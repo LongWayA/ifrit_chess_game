@@ -38,13 +38,14 @@ let IfritChessGame_R = {
         IfritChessGame_R.ifritChessEngine_O.iniM();
         IfritChessGame_R.html5Canvas_O.iniM();
         IfritChessGame_R.html5Sprites_O.iniM(IfritChessGame_R.html5Canvas_O);
-        IfritChessGame_R.chessBoard_8x8_O.iniM(10, 10, 50, 50, IfritChessGame_R.html5Sprites_O);//32
+        IfritChessGame_R.chessBoard_8x8_O.iniM(10, 10, 50, 50);//32
         IfritChessGame_R.html5CanvasMouse_R.iniM(IfritChessGame_R.html5Canvas_O.idCanvas, IfritChessGame_R);
     },
 
     drowGame() {
         console.log('IfritChessGame_R->drowGame');
-        IfritChessGame_R.chessBoard_8x8_O.drow();
+        IfritChessGame_R.chessBoard_8x8_O.drow(IfritChessGame_R.html5Sprites_O);
+
     },
 
     startGame() {

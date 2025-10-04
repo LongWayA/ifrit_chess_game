@@ -39,7 +39,6 @@ class Chess_board_0x88_C {
 
     static NAME = "Chess_board_0x88_C";
 
-    static COLOR_NO = -1;
     static BLACK = 0;
     static WHITE = 1;
 
@@ -210,12 +209,11 @@ class Chess_board_0x88_C {
         let i = -1;
 
         this.iniStartPosition();
-
         for (let y = 0; y < 8; y++) {
             for (let x = 0; x < 8; x++) {
                 i = this.x07_y07_to_0x88(x, y);
-                this.sq_piece_0x88[i] = chessBoard_8x8_O.squares8x8[y][x].square_piece;
-                this.sq_piece_color_0x88[i] = chessBoard_8x8_O.squares8x8[y][x].color_piece;
+                this.sq_piece_0x88[i] = chessBoard_8x8_O.squares_p_8x8[y][x];
+                this.sq_piece_color_0x88[i] = chessBoard_8x8_O.squares_pc_8x8[y][x];
             }
         }
         // цвет хода 0 - черные 1 - белые

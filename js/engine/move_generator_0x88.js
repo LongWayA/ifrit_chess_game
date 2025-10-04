@@ -25,32 +25,32 @@ class Move_generator_0x88_С {
     // 96,  97,  98,  99,  100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111,
     // 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127
 
-	/*
-	0   1   2
-	16  17  18
-	32  33  34    
-	*/
+    /*
+    0   1   2
+    16  17  18
+    32  33  34    
+    */
     moves_king = [-16, -15, 1, 17, 16, 15, -1, -17];
     moves_queen = this.moves_king;
- 	/*
- 	   1      
-	16 17 18
-	   33
-	*/   
+    /*
+       1      
+  16 17 18
+     33
+  */
     moves_rook = [-16, 1, 16, -1];
     /*
-	 0    2     
-	   17
-	 32   34
-	*/
+     0    2     
+       17
+     32   34
+    */
     moves_bishop = [-15, 17, 15, -17];
     /*
-	     1---3    
-	 16    |   20
-	  |---34---|
-	 48    |   52     
-	    65---67
-	*/
+         1---3    
+     16    |   20
+      |---34---|
+     48    |   52     
+        65---67
+    */
     moves_knight = [-33, -31, -14, 18, 33, 31, 14, -18];
 
     constructor() {
@@ -110,15 +110,17 @@ class Move_generator_0x88_С {
     }
 
     add_move(type_move, from, to, piece, piece_color, type_captures_move) {
+        let piece_to = -1;
         let piece_color_to = -1;
         let capture_piece = -1;
+        piece_to = this.chess_board_0x88_O.sq_piece_0x88[to];
         piece_color_to = this.chess_board_0x88_O.sq_piece_color_0x88[to];
 
-        if (piece_color_to == -1) {// цвет не задан и значит фигуры там нет. можно ходить. это спокойный ход
+        if (piece_to == 0) {// проверяем клетку куда ходим. Если там нет фигур то можно ходить
             this.move_list_0x88_O.add_simple_move(type_move, piece, piece_color, from, to);
             return 0;// можно продолжать луч
-        } else if (piece_color_to != piece_color) {// мы уже знаем что тут есть фигура и если цвет отличен то это взятие  
-            capture_piece = this.chess_board_0x88_O.sq_piece_0x88[to];
+        } else if (piece_color != piece_color_to) {// мы уже знаем что тут есть фигура и если цвет отличен, то это взятие  
+            capture_piece = piece_to;
             this.move_list_0x88_O.add_captures_move(type_captures_move, piece, piece_color, capture_piece, from, to);
             return 1;// луч прерываем на вражеской фигуре включительно
         } else {//на свою фигуру не прыгаем. хода нет. 
@@ -235,18 +237,18 @@ class Move_generator_0x88_С {
 
     generated_moves_castle_king(from, piece, piece_color) {
         let to = -1;
-        let piece_color_to_1 = -1;
-        let piece_color_to_2 = -1;
-        let piece_color_to_3 = -1;
+        let piece_to_1 = -1;
+        let piece_to_2 = -1;
+        let piece_to_3 = -1;
         let type_move = -1;
 
         if (from == 116) {// король стоит на стартовой позиции
             if (piece_color == 1) {// король белый
                 if (this.chess_board_0x88_O.castling_Q == 1) {// рокировка белых в длинную сторону   1/0
-                    piece_color_to_1 = this.chess_board_0x88_O.sq_piece_color_0x88[113];
-                    piece_color_to_2 = this.chess_board_0x88_O.sq_piece_color_0x88[114];
-                    piece_color_to_3 = this.chess_board_0x88_O.sq_piece_color_0x88[115];
-                    if ((piece_color_to_1 == -1) && (piece_color_to_2 == -1) && (piece_color_to_3 == -1)) {//
+                    piece_to_1 = this.chess_board_0x88_O.sq_piece_0x88[113];
+                    piece_to_2 = this.chess_board_0x88_O.sq_piece_0x88[114];
+                    piece_to_3 = this.chess_board_0x88_O.sq_piece_0x88[115];
+                    if ((piece_to_1 == 0) && (piece_to_2 == 0) && (piece_to_3 == 0)) {//
                         type_move = Move_list_0x88_С.KING_QUEEN_CASTLE;
                         to = 114;
                         this.move_list_0x88_O.add_simple_move(type_move, piece, piece_color, from, to);
@@ -254,9 +256,9 @@ class Move_generator_0x88_С {
                 }
 
                 if (this.chess_board_0x88_O.castling_K == 1) {// рокировка белых в короткую сторону  1/0
-                    piece_color_to_1 = this.chess_board_0x88_O.sq_piece_color_0x88[117];
-                    piece_color_to_2 = this.chess_board_0x88_O.sq_piece_color_0x88[118];
-                    if ((piece_color_to_1 == -1) && (piece_color_to_2 == -1)) {//
+                    piece_to_1 = this.chess_board_0x88_O.sq_piece_0x88[117];
+                    piece_to_2 = this.chess_board_0x88_O.sq_piece_0x88[118];
+                    if ((piece_to_1 == 0) && (piece_to_2 == 0)) {//
                         type_move = Move_list_0x88_С.KING_CASTLE;
                         to = 118;
                         this.move_list_0x88_O.add_simple_move(type_move, piece, piece_color, from, to);
@@ -266,10 +268,10 @@ class Move_generator_0x88_С {
         } else if (from == 4) {// король стоит на стартовой позиции
             if (piece_color == 0) {// король черный
                 if (this.chess_board_0x88_O.castling_q == 1) {// рокировка черных в длинную сторону   1/0
-                    piece_color_to_1 = this.chess_board_0x88_O.sq_piece_color_0x88[1];
-                    piece_color_to_2 = this.chess_board_0x88_O.sq_piece_color_0x88[2];
-                    piece_color_to_3 = this.chess_board_0x88_O.sq_piece_color_0x88[3];
-                    if ((piece_color_to_1 == -1) && (piece_color_to_2 == -1) && (piece_color_to_3 == -1)) {//
+                    piece_to_1 = this.chess_board_0x88_O.sq_piece_0x88[1];
+                    piece_to_2 = this.chess_board_0x88_O.sq_piece_0x88[2];
+                    piece_to_3 = this.chess_board_0x88_O.sq_piece_0x88[3];
+                    if ((piece_color_to_1 == 0) && (piece_color_to_2 == 0) && (piece_color_to_3 == 0)) {//
                         type_move = Move_list_0x88_С.KING_QUEEN_CASTLE;
                         to = 2;
                         this.move_list_0x88_O.add_simple_move(type_move, piece, piece_color, from, to);
@@ -277,9 +279,9 @@ class Move_generator_0x88_С {
                 }
 
                 if (this.chess_board_0x88_O.castling_k == 1) {// рокировка черных в короткую сторону  1/0
-                    piece_color_to_1 = this.chess_board_0x88_O.sq_piece_color_0x88[5];
-                    piece_color_to_2 = this.chess_board_0x88_O.sq_piece_color_0x88[6];
-                    if ((piece_color_to_1 == -1) && (piece_color_to_2 == -1)) {//
+                    piece_to_1 = this.chess_board_0x88_O.sq_piece_0x88[5];
+                    piece_to_2 = this.chess_board_0x88_O.sq_piece_0x88[6];
+                    if ((piece_to_1 == 0) && (piece_to_2 == 0)) {//
                         type_move = Move_list_0x88_С.KING_CASTLE;
                         to = 6;
                         this.move_list_0x88_O.add_simple_move(type_move, piece, piece_color, from, to);
@@ -299,7 +301,8 @@ class Move_generator_0x88_С {
         let to = -1;
         let to2 = -1;
         let piece_color_to = -1;
-        let piece_color_to2 = -1;
+        let piece_to = -1;
+        let piece_to2 = -1;
         let capture_piece = -1;
         let type_move = -1;
 
@@ -308,9 +311,9 @@ class Move_generator_0x88_С {
             if (Math.floor(from / 16) == 6) {// белые пешки на стартовой позиции. можно ходить на две клетки
                 to = from - 16;// ход белой пешки на одну клетку
                 to2 = from - 32;// ход белой пешки на одну клетку
-                piece_color_to = this.chess_board_0x88_O.sq_piece_color_0x88[to];
-                piece_color_to2 = this.chess_board_0x88_O.sq_piece_color_0x88[to2];
-                if ((piece_color_to == -1) && (piece_color_to2 == -1)) {// цвет не задан и значит фигуры там нет. можно ходить. это спокойный ход
+                piece_to = this.chess_board_0x88_O.sq_piece_0x88[to];
+                piece_to2 = this.chess_board_0x88_O.sq_piece_0x88[to2];
+                if ((piece_to == 0) && (piece_to2 == 0)) {// цвет не задан и значит фигуры там нет. можно ходить. это спокойный ход
                     type_move = Move_list_0x88_С.PAWN_MOVE;
                     this.move_list_0x88_O.add_simple_move(type_move, piece, piece_color, from, to2);
                     this.chess_board_0x88_O.en_passant_yes = 1;
@@ -321,8 +324,8 @@ class Move_generator_0x88_С {
             if (Math.floor(from / 16) == 1) {// 136 0x88
                 // превращение пешки просто и со взятием
                 to = from - 16;// ход белой пешки на одну клетку
-                piece_color_to = this.chess_board_0x88_O.sq_piece_color_0x88[to];
-                if (piece_color_to == -1) {// цвет не задан и значит фигуры там нет. можно ходить. это спокойный ход
+                piece_to = this.chess_board_0x88_O.sq_piece_0x88[to];
+                if (piece_to == 0) {// цвет не задан и значит фигуры там нет. можно ходить. это спокойный ход
                     type_move = Move_list_0x88_С.QUEEN_PROMOTION;
                     this.move_list_0x88_O.add_simple_move(type_move, piece, piece_color, from, to);
                     type_move = Move_list_0x88_С.ROOK_PROMOTION;
@@ -334,8 +337,9 @@ class Move_generator_0x88_С {
                 }
                 to = from - 17;// взятие белой пешкой влево
                 if ((from & 136) == 0) {// 136 0x88                
+                    piece_to = this.chess_board_0x88_O.sq_piece_0x88[to];
                     piece_color_to = this.chess_board_0x88_O.sq_piece_color_0x88[to];
-                    if (piece_color_to == 0) {// 
+                    if ((piece_to != 0) && (piece_color != piece_color_to)) {// 
                         type_move = Move_list_0x88_С.QUEEN_PROMO_CAPTURE;
                         capture_piece = this.chess_board_0x88_O.sq_piece_0x88[to];
                         this.move_list_0x88_O.add_captures_move(type_move, piece, piece_color, capture_piece, from, to);
@@ -351,9 +355,10 @@ class Move_generator_0x88_С {
                     }
                 }
                 to = from - 15;// взятие белой пешкой влево
-                if ((from & 136) == 0) {// 136 0x88               
+                if ((from & 136) == 0) {// 136 0x88      
+                    piece_to = this.chess_board_0x88_O.sq_piece_0x88[to];
                     piece_color_to = this.chess_board_0x88_O.sq_piece_color_0x88[to];
-                    if (piece_color_to == 0) {// 
+                    if ((piece_to != 0) && (piece_color != piece_color_to)) {// 
                         type_move = Move_list_0x88_С.QUEEN_PROMO_CAPTURE;
                         capture_piece = this.chess_board_0x88_O.sq_piece_0x88[to];
                         this.move_list_0x88_O.add_captures_move(type_move, piece, piece_color, capture_piece, from, to);
@@ -370,16 +375,17 @@ class Move_generator_0x88_С {
                 }
             } else {
                 to = from - 16;// ход белой пешки на одну клетку
-                piece_color_to = this.chess_board_0x88_O.sq_piece_color_0x88[to];
-                if (piece_color_to == -1) {// цвет не задан и значит фигуры там нет. можно ходить. это спокойный ход
+                piece_to = this.chess_board_0x88_O.sq_piece_0x88[to];
+                if (piece_to == 0) {// цвет не задан и значит фигуры там нет. можно ходить. это спокойный ход
                     type_move = Move_list_0x88_С.PAWN_MOVE;
                     this.move_list_0x88_O.add_simple_move(type_move, piece, piece_color, from, to);
                 }
             }
             to = from - 17;// взятие белой пешкой влево
             if ((from & 136) == 0) {// 136 0x88
+                piece_to = this.chess_board_0x88_O.sq_piece_0x88[to];
                 piece_color_to = this.chess_board_0x88_O.sq_piece_color_0x88[to];
-                if (piece_color_to == 0) {// 
+                if ((piece_to != 0) && (piece_color != piece_color_to)) {// 
                     type_move = Move_list_0x88_С.PAWN_CAPTURES;
                     capture_piece = this.chess_board_0x88_O.sq_piece_0x88[to];
                     this.move_list_0x88_O.add_captures_move(type_move, piece, piece_color, capture_piece, from, to);
@@ -390,9 +396,10 @@ class Move_generator_0x88_С {
                 }
             }
             to = from - 15;// взятие белой пешкой вправо
-            if ((from & 136) == 0) {// 136 0x88            
+            if ((from & 136) == 0) {// 136 0x88    
+                piece_to = this.chess_board_0x88_O.sq_piece_0x88[to];
                 piece_color_to = this.chess_board_0x88_O.sq_piece_color_0x88[to];
-                if (piece_color_to == 0) {// 
+                if ((piece_to != 0) && (piece_color != piece_color_to)) {// 
                     type_move = Move_list_0x88_С.PAWN_CAPTURES;
                     capture_piece = this.chess_board_0x88_O.sq_piece_0x88[to];
                     this.move_list_0x88_O.add_captures_move(type_move, piece, piece_color, capture_piece, from, to);
@@ -407,9 +414,9 @@ class Move_generator_0x88_С {
             if (Math.floor(from / 16) == 6) {// белые пешки на стартовой позиции. можно ходить на две клетки
                 to = from - 16;// ход белой пешки на одну клетку
                 to2 = from - 32;// ход белой пешки на одну клетку
-                piece_color_to = this.chess_board_0x88_O.sq_piece_color_0x88[to];
-                piece_color_to2 = this.chess_board_0x88_O.sq_piece_color_0x88[to2];
-                if ((piece_color_to == -1) && (piece_color_to2 == -1)) {// цвет не задан и значит фигуры там нет. можно ходить. это спокойный ход
+                piece_to = this.chess_board_0x88_O.sq_piece_0x88[to];
+                piece_to2 = this.chess_board_0x88_O.sq_piece_0x88[to2];
+                if ((piece_to == 0) && (piece_to2 == 0)) {// цвет не задан и значит фигуры там нет. можно ходить. это спокойный ход
                     type_move = Move_list_0x88_С.PAWN_MOVE;
                     this.move_list_0x88_O.add_simple_move(type_move, piece, piece_color, from, to2);
                     this.chess_board_0x88_O.en_passant_yes = 1;
@@ -420,8 +427,8 @@ class Move_generator_0x88_С {
             if (Math.floor(from / 16) == 1) {// 136 0x88
                 // превращение пешки просто и со взятием
                 to = from - 16;// ход белой пешки на одну клетку
-                piece_color_to = this.chess_board_0x88_O.sq_piece_color_0x88[to];
-                if (piece_color_to == -1) {// цвет не задан и значит фигуры там нет. можно ходить. это спокойный ход
+                piece_to = this.chess_board_0x88_O.sq_piece_0x88[to];
+                if (piece_to == 0) {// цвет не задан и значит фигуры там нет. можно ходить. это спокойный ход
                     type_move = Move_list_0x88_С.QUEEN_PROMOTION;
                     this.move_list_0x88_O.add_simple_move(type_move, piece, piece_color, from, to);
                     type_move = Move_list_0x88_С.ROOK_PROMOTION;
@@ -433,8 +440,9 @@ class Move_generator_0x88_С {
                 }
                 to = from - 17;// взятие белой пешкой влево
                 if ((from & 136) == 0) {// 136 0x88                
+                    piece_to = this.chess_board_0x88_O.sq_piece_0x88[to];
                     piece_color_to = this.chess_board_0x88_O.sq_piece_color_0x88[to];
-                    if (piece_color_to == 0) {// 
+                    if ((piece_to != 0) && (piece_color != piece_color_to)) {// 
                         type_move = Move_list_0x88_С.QUEEN_PROMO_CAPTURE;
                         capture_piece = this.chess_board_0x88_O.sq_piece_0x88[to];
                         this.move_list_0x88_O.add_captures_move(type_move, piece, piece_color, capture_piece, from, to);
@@ -450,9 +458,10 @@ class Move_generator_0x88_С {
                     }
                 }
                 to = from - 15;// взятие белой пешкой влево
-                if ((from & 136) == 0) {// 136 0x88               
+                if ((from & 136) == 0) {// 136 0x88      
+                    piece_to = this.chess_board_0x88_O.sq_piece_0x88[to];
                     piece_color_to = this.chess_board_0x88_O.sq_piece_color_0x88[to];
-                    if (piece_color_to == 0) {// 
+                    if ((piece_to != 0) && (piece_color != piece_color_to)) {// 
                         type_move = Move_list_0x88_С.QUEEN_PROMO_CAPTURE;
                         capture_piece = this.chess_board_0x88_O.sq_piece_0x88[to];
                         this.move_list_0x88_O.add_captures_move(type_move, piece, piece_color, capture_piece, from, to);
@@ -469,16 +478,17 @@ class Move_generator_0x88_С {
                 }
             } else {
                 to = from - 16;// ход белой пешки на одну клетку
-                piece_color_to = this.chess_board_0x88_O.sq_piece_color_0x88[to];
-                if (piece_color_to == -1) {// цвет не задан и значит фигуры там нет. можно ходить. это спокойный ход
+                piece_to = this.chess_board_0x88_O.sq_piece_0x88[to];
+                if (piece_to == 0) {// цвет не задан и значит фигуры там нет. можно ходить. это спокойный ход
                     type_move = Move_list_0x88_С.PAWN_MOVE;
                     this.move_list_0x88_O.add_simple_move(type_move, piece, piece_color, from, to);
                 }
             }
             to = from - 17;// взятие белой пешкой влево
             if ((from & 136) == 0) {// 136 0x88
+                piece_to = this.chess_board_0x88_O.sq_piece_0x88[to];
                 piece_color_to = this.chess_board_0x88_O.sq_piece_color_0x88[to];
-                if (piece_color_to == 0) {// 
+                if ((piece_to != 0) && (piece_color != piece_color_to)) {// 
                     type_move = Move_list_0x88_С.PAWN_CAPTURES;
                     capture_piece = this.chess_board_0x88_O.sq_piece_0x88[to];
                     this.move_list_0x88_O.add_captures_move(type_move, piece, piece_color, capture_piece, from, to);
@@ -489,9 +499,10 @@ class Move_generator_0x88_С {
                 }
             }
             to = from - 15;// взятие белой пешкой вправо
-            if ((from & 136) == 0) {// 136 0x88            
+            if ((from & 136) == 0) {// 136 0x88    
+                piece_to = this.chess_board_0x88_O.sq_piece_0x88[to];
                 piece_color_to = this.chess_board_0x88_O.sq_piece_color_0x88[to];
-                if (piece_color_to == 0) {// 
+                if ((piece_to != 0) && (piece_color != piece_color_to)) {// 
                     type_move = Move_list_0x88_С.PAWN_CAPTURES;
                     capture_piece = this.chess_board_0x88_O.sq_piece_0x88[to];
                     this.move_list_0x88_O.add_captures_move(type_move, piece, piece_color, capture_piece, from, to);
@@ -504,7 +515,5 @@ class Move_generator_0x88_С {
         }
     }
 
-//pawn_move_white
-
-
+    //pawn_move_white
 }
