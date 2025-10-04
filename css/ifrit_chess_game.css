@@ -1,0 +1,204 @@
+/** 
+ * @author AnBr75
+ * @copyright Copyright (c) 2025, AnBr75 and/or its affiliates. All rights reserved.
+ * @version created 07.07.2018
+ */
+
+/**
+* НАЗНАЧЕНИЕ
+*/
+
+/*
+textarea {
+  resize: none;
+}
+*/
+
+body{
+  /*background-color: rgb(240, 236, 243);*/
+  background-color: rgb(215, 215, 223);
+}
+
+h1.st1 {
+  background-color: white;
+  color: red;
+  margin: 10px;
+  padding: 10px;
+  text-align: center;
+}
+
+h1.w {
+  text-align: center;
+}
+
+h4.w {
+  text-align: center;
+}
+
+h2 {
+   color: blue;
+   text-align: center;
+}
+ 
+p.st2 {
+  background-color: blue;
+  color: white;
+  margin: 1px;
+  padding: 10px;
+  text-align: justify;
+  font-size: large;
+  /* font-size: medium; */
+}
+
+p.st3 {
+  background-color: green;
+  color: white;
+  margin: 1px;
+  padding: 10px;
+  text-align: justify;
+  font-size: large;
+}
+
+p.st4 {
+  background-color: black;
+  color: white;
+  margin: 1px;
+  padding: 10px;
+  text-align: justify;
+  font-size: large;
+}
+
+
+ p.st5 {
+  background-color: orange;
+  color: white;
+  margin: 1px;
+  padding: 20px;
+ }
+
+ p.st6 {
+ background-color: yellow;
+ color: white;
+ margin: 1px;
+ padding: 20px;
+ }
+ a.st7 {
+ background-color: rgb(255, 255, 255);
+ color: rgb(18, 21, 231);
+ }
+
+ a.button {
+     -moz-border-radius: 8px;
+     -webkit-border-radius: 8px;
+     border-radius: 8px;
+     border: 2px groove green;
+     display: block;
+     height: 30px;
+     line-height: 30px;
+     width: 100px;
+     text-decoration: none;
+     text-align: center;
+     color: red;
+     font-weight: bold;
+   }
+
+
+#game-canvas {
+   position: relative;
+   border: 1px inset rgba(0,0,80,0.62);
+   -webkit-transition: opacity 2.5s;
+   -moz-transition: opacity 2.5s;
+   -o-transition: opacity 2.5s;
+   transition: opacity 2.5s;
+}
+
+/*https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/button */
+input.styled {
+    border: 0;
+    line-height: 2.5;
+    padding: 0 20px;
+    font-size: 1rem;
+    text-align: center;
+    color: #fff;
+    text-shadow: 1px 1px 1px #000;
+    border-radius: 10px;
+    /*background-color: rgba(220, 0, 0, 1);*/
+    background-color: rgba(0, 0, 220, 1);
+    background-image: linear-gradient(to top left,
+                                      rgba(0, 0, 0, .2),
+                                      rgba(0, 0, 0, .2) 30%,
+                                      rgba(0, 0, 0, 0));
+    box-shadow: inset 2px 2px 3px rgba(255, 255, 255, .6),
+                inset -2px -2px 3px rgba(0, 0, 0, .6);
+}
+
+.styled:hover {
+    /*background-color: rgba(255, 0, 0, 1);*/
+    background-color: rgba(0, 255, 220, 1);
+}
+
+.styled:active {
+    box-shadow: inset -2px -2px 3px rgba(255, 255, 255, .6),
+                inset 2px 2px 3px rgba(0, 0, 0, .6);
+}
+
+
+input.styled_off {
+  border: 0;
+  line-height: 2.5;
+  padding: 0 20px;
+  font-size: 1rem;
+  text-align: center;
+  color: #fff;
+  text-shadow: 1px 1px 1px #000;
+  border-radius: 10px;
+  /*background-color: rgba(220, 0, 0, 1);*/
+  background-color: rgb(0, 220, 128);
+  background-image: linear-gradient(to top left,
+                                    rgba(0, 0, 0, .2),
+                                    rgba(0, 0, 0, .2) 30%,
+                                    rgba(0, 0, 0, 0));
+  box-shadow: inset 2px 2px 3px rgba(20, 30, 170, 0.6),
+              inset -2px -2px 3px rgba(104, 13, 146, 0.6);
+}
+
+
+.styled_off:hover {
+  /*background-color: rgba(255, 0, 0, 1);*/
+  background-color: rgb(218, 183, 29);
+}
+
+.styled_off:active {
+  box-shadow: inset -2px -2px 3px rgba(255, 255, 255, .6),
+              inset 2px 2px 3px rgba(0, 0, 0, .6);
+}
+
+input.styled_res {
+  border: 0;
+  line-height: 2.5;
+  padding: 0 20px;
+  font-size: 1rem;
+  text-align: center;
+  color: #fff;
+  text-shadow: 1px 1px 1px #000;
+  border-radius: 10px;
+  /*background-color: rgba(220, 0, 0, 1);*/
+  background-color: rgb(145, 23, 226);
+  background-image: linear-gradient(to top left,
+                                    rgba(0, 0, 0, .2),
+                                    rgba(0, 0, 0, .2) 30%,
+                                    rgba(0, 0, 0, 0));
+  box-shadow: inset 2px 2px 3px rgba(255, 255, 255, .6),
+              inset -2px -2px 3px rgba(0, 0, 0, .6);
+}
+
+.styled_res:hover {
+  /*background-color: rgba(255, 0, 0, 1);*/
+  /*background-color: rgb(216, 92, 20);*/
+  background-color: rgb(203, 216, 20);
+}
+
+.styled_res:active {
+  box-shadow: inset -2px -2px 3px rgba(255, 255, 255, .6),
+              inset 2px 2px 3px rgba(0, 0, 0, .6);
+}

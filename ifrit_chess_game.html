@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en"><!-- ru -->
+
+<head>
+
+    <meta charset="utf-8">
+    <title> Ifrit Chess Game </title>
+    <!-- Copyright (c) 2025, AnBr75 and/or its affiliates. All rights reserved. -->
+    <!-- created 26.09m.2025 -->
+
+    <link rel='stylesheet' href='css/ifrit_chess_game.css' />
+    <link rel="icon" type="image/x-icon" href='resource/favicon/favicon.ico'>
+
+</head>
+
+<body>
+
+    <h2 class="w"> <img src="resource/images/creatures/cr_1.png" alt="g" title="Игра в разработке">
+        Ifrit Chess Game [in development]
+        <img src="resource/images/creatures/cr_1.png" alt="g">
+    </h2>
+
+    <!-- дата в виде  The dateTime is specified in the following form "YYYY-MM-DDThh:mm:ss" 
+        where: YYYY indicates the year. MM indicates the month. DD indicates the day.-->
+    <h4 class="w"> Last update <time datetime="2025-10-04">04.10m.25. </time><br>
+    
+    Посещений: <input type="text" name="t_requests" id="text_requests" value="requests"
+        style="background-color: rgb(215, 215, 223)">
+    </h4>    
+    <a href="https://alphagameset.ru/"> На главную</a><br>
+    <!--The game canvas-1600-800 -->
+    <canvas id='game-canvas' width='800' height='600'>
+        Your browser does not support HTML5 Canvas<br>
+        Ваш браузер не поддерживает HTML5 графику<br>
+    </canvas>
+
+    <!-- Scripts -->
+    <!-- =========================================================================== -->
+    <!-- engine/ -->
+    <script src='js/engine/chess_board_0x88.js'></script>
+    <script src='js/engine/move_list_0x88.js'></script>
+    <script src='js/engine/move_generator_0x88.js'></script>
+    <script src='js/engine/ifrit_chess_engine.js'></script>
+
+    <!-- =========================================================================== -->
+    <!-- gui/browser/ -->
+    <script src='js/gui/browser/pathes_browser.js'></script>
+
+
+    <!-- gui/html5_graphics_2d/html5_canvas -->
+    <script src='js/gui/html5_graphics_2d/html5_canvas/html5_canvas_text.js'></script>
+    <script src='js/gui/html5_graphics_2d/html5_canvas/html5_canvas_primitive.js'></script>
+    <script src='js/gui/html5_graphics_2d/html5_canvas/html5_canvas_image.js'></script>
+    <script src='js/gui/html5_graphics_2d/html5_canvas/html5_canvas.js'></script>
+
+    <!-- gui/html5_graphics_2d/html5_sprites -->
+    <script src='js/gui/html5_graphics_2d/html5_sprites/html5_square_c.js'></script>
+    <script src='js/gui/html5_graphics_2d/html5_sprites/html5_sprites_chess_pieces.js'></script>
+    <script src='js/gui/html5_graphics_2d/html5_sprites/html5_sprites.js'></script>
+
+    <!-- gui/chess_board -->
+    <script src='js/gui/chess_board/board_square.js'></script>
+    <script src='js/gui/chess_board/chess_board_8x8.js'></script>
+
+    <!-- gui/mouse -->
+    <script src='js/gui/mouse/html5_canvas_mouse.js'></script>
+
+    <!-- gui/drow -->
+
+
+    <!-- web/ -->
+    <script src='js/web/pathes_web.js'></script>
+    <script src='js/web/counter.js'></script>
+
+
+    <!-- gui/ -->
+    <script src='js/gui/browser/ifrit_chess_game.js'></script>
+
+    <script>
+        IfritChessGame_R.iniM();
+
+        window.onload = function () {
+            //console.log('ifrit_chess_game.html->window.onload');
+            IfritChessGame_R.startGame();
+        };
+    </script>
+
+    <script>
+        /*
+       <script src='js/gui/browser/timer.js'>
+        <script src='js/gui/drow/drow_timer_number.js'>
+        <script src='js/gui/drow/drow_mouse.js'>
+        */
+    </script>
+
+
+</body>
+
+</html>
