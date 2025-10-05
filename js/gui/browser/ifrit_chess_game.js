@@ -19,7 +19,7 @@ let IfritChessGame_R = {
     chessBoard_8x8_O: new ChessBoard_8x8_C(),
 
     html5CanvasMouse_R: Html5CanvasMouse_R,
-    StartFen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+    StartFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
 
 
     NAME: "IfritChessGame_R",
@@ -31,6 +31,8 @@ let IfritChessGame_R = {
     END_GAME: 4,
 
     gameState: 0, // состояния игры. может быть: нет игры, старт, продолжение , пауза, конец.
+    step: -1,
+
 
     iniM() {
         console.log('IfritChessGame_R->iniM');
@@ -40,6 +42,7 @@ let IfritChessGame_R = {
         IfritChessGame_R.html5Sprites_O.iniM(IfritChessGame_R.html5Canvas_O);
         IfritChessGame_R.chessBoard_8x8_O.iniM(10, 10, 50, 50);//32
         IfritChessGame_R.html5CanvasMouse_R.iniM(IfritChessGame_R.html5Canvas_O.idCanvas, IfritChessGame_R);
+        IfritChessGame_R.step = 1;
     },
 
     drowGame() {
@@ -66,11 +69,16 @@ let IfritChessGame_R = {
     },
 
     mouseDown(x, y) {
-        console.log('IfritChessGame_R->mouseDown');
+
+        //console.log('IfritChessGame_R->mouseDown x ' + x + " y " + y);
+        IfritChessGame_R.chessBoard_8x8_O.click(1, x, y, IfritChessGame_R.step,
+            IfritChessGame_R.html5Sprites_O, IfritChessGame_R.ifritChessEngine_O);
     },
 
     mouseUp(x, y) {
-        console.log('IfritChessGame_R->mouseUp');
+        //console.log('IfritChessGame_R->mouseUp x ' + x + " y " + y);
+      //  IfritChessGame_R.chessBoard_8x8_O.click(2, x, y, IfritChessGame_R.step,
+      //      IfritChessGame_R.html5Sprites_O, IfritChessGame_R.ifritChessEngine_O);
     },
 
 };

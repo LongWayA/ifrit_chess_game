@@ -22,7 +22,7 @@ let PathesBrowser_R = {
 
       iniM() {
 
-            console.log('PathesBrowser_R->iniM');
+            //console.log('PathesBrowser_R->iniM');
 
              PathesBrowser_R.html5_sprites_chess_pieces_js_pathToImages = "resource/images";
       },

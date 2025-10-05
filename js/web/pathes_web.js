@@ -31,7 +31,7 @@ let PathesWeb_R = {
 
       iniM() {
 
-            console.log('PathesWeb_R->iniM');
+            //console.log('PathesWeb_R->iniM');
 
             if (PathesWeb_R.isServer){ 
                   PathesWeb_R.pathesState = PathesWeb_R.SERVER;
@@ -46,7 +46,7 @@ let PathesWeb_R = {
 
             } else if (PathesWeb_R.pathesState == PathesWeb_R.SERVER) {
 
-               PathesWeb_R.counter_js_counterGet = 'https://alphagameset.ru/0_0_SQL_base/CountRequestsGet.php/?name=requests_double_shadow';
+               PathesWeb_R.counter_js_counterGet = 'https://alphagameset.ru/0_0_SQL_base/CountRequestsGet.php/?name=requests_ifrit_chess_game';
 
             }
 

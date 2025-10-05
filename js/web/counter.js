@@ -20,7 +20,7 @@ if (PathesWeb_R.counter_js_isA20) {
   // 1. Создаём новый объект XMLHttpRequest
   var xhr = new XMLHttpRequest();
 
-  console.log('PathesWeb_R.counter_js_counterGet = ' + PathesWeb_R.counter_js_counterGet);
+  //console.log('PathesWeb_R.counter_js_counterGet = ' + PathesWeb_R.counter_js_counterGet);
 
   // 2. Конфигурируем его: GET-запрос на URL
   xhr.open('GET', PathesWeb_R.counter_js_counterGet, false);

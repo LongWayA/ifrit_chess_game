@@ -271,7 +271,7 @@ class Move_generator_0x88_С {
                     piece_to_1 = this.chess_board_0x88_O.sq_piece_0x88[1];
                     piece_to_2 = this.chess_board_0x88_O.sq_piece_0x88[2];
                     piece_to_3 = this.chess_board_0x88_O.sq_piece_0x88[3];
-                    if ((piece_color_to_1 == 0) && (piece_color_to_2 == 0) && (piece_color_to_3 == 0)) {//
+                    if ((piece_to_1 == 0) && (piece_to_2 == 0) && (piece_to_3 == 0)) {//
                         type_move = Move_list_0x88_С.KING_QUEEN_CASTLE;
                         to = 2;
                         this.move_list_0x88_O.add_simple_move(type_move, piece, piece_color, from, to);
