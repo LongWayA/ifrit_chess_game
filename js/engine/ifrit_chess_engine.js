@@ -31,11 +31,10 @@ class IfritChessEngine_С {
         this.move_generator_0x88_O.iniM();
     }
 
-
     go() {
         this.chess_board_0x88_O.drow0x88();
         this.chess_board_0x88_O.drow0x88_color();       
         this.move_generator_0x88_O.generated_pseudo_legal_moves( this.chess_board_0x88_O, this.move_list_0x88_O);
-        //this.move_list_0x88_O.print_list(IfritChessGame_R.ifritChessEngine_O.chess_board_0x88_O);
+        this.move_list_0x88_O.print_list(IfritChessGame_R.ifritChessEngine_O.chess_board_0x88_O);
     }
 }

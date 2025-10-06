@@ -78,26 +78,6 @@ class Move_list_0x88_С {
         this.number_move = 0;
     }
 
-    print_list(chess_board_0x88_O) {
-        console.log(" ");
-        console.log("print list");
-
-        for (let i = 0; i < this.number_move; i++) {
-            console.log("type_move[" + i + "] = " + this.type_move[i] + " nm = " + Move_list_0x88_С.TYPE_MOVE_NAME[this.type_move[i]]);
-            console.log("from[" + i + "] = " + this.from[i]);          
-            console.log("to[" + i + "] = " + this.to[i]);
-            console.log(Chess_board_0x88_C.AN[chess_board_0x88_O.s_0x88_to_x07(this.from[i])] + "" + 
-            (8 - chess_board_0x88_O.s_0x88_to_y07(this.from[i])) + "-" +            
-            Chess_board_0x88_C.AN[chess_board_0x88_O.s_0x88_to_x07(this.to[i])] + "" + 
-            (8 - chess_board_0x88_O.s_0x88_to_y07(this.to[i])));            
-            console.log("name_piece[" + i + "] = " + this.name_piece[i] + " np = " + Chess_board_0x88_C.PIECE_NAME[this.name_piece[i]]);
-            console.log("piece_color[" + i + "] = " + this.piece_color[i]);
-            console.log("name_capture_piece[" + i + "] = " + this.name_capture_piece[i] + 
-                " cnp = " + Chess_board_0x88_C.PIECE_NAME[this.name_capture_piece[i]]);
-            console.log(" ");
-        }
-    }
-
     // 
     add_captures_move(type_move, piece, piece_color, capture_piece, from, to) {
         //console.log('Move_list_0x88_С->add_move');
@@ -131,5 +111,40 @@ class Move_list_0x88_С {
         this.number_move = this.number_move + 1;
 
     }
+
+    print_list(chess_board_0x88_O) {
+        console.log(" ");
+        console.log("print list");
+
+        for (let i = 0; i < this.number_move; i++) {
+            console.log("type_move[" + i + "] = " + this.type_move[i] + " nm = " + Move_list_0x88_С.TYPE_MOVE_NAME[this.type_move[i]]);
+            console.log("from[" + i + "] = " + this.from[i]);
+            console.log("to[" + i + "] = " + this.to[i]);
+            console.log(Chess_board_0x88_C.LET_COOR[chess_board_0x88_O.s_0x88_to_x07(this.from[i])] + "" +
+                (8 - chess_board_0x88_O.s_0x88_to_y07(this.from[i])) + "-" +
+                Chess_board_0x88_C.LET_COOR[chess_board_0x88_O.s_0x88_to_x07(this.to[i])] + "" +
+                (8 - chess_board_0x88_O.s_0x88_to_y07(this.to[i])));
+            console.log("name_piece[" + i + "] = " + this.name_piece[i] + " np = " + Chess_board_0x88_C.PIECE_NAME[this.name_piece[i]]);
+            console.log("piece_color[" + i + "] = " + this.piece_color[i]);
+            console.log("name_capture_piece[" + i + "] = " + this.name_capture_piece[i] +
+                " cnp = " + Chess_board_0x88_C.PIECE_NAME[this.name_capture_piece[i]]);
+            console.log(" ");
+        }
+    }
+
+    clear_list() {
+        for (let i = 0; i < Move_list_0x88_С.LENGTH_LIST; i++) {
+            this.type_move[i] = 0;
+            this.from[i] = -1;
+            this.to[i] = -1;
+            this.name_piece[i] = -1;
+            this.piece_color[i] = -1;
+            this.name_capture_piece[i] = -1;
+            this.score_move[i] = 0;
+        }
+
+        this.number_move = 0;
+    }
+
 
 }
