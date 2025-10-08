@@ -198,10 +198,10 @@ class ChessBoard_8x8_C {
                         // рисуем квадратик кликнутой клетки хода
                         left = x_b_n * this.squares_width + this.x_start;
                         top = y_b_n * this.squares_height + this.y_start;
-                        color = Html5Canvas_C.BLUE;//
+                        color = Html5Canvas_C.GREEN;//BLUE
                         console.log("color = " + color);
                         html5Sprites_O.html5Canvas_R.drawRect(left, top, width, height, lineWidth, color, fillYes);
-                        ifritChessEngine_O.detected_drow(html5Sprites_O, this);
+                        //ifritChessEngine_O.detected_drow(html5Sprites_O, this);
 
                         ifritChessEngine_O.chess_board_0x88_O.ini_0x88_from_8x8(this);
                         ifritChessEngine_O.go();
@@ -216,6 +216,8 @@ class ChessBoard_8x8_C {
                     this.one_click_on_squares = 1;
                     this.one_click_on_squares_x = x_b_n;
                     this.one_click_on_squares_y = y_b_n;
+
+                    ifritChessEngine_O.detected_drow(x_b_n, y_b_n, html5Sprites_O, this);
 
                     // рисуем квадратик кликнутой клетки
                     left = x_b_n * this.squares_width + this.x_start;

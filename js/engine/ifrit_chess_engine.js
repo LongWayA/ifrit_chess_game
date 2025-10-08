@@ -62,7 +62,13 @@ class IfritChessEngine_С {
 
    }
 
-   detected_drow(html5Sprites_O, chessBoard_8x8_O) {
+   detected_drow(from_x, from_y, html5Sprites_O, chessBoard_8x8_O) {
+
+     let from = this.chess_board_0x88_O.x07_y07_to_0x88(from_x, from_y);
+     this.move_list_det_0x88_O.clear_list();
+     this.move_detector_0x88_O.detected_pseudo_legal_moves(from, this.chess_board_0x88_O,
+         this.move_list_det_0x88_O, this.move_generator_0x88_O);
+
        this.move_list_det_0x88_O.detected_drow(html5Sprites_O, this.chess_board_0x88_O, chessBoard_8x8_O);
    }
 }
