@@ -1,7 +1,7 @@
 /** 
  * @copyright Copyright (c) 2025, AnBr75 and/or its affiliates. All rights reserved.
  * @author AnBr75
- * @name move_list_det_0x88.js
+ * @name move_list_0x88.js
  * @version created 29.09m.2025 
  * last modified 29.09m.2025
 */
@@ -11,9 +11,9 @@
 
 */
 
-class Move_list_det_0x88_С {
+class Move_list_0x88_С {
 
-    static NAME = "Move_list_det_0x88_С";
+    static NAME = "Move_list_0x88_С";
 
     static NO_MOVE = 0;//
 
@@ -112,7 +112,7 @@ class Move_list_det_0x88_С {
 
     }
 
-    print_list(chess_board_0x88_O) {
+    test_print_list(chess_board_0x88_O) {
         console.log(" ");
         console.log("print list");
 
@@ -133,7 +133,7 @@ class Move_list_det_0x88_С {
     }
 
     clear_list() {
-        for (let i = 0; i < Move_list_det_0x88_С.LENGTH_LIST; i++) {
+        for (let i = 0; i < Move_list_0x88_С.LENGTH_LIST; i++) {
             this.type_move[i] = 0;
             this.from[i] = -1;
             this.to[i] = -1;
@@ -146,7 +146,7 @@ class Move_list_det_0x88_С {
         this.number_move = 0;
     }
 
-    move_is_legal(from, to) {
+   move_is_legal(from, to) {
 
         let ret = false;
 
@@ -154,39 +154,9 @@ class Move_list_det_0x88_С {
             if ((this.from[i] == from) && (this.to[i] == to)) ret = true;
         }
 
-        console.log("Move_list_det_0x88_С-> from " + from + " to " + to);
-        console.log("Move_list_det_0x88_С-> ret " + ret);
+        //console.log("Move_list_det_0x88_С-> from " + from + " to " + to);
+        //console.log("Move_list_det_0x88_С-> ret " + ret);
 
         return ret;
     }
-
-    detected_drow(html5Sprites_O, chess_board_0x88_O, chessBoard_8x8_O) {
-
-        let left;
-        let top;
-        let width = 50;
-        let height = 50;
-        let lineWidth = 2;
-        let color = Html5Canvas_C.GREEN;//BLUE
-        let fillYes = 0;
-
-        let x_b_n = -1; // номер клетки по х
-        let y_b_n = -1; // номер клетки по у
-
-        for (let i = 0; i < this.number_move; i++) {
-
-            x_b_n = chess_board_0x88_O.s_0x88_to_x07(this.to[i]);
-            y_b_n = chess_board_0x88_O.s_0x88_to_y07(this.to[i]);
-
-            // рисуем квадратик клетки хода
-            left = x_b_n * chessBoard_8x8_O.squares_width + chessBoard_8x8_O.x_start;
-            top = y_b_n * chessBoard_8x8_O.squares_height + chessBoard_8x8_O.y_start;
-            color = Html5Canvas_C.BLUE;//
-            console.log("color = " + color);
-            html5Sprites_O.html5Canvas_R.drawRect(left, top, width, height, lineWidth, color, fillYes);
-        }
-
-
-    }
-
 }

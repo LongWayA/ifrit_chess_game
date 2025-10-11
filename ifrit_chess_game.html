@@ -22,11 +22,11 @@
 
     <!-- дата в виде  The dateTime is specified in the following form "YYYY-MM-DDThh:mm:ss" 
         where: YYYY indicates the year. MM indicates the month. DD indicates the day.-->
-    <h4 class="w"> Last update <time datetime="2025-10-08">08.10m.25. </time><br>
-    
-    Посещений: <input type="text" name="t_requests" id="text_requests" value="requests"
-        style="background-color: rgb(215, 215, 223)">
-    </h4>    
+    <h4 class="w"> Last update <time datetime="2025-10-11">11.10m.25. </time><br>
+
+        Посещений: <input type="text" name="t_requests" id="text_requests" value="requests"
+            style="background-color: rgb(215, 215, 223)">
+    </h4>
     <a href="https://alphagameset.ru/"> На главную</a><br>
     <!--The game canvas-1600-800 -->
     <canvas id='game-canvas' width='800' height='600'>
@@ -37,45 +37,43 @@
     <!-- Scripts -->
     <!-- =========================================================================== -->
     <!-- engine/ -->
-    <script src='js/engine/chess_board_0x88.js'></script>
-    <script src='js/engine/move_list_0x88.js'></script>
-    <script src='js/engine/move_generator_0x88.js'></script>
-    <script src='js/engine/move_list_det_0x88.js'></script>
-    <script src='js/engine/move_detector_0x88.js'></script>
-    <script src='js/engine/ifrit_chess_engine.js'></script>
+    <script src='js/chess_engine_0x88/chess_board_0x88.js'></script>
+    <script src='js/chess_engine_0x88/move_list_0x88.js'></script>
+    <script src='js/chess_engine_0x88/move_generator_0x88.js'></script>
+    <script src='js/chess_engine_0x88/chess_engine_0x88.js'></script>
 
     <!-- =========================================================================== -->
-    <!-- gui/browser/ -->
-    <script src='js/gui/browser/pathes_browser.js'></script>
+    <!-- browser/ -->
+    <script src='js/browser/pathes_browser.js'></script>
 
 
-    <!-- gui/html5_graphics_2d/html5_canvas -->
-    <script src='js/gui/html5_graphics_2d/html5_canvas/html5_canvas_text.js'></script>
-    <script src='js/gui/html5_graphics_2d/html5_canvas/html5_canvas_primitive.js'></script>
-    <script src='js/gui/html5_graphics_2d/html5_canvas/html5_canvas_image.js'></script>
-    <script src='js/gui/html5_graphics_2d/html5_canvas/html5_canvas.js'></script>
+    <!-- html5_canvas/ -->
+    <script src='js/html5_canvas/html5_canvas_text.js'></script>
+    <script src='js/html5_canvas/html5_canvas_primitive.js'></script>
+    <script src='js/html5_canvas/html5_canvas_image.js'></script>
+    <script src='js/html5_canvas/html5_canvas.js'></script>
 
-    <!-- gui/html5_graphics_2d/html5_sprites -->
-    <script src='js/gui/html5_graphics_2d/html5_sprites/html5_square_c.js'></script>
-    <script src='js/gui/html5_graphics_2d/html5_sprites/html5_sprites_chess_pieces.js'></script>
-    <script src='js/gui/html5_graphics_2d/html5_sprites/html5_sprites.js'></script>
+    <!-- html5_sprites/ -->
+    <script src='js/html5_sprites/html5_square_c.js'></script>
+    <script src='js/html5_sprites/html5_sprites_chess_pieces.js'></script>
+    <script src='js/html5_sprites/html5_sprites.js'></script>
 
-    <!-- gui/chess_board -->
-    <script src='js/gui/chess_board/chess_board_8x8.js'></script>
+    <!-- chess_board -->
+    <script src='js/chess_board_8x8/chess_board_8x8.js'></script>
 
-    <!-- gui/mouse -->
-    <script src='js/gui/mouse/html5_canvas_mouse.js'></script>
+    <!-- mouse -->
+    <script src='js/mouse/mouse.js'></script>
 
-    <!-- gui/drow -->
-
+    <!-- draw -->
+   <script src='js/draw/draw.js'></script>
 
     <!-- web/ -->
     <script src='js/web/pathes_web.js'></script>
     <script src='js/web/counter.js'></script>
 
 
-    <!-- gui/ -->
-    <script src='js/gui/browser/ifrit_chess_game.js'></script>
+    <!-- js/ -->
+    <script src='js/browser/ifrit_chess_game.js'></script>
 
     <script>
         IfritChessGame_R.iniM();
@@ -85,15 +83,6 @@
             IfritChessGame_R.startGame();
         };
     </script>
-
-    <script>
-        /*
-       <script src='js/gui/browser/timer.js'>
-        <script src='js/gui/drow/drow_timer_number.js'>
-        <script src='js/gui/drow/drow_mouse.js'>
-        */
-    </script>
-
 
 </body>
 

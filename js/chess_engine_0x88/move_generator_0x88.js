@@ -465,4 +465,53 @@ class Move_generator_0x88_С {
             }
         }
     }
+
+    //  не учитываем шахи и вскрытые шахи.
+    detected_pseudo_legal_moves(from, chess_board_0x88_O, move_list_0x88_O) {
+ 
+        //console.log('Move_generator_0x88_С->generated_pseudo_legal_moves');
+        let piece_color = -1;
+        let piece = -1;
+        let side_to_move = -1;
+
+        move_list_0x88_O.clear_list();
+
+        // если мы не вышли за пределы доски
+        if ((from & 136) == 0) {// 136 0x88
+
+            side_to_move = chess_board_0x88_O.side_to_move;
+            piece_color = chess_board_0x88_O.sq_piece_color_0x88[from];
+            piece = chess_board_0x88_O.sq_piece_0x88[from];
+
+            // если фигура иммеет цвет ходящей стороны
+            if (piece_color == side_to_move) {
+                // смотрим фигуру на доске
+                switch (piece) {
+                    case 6:// KING
+                        this.generated_moves_king(from, piece, piece_color, chess_board_0x88_O, move_list_0x88_O);
+                        this.generated_moves_castle_king(from, piece, piece_color, chess_board_0x88_O, move_list_0x88_O);
+                        break;
+                    case 5://QUEEN
+                        this.generated_moves_queen(from, piece, piece_color, chess_board_0x88_O, move_list_0x88_O);
+                        break;
+                    case 4://ROOK
+                        this.generated_moves_rook(from, piece, piece_color, chess_board_0x88_O, move_list_0x88_O);
+                        break;
+                    case 3://BISHOP
+                        this.generated_moves_bishop(from, piece, piece_color, chess_board_0x88_O, move_list_0x88_O);
+                        break;
+                    case 2://KNIGHT
+                        this.generated_moves_knight(from, piece, piece_color, chess_board_0x88_O, move_list_0x88_O);
+                        break;
+                    case 1://PAWN
+                        this.generated_moves_pawn(from, piece, piece_color, chess_board_0x88_O, move_list_0x88_O);
+                        break;
+
+                    default://
+                    // console.log("default");
+                }
+            }
+        }//if ((from & 136) == 0) {// 136 0x88
+    }
+
 }

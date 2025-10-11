@@ -125,12 +125,12 @@ class Chess_board_0x88_C {
     }
 
     // рисуем доску на консоле браузера (для тестирования)
-    drow0x88() {
-        console.log("drow");
+    test_drow_0x88() {
+        //console.log("drow");
         let l = 0;// только один раз должен сработать перевод строки
         let line = "";//
 
-        console.log( "------------------------------------------------");
+        console.log("------------------------------------------------");
 
         for (let i = 0; i < 128; i++) {
             if ((i & 136) == 0) {// 136 0x88
@@ -149,9 +149,9 @@ class Chess_board_0x88_C {
         console.log("side_to_move = " + this.side_to_move);
     }
 
-   // рисуем доску на консоле браузера (для тестирования)
-    drow0x88_color() {
-        console.log("drow");
+    // рисуем доску на консоле браузера (для тестирования)
+    test_drow_0x88_color() {
+        //console.log("drow");
         let l = 0;// только один раз должен сработать перевод строки
         let line = "";//
 
@@ -171,7 +171,7 @@ class Chess_board_0x88_C {
         }
     }
 
-    drow0x88_2() {
+    test_drow_0x88_line() {
         console.log("drow");
         let line = "";//
         for (let i = 0; i < 128; i++) {
@@ -183,7 +183,7 @@ class Chess_board_0x88_C {
 
     // инициализируем одномерную доску движка из двумерной доски оболочки
     ini_0x88_from_8x8(chessBoard_8x8_O) {
-        console.log("ini_0x88_from_8x8");
+        //console.log("ini_0x88_from_8x8");
         let i = -1;
 
         this.iniStartPosition();
@@ -208,8 +208,6 @@ class Chess_board_0x88_C {
         this.castling_q = chessBoard_8x8_O.castling_q;
         // рокировка черных в короткую сторону 1/0
         this.castling_k = chessBoard_8x8_O.castling_k;
-
-
     }
 
 
