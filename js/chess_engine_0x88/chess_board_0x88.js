@@ -85,17 +85,13 @@ class Chess_board_0x88_C {
     castling_k = 1;
 
     // оценка позиции
-    //eval = 0;
+    eval = 0;
 
     // 64 битный хеш-ключ позиции
     //hash_key = 1n;
 
     //hash_key_index = 0;// индекс в таблице перестановок
     //hash_key_lock = 0;// ключ в таблице перестановок
-
-
-
-
 
     constructor() {
     }

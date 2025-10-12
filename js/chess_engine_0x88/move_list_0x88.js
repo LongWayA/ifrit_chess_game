@@ -15,36 +15,37 @@ class Move_list_0x88_С {
 
     static NAME = "Move_list_0x88_С";
 
-    static NO_MOVE = 0;//
+    static NO_MOVE = 0;// нет хода
 
-    static PAWN_CAPTURES = 1;//
-    static KNIGHT_CAPTURES = 2;//
-    static BISHOP_CAPTURES = 3;//
-    static ROOK_CAPTURES = 4;//
-    static QUEEN_CAPTURES = 5;//
-    static KING_CAPTURES = 6;//
-    static EP_CAPTURES = 7;//
+    static PAWN_CAPTURES = 1;// взятие пешкой
+    static KNIGHT_CAPTURES = 2;// взятие конем
+    static BISHOP_CAPTURES = 3;// взятие слоном
+    static ROOK_CAPTURES = 4;// взятие ладьей
+    static QUEEN_CAPTURES = 5;// взятие ферзем
+    static KING_CAPTURES = 6;// взятие королем
+    static EP_CAPTURES = 7;// взятие на проходе
 
-    static PAWN_MOVE = 8;//
-    static KNIGHT_MOVE = 9;//
-    static BISHOP_MOVE = 10;//
-    static ROOK_MOVE = 11;//
-    static QUEEN_MOVE = 12;//
-    static KING_MOVE = 13;//
-    static PAWN_DOUBLE_PUSH = 14;//
+    static PAWN_MOVE = 8;// ход пешкой
+    static KNIGHT_MOVE = 9;// ход конем
+    static BISHOP_MOVE = 10;// ход слоном
+    static ROOK_MOVE = 11;// ход ладьей
+    static QUEEN_MOVE = 12;// ход ферзем
+    static KING_MOVE = 13;// простой ход королем
 
-    static KING_CASTLE = 15;//
-    static KING_QUEEN_CASTLE = 16;//
+    static PAWN_DOUBLE_PUSH = 14;// ход пешкой на две клетки
 
-    static KNIGHT_PROMO_CAPTURE = 17;//
-    static BISHOP_PROMO_CAPTURE = 18;//
-    static ROOK_PROMO_CAPTURE = 19;//
-    static QUEEN_PROMO_CAPTURE = 20;//
+    static KING_CASTLE = 15;// короткая рокировка
+    static KING_QUEEN_CASTLE = 16;// длинная рокировка
 
-    static KNIGHT_PROMOTION = 21;//
-    static BISHOP_PROMOTION = 22;//
-    static ROOK_PROMOTION = 23;//
-    static QUEEN_PROMOTION = 24;//
+    static KNIGHT_PROMO_CAPTURE = 17;// взятие пешкой с превращением в коня
+    static BISHOP_PROMO_CAPTURE = 18;// взятие пешкой с превращением в слона
+    static ROOK_PROMO_CAPTURE = 19;// взятие пешкой с превращением в ладью
+    static QUEEN_PROMO_CAPTURE = 20;// взятие пешкой с превращением в ферзя
+
+    static KNIGHT_PROMOTION = 21;// пешка превращается в коня
+    static BISHOP_PROMOTION = 22;// пешка превращается в в слона
+    static ROOK_PROMOTION = 23;// пешка превращается в в ладью
+    static QUEEN_PROMOTION = 24;// пешка превращается в ферзя
 
     static LENGTH_LIST = 256;//
 

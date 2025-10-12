@@ -31,7 +31,7 @@ class Move_generator_0x88_С {
     moves_king = [-16, -15, 1, 17, 16, 15, -1, -17];
     moves_queen = this.moves_king;
     /*
-       1      
+     1      
   16 17 18
      33
   */
@@ -78,25 +78,26 @@ class Move_generator_0x88_С {
 
                 // если фигура иммеет цвет ходящей стороны
                 if (piece_color == side_to_move) {
+
                     // смотрим фигуру на доске
                     switch (piece) {
-                        case 6:// KING
+                        case Chess_board_0x88_C.KING:// KING
                             this.generated_moves_king(from, piece, piece_color, chess_board_0x88_O, move_list_0x88_O);
                             this.generated_moves_castle_king(from, piece, piece_color, chess_board_0x88_O, move_list_0x88_O);
                             break;
-                        case 5://QUEEN
+                        case Chess_board_0x88_C.QUEEN://QUEEN
                             this.generated_moves_queen(from, piece, piece_color, chess_board_0x88_O, move_list_0x88_O);
                             break;
-                        case 4://ROOK
+                        case Chess_board_0x88_C.ROOK://ROOK
                             this.generated_moves_rook(from, piece, piece_color, chess_board_0x88_O, move_list_0x88_O);
                             break;
-                        case 3://BISHOP
+                        case Chess_board_0x88_C.BISHOP://BISHOP
                             this.generated_moves_bishop(from, piece, piece_color, chess_board_0x88_O, move_list_0x88_O);
                             break;
-                        case 2://KNIGHT
+                        case Chess_board_0x88_C.KNIGHT://KNIGHT
                             this.generated_moves_knight(from, piece, piece_color, chess_board_0x88_O, move_list_0x88_O);
                             break;
-                        case 1://PAWN
+                        case Chess_board_0x88_C.PAWN://PAWN
                             this.generated_moves_pawn(from, piece, piece_color, chess_board_0x88_O, move_list_0x88_O);
                             break;
 
@@ -108,7 +109,7 @@ class Move_generator_0x88_С {
         }
     }
 
-    add_move(type_move, from, to, piece, piece_color, type_captures_move, chess_board_0x88_O, move_list_0x88_O) {
+    add_move(type_move, type_captures_move, from, to, piece, piece_color, chess_board_0x88_O, move_list_0x88_O) {
         let piece_to = -1;
         let piece_color_to = -1;
         let capture_piece = -1;
@@ -140,7 +141,7 @@ class Move_generator_0x88_С {
         for (let j = 0; j < 8; j++) {
             to = from + this.moves_king[j];
             if ((to & 136) == 0) {// если мы не вышли за пределы доски
-                bre_ak = this.add_move(Move_list_0x88_С.KING_MOVE, from, to, piece, piece_color, Move_list_0x88_С.KING_CAPTURES,
+                bre_ak = this.add_move(Move_list_0x88_С.KING_MOVE, Move_list_0x88_С.KING_CAPTURES, from, to, piece, piece_color,
                     chess_board_0x88_O, move_list_0x88_O);
             }
         }
@@ -162,8 +163,8 @@ class Move_generator_0x88_С {
             to = from + this.moves_queen[j];
             if ((to & 136) == 0) {// если мы не вышли за пределы доски
                 while (true) {
-                    bre_ak = this.add_move(Move_list_0x88_С.QUEEN_MOVE, from, to, piece, piece_color, Move_list_0x88_С.QUEEN_CAPTURES
-                        , chess_board_0x88_O, move_list_0x88_O);
+                    bre_ak = this.add_move(Move_list_0x88_С.QUEEN_MOVE, Move_list_0x88_С.QUEEN_CAPTURES, from, to, piece, piece_color, 
+                        chess_board_0x88_O, move_list_0x88_O);
                     if (bre_ak == 1) break;
                     to = to + this.moves_queen[j];
                     if ((to & 136) != 0) break;
@@ -187,7 +188,7 @@ class Move_generator_0x88_С {
             to = from + this.moves_rook[j];
             if ((to & 136) == 0) {// если мы не вышли за пределы доски
                 while (true) {
-                    bre_ak = this.add_move(Move_list_0x88_С.ROOK_MOVE, from, to, piece, piece_color, Move_list_0x88_С.ROOK_CAPTURES,
+                    bre_ak = this.add_move(Move_list_0x88_С.ROOK_MOVE, Move_list_0x88_С.ROOK_CAPTURES, from, to, piece, piece_color,
                         chess_board_0x88_O, move_list_0x88_O);
                     if (bre_ak == 1) break;
                     to = to + this.moves_rook[j];
@@ -212,7 +213,7 @@ class Move_generator_0x88_С {
             to = from + this.moves_bishop[j];
             if ((to & 136) == 0) {// если мы не вышли за пределы доски
                 while (true) {
-                    bre_ak = this.add_move(Move_list_0x88_С.BISHOP_MOVE, from, to, piece, piece_color, Move_list_0x88_С.BISHOP_CAPTURES,
+                    bre_ak = this.add_move(Move_list_0x88_С.BISHOP_MOVE, Move_list_0x88_С.BISHOP_CAPTURES, from, to, piece, piece_color,
                         chess_board_0x88_O, move_list_0x88_O);
                     if (bre_ak == 1) break;
                     to = to + this.moves_bishop[j];
@@ -236,7 +237,7 @@ class Move_generator_0x88_С {
         for (let j = 0; j < 8; j++) {
             to = from + this.moves_knight[j];
             if ((to & 136) == 0) {// если мы не вышли за пределы доски
-                bre_ak = this.add_move(Move_list_0x88_С.KNIGHT_MOVE, from, to, piece, piece_color, Move_list_0x88_С.KNIGHT_CAPTURES,
+                bre_ak = this.add_move(Move_list_0x88_С.KNIGHT_MOVE, Move_list_0x88_С.KNIGHT_CAPTURES, from, to, piece, piece_color,
                     chess_board_0x88_O, move_list_0x88_O);
             }
         }
@@ -365,7 +366,7 @@ class Move_generator_0x88_С {
         piece_to = chess_board_0x88_O.sq_piece_0x88[to];
         piece_to2 = chess_board_0x88_O.sq_piece_0x88[to2];
         if ((piece_to == 0) && (piece_to2 == 0)) {// цвет не задан и значит фигуры там нет. можно ходить. это спокойный ход
-            type_move = Move_list_0x88_С.PAWN_MOVE;
+            type_move = Move_list_0x88_С.PAWN_DOUBLE_PUSH;
             move_list_0x88_O.add_simple_move(type_move, piece, piece_color, from, to2, chess_board_0x88_O, move_list_0x88_O);
             chess_board_0x88_O.en_passant_yes = 1;
             chess_board_0x88_O.en_passant_target_square = to;
@@ -468,7 +469,7 @@ class Move_generator_0x88_С {
 
     //  не учитываем шахи и вскрытые шахи.
     detected_pseudo_legal_moves(from, chess_board_0x88_O, move_list_0x88_O) {
- 
+
         //console.log('Move_generator_0x88_С->generated_pseudo_legal_moves');
         let piece_color = -1;
         let piece = -1;
@@ -487,23 +488,23 @@ class Move_generator_0x88_С {
             if (piece_color == side_to_move) {
                 // смотрим фигуру на доске
                 switch (piece) {
-                    case 6:// KING
+                    case Chess_board_0x88_C.KING:// KING
                         this.generated_moves_king(from, piece, piece_color, chess_board_0x88_O, move_list_0x88_O);
                         this.generated_moves_castle_king(from, piece, piece_color, chess_board_0x88_O, move_list_0x88_O);
                         break;
-                    case 5://QUEEN
+                    case Chess_board_0x88_C.QUEEN://QUEEN
                         this.generated_moves_queen(from, piece, piece_color, chess_board_0x88_O, move_list_0x88_O);
                         break;
-                    case 4://ROOK
+                    case Chess_board_0x88_C.ROOK://ROOK
                         this.generated_moves_rook(from, piece, piece_color, chess_board_0x88_O, move_list_0x88_O);
                         break;
-                    case 3://BISHOP
+                    case Chess_board_0x88_C.BISHOP://BISHOP
                         this.generated_moves_bishop(from, piece, piece_color, chess_board_0x88_O, move_list_0x88_O);
                         break;
-                    case 2://KNIGHT
+                    case Chess_board_0x88_C.KNIGHT://KNIGHT
                         this.generated_moves_knight(from, piece, piece_color, chess_board_0x88_O, move_list_0x88_O);
                         break;
-                    case 1://PAWN
+                    case Chess_board_0x88_C.PAWN://PAWN
                         this.generated_moves_pawn(from, piece, piece_color, chess_board_0x88_O, move_list_0x88_O);
                         break;
 
@@ -514,4 +515,59 @@ class Move_generator_0x88_С {
         }//if ((from & 136) == 0) {// 136 0x88
     }
 
+    // ищем шахи
+    check_detected(from, piece_color, chess_board_0x88_O) {
+
+        let move_list_0x88_O = new Move_list_0x88_С();
+        let check = 0;
+
+        // 1 knight
+        this.generated_moves_knight(from, Chess_board_0x88_C.KNIGHT, piece_color, chess_board_0x88_O, move_list_0x88_O);
+        move_list_0x88_O.clear_list();
+        for (let i = 0; i < move_list_0x88_O.number_move; i++) {
+            if (this.name_capture_piece[i] == Chess_board_0x88_C.KNIGHT) {
+                check = Chess_board_0x88_C.KNIGHT;
+                return check;
+            }
+        }
+
+        // 2 bishop + 1/2 queen
+        this.generated_moves_bishop(from, Chess_board_0x88_C.BISHOP, piece_color, chess_board_0x88_O, move_list_0x88_O);
+        move_list_0x88_O.clear_list();
+        for (let i = 0; i < move_list_0x88_O.number_move; i++) {
+            if (this.name_capture_piece[i] == Chess_board_0x88_C.BISHOP) {
+                check = Chess_board_0x88_C.BISHOP;
+                return check;
+            }
+            if (this.name_capture_piece[i] == Chess_board_0x88_C.QUEEN) {
+                check = Chess_board_0x88_C.QUEEN;
+                return check;
+            }           
+        }
+
+        // 3 rook + 1/2 queen
+        this.generated_moves_rook(from, Chess_board_0x88_C.ROOK, piece_color, chess_board_0x88_O, move_list_0x88_O);
+        move_list_0x88_O.clear_list();
+        for (let i = 0; i < move_list_0x88_O.number_move; i++) {
+
+            if (this.name_capture_piece[i] == Chess_board_0x88_C.ROOK) {
+                check = Chess_board_0x88_C.ROOK;
+                return check;
+            }
+            if (this.name_capture_piece[i] == Chess_board_0x88_C.QUEEN) {
+                check = Chess_board_0x88_C.QUEEN;
+                return check;
+            }       
+        }
+
+        // 1 pawn
+        this.generated_moves_pawn(from, Chess_board_0x88_C.PAWN, piece_color, chess_board_0x88_O, move_list_0x88_O);
+        move_list_0x88_O.clear_list();
+        for (let i = 0; i < move_list_0x88_O.number_move; i++) {
+            if (this.name_capture_piece[i] == Chess_board_0x88_C.PAWN) {
+                check = Chess_board_0x88_C.PAWN;
+                return check;
+            }
+        }
+    }
 }

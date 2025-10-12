@@ -20,8 +20,10 @@ class ChessEngine_0x88_С {
 
   move_list_det_0x88_O = new Move_list_0x88_С();
 
-  static StartFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+  search_0x88_O = new Search_0x88_C();
 
+  static StartFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+  value = 0;
 
   constructor() {
 
@@ -31,6 +33,7 @@ class ChessEngine_0x88_С {
     this.chess_board_0x88_O.iniM();
     this.move_list_0x88_O.iniM();
     this.move_generator_0x88_O.iniM();
+    this.search_0x88_O.iniM();  
   }
 
   go() {
@@ -38,6 +41,8 @@ class ChessEngine_0x88_С {
     this.chess_board_0x88_O.test_drow_0x88_color();
     this.move_generator_0x88_O.generated_pseudo_legal_moves(this.chess_board_0x88_O, this.move_list_0x88_O);
     //this.move_list_0x88_O.test_print_list(IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O);
+    this.value = this.search_0x88_O.start_search(this.chess_board_0x88_O, this.move_generator_0x88_O);
+    console.log("ChessEngine_0x88_С->value " + this.value);
   }
 
   //this.one_click_on_squares_x, this.one_click_on_squares_y, x_b_n, y_b_n
