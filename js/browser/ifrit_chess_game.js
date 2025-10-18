@@ -12,7 +12,7 @@
 */
 // корневой объект программы. поэтому объект, а не класс
 let IfritChessGame_R = {
-   
+
     chessEngine_0x88_O: new ChessEngine_0x88_С(),// встроенный шахматный движок на доске 0x88
     chessBoard_8x8_O: new ChessBoard_8x8_C(),// доска 8x8 для графического отображения в браузере
     draw_O: new Draw_С(),// рисуем в браузере   
@@ -20,32 +20,39 @@ let IfritChessGame_R = {
 
     NAME: "IfritChessGame_R",
 
-    StartFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",   
+    StartFen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+
+    one_click_on_squares: 0,
+    one_click_on_squares_x: 0,
+    one_click_on_squares_y: 0,
+
+
 
     iniM() {
         //console.log('IfritChessGame_R->iniM');       
         IfritChessGame_R.chessEngine_0x88_O.iniM();
         IfritChessGame_R.chessBoard_8x8_O.iniM(10, 10, 50, 50);//32
-        IfritChessGame_R.draw_O.iniM();        
+        IfritChessGame_R.draw_O.iniM();
         IfritChessGame_R.mouse_R.iniM(IfritChessGame_R.draw_O.html5Canvas_O.idCanvas, IfritChessGame_R);
     },
 
     startGame() {
         //console.log('IfritChessGame_R->startGame');
-        IfritChessGame_R.drowGame();
-        IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O.ini_0x88_from_8x8(IfritChessGame_R.chessBoard_8x8_O);
-        IfritChessGame_R.chessEngine_0x88_O.go();
+        IfritChessGame_R.updateGame();
+        IfritChessGame_R.drawGame();
     },
 
     updateGame() {
         //console.log('IfritChessGame_R->updateGame');
-        IfritChessGame_R.drowGame();
-
+        IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O.set_0x88_from_8x8(IfritChessGame_R.chessBoard_8x8_O);
+        IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_0x88(IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O);
+        //IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O.set_0x88_from_8x8(IfritChessGame_R.chessBoard_8x8_O);
+        IfritChessGame_R.chessEngine_0x88_O.go();
     },
 
-    drowGame() {
-        //console.log('IfritChessGame_R->drowGame');
-        IfritChessGame_R.draw_O.drow_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O);
+    drawGame() {
+        //console.log('IfritChessGame_R->drawGame');
+        IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O);
     },
 
 
@@ -56,14 +63,86 @@ let IfritChessGame_R = {
     mouseDown(x, y) {
 
         //console.log('IfritChessGame_R->mouseDown x ' + x + " y " + y);
-        IfritChessGame_R.chessBoard_8x8_O.clickDown( x, y, IfritChessGame_R.draw_O, IfritChessGame_R.chessEngine_0x88_O);
-            
+
+        let x_b_n = -1; // номер клетки по х
+        let y_b_n = -1; // номер клетки по у
+
+        x_b_n = Math.floor((x - IfritChessGame_R.chessBoard_8x8_O.x_start) / IfritChessGame_R.chessBoard_8x8_O.squares_width);
+        y_b_n = Math.floor((y - IfritChessGame_R.chessBoard_8x8_O.y_start) / IfritChessGame_R.chessBoard_8x8_O.squares_height);
+
+        //console.log("ChessBoard_8x8_C->click(mouseDown) x " + x + " y " + y);
+        //console.log("ChessBoard_8x8_C->click(mouseDown) x_b_n " + x_b_n + " y_b_n " + y_b_n);
+
+        if (IfritChessGame_R.one_click_on_squares == 1) {// это уже второй клик
+            if ((x_b_n < 8) && (y_b_n < 8)) {// 
+                IfritChessGame_R.one_click_on_squares = 0;
+                // если это второй клик по той же самой клетке то выделение снимаем
+                if ((IfritChessGame_R.one_click_on_squares_x == x_b_n) && 
+                (IfritChessGame_R.one_click_on_squares_y == y_b_n)) {
+
+                    // рисуем доску
+                    IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O);
+
+                } else if (IfritChessGame_R.chessEngine_0x88_O.move_is_legal(IfritChessGame_R.one_click_on_squares_x,
+                    IfritChessGame_R.one_click_on_squares_y, x_b_n, y_b_n)) { // это второй клик по другой клетке значит делаем ход
+
+                    IfritChessGame_R.chessBoard_8x8_O.squares_p_8x8[y_b_n][x_b_n] = 
+                    IfritChessGame_R.chessBoard_8x8_O.squares_p_8x8[IfritChessGame_R.one_click_on_squares_y]
+                    [IfritChessGame_R.one_click_on_squares_x];
+                    IfritChessGame_R.chessBoard_8x8_O.squares_pc_8x8[y_b_n][x_b_n] = 
+                    IfritChessGame_R.chessBoard_8x8_O.squares_pc_8x8[IfritChessGame_R.one_click_on_squares_y]
+                    [IfritChessGame_R.one_click_on_squares_x];
+                    IfritChessGame_R.chessBoard_8x8_O.squares_p_8x8[IfritChessGame_R.one_click_on_squares_y]
+                    [IfritChessGame_R.one_click_on_squares_x] = 0;
+                    IfritChessGame_R.chessBoard_8x8_O.squares_pc_8x8[IfritChessGame_R.one_click_on_squares_y]
+                    [IfritChessGame_R.one_click_on_squares_x] = 0;
+                    IfritChessGame_R.chessBoard_8x8_O.side_to_move = 1 - IfritChessGame_R.chessBoard_8x8_O.side_to_move;
+
+                    //console.log("ChessBoard_8x8_C->click(mouseDown) move_is_legal");
+                    IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O.set_0x88_from_8x8(IfritChessGame_R.chessBoard_8x8_O);
+                    IfritChessGame_R.chessEngine_0x88_O.go();
+                    console.log("ChessBoard_8x8_C->click(mouseDown) +++++++++++++++++++++++++++++++++++++++++++++++++++++");
+                    IfritChessGame_R.chessEngine_0x88_O.search_0x88_O.chess_board_0x88_O_move.test_print_0x88();
+                    IfritChessGame_R.chessEngine_0x88_O.search_0x88_O.chess_board_0x88_O_move.test_print_0x88_color();            
+                    IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_0x88(IfritChessGame_R.chessEngine_0x88_O.search_0x88_O.chess_board_0x88_O_move);
+                    IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O.set_0x88_from_8x8(IfritChessGame_R.chessBoard_8x8_O);                   
+                    //IfritChessGame_R.chessBoard_8x8_O.side_to_move = 1 - IfritChessGame_R.chessBoard_8x8_O.side_to_move;
+
+                    // рисуем доску                    
+                    IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O);
+
+                    //console.log("ChessBoard_8x8_C->рисуем квадратик кликнутой клетки хода ");                         
+                    // рисуем квадратик кликнутой клетки хода
+                    IfritChessGame_R.draw_O.draw_rect(IfritChessGame_R.chessBoard_8x8_O, x_b_n, y_b_n, Html5Canvas_C.GREEN);
+
+                } else {
+                    // рисуем доску                     
+                    IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O);
+                }
+            }
+        } else { // это первый клик
+            if ((x_b_n < 8) && (y_b_n < 8) && (IfritChessGame_R.chessBoard_8x8_O.squares_pc_8x8[y_b_n][x_b_n] == 
+                IfritChessGame_R.chessBoard_8x8_O.side_to_move)
+                && (IfritChessGame_R.chessBoard_8x8_O.squares_p_8x8[y_b_n][x_b_n] != 0)) {//  
+                // запоминаем координаты клетки и то что сделали клик
+                IfritChessGame_R.one_click_on_squares = 1;
+                IfritChessGame_R.one_click_on_squares_x = x_b_n;
+                IfritChessGame_R.one_click_on_squares_y = y_b_n;
+
+                // считаем возможные ходы фигуры и рисуем квадратики ходов
+                IfritChessGame_R.chessEngine_0x88_O.draw_rect_move(x_b_n, y_b_n, IfritChessGame_R.chessBoard_8x8_O, IfritChessGame_R.draw_O);
+
+                // рисуем квадратик кликнутой клетки
+                IfritChessGame_R.draw_O.draw_rect(IfritChessGame_R.chessBoard_8x8_O, x_b_n, y_b_n, Html5Canvas_C.GREEN);
+            }
+        }
+
     },
 
     mouseUp(x, y) {
         //console.log('IfritChessGame_R->mouseUp x ' + x + " y " + y);
-      //  IfritChessGame_R.chessBoard_8x8_O.click(2, x, y,
-      //      IfritChessGame_R.draw_O.html5Sprites_O, IfritChessGame_R.chessEngine_0x88_O);
+        //  IfritChessGame_R.chessBoard_8x8_O.click(2, x, y,
+        //      IfritChessGame_R.draw_O.html5Sprites_O, IfritChessGame_R.chessEngine_0x88_O);
     },
 
 };

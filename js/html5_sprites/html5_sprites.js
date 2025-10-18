@@ -23,7 +23,7 @@ class Html5Sprites_C {
         this.html5SpritesChessPieces_R.iniM();
     }
 
-    drowSprite(color_square, color_piece, index, imageLeft, imageTop, imageWidth = 0, imageHeight = 0) {
+    drawSprite(color_square, color_piece, index, imageLeft, imageTop, imageWidth = 0, imageHeight = 0) {
         let image = this.html5SpritesChessPieces_R.getSprite(color_square, color_piece, index);
         this.html5Canvas_R.drawImage(image, imageLeft, imageTop, imageWidth, imageHeight, false);
     }

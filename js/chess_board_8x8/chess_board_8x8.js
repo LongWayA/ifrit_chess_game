@@ -60,10 +60,6 @@ class ChessBoard_8x8_C {
     squares_width = -1;//32
     squares_height = -1;
 
-    one_click_on_squares = 0;
-    one_click_on_squares_x = 0;
-    one_click_on_squares_y = 0;
-
     constructor() {
         // инициируем цвет клеток
         this.squares_c_8x8 = [
@@ -132,64 +128,33 @@ class ChessBoard_8x8_C {
         ];
     }
 
-    //
-    clickDown(x, y, draw_O, ifritChessEngine_O) {
+    // инициализируем двумерную доску оболочки из одномерной доски движка
+    set_8x8_from_0x88(chess_board_0x88_O) {
+        //console.log("ini_0x88_from_8x8");
+        let i = -1;
 
-        let x_b_n = -1; // номер клетки по х
-        let y_b_n = -1; // номер клетки по у
-
-        x_b_n = Math.floor((x - this.x_start) / this.squares_width);
-        y_b_n = Math.floor((y - this.y_start) / this.squares_height);
-
-//        console.log("ChessBoard_8x8_C->click(mouseDown) x " + x + " y " + y);
-//        console.log("ChessBoard_8x8_C->click(mouseDown) x_b_n " + x_b_n + " y_b_n " + y_b_n);
-
-        if (this.one_click_on_squares == 1) {// это уже второй клик
-            if ((x_b_n < 8) && (y_b_n < 8)) {// 
-                this.one_click_on_squares = 0;
-                // если это второй клик по той же самой клетке то выделение снимаем
-                if ((this.one_click_on_squares_x == x_b_n) && (this.one_click_on_squares_y == y_b_n)) {
-
-                    // рисуем доску
-                    draw_O.drow_chess_board_8x8(this);
-
-                } else if (ifritChessEngine_O.move_is_legal(this.one_click_on_squares_x,
-                    this.one_click_on_squares_y, x_b_n, y_b_n)) { // это второй клик по другой клетке значит делаем ход
-
-                    this.squares_p_8x8[y_b_n][x_b_n] = this.squares_p_8x8[this.one_click_on_squares_y][this.one_click_on_squares_x];
-                    this.squares_pc_8x8[y_b_n][x_b_n] = this.squares_pc_8x8[this.one_click_on_squares_y][this.one_click_on_squares_x];
-                    this.squares_p_8x8[this.one_click_on_squares_y][this.one_click_on_squares_x] = 0;
-                    this.squares_pc_8x8[this.one_click_on_squares_y][this.one_click_on_squares_x] = 0;
-                    this.side_to_move = 1 - this.side_to_move;
-
-                    // рисуем доску                    
-                    draw_O.drow_chess_board_8x8(this);
-
-                    //console.log("ChessBoard_8x8_C->рисуем квадратик кликнутой клетки хода ");                         
-                    // рисуем квадратик кликнутой клетки хода
-                    draw_O.draw_rect(this, x_b_n, y_b_n, Html5Canvas_C.GREEN);
-
-                    ifritChessEngine_O.chess_board_0x88_O.ini_0x88_from_8x8(this);
-                    ifritChessEngine_O.go();
-                } else {
-                    // рисуем доску                     
-                    draw_O.drow_chess_board_8x8(this);
-                }
-            }
-        } else { // это первый клик
-            if ((x_b_n < 8) && (y_b_n < 8) && (this.squares_pc_8x8[y_b_n][x_b_n] == this.side_to_move)
-                && (this.squares_p_8x8[y_b_n][x_b_n] != 0)) {//  
-                // запоминаем координаты клетки и то что сделали клик
-                this.one_click_on_squares = 1;
-                this.one_click_on_squares_x = x_b_n;
-                this.one_click_on_squares_y = y_b_n;
-
-                // считаем возможные ходы фигуры и рисуем квадратики ходов
-                ifritChessEngine_O.draw_rect_move(x_b_n, y_b_n, this, draw_O);
-
-                // рисуем квадратик кликнутой клетки
-                draw_O.draw_rect(this, x_b_n, y_b_n, Html5Canvas_C.GREEN);
+        this.iniStartPosition();
+        for (let y = 0; y < 8; y++) {
+            for (let x = 0; x < 8; x++) {
+                i = chess_board_0x88_O.x07_y07_to_0x88(x, y);
+                this.squares_p_8x8[y][x] = chess_board_0x88_O.sq_piece_0x88[i];
+                this.squares_pc_8x8[y][x] = chess_board_0x88_O.sq_piece_color_0x88[i];
             }
         }
+        // цвет хода 0 - черные 1 - белые
+        this.side_to_move = chess_board_0x88_O.side_to_move;
+        // разрешение взятия на проходе 1/0
+        this.en_passant_yes = chess_board_0x88_O.en_passant_yes;
+        // координата битого поля
+        this.en_passant_target_square = chess_board_0x88_O.en_passant_target_square;
+        // рокировка белых в длинную сторону   1/0
+        this.castling_Q = chess_board_0x88_O.castling_Q;
+        // рокировка белых в короткую сторону  1/0
+        this.castling_K = chess_board_0x88_O.castling_K;
+        // рокировка черных в длинную сторону  1/0
+        this.castling_q = chess_board_0x88_O.castling_q;
+        // рокировка черных в короткую сторону 1/0
+        this.castling_k = chess_board_0x88_O.castling_k;
     }
+
 }

@@ -58,16 +58,16 @@ class Move_list_0x88_С {
         "KNIGHT_PROMOTION", "BISHOP_PROMOTION", "ROOK_PROMOTION", "QUEEN_PROMOTION"
     ];
 
-    type_move = new Array(this.LENGTH_LIST).fill(this.NO_MOVE);
-    from = new Array(this.LENGTH_LIST).fill(-1);
-    to = new Array(this.LENGTH_LIST).fill(-1);
+    type_move = new Array(Move_list_0x88_С.LENGTH_LIST).fill(Move_list_0x88_С.NO_MOVE);
+    from = new Array(Move_list_0x88_С.LENGTH_LIST).fill(-1);
+    to = new Array(Move_list_0x88_С.LENGTH_LIST).fill(-1);
 
-    name_piece = new Array(this.LENGTH_LIST).fill(-1);
-    piece_color = new Array(this.LENGTH_LIST).fill(-1);
+    name_piece = new Array(Move_list_0x88_С.LENGTH_LIST).fill(-1);
+    piece_color = new Array(Move_list_0x88_С.LENGTH_LIST).fill(-1);
 
-    name_capture_piece = new Array(this.LENGTH_LIST).fill(-1);
+    name_capture_piece = new Array(Move_list_0x88_С.LENGTH_LIST).fill(-1);
 
-    score_move = new Array(this.LENGTH_LIST).fill(-1);
+    score_move = new Array(Move_list_0x88_С.LENGTH_LIST).fill(-1);
 
     number_move = 0;
 
@@ -80,7 +80,7 @@ class Move_list_0x88_С {
     }
 
     // 
-    add_captures_move(type_move, piece, piece_color, capture_piece, from, to) {
+    add_captures_move(type_move, piece, piece_color, capture_piece, from, to, score_move) {
         //console.log('Move_list_0x88_С->add_move');
         this.type_move[this.number_move] = type_move;
         this.from[this.number_move] = from;
@@ -91,12 +91,12 @@ class Move_list_0x88_С {
 
         this.name_capture_piece[this.number_move] = capture_piece;
 
-        this.score_move[this.number_move] = 0;
+        this.score_move[this.number_move] = score_move;
 
         this.number_move = this.number_move + 1;
     }
 
-    add_simple_move(type_move, piece, piece_color, from, to) {
+    add_simple_move(type_move, piece, piece_color, from, to, score_move) {
         //console.log('Move_list_0x88_С->add_move');
         this.type_move[this.number_move] = type_move;
         this.from[this.number_move] = from;
@@ -107,7 +107,7 @@ class Move_list_0x88_С {
 
         this.name_capture_piece[this.number_move] = 0;
 
-        this.score_move[this.number_move] = 0;
+        this.score_move[this.number_move] = score_move;
 
         this.number_move = this.number_move + 1;
 

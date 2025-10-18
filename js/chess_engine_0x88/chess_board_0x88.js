@@ -121,8 +121,24 @@ class Chess_board_0x88_C {
     }
 
     // рисуем доску на консоле браузера (для тестирования)
-    test_drow_0x88() {
-        //console.log("drow");
+    test_print_any_0x88() {
+
+        console.log("side_to_move " + this.side_to_move);
+        console.log("en_passant_yes " + this.en_passant_yes);
+        console.log("en_passant_target_square " + this.en_passant_target_square);
+        console.log("castling_Q " + this.castling_Q);
+        console.log("castling_K " + this.castling_K);
+        console.log("castling_q " + this.castling_q);
+        console.log("castling_k " + this.castling_k);
+        console.log("eval " + this.eval);
+
+
+    }
+
+
+    // рисуем доску на консоле браузера (для тестирования)
+    test_print_0x88() {
+        //console.log("draw");
         let l = 0;// только один раз должен сработать перевод строки
         let line = "";//
 
@@ -142,12 +158,13 @@ class Chess_board_0x88_C {
                 line = "";
             }
         }
+        console.log("eval = " + this.eval);
         console.log("side_to_move = " + this.side_to_move);
     }
 
     // рисуем доску на консоле браузера (для тестирования)
-    test_drow_0x88_color() {
-        //console.log("drow");
+    test_print_0x88_color() {
+        //console.log("draw");
         let l = 0;// только один раз должен сработать перевод строки
         let line = "";//
 
@@ -167,8 +184,8 @@ class Chess_board_0x88_C {
         }
     }
 
-    test_drow_0x88_line() {
-        console.log("drow");
+    test_print_0x88_line() {
+        console.log("draw");
         let line = "";//
         for (let i = 0; i < 128; i++) {
             //line = line + String(this.squares_0x88[i]) + ",";
@@ -178,7 +195,7 @@ class Chess_board_0x88_C {
     }
 
     // инициализируем одномерную доску движка из двумерной доски оболочки
-    ini_0x88_from_8x8(chessBoard_8x8_O) {
+    set_0x88_from_8x8(chessBoard_8x8_O) {
         //console.log("ini_0x88_from_8x8");
         let i = -1;
 

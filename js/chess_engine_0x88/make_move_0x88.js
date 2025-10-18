@@ -27,54 +27,8 @@ class Make_move_0x88_C {
 
   }
 
-  make_any_move_0x88(move_i, chess_board_0x88_O, undo_0x88_O, move_list_0x88_O) {
-    //undo <
-    // цвет хода 0 - черные 1 - белые
-    undo_0x88_O.side_to_move = chess_board_0x88_O.side_to_move;
-    // разрешение взятия на проходе 1/0
-    undo_0x88_O.en_passant_yes = chess_board_0x88_O.en_passant_yes;
-    // координата битого поля
-    undo_0x88_O.en_passant_target_square = chess_board_0x88_O.en_passant_target_square;
-    // рокировка белых в длинную сторону   1/0
-    undo_0x88_O.castling_Q = chess_board_0x88_O.castling_Q;
-    // рокировка белых в короткую сторону  1/0
-    undo_0x88_O.castling_K = chess_board_0x88_O.castling_K;
-    // рокировка черных в длинную сторону  1/0
-    undo_0x88_O.castling_q = chess_board_0x88_O.castling_q;
-    // рокировка черных в короткую сторону 1/0
-    undo_0x88_O.castling_k = chess_board_0x88_O.castling_k;
-    // оценка позиции
-    undo_0x88_O.eval = chess_board_0x88_O.eval;
-
-    undo_0x88_O.name_capture_piece = chess_board_0x88_O.sq_piece_0x88[move_list_0x88_O.to[move_i]];
-    undo_0x88_O.color_capture_piece = chess_board_0x88_O.sq_piece_color_0x88[move_list_0x88_O.to[move_i]];
-    // > undo 
-
-    // записываем имя фигуры на новом месте
-    chess_board_0x88_O.sq_piece_0x88[move_list_0x88_O.to[move_i]] =
-      chess_board_0x88_O.sq_piece_0x88[move_list_0x88_O.from[move_i]];
-
-    // записываем цвет фигуры на новом месте 
-    chess_board_0x88_O.sq_piece_color_0x88[move_list_0x88_O.to[move_i]] =
-      chess_board_0x88_O.sq_piece_color_0x88[move_list_0x88_O.from[move_i]];
-
-    // стираем имя фигуры на старом месте
-    chess_board_0x88_O.sq_piece_0x88[move_list_0x88_O.from[move_i]] = Chess_board_0x88_C.PIECE_NO;// 0
-
-    // стираем цвет фигуры на старом месте 
-    chess_board_0x88_O.sq_piece_color_0x88[move_list_0x88_O.from[move_i]] = Chess_board_0x88_C.BLACK;// 0
-
-
-    // цвет хода 0 - черные 1 - белые
-    chess_board_0x88_O.side_to_move = 1 - chess_board_0x88_O.side_to_move;
-
-    // this.piece_color[this.number_move] = piece_color;
-    // this.name_capture_piece[this.number_move] = capture_piece;
-
-  }
-
   do_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O) {
-console.log("Make_move_0x88_C->do_moves  move_i " + move_i);
+    //console.log("Make_move_0x88_C->do_moves  move_i " + move_i);
     let type_move = move_list_0x88_O.type_move[move_i];
 
     // смотрим 
@@ -165,8 +119,57 @@ console.log("Make_move_0x88_C->do_moves  move_i " + move_i);
     }
   }
 
-  do_undo_moves(chess_board_0x88_O, chess_board_0x88_O_s) {
-    console.log("Make_move_0x88_C->do_undo_moves");
+make_any_move_0x88(move_i, chess_board_0x88_O, undo_0x88_O, move_list_0x88_O) {
+    //undo <
+    // цвет хода 0 - черные 1 - белые
+    undo_0x88_O.side_to_move = chess_board_0x88_O.side_to_move;
+    // разрешение взятия на проходе 1/0
+    undo_0x88_O.en_passant_yes = chess_board_0x88_O.en_passant_yes;
+    // координата битого поля
+    undo_0x88_O.en_passant_target_square = chess_board_0x88_O.en_passant_target_square;
+    // рокировка белых в длинную сторону   1/0
+    undo_0x88_O.castling_Q = chess_board_0x88_O.castling_Q;
+    // рокировка белых в короткую сторону  1/0
+    undo_0x88_O.castling_K = chess_board_0x88_O.castling_K;
+    // рокировка черных в длинную сторону  1/0
+    undo_0x88_O.castling_q = chess_board_0x88_O.castling_q;
+    // рокировка черных в короткую сторону 1/0
+    undo_0x88_O.castling_k = chess_board_0x88_O.castling_k;
+    // оценка позиции
+    undo_0x88_O.eval = chess_board_0x88_O.eval;
+
+    undo_0x88_O.name_capture_piece = chess_board_0x88_O.sq_piece_0x88[move_list_0x88_O.to[move_i]];
+    undo_0x88_O.color_capture_piece = chess_board_0x88_O.sq_piece_color_0x88[move_list_0x88_O.to[move_i]];
+    // > undo 
+
+    // записываем имя фигуры на новом месте
+    chess_board_0x88_O.sq_piece_0x88[move_list_0x88_O.to[move_i]] =
+      chess_board_0x88_O.sq_piece_0x88[move_list_0x88_O.from[move_i]];
+
+    // записываем цвет фигуры на новом месте 
+    chess_board_0x88_O.sq_piece_color_0x88[move_list_0x88_O.to[move_i]] =
+      chess_board_0x88_O.sq_piece_color_0x88[move_list_0x88_O.from[move_i]];
+
+    // стираем имя фигуры на старом месте
+    chess_board_0x88_O.sq_piece_0x88[move_list_0x88_O.from[move_i]] = Chess_board_0x88_C.PIECE_NO;// 0
+
+    // стираем цвет фигуры на старом месте 
+    chess_board_0x88_O.sq_piece_color_0x88[move_list_0x88_O.from[move_i]] = Chess_board_0x88_C.BLACK;// 0
+
+
+    // цвет хода 0 - черные 1 - белые
+    chess_board_0x88_O.side_to_move = 1 - chess_board_0x88_O.side_to_move;
+
+    // this.piece_color[this.number_move] = piece_color;
+    // this.name_capture_piece[this.number_move] = capture_piece;
+
+  }
+
+
+
+  //////////////////////////////////////////////////////////////////////////////////////
+  save_chess_board_0x88(chess_board_0x88_O, chess_board_0x88_O_s) {
+    //console.log("Make_move_0x88_C->do_undo_moves");
     for (let i = 0; i < 128; i++) {
       chess_board_0x88_O_s.sq_piece_0x88[i] = chess_board_0x88_O.sq_piece_0x88[i];
       chess_board_0x88_O_s.sq_piece_color_0x88[i] = chess_board_0x88_O.sq_piece_color_0x88[i];
@@ -191,8 +194,8 @@ console.log("Make_move_0x88_C->do_moves  move_i " + move_i);
   }
 
   //  undo_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O) {
-  undo_moves(chess_board_0x88_O, chess_board_0x88_O_s) {
-   console.log("Make_move_0x88_C->undo_moves");
+  restore_chess_board_0x88(chess_board_0x88_O, chess_board_0x88_O_s) {
+    //console.log("Make_move_0x88_C->undo_moves");
     for (let i = 0; i < 128; i++) {
       chess_board_0x88_O.sq_piece_0x88[i] = chess_board_0x88_O_s.sq_piece_0x88[i];
       chess_board_0x88_O.sq_piece_color_0x88[i] = chess_board_0x88_O_s.sq_piece_color_0x88[i];

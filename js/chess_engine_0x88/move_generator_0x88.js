@@ -117,11 +117,11 @@ class Move_generator_0x88_С {
         piece_color_to = chess_board_0x88_O.sq_piece_color_0x88[to];
 
         if (piece_to == 0) {// проверяем клетку куда ходим. Если там нет фигур то можно ходить
-            move_list_0x88_O.add_simple_move(type_move, piece, piece_color, from, to);
+            move_list_0x88_O.add_simple_move(type_move, piece, piece_color, from, to, 0);
             return 0;// можно продолжать луч
         } else if (piece_color != piece_color_to) {// мы уже знаем что тут есть фигура и если цвет отличен, то это взятие  
             capture_piece = piece_to;
-            move_list_0x88_O.add_captures_move(type_captures_move, piece, piece_color, capture_piece, from, to);
+            move_list_0x88_O.add_captures_move(type_captures_move, piece, piece_color, capture_piece, from, to, 0);
             return 1;// луч прерываем на вражеской фигуре включительно
         } else {//на свою фигуру не прыгаем. хода нет. 
             return 1;// луч прерываем на своей фигуре не включительно
@@ -129,7 +129,7 @@ class Move_generator_0x88_С {
     }
 
     generated_moves_king(from, piece, piece_color, chess_board_0x88_O, move_list_0x88_O) {
-        console.log("king " + piece + " c " + piece_color + " f " + from);
+        //console.log("king " + piece + " c " + piece_color + " f " + from);
         //console.log("king");
         //console.log("from = " + from);
         //console.log("piece = " + piece);
@@ -148,7 +148,7 @@ class Move_generator_0x88_С {
     }
 
     generated_moves_queen(from, piece, piece_color, chess_board_0x88_O, move_list_0x88_O) {
-        console.log("queen " + piece + " c " + piece_color + " f " + from);
+        //console.log("queen " + piece + " c " + piece_color + " f " + from);
         //console.log("queen");
         //console.log("from = " + from);
         //console.log("piece = " + piece);
@@ -174,7 +174,7 @@ class Move_generator_0x88_С {
     }
 
     generated_moves_rook(from, piece, piece_color, chess_board_0x88_O, move_list_0x88_O) {
-        console.log("rook " + piece + " c " + piece_color + " f " + from);
+        //console.log("rook " + piece + " c " + piece_color + " f " + from);
         //console.log("rook");
         //console.log("from = " + from);
         //console.log("piece = " + piece);
@@ -199,7 +199,7 @@ class Move_generator_0x88_С {
     }
 
     generated_moves_bishop(from, piece, piece_color, chess_board_0x88_O, move_list_0x88_O) {
-        console.log("bishop " + piece + " c " + piece_color + " f " + from);
+        //console.log("bishop " + piece + " c " + piece_color + " f " + from);
         //console.log("bishop");
         //console.log("from = " + from);
         //console.log("piece = " + piece);
@@ -225,7 +225,7 @@ class Move_generator_0x88_С {
     }
 
     generated_moves_knight(from, piece, piece_color, chess_board_0x88_O, move_list_0x88_O) {
-        console.log("knight " + piece + " c " + piece_color + " f " + from);
+        //console.log("knight " + piece + " c " + piece_color + " f " + from);
         //console.log("knight");
         //console.log("from = " + from);
         //console.log("piece = " + piece);
@@ -259,7 +259,7 @@ class Move_generator_0x88_С {
                     if ((piece_to_1 == 0) && (piece_to_2 == 0) && (piece_to_3 == 0)) {//
                         type_move = Move_list_0x88_С.KING_QUEEN_CASTLE;
                         to = 114;
-                        move_list_0x88_O.add_simple_move(type_move, piece, piece_color, from, to);
+                        move_list_0x88_O.add_simple_move(type_move, piece, piece_color, from, to, 0);
                     }
                 }
 
@@ -269,7 +269,7 @@ class Move_generator_0x88_С {
                     if ((piece_to_1 == 0) && (piece_to_2 == 0)) {//
                         type_move = Move_list_0x88_С.KING_CASTLE;
                         to = 118;
-                        move_list_0x88_O.add_simple_move(type_move, piece, piece_color, from, to);
+                        move_list_0x88_O.add_simple_move(type_move, piece, piece_color, from, to, 0);
                     }
                 }
             }
@@ -282,7 +282,7 @@ class Move_generator_0x88_С {
                     if ((piece_to_1 == 0) && (piece_to_2 == 0) && (piece_to_3 == 0)) {//
                         type_move = Move_list_0x88_С.KING_QUEEN_CASTLE;
                         to = 2;
-                        move_list_0x88_O.add_simple_move(type_move, piece, piece_color, from, to);
+                        move_list_0x88_O.add_simple_move(type_move, piece, piece_color, from, to, 0);
                     }
                 }
 
@@ -292,7 +292,7 @@ class Move_generator_0x88_С {
                     if ((piece_to_1 == 0) && (piece_to_2 == 0)) {//
                         type_move = Move_list_0x88_С.KING_CASTLE;
                         to = 6;
-                        move_list_0x88_O.add_simple_move(type_move, piece, piece_color, from, to);
+                        move_list_0x88_O.add_simple_move(type_move, piece, piece_color, from, to, 0);
                     }
                 }
             }
@@ -300,7 +300,7 @@ class Move_generator_0x88_С {
     }
 
     generated_moves_pawn(from, piece, piece_color, chess_board_0x88_O, move_list_0x88_O) {
-        console.log("pawn " + piece + " c " + piece_color + " f " + from);
+        //console.log("pawn " + piece + " c " + piece_color + " f " + from);
         //console.log("pawn");
         //console.log("from = " + from);
         //console.log("piece = " + piece);
@@ -354,7 +354,7 @@ class Move_generator_0x88_С {
         piece_to = chess_board_0x88_O.sq_piece_0x88[to];
         if (piece_to == 0) {// цвет не задан и значит фигуры там нет. можно ходить. это спокойный ход
             type_move = Move_list_0x88_С.PAWN_MOVE;
-            move_list_0x88_O.add_simple_move(type_move, piece, piece_color, from, to, chess_board_0x88_O, move_list_0x88_O);
+            move_list_0x88_O.add_simple_move(type_move, piece, piece_color, from, to, chess_board_0x88_O, move_list_0x88_O, 0);
         }
     }
 
@@ -367,7 +367,7 @@ class Move_generator_0x88_С {
         piece_to2 = chess_board_0x88_O.sq_piece_0x88[to2];
         if ((piece_to == 0) && (piece_to2 == 0)) {// цвет не задан и значит фигуры там нет. можно ходить. это спокойный ход
             type_move = Move_list_0x88_С.PAWN_DOUBLE_PUSH;
-            move_list_0x88_O.add_simple_move(type_move, piece, piece_color, from, to2, chess_board_0x88_O, move_list_0x88_O);
+            move_list_0x88_O.add_simple_move(type_move, piece, piece_color, from, to2, chess_board_0x88_O, move_list_0x88_O, 0);
             chess_board_0x88_O.en_passant_yes = 1;
             chess_board_0x88_O.en_passant_target_square = to;
         }
@@ -418,13 +418,13 @@ class Move_generator_0x88_С {
         piece_to = chess_board_0x88_O.sq_piece_0x88[to1];
         if (piece_to == 0) {// цвет не задан и значит фигуры там нет. можно ходить. это спокойный ход
             type_move = Move_list_0x88_С.QUEEN_PROMOTION;
-            move_list_0x88_O.add_simple_move(type_move, piece, piece_color, from, to1);
+            move_list_0x88_O.add_simple_move(type_move, piece, piece_color, from, to1, 0);
             type_move = Move_list_0x88_С.ROOK_PROMOTION;
-            move_list_0x88_O.add_simple_move(type_move, piece, piece_color, from, to1);
+            move_list_0x88_O.add_simple_move(type_move, piece, piece_color, from, to1, 0);
             type_move = Move_list_0x88_С.BISHOP_PROMOTION;
-            move_list_0x88_O.add_simple_move(type_move, piece, piece_color, from, to1);
+            move_list_0x88_O.add_simple_move(type_move, piece, piece_color, from, to1, 0);
             type_move = Move_list_0x88_С.KNIGHT_PROMOTION;
-            move_list_0x88_O.add_simple_move(type_move, piece, piece_color, from, to1);
+            move_list_0x88_O.add_simple_move(type_move, piece, piece_color, from, to1, 0);
         }
 
         // взятие пешкой влево с превращением
@@ -467,8 +467,8 @@ class Move_generator_0x88_С {
         }
     }
 
-    //  не учитываем шахи и вскрытые шахи.
-    detected_pseudo_legal_moves(from, chess_board_0x88_O, move_list_0x88_O) {
+    //  считаем ходы одной фигуры из конкретной позиции
+    generated_pseudo_legal_moves_one_pice(from, chess_board_0x88_O, move_list_0x88_O) {
 
         //console.log('Move_generator_0x88_С->generated_pseudo_legal_moves');
         let piece_color = -1;

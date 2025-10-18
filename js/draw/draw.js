@@ -28,7 +28,7 @@ class Draw_С {
         this.html5Sprites_O.iniM(this.html5Canvas_O);
     }
     
-    drow_chess_board_8x8(chessBoard_8x8_O) {
+    draw_chess_board_8x8(chessBoard_8x8_O) {
 
         this.html5Canvas_O.clearRect(0, 0, 50 * 7, 50 * 7);
 
@@ -45,7 +45,7 @@ class Draw_С {
                 cp = chessBoard_8x8_O.squares_pc_8x8[y][x];
                 cs = chessBoard_8x8_O.squares_c_8x8[y][x];
 
-                this.html5Sprites_O.drowSprite(cs, cp, sp, xx, yy, chessBoard_8x8_O.squares_width, chessBoard_8x8_O.squares_height);
+                this.html5Sprites_O.drawSprite(cs, cp, sp, xx, yy, chessBoard_8x8_O.squares_width, chessBoard_8x8_O.squares_height);
                 this.html5Sprites_O.html5Canvas_R.drawText(y, xx, yy, Html5Canvas_C.ITALIC_20PX_SANS_SERIF,
                     Html5Canvas_C.WHITE, 1);
             }

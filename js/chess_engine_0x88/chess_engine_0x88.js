@@ -37,12 +37,15 @@ class ChessEngine_0x88_С {
   }
 
   go() {
-    this.chess_board_0x88_O.test_drow_0x88();
-    this.chess_board_0x88_O.test_drow_0x88_color();
+    this.chess_board_0x88_O.eval = this.search_0x88_O.evaluate_0x88_O.score_position(this.chess_board_0x88_O);
+    this.chess_board_0x88_O.test_print_0x88();
+    this.chess_board_0x88_O.test_print_0x88_color();
     this.move_generator_0x88_O.generated_pseudo_legal_moves(this.chess_board_0x88_O, this.move_list_0x88_O);
     //this.move_list_0x88_O.test_print_list(IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O);
     this.value = this.search_0x88_O.start_search(this.chess_board_0x88_O, this.move_generator_0x88_O);
     console.log("ChessEngine_0x88_С->value " + this.value);
+    this.chess_board_0x88_O.test_print_0x88();
+    this.chess_board_0x88_O.test_print_0x88_color();
   }
 
   //this.one_click_on_squares_x, this.one_click_on_squares_y, x_b_n, y_b_n
@@ -51,12 +54,13 @@ class ChessEngine_0x88_С {
     let from = this.chess_board_0x88_O.x07_y07_to_0x88(from_x, from_y);
     let to = this.chess_board_0x88_O.x07_y07_to_0x88(to_x, to_y);
     this.move_list_det_0x88_O.clear_list();
-    this.move_generator_0x88_O.detected_pseudo_legal_moves(from, this.chess_board_0x88_O,
+    this.move_generator_0x88_O.generated_pseudo_legal_moves_one_pice(from, this.chess_board_0x88_O,
       this.move_list_det_0x88_O);
 
-    //console.log("IfritChessEngine_С-> print_list---------- ");
-    //this.move_list_det_0x88_O.test_print_list(this.chess_board_0x88_O); 
-
+   // console.log("IfritChessEngine_С-> print_list---------- ");
+   // this.move_list_det_0x88_O.test_print_list(this.chess_board_0x88_O); 
+   // this.chess_board_0x88_O.test_print_0x88();
+   // this.chess_board_0x88_O.test_print_0x88_color();
     let ret = this.move_list_det_0x88_O.move_is_legal(from, to);
 
     //console.log("IfritChessEngine_С-> from_x " + from_x + " from_y " + from_y +" to_x " + to_x + " to_y " + to_y);
@@ -71,7 +75,7 @@ class ChessEngine_0x88_С {
 
     let from = this.chess_board_0x88_O.x07_y07_to_0x88(from_x, from_y);
     this.move_list_det_0x88_O.clear_list();
-    this.move_generator_0x88_O.detected_pseudo_legal_moves(from, this.chess_board_0x88_O,
+    this.move_generator_0x88_O.generated_pseudo_legal_moves_one_pice(from, this.chess_board_0x88_O,
       this.move_list_det_0x88_O, this.move_generator_0x88_O);
 
     draw_O.draw_rect_move(this.move_list_det_0x88_O, this.chess_board_0x88_O, chessBoard_8x8_O, Html5Canvas_C.BLUE);

@@ -1,7 +1,7 @@
 /** 
  * @copyright Copyright (c) 2025, AnBr75 and/or its affiliates. All rights reserved.
  * @author AnBr75
- * @name drow_mouse.js
+ * @name draw_mouse.js
  * @version created 20.07m.2025 
  * last modified 20.07m.2025
 */
@@ -12,18 +12,18 @@
  *  
 */
 
-class DrowMouse_C {
+class drawMouse_C {
     html5Canvas_R = null;
     html5CanvasMouse_R = null;
 
-    static NAME = "DrowMouse_C";
+    static NAME = "drawMouse_C";
     constructor() {
     }
     iniM(html5Canvas, html5CanvasMouse) {
         this.html5Canvas_R = html5Canvas;
         this.html5CanvasMouse_R = html5CanvasMouse;
     }
-    drow() {
+    draw() {
         let X0 = 550;
         let Y0 = +510;
         let left = X0;
