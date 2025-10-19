@@ -23,7 +23,7 @@ class ChessEngine_0x88_С {
   search_0x88_O = new Search_0x88_C();
 
   static StartFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-  value = 0;
+  score = 0;
 
   constructor() {
 
@@ -37,15 +37,16 @@ class ChessEngine_0x88_С {
   }
 
   go() {
-    this.chess_board_0x88_O.eval = this.search_0x88_O.evaluate_0x88_O.score_position(this.chess_board_0x88_O);
+    this.chess_board_0x88_O.score = this.search_0x88_O.evaluate_0x88_O.score_position(this.chess_board_0x88_O);
     this.chess_board_0x88_O.test_print_0x88();
     this.chess_board_0x88_O.test_print_0x88_color();
     this.move_generator_0x88_O.generated_pseudo_legal_moves(this.chess_board_0x88_O, this.move_list_0x88_O);
     //this.move_list_0x88_O.test_print_list(IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O);
-    this.value = this.search_0x88_O.start_search(this.chess_board_0x88_O, this.move_generator_0x88_O);
-    console.log("ChessEngine_0x88_С->value " + this.value);
-    this.chess_board_0x88_O.test_print_0x88();
-    this.chess_board_0x88_O.test_print_0x88_color();
+    /////////////////////
+    this.score = this.search_0x88_O.start_search(this.chess_board_0x88_O, this.move_generator_0x88_O);
+    //console.log("ChessEngine_0x88_С->score " + this.score);
+    //this.chess_board_0x88_O.test_print_0x88();
+    //this.chess_board_0x88_O.test_print_0x88_color();
   }
 
   //this.one_click_on_squares_x, this.one_click_on_squares_y, x_b_n, y_b_n
@@ -54,7 +55,7 @@ class ChessEngine_0x88_С {
     let from = this.chess_board_0x88_O.x07_y07_to_0x88(from_x, from_y);
     let to = this.chess_board_0x88_O.x07_y07_to_0x88(to_x, to_y);
     this.move_list_det_0x88_O.clear_list();
-    this.move_generator_0x88_O.generated_pseudo_legal_moves_one_pice(from, this.chess_board_0x88_O,
+    this.move_generator_0x88_O.generated_pseudo_legal_moves_one_piece_for_gui(from, this.chess_board_0x88_O,
       this.move_list_det_0x88_O);
 
    // console.log("IfritChessEngine_С-> print_list---------- ");
@@ -75,7 +76,7 @@ class ChessEngine_0x88_С {
 
     let from = this.chess_board_0x88_O.x07_y07_to_0x88(from_x, from_y);
     this.move_list_det_0x88_O.clear_list();
-    this.move_generator_0x88_O.generated_pseudo_legal_moves_one_pice(from, this.chess_board_0x88_O,
+    this.move_generator_0x88_O.generated_pseudo_legal_moves_one_piece_for_gui(from, this.chess_board_0x88_O,
       this.move_list_det_0x88_O, this.move_generator_0x88_O);
 
     draw_O.draw_rect_move(this.move_list_det_0x88_O, this.chess_board_0x88_O, chessBoard_8x8_O, Html5Canvas_C.BLUE);

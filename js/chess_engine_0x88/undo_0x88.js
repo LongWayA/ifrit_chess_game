@@ -37,7 +37,7 @@ class Undo_0x88_C {
   castling_k = 1;
 
   // оценка позиции
-  eval = 0;
+  score = 0;
 
   name_capture_piece = 0;
   color_capture_piece = 0;
@@ -47,6 +47,46 @@ class Undo_0x88_C {
   }
 
   iniM() {
+  }
+
+  set_undo(chess_board_0x88_O) {
+      // цвет хода 0 - черные 1 - белые
+    this.side_to_move = chess_board_0x88_O.side_to_move;
+    // разрешение взятия на проходе 1/0
+    this.en_passant_yes = chess_board_0x88_O.en_passant_yes;
+    // координата битого поля
+    this.en_passant_target_square = chess_board_0x88_O.en_passant_target_square;
+    // рокировка белых в длинную сторону   1/0
+    this.castling_Q = chess_board_0x88_O.castling_Q;
+    // рокировка белых в короткую сторону  1/0
+    this.castling_K = chess_board_0x88_O.castling_K;
+    // рокировка черных в длинную сторону  1/0
+    this.castling_q = chess_board_0x88_O.castling_q;
+    // рокировка черных в короткую сторону 1/0
+    this.castling_k = chess_board_0x88_O.castling_k;
+    // оценка позиции
+    this.score = chess_board_0x88_O.score;
+  }
+
+  get_undo(chess_board_0x88_O) {
+
+    // цвет хода 0 - черные 1 - белые
+    chess_board_0x88_O.side_to_move = this.side_to_move;
+    // разрешение взятия на проходе 1/0
+    chess_board_0x88_O.en_passant_yes = this.en_passant_yes;
+    // координата битого поля
+    chess_board_0x88_O.en_passant_target_square = this.en_passant_target_square;
+    // рокировка белых в длинную сторону   1/0
+    chess_board_0x88_O.castling_Q = this.castling_Q;
+    // рокировка белых в короткую сторону  1/0
+    chess_board_0x88_O.castling_K = this.castling_K;
+    // рокировка черных в длинную сторону  1/0
+    chess_board_0x88_O.castling_q = this.castling_q;
+    // рокировка черных в короткую сторону 1/0
+    chess_board_0x88_O.castling_k = this.castling_k;
+    // оценка позиции
+    chess_board_0x88_O.score = this.score;
+
   }
 
 }

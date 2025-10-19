@@ -26,7 +26,16 @@ class Evaluate_0x88_C {
   */
   static PIECE_SCORE = [0, 100, 400, 400, 600, 1200, 10000];
 
-  d = 0;// 
+  center_0x88 = [
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    5, 5, 5, 5, 5, 5, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0,
+    10, 20, 20, 20, 20, 20, 20, 10, 0, 0, 0, 0, 0, 0, 0, 0,
+    15, 20, 25, 30, 30, 25, 20, 15, 0, 0, 0, 0, 0, 0, 0, 0,
+    15, 20, 25, 30, 30, 25, 20, 15, 0, 0, 0, 0, 0, 0, 0, 0,
+    10, 15, 20, 25, 25, 20, 15, 10, 0, 0, 0, 0, 0, 0, 0, 0,
+    5, 5, 5, 5, 5, 5, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  ];
 
 
 
@@ -42,8 +51,9 @@ class Evaluate_0x88_C {
 
     let color_piece = 0;
     let score_piece = 0;
-    let index_piece = 0;    
-    let value = 0;
+    let index_piece = 0;
+    let score = 0;
+    let center = 0;
 
     for (let sq = 0; sq < 128; sq++) {
       if ((sq & 136) == 0) {// 136 0x88
@@ -52,14 +62,19 @@ class Evaluate_0x88_C {
         color_piece = chess_board_0x88_O.sq_piece_color_0x88[sq];
 
         if (color_piece == 1) {// белая фигура
-           value = value + score_piece;
+          score = score + score_piece;
+          if (index_piece != 0) score = score + this.center_0x88[sq];
         } else {// черная фигура
-           value = value - score_piece;
+          score = score - score_piece;
+          if (index_piece != 0) score = score - this.center_0x88[sq];
         }
       }
     }
-    if (chess_board_0x88_O.side_to_move == 0) value = -1 * value;
-    return value;
+
+    chess_board_0x88_O.score = score;
+    return score;
   }
+
+
 
 }

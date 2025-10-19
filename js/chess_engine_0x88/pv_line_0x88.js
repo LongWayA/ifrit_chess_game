@@ -47,7 +47,7 @@ class PV_line_0x88_C {
       this.name_piece[i] = -1;
       this.piece_color[i] = -1;
       this.name_capture_piece[i] = -1;
-      this.score_move[i] = 0;
+      this.score_move[i] = -1;
     }
 
     this.depth_max = 0;

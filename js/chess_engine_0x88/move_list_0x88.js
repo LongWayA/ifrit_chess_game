@@ -129,6 +129,7 @@ class Move_list_0x88_С {
             console.log("piece_color[" + i + "] = " + this.piece_color[i]);
             console.log("name_capture_piece[" + i + "] = " + this.name_capture_piece[i] +
                 " cnp = " + Chess_board_0x88_C.PIECE_NAME[this.name_capture_piece[i]]);
+            console.log("score_move[" + i + "] = " + this.score_move[i]);     
             console.log(" ");
         }
     }
@@ -160,4 +161,23 @@ class Move_list_0x88_С {
 
         return ret;
     }
+
+
+    return_move(from, to) {
+
+        let ret = -1;
+
+        for (let i = 0; i < this.number_move; i++) {
+            if ((this.from[i] == from) && (this.to[i] == to)){
+               ret = i;
+            } 
+        }
+
+        //console.log("Move_list_det_0x88_С-> from " + from + " to " + to);
+        //console.log("Move_list_det_0x88_С-> ret " + ret);
+
+        return ret;
+    }
+
+
 }

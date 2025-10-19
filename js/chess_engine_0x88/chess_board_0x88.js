@@ -59,7 +59,7 @@ class Chess_board_0x88_C {
         "a", "b", "c", "d", "e", "f", "g", "h"
     ];
 
-    sq_piece_0x88 = new Array(128).fill(0);// доска 0x88 с фигурами
+    sq_piece_0x88 = new Array(128).fill(-1);// доска 0x88 с фигурами
     sq_piece_color_0x88 = new Array(128).fill(-1);// доска 0x88 с цветом фигур
 
     // ВСПОМОГАТЕЛЬНАЯ ИНФОРМАЦИЯ
@@ -85,20 +85,14 @@ class Chess_board_0x88_C {
     castling_k = 1;
 
     // оценка позиции
-    eval = 0;
-
-    // 64 битный хеш-ключ позиции
-    //hash_key = 1n;
-
-    //hash_key_index = 0;// индекс в таблице перестановок
-    //hash_key_lock = 0;// ключ в таблице перестановок
+    score = -1;
 
     constructor() {
     }
 
     iniM() {
 
-        this.iniStartPosition();
+        this.iniStartPositionForWhite();
 
     }
 
@@ -122,7 +116,6 @@ class Chess_board_0x88_C {
 
     // рисуем доску на консоле браузера (для тестирования)
     test_print_any_0x88() {
-
         console.log("side_to_move " + this.side_to_move);
         console.log("en_passant_yes " + this.en_passant_yes);
         console.log("en_passant_target_square " + this.en_passant_target_square);
@@ -130,9 +123,7 @@ class Chess_board_0x88_C {
         console.log("castling_K " + this.castling_K);
         console.log("castling_q " + this.castling_q);
         console.log("castling_k " + this.castling_k);
-        console.log("eval " + this.eval);
-
-
+        console.log("score " + this.score);
     }
 
 
@@ -147,10 +138,7 @@ class Chess_board_0x88_C {
         for (let i = 0; i < 128; i++) {
             if ((i & 136) == 0) {// 136 0x88
                 l = 1;
-                //line = line + "|" + String(this.squares_0x88[i]);
                 line = line + "|" + String(this.sq_piece_0x88[i]);
-                // line = line + "|" + String(this.sq_piece_0x88[i] + ":" + this.s_0x88_to_y07(i) + ":" 
-                // + this.s_0x88_to_x07(i) + ":" + i );
             } else if (l == 1) {
                 l = 0;
                 console.log(line);
@@ -158,8 +146,9 @@ class Chess_board_0x88_C {
                 line = "";
             }
         }
-        console.log("eval = " + this.eval);
         console.log("side_to_move = " + this.side_to_move);
+        console.log("score = " + this.score);
+
     }
 
     // рисуем доску на консоле браузера (для тестирования)
@@ -171,14 +160,10 @@ class Chess_board_0x88_C {
         for (let i = 0; i < 128; i++) {
             if ((i & 136) == 0) {// 136 0x88
                 l = 1;
-                //line = line + "|" + String(this.squares_0x88[i]);
                 line = line + "|" + String(this.sq_piece_color_0x88[i]);
-                // line = line + "|" + String(this.sq_piece_0x88[i] + ":" + this.s_0x88_to_y07(i) + ":" 
-                // + this.s_0x88_to_x07(i) + ":" + i );
             } else if (l == 1) {
                 l = 0;
                 console.log(line);
-                //console.log( "\n");
                 line = "";
             }
         }
@@ -188,7 +173,6 @@ class Chess_board_0x88_C {
         console.log("draw");
         let line = "";//
         for (let i = 0; i < 128; i++) {
-            //line = line + String(this.squares_0x88[i]) + ",";
             line = line + String(this.sq_piece_0x88[i]) + ",";
         }
         console.log(line);
@@ -199,12 +183,12 @@ class Chess_board_0x88_C {
         //console.log("ini_0x88_from_8x8");
         let i = -1;
 
-        this.iniStartPosition();
+        this.iniStartPositionForWhite();
         for (let y = 0; y < 8; y++) {
             for (let x = 0; x < 8; x++) {
                 i = this.x07_y07_to_0x88(x, y);
-                this.sq_piece_0x88[i] = chessBoard_8x8_O.squares_p_8x8[y][x];
-                this.sq_piece_color_0x88[i] = chessBoard_8x8_O.squares_pc_8x8[y][x];
+                this.sq_piece_0x88[i] = chessBoard_8x8_O.sq_piece_8x8[y][x];
+                this.sq_piece_color_0x88[i] = chessBoard_8x8_O.sq_piece_color_8x8[y][x];
             }
         }
         // цвет хода 0 - черные 1 - белые
@@ -221,12 +205,14 @@ class Chess_board_0x88_C {
         this.castling_q = chessBoard_8x8_O.castling_q;
         // рокировка черных в короткую сторону 1/0
         this.castling_k = chessBoard_8x8_O.castling_k;
+
+        this.score = chessBoard_8x8_O.score;
     }
 
 
 
     //
-    iniStartPosition() {
+    iniStartPositionForWhite() {
 
         /*
          имя фигуры
@@ -276,163 +262,7 @@ class Chess_board_0x88_C {
         this.castling_q = 1;
         // рокировка черных в короткую сторону 1/0
         this.castling_k = 1;
-        // 64 битный хеш-ключ позиции
-        this.hash_key = 1n;
-        this.hash_key_index = 0;// индекс в таблице перестановок
-        this.hash_key_lock = 0;// ключ в таблице перестановок
         // оценка позиции
-        this.eval = 0;
+        this.score = -1;
     }
 }
-
-/*
-
-    squares_64 = new Array(64);// обычная доска в одномерном массиве 64 ячейки
-    squares_0x88 = new Array(128);// доска 0x88 размером 128 ячейки
-
-    squares_64_to_128 = new Array(64);// перевод координаты 64 в 128 доску
-
-    squares_64_to_x = new Array(64);// перевод координаты ячейки в горизонтальную
-    squares_64_to_y = new Array(64);// перевод координаты ячейки в вертикальную
-    squares_64_to_x_an = new Array(64);// перевод координаты ячейки в горизонтальную аннотацию (a,b,c,d,e,f,g,h)
-
-
-        //пронумерованные поля доски 0x88
-        this.squares_0x88 = [
-            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-            16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
-            32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47,
-            48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63,
-            64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79,
-            80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95,
-            96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111,
-            112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127
-        ];
-
-        this.squares_64_to_128 = [
-            0, 1, 2, 3, 4, 5, 6, 7,
-            16, 17, 18, 19, 20, 21, 22, 23,
-            32, 33, 34, 35, 36, 37, 38, 39,
-            48, 49, 50, 51, 52, 53, 54, 55,
-            64, 65, 66, 67, 68, 69, 70, 71,
-            80, 81, 82, 83, 84, 85, 86, 87,
-            96, 97, 98, 99, 100, 101, 102, 103,
-            112, 113, 114, 115, 116, 117, 118, 119
-        ];
-
-
-        this.squares_64 = [
-            0, 1, 2, 3, 4, 5, 6, 7,
-            8, 9, 10, 11, 12, 13, 14, 15,
-            16, 17, 18, 19, 20, 21, 22, 23,
-            24, 25, 26, 27, 28, 29, 30, 31,
-            32, 33, 34, 35, 36, 37, 38, 39,
-            40, 41, 42, 43, 44, 45, 46, 47,
-            48, 49, 50, 51, 52, 53, 54, 55,
-            56, 57, 58, 59, 60, 61, 62, 63
-        ];
-
-
-
-        this.squares_64_to_x = [
-            1, 2, 3, 4, 5, 6, 7, 8,
-            1, 2, 3, 4, 5, 6, 7, 8,
-            1, 2, 3, 4, 5, 6, 7, 8,
-            1, 2, 3, 4, 5, 6, 7, 8,
-            1, 2, 3, 4, 5, 6, 7, 8,
-            1, 2, 3, 4, 5, 6, 7, 8,
-            1, 2, 3, 4, 5, 6, 7, 8,
-            1, 2, 3, 4, 5, 6, 7, 8,
-        ];
-
-        this.squares_64_to_y = [
-            8, 8, 8, 8, 8, 8, 8, 8,
-            7, 7, 7, 7, 7, 7, 7, 7,
-            6, 6, 6, 6, 6, 6, 6, 6,
-            5, 5, 5, 5, 5, 5, 5, 5,
-            4, 4, 4, 4, 4, 4, 4, 4,
-            3, 3, 3, 3, 3, 3, 3, 3,
-            2, 2, 2, 2, 2, 2, 2, 2,
-            1, 1, 1, 1, 1, 1, 1, 1
-        ];
-
-        this.squares_64_to_x_an = [
-            "a", "b", "c", "d", "e", "f", "g", "h",
-            "a", "b", "c", "d", "e", "f", "g", "h",
-            "a", "b", "c", "d", "e", "f", "g", "h",
-            "a", "b", "c", "d", "e", "f", "g", "h",
-            "a", "b", "c", "d", "e", "f", "g", "h",
-            "a", "b", "c", "d", "e", "f", "g", "h",
-            "a", "b", "c", "d", "e", "f", "g", "h",
-            "a", "b", "c", "d", "e", "f", "g", "h",
-        ];
-
-
-       this.squares64 = [
-            0,  1,  2,  3,  4,  5,  6,  7,
-            8,  9,  10, 11, 12, 13, 14, 15,
-            16, 17, 18, 19, 20, 21, 22, 23,
-            24, 25, 26, 27, 28, 29, 30, 31,
-            32, 33, 34, 35, 36, 37, 38, 39,
-            40, 41, 42, 43, 44, 45, 46, 47,
-            48, 49, 50, 51, 52, 53, 54, 55,
-            56, 57, 58, 59, 60, 61, 62, 63
-        ];
-
-
-        this.squares128 = [
-            0,   1,   2,   3,   4,   5,   6,   7,   8,   9,   10,  11,  12,  13,  14,  15,
-            16,  17,  18,  19,  20,  21,  22,  23,  24,  25,  26,  27,  28,  29,  30,  31,
-            32,  33,  34,  35,  36,  37,  38,  39,  40,  41,  42,  43,  44,  45,  46,  47,
-            48,  49,  50,  51,  52,  53,  54,  55,  56,  57,  58,  59,  60,  61,  62,  63,
-            64,  65,  66,  67,  68,  69,  70,  71,  72,  73,  74,  75,  76,  77,  78,  79,
-            80,  81,  82,  83,  84,  85,  86,  87,  88,  89,  90,  91,  92,  93,  94,  95,
-            96,  97,  98,  99,  100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111,
-            112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127
-        ];
-
-
-        this.squares_64_to_128 = [
-            0,   1,   2,   3,   4,   5,   6,   7, 
-            16,  17,  18,  19,  20,  21,  22,  23, 
-            32,  33,  34,  35,  36,  37,  38,  39,
-            48,  49,  50,  51,  52,  53,  54,  55, 
-            64,  65,  66,  67,  68,  69,  70,  71, 
-            80,  81,  82,  83,  84,  85,  86,  87, 
-            96,  97,  98,  99,  100, 101, 102, 103, 
-            112, 113, 114, 115, 116, 117, 118, 119
-        ];
-
-        this.squares_64_to_x = [
-            1, 2, 3, 4, 5, 6, 7, 8,
-            1, 2, 3, 4, 5, 6, 7, 8,
-            1, 2, 3, 4, 5, 6, 7, 8,
-            1, 2, 3, 4, 5, 6, 7, 8,
-            1, 2, 3, 4, 5, 6, 7, 8,
-            1, 2, 3, 4, 5, 6, 7, 8,
-            1, 2, 3, 4, 5, 6, 7, 8,
-            1, 2, 3, 4, 5, 6, 7, 8,
-        ];
-
-        this.squares_64_to_y = [
-            8, 8, 8, 8, 8, 8, 8, 8,
-            7, 7, 7, 7, 7, 7, 7, 7,
-            6, 6, 6, 6, 6, 6, 6, 6,
-            5, 5, 5, 5, 5, 5, 5, 5,
-            4, 4, 4, 4, 4, 4, 4, 4,
-            3, 3, 3, 3, 3, 3, 3, 3,
-            2, 2, 2, 2, 2, 2, 2, 2,
-            1, 1, 1, 1, 1, 1, 1, 1
-        ];
-
-        this.squares_64_to_x_an = [
-            "a", "b", "c", "d", "e", "f", "g", "h",
-            "a", "b", "c", "d", "e", "f", "g", "h",
-            "a", "b", "c", "d", "e", "f", "g", "h",
-            "a", "b", "c", "d", "e", "f", "g", "h",
-            "a", "b", "c", "d", "e", "f", "g", "h",
-            "a", "b", "c", "d", "e", "f", "g", "h",
-            "a", "b", "c", "d", "e", "f", "g", "h",
-            "a", "b", "c", "d", "e", "f", "g", "h",
-        ];
-*/

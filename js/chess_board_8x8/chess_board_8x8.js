@@ -28,41 +28,43 @@ class ChessBoard_8x8_C {
     static QUEEN = 5;    // ферзь
     static KING = 6;     // король
 
-    squares_c_8x8 = null;// цвет клеток
-    squares_p_8x8 = null;// фигуры
-    squares_pc_8x8 = null;//цвет фигур
+    squares_color_8x8 = null;// цвет клеток
+    sq_piece_8x8 = null;// фигуры
+    sq_piece_color_8x8 = null;//цвет фигур
 
     // ВСПОМОГАТЕЛЬНАЯ ИНФОРМАЦИЯ
     // цвет хода 0 - черные 1 - белые
-    side_to_move = -1;
+    side_to_move = 1;
 
     // разрешение взятия на проходе 1/0
-    en_passant_yes = -1;
+    en_passant_yes = 0;
 
     // координата битого поля
-    en_passant_target_square = -1;
+    en_passant_target_square = 0;
 
     // рокировка белых в длинную сторону   1/0
-    castling_Q = -1;
+    castling_Q = 1;
 
     // рокировка белых в короткую сторону  1/0
-    castling_K = -1;
+    castling_K = 1;
 
     // рокировка черных в длинную сторону  1/0
-    castling_q = -1;
+    castling_q = 1;
 
     // рокировка черных в короткую сторону 1/0
-    castling_k = -1;
+    castling_k = 1;
+    // оценка позиции
+    score = -1;
 
     x_start = -1;
     y_start = -1;
 
-    squares_width = -1;//32
+    squares_width = -1;
     squares_height = -1;
 
     constructor() {
         // инициируем цвет клеток
-        this.squares_c_8x8 = [
+        this.squares_color_8x8 = [
             [1, 0, 1, 0, 1, 0, 1, 0],
             [0, 1, 0, 1, 0, 1, 0, 1],
             [1, 0, 1, 0, 1, 0, 1, 0],
@@ -81,7 +83,7 @@ class ChessBoard_8x8_C {
         this.squares_width = squares_width;
         this.squares_height = squares_height;
 
-        this.iniStartPosition();
+        this.iniStartPositionForWhite();
 
         //this.iniStartPositionInvert();
         // цвет хода 0 - черные 1 - белые
@@ -98,13 +100,15 @@ class ChessBoard_8x8_C {
         this.castling_q = 1;
         // рокировка черных в короткую сторону 1/0
         this.castling_k = 1;
+        // оценка позиции
+        this.score = -1;
     }
 
 
-    iniStartPosition() {
+    iniStartPositionForWhite() {
 
         // раставляем фигуры
-        this.squares_p_8x8 = [
+        this.sq_piece_8x8 = [
             [4, 2, 3, 5, 6, 3, 2, 4],
             [1, 1, 1, 1, 1, 1, 1, 1],
             [0, 0, 0, 0, 0, 0, 0, 0],
@@ -116,7 +120,7 @@ class ChessBoard_8x8_C {
         ];
 
         // инициируем цвет фигур
-        this.squares_pc_8x8 = [
+        this.sq_piece_color_8x8 = [
             [0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0],
@@ -133,12 +137,11 @@ class ChessBoard_8x8_C {
         //console.log("ini_0x88_from_8x8");
         let i = -1;
 
-        this.iniStartPosition();
         for (let y = 0; y < 8; y++) {
             for (let x = 0; x < 8; x++) {
                 i = chess_board_0x88_O.x07_y07_to_0x88(x, y);
-                this.squares_p_8x8[y][x] = chess_board_0x88_O.sq_piece_0x88[i];
-                this.squares_pc_8x8[y][x] = chess_board_0x88_O.sq_piece_color_0x88[i];
+                this.sq_piece_8x8[y][x] = chess_board_0x88_O.sq_piece_0x88[i];
+                this.sq_piece_color_8x8[y][x] = chess_board_0x88_O.sq_piece_color_0x88[i];
             }
         }
         // цвет хода 0 - черные 1 - белые
@@ -155,6 +158,8 @@ class ChessBoard_8x8_C {
         this.castling_q = chess_board_0x88_O.castling_q;
         // рокировка черных в короткую сторону 1/0
         this.castling_k = chess_board_0x88_O.castling_k;
+        // оценка позиции
+        this.score = chess_board_0x88_O.score;
     }
 
 }

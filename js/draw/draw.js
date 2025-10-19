@@ -27,7 +27,7 @@ class Draw_С {
         this.html5Canvas_O.iniM();
         this.html5Sprites_O.iniM(this.html5Canvas_O);
     }
-    
+
     draw_chess_board_8x8(chessBoard_8x8_O) {
 
         this.html5Canvas_O.clearRect(0, 0, 50 * 7, 50 * 7);
@@ -41,15 +41,22 @@ class Draw_С {
             for (let x = 0; x < 8; x++) {
                 xx = chessBoard_8x8_O.x_start + chessBoard_8x8_O.squares_width * x;
                 yy = chessBoard_8x8_O.y_start + chessBoard_8x8_O.squares_height * y;
-                sp = chessBoard_8x8_O.squares_p_8x8[y][x];
-                cp = chessBoard_8x8_O.squares_pc_8x8[y][x];
-                cs = chessBoard_8x8_O.squares_c_8x8[y][x];
+                sp = chessBoard_8x8_O.sq_piece_8x8[y][x];
+                cp = chessBoard_8x8_O.sq_piece_color_8x8[y][x];
+                cs = chessBoard_8x8_O.squares_color_8x8[y][x];
 
                 this.html5Sprites_O.drawSprite(cs, cp, sp, xx, yy, chessBoard_8x8_O.squares_width, chessBoard_8x8_O.squares_height);
-                this.html5Sprites_O.html5Canvas_R.drawText(y, xx, yy, Html5Canvas_C.ITALIC_20PX_SANS_SERIF,
-                    Html5Canvas_C.WHITE, 1);
+                //this.html5Sprites_O.html5Canvas_R.drawText(y, xx, yy, Html5Canvas_C.ITALIC_20PX_SANS_SERIF,
+                //  Html5Canvas_C.WHITE, 1);
+
+                this.html5Sprites_O.html5Canvas_R.drawText((8 - y), (chessBoard_8x8_O.x_start - 15), (yy + 15), Html5Canvas_C.ITALIC_20PX_SANS_SERIF,
+                    Html5Canvas_C.BLACK, 1);
             }
         }
+        let abc = "   a       b       c        d       e       f       g        h";
+        this.html5Sprites_O.html5Canvas_R.drawText(abc, chessBoard_8x8_O.x_start,
+            (chessBoard_8x8_O.y_start + chessBoard_8x8_O.squares_height * 8), Html5Canvas_C.ITALIC_20PX_SANS_SERIF,
+            Html5Canvas_C.BLACK, 1);
 
     }
 
