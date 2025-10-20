@@ -52,9 +52,8 @@ let IfritChessGame_R = {
     updateGame() {
         //console.log('IfritChessGame_R->updateGame');
         IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O.set_0x88_from_8x8(IfritChessGame_R.chessBoard_8x8_O);
-        //IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_0x88(IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O);
-        IfritChessGame_R.chessEngine_0x88_O.go();
-        // комп за белых
+        // комп за белых        
+        //IfritChessGame_R.chessEngine_0x88_O.go();
         //IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_0x88(IfritChessGame_R.chessEngine_0x88_O.search_0x88_O.chess_board_0x88_O_move);
         //IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O.set_0x88_from_8x8(IfritChessGame_R.chessBoard_8x8_O);
     },
@@ -71,6 +70,8 @@ let IfritChessGame_R = {
 
     mouseDown(x, y) {
 
+        IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O.set_0x88_from_8x8(IfritChessGame_R.chessBoard_8x8_O);
+
         //console.log('IfritChessGame_R->mouseDown x ' + x + " y " + y);
         let undo_0x88_O = new Undo_0x88_C();
 
@@ -85,7 +86,6 @@ let IfritChessGame_R = {
 
         if (IfritChessGame_R.one_click_on_squares == 1) {// это уже второй клик
             if ((x_b_n < 8) && (y_b_n < 8)) {// 
-                IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O.set_0x88_from_8x8(IfritChessGame_R.chessBoard_8x8_O);
                 IfritChessGame_R.one_click_on_squares = 0;
                 // если это второй клик по той же самой клетке то выделение снимаем
                 if ((IfritChessGame_R.one_click_on_squares_x == x_b_n) &&
@@ -101,28 +101,31 @@ let IfritChessGame_R = {
                         IfritChessGame_R.one_click_on_squares_y);
                     let to = IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O.x07_y07_to_0x88(x_b_n, y_b_n);
 
-                    IfritChessGame_R.chessEngine_0x88_O.move_list_det_0x88_O.clear_list();
+                    IfritChessGame_R.chessEngine_0x88_O.move_list_gui_0x88_O.clear_list();
 
-                    IfritChessGame_R.chessEngine_0x88_O.move_generator_0x88_O.generated_pseudo_legal_moves_one_piece_for_gui(from, 
-                        IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O, IfritChessGame_R.chessEngine_0x88_O.move_list_det_0x88_O, 
+                    IfritChessGame_R.chessEngine_0x88_O.move_generator_0x88_O.generated_pseudo_legal_moves_one_piece_for_gui(from,
+                        IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O, IfritChessGame_R.chessEngine_0x88_O.move_list_gui_0x88_O,
                         IfritChessGame_R.chessEngine_0x88_O.move_generator_0x88_O);
 
-                    let move_i = IfritChessGame_R.chessEngine_0x88_O.move_list_det_0x88_O.return_move(from, to);
+                    let move_i = IfritChessGame_R.chessEngine_0x88_O.move_list_gui_0x88_O.return_i_move(from, to);
 
-                    IfritChessGame_R.chessEngine_0x88_O.search_0x88_O.make_move_0x88_O.do_moves(move_i, 
-                        IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O, 
-                        IfritChessGame_R.chessEngine_0x88_O.move_list_det_0x88_O, undo_0x88_O);
+                    IfritChessGame_R.chessEngine_0x88_O.search_0x88_O.make_move_0x88_O.do_moves(move_i,
+                        IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O,
+                        IfritChessGame_R.chessEngine_0x88_O.move_list_gui_0x88_O, undo_0x88_O);
+                    //режим без ответа компа   
                     //IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_0x88(IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O);
 
                     IfritChessGame_R.chessEngine_0x88_O.go();
                     console.log("ChessBoard_8x8_C->click(mouseDown) +++++++++++++++++++++++++++++++++++++++++++++++++++++");
+                    //режим без ответа компа                    
                     ///IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O.test_print_0x88();
                     ///IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O.test_print_0x88_color();
+                    ///////////////////
+                    // с ответом компа                   
                     IfritChessGame_R.chessEngine_0x88_O.search_0x88_O.chess_board_0x88_O_move.test_print_0x88();
                     IfritChessGame_R.chessEngine_0x88_O.search_0x88_O.chess_board_0x88_O_move.test_print_0x88_color();
-                    ///////////////////
+
                     IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_0x88(IfritChessGame_R.chessEngine_0x88_O.search_0x88_O.chess_board_0x88_O_move);
-                    //IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O.set_0x88_from_8x8(IfritChessGame_R.chessBoard_8x8_O);
 
                     // рисуем доску                    
                     IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O);
@@ -157,8 +160,6 @@ let IfritChessGame_R = {
 
     mouseUp(x, y) {
         //console.log('IfritChessGame_R->mouseUp x ' + x + " y " + y);
-        //  IfritChessGame_R.chessBoard_8x8_O.click(2, x, y,
-        //      IfritChessGame_R.draw_O.html5Sprites_O, IfritChessGame_R.chessEngine_0x88_O);
     },
 
 };

@@ -19,7 +19,7 @@ class Search_0x88_C {
 
   static NAME = "Search_0x88_C";
 
-  depth_max = 1;// максимальная глубина
+  depth_max = 3;// максимальная глубина
   chess_board_0x88_O_move = new Chess_board_0x88_C();
 
 

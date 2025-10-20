@@ -18,7 +18,7 @@ class ChessEngine_0x88_С {
   move_list_0x88_O = new Move_list_0x88_С();
   move_generator_0x88_O = new Move_generator_0x88_С();
 
-  move_list_det_0x88_O = new Move_list_0x88_С();
+  move_list_gui_0x88_O = new Move_list_0x88_С();
 
   search_0x88_O = new Search_0x88_C();
 
@@ -54,15 +54,15 @@ class ChessEngine_0x88_С {
 
     let from = this.chess_board_0x88_O.x07_y07_to_0x88(from_x, from_y);
     let to = this.chess_board_0x88_O.x07_y07_to_0x88(to_x, to_y);
-    this.move_list_det_0x88_O.clear_list();
+    this.move_list_gui_0x88_O.clear_list();
     this.move_generator_0x88_O.generated_pseudo_legal_moves_one_piece_for_gui(from, this.chess_board_0x88_O,
-      this.move_list_det_0x88_O);
+      this.move_list_gui_0x88_O);
 
    // console.log("IfritChessEngine_С-> print_list---------- ");
-   // this.move_list_det_0x88_O.test_print_list(this.chess_board_0x88_O); 
+   // this.move_list_gui_0x88_O.test_print_list(this.chess_board_0x88_O); 
    // this.chess_board_0x88_O.test_print_0x88();
    // this.chess_board_0x88_O.test_print_0x88_color();
-    let ret = this.move_list_det_0x88_O.move_is_legal(from, to);
+    let ret = this.move_list_gui_0x88_O.move_is_legal(from, to);
 
     //console.log("IfritChessEngine_С-> from_x " + from_x + " from_y " + from_y +" to_x " + to_x + " to_y " + to_y);
     //console.log("IfritChessEngine_С-> from " + from + " to " + to);
@@ -75,10 +75,10 @@ class ChessEngine_0x88_С {
   draw_rect_move(from_x, from_y, chessBoard_8x8_O, draw_O) {
 
     let from = this.chess_board_0x88_O.x07_y07_to_0x88(from_x, from_y);
-    this.move_list_det_0x88_O.clear_list();
+    this.move_list_gui_0x88_O.clear_list();
     this.move_generator_0x88_O.generated_pseudo_legal_moves_one_piece_for_gui(from, this.chess_board_0x88_O,
-      this.move_list_det_0x88_O, this.move_generator_0x88_O);
+      this.move_list_gui_0x88_O, this.move_generator_0x88_O);
 
-    draw_O.draw_rect_move(this.move_list_det_0x88_O, this.chess_board_0x88_O, chessBoard_8x8_O, Html5Canvas_C.BLUE);
+    draw_O.draw_rect_move(this.move_list_gui_0x88_O, this.chess_board_0x88_O, chessBoard_8x8_O, Html5Canvas_C.BLUE);
   }
 }

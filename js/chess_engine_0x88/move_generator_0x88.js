@@ -23,20 +23,23 @@ class Move_generator_0x88_С {
     // 96,  97,  98,  99,  100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111,
     // 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127
 
+    static A1 = 112;    
     static B1 = 113;
     static C1 = 114;
     static D1 = 115;
     static E1 = 116;
     static F1 = 117;
     static G1 = 118;
+    static H1 = 119;    
 
+    static A8 = 0;   
     static B8 = 1;
     static C8 = 2;
     static D8 = 3;
     static E8 = 4;
     static F8 = 5;
     static G8 = 6;
-
+    static H8 = 7;
     /*
     0   1   2
     16  17  18

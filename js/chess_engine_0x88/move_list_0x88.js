@@ -163,20 +163,20 @@ class Move_list_0x88_С {
     }
 
 
-    return_move(from, to) {
+    return_i_move(from, to) {
 
-        let ret = -1;
+        let i_move = -1;
 
         for (let i = 0; i < this.number_move; i++) {
             if ((this.from[i] == from) && (this.to[i] == to)){
-               ret = i;
+               i_move = i;
             } 
         }
 
         //console.log("Move_list_det_0x88_С-> from " + from + " to " + to);
         //console.log("Move_list_det_0x88_С-> ret " + ret);
 
-        return ret;
+        return i_move;
     }
 
 
