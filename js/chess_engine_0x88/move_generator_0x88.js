@@ -140,7 +140,7 @@ class Move_generator_0x88_С {
         }
     }
 
-    // могут быть простые хода, а могут быть взятия
+    // могут быть простые ходы, а могут быть взятия
     add_move(type_move, type_captures_move, from, to, piece, piece_color, chess_board_0x88_O, move_list_0x88_O) {
         let piece_to = -1;
         let piece_color_to = -1;
@@ -498,55 +498,58 @@ class Move_generator_0x88_С {
     check_detected(from, piece_color, chess_board_0x88_O) {
 
         let move_list_0x88_O = new Move_list_0x88_С();
-        let check = 0;
+        let check = -1;
 
         // 1 knight
+        move_list_0x88_O.clear_list();       
         this.generated_moves_knight(from, Chess_board_0x88_C.KNIGHT, piece_color, chess_board_0x88_O, move_list_0x88_O);
-        move_list_0x88_O.clear_list();
         for (let i = 0; i < move_list_0x88_O.number_move; i++) {
-            if (this.name_capture_piece[i] == Chess_board_0x88_C.KNIGHT) {
+            if (move_list_0x88_O.name_capture_piece[i] == Chess_board_0x88_C.KNIGHT) {
                 check = Chess_board_0x88_C.KNIGHT;
                 return check;
             }
         }
 
         // 2 bishop + 1/2 queen
+        move_list_0x88_O.clear_list();        
         this.generated_moves_bishop(from, Chess_board_0x88_C.BISHOP, piece_color, chess_board_0x88_O, move_list_0x88_O);
-        move_list_0x88_O.clear_list();
         for (let i = 0; i < move_list_0x88_O.number_move; i++) {
-            if (this.name_capture_piece[i] == Chess_board_0x88_C.BISHOP) {
+            if (move_list_0x88_O.name_capture_piece[i] == Chess_board_0x88_C.BISHOP) {
                 check = Chess_board_0x88_C.BISHOP;
                 return check;
             }
-            if (this.name_capture_piece[i] == Chess_board_0x88_C.QUEEN) {
+            if (move_list_0x88_O.name_capture_piece[i] == Chess_board_0x88_C.QUEEN) {
                 check = Chess_board_0x88_C.QUEEN;
                 return check;
             }
         }
 
         // 3 rook + 1/2 queen
+        move_list_0x88_O.clear_list();        
         this.generated_moves_rook(from, Chess_board_0x88_C.ROOK, piece_color, chess_board_0x88_O, move_list_0x88_O);
-        move_list_0x88_O.clear_list();
         for (let i = 0; i < move_list_0x88_O.number_move; i++) {
 
-            if (this.name_capture_piece[i] == Chess_board_0x88_C.ROOK) {
+            if (move_list_0x88_O.name_capture_piece[i] == Chess_board_0x88_C.ROOK) {
                 check = Chess_board_0x88_C.ROOK;
                 return check;
             }
-            if (this.name_capture_piece[i] == Chess_board_0x88_C.QUEEN) {
+            if (move_list_0x88_O.name_capture_piece[i] == Chess_board_0x88_C.QUEEN) {
                 check = Chess_board_0x88_C.QUEEN;
                 return check;
             }
         }
 
         // 1 pawn
+        move_list_0x88_O.clear_list();        
         this.generated_moves_pawn(from, Chess_board_0x88_C.PAWN, piece_color, chess_board_0x88_O, move_list_0x88_O);
-        move_list_0x88_O.clear_list();
         for (let i = 0; i < move_list_0x88_O.number_move; i++) {
-            if (this.name_capture_piece[i] == Chess_board_0x88_C.PAWN) {
+            if (move_list_0x88_O.name_capture_piece[i] == Chess_board_0x88_C.PAWN) {
                 check = Chess_board_0x88_C.PAWN;
                 return check;
             }
         }
+
+        check = 0;// нет шаха
+        return check;
     }
 }

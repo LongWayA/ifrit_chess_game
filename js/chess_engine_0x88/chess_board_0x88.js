@@ -209,7 +209,19 @@ class Chess_board_0x88_C {
         this.score = chessBoard_8x8_O.score;
     }
 
-
+    searching_king(piece_color) {
+        for (let i = 0; i < 128; i++) {
+            if ((i & 136) == 0) {// 136 0x88
+                if (this.sq_piece_0x88[i] == Chess_board_0x88_C.KING) {
+                    if (this.sq_piece_color_0x88[i] == piece_color) {
+                        return i;
+                    }
+                }
+            }
+        }
+        // короля не нашли
+        return -1;
+    }
 
     //
     iniStartPositionForWhite() {

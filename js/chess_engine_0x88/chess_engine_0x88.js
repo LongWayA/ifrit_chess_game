@@ -15,6 +15,7 @@ class ChessEngine_0x88_С {
 
   static NAME = "ChessEngine_0x88";
   chess_board_0x88_O = new Chess_board_0x88_C();
+  chess_board_0x88_O_save_gui = new Chess_board_0x88_C();
   move_list_0x88_O = new Move_list_0x88_С();
   move_generator_0x88_O = new Move_generator_0x88_С();
 
@@ -36,14 +37,15 @@ class ChessEngine_0x88_С {
     this.search_0x88_O.iniM();  
   }
 
-  go() {
+  go(depth_max) {
     this.chess_board_0x88_O.score = this.search_0x88_O.evaluate_0x88_O.score_position(this.chess_board_0x88_O);
     this.chess_board_0x88_O.test_print_0x88();
     this.chess_board_0x88_O.test_print_0x88_color();
+    this.chess_board_0x88_O.test_print_any_0x88(); 
     this.move_generator_0x88_O.generated_pseudo_legal_moves(this.chess_board_0x88_O, this.move_list_0x88_O);
     //this.move_list_0x88_O.test_print_list(IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O);
     /////////////////////
-    this.score = this.search_0x88_O.start_search(this.chess_board_0x88_O, this.move_generator_0x88_O);
+    this.score = this.search_0x88_O.start_search(this.chess_board_0x88_O, this.move_generator_0x88_O, depth_max);
     //console.log("ChessEngine_0x88_С->score " + this.score);
     //this.chess_board_0x88_O.test_print_0x88();
     //this.chess_board_0x88_O.test_print_0x88_color();

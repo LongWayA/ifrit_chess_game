@@ -30,7 +30,8 @@ class Draw_С {
 
     draw_chess_board_8x8(chessBoard_8x8_O) {
 
-        this.html5Canvas_O.clearRect(0, 0, 50 * 7, 50 * 7);
+        //this.html5Canvas_O.clearRect(0, 0, 50 * 7, 50 * 7);
+        this.html5Canvas_O.clearRect(0, 0, 800, 600);        
 
         let xx;
         let yy;
