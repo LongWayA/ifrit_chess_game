@@ -76,7 +76,7 @@ class Make_move_0x88_C {
 
       case Move_list_0x88_С.EP_CAPTURES:// взятие на проходе
         //console.log("EP_CAPTURES");
-        this.make_en_passant_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O);
+        this.make_en_passant_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O);        
         break;
 
       case Move_list_0x88_С.KING_CASTLE:// короткая рокировка
@@ -92,18 +92,22 @@ class Make_move_0x88_C {
       // пешка - взятия с превращением
       case Move_list_0x88_С.KNIGHT_PROMO_CAPTURE:// взятие пешкой с превращением в коня
         this.make_promo_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O, Chess_board_0x88_C.KNIGHT);
+                this.stop_king_castle_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O);
         break;
       //
       case Move_list_0x88_С.BISHOP_PROMO_CAPTURE:// взятие пешкой с превращением в слона
         this.make_promo_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O, Chess_board_0x88_C.BISHOP);
+                this.stop_king_castle_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O);
         break;
       //
       case Move_list_0x88_С.ROOK_PROMO_CAPTURE:// взятие пешкой с превращением в ладью
         this.make_promo_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O, Chess_board_0x88_C.ROOK);
+                this.stop_king_castle_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O);
         break;
       //
       case Move_list_0x88_С.QUEEN_PROMO_CAPTURE:// взятие пешкой с превращением в ферзя
         this.make_promo_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O, Chess_board_0x88_C.QUEEN);
+                this.stop_king_castle_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O);
         break;
 
       // превращения пешки

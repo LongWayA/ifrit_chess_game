@@ -22,8 +22,7 @@ class ChessEngine_0x88_С {
   move_list_gui_0x88_O = new Move_list_0x88_С();
 
   search_0x88_O = new Search_0x88_C();
-
-  static StartFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+  
   score = 0;
 
   constructor() {
