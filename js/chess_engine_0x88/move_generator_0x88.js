@@ -500,7 +500,17 @@ class Move_generator_0x88_С {
         let move_list_0x88_O = new Move_list_0x88_С();
         let check = -1;
 
-        // 1 knight
+        // 0 king
+        move_list_0x88_O.clear_list();       
+        this.generated_moves_king(from, Chess_board_0x88_C.KING, piece_color, chess_board_0x88_O, move_list_0x88_O);
+        for (let i = 0; i < move_list_0x88_O.number_move; i++) {
+            if (move_list_0x88_O.name_capture_piece[i] == Chess_board_0x88_C.KING) {
+                check = Chess_board_0x88_C.KING;
+                return check;
+            }
+        }
+
+        // 2 knight
         move_list_0x88_O.clear_list();       
         this.generated_moves_knight(from, Chess_board_0x88_C.KNIGHT, piece_color, chess_board_0x88_O, move_list_0x88_O);
         for (let i = 0; i < move_list_0x88_O.number_move; i++) {
@@ -510,7 +520,7 @@ class Move_generator_0x88_С {
             }
         }
 
-        // 2 bishop + 1/2 queen
+        // 3 bishop + 1/2 queen
         move_list_0x88_O.clear_list();        
         this.generated_moves_bishop(from, Chess_board_0x88_C.BISHOP, piece_color, chess_board_0x88_O, move_list_0x88_O);
         for (let i = 0; i < move_list_0x88_O.number_move; i++) {
@@ -524,7 +534,7 @@ class Move_generator_0x88_С {
             }
         }
 
-        // 3 rook + 1/2 queen
+        // 4 rook + 1/2 queen
         move_list_0x88_O.clear_list();        
         this.generated_moves_rook(from, Chess_board_0x88_C.ROOK, piece_color, chess_board_0x88_O, move_list_0x88_O);
         for (let i = 0; i < move_list_0x88_O.number_move; i++) {
@@ -539,7 +549,7 @@ class Move_generator_0x88_С {
             }
         }
 
-        // 1 pawn
+        // 5 pawn
         move_list_0x88_O.clear_list();        
         this.generated_moves_pawn(from, Chess_board_0x88_C.PAWN, piece_color, chess_board_0x88_O, move_list_0x88_O);
         for (let i = 0; i < move_list_0x88_O.number_move; i++) {
