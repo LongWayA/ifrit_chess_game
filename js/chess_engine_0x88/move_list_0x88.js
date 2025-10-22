@@ -71,6 +71,8 @@ class Move_list_0x88_С {
 
     number_move = 0;
 
+    king_from = -1;
+
     constructor() {
 
     }
@@ -129,7 +131,7 @@ class Move_list_0x88_С {
             console.log("piece_color[" + i + "] = " + this.piece_color[i]);
             console.log("name_capture_piece[" + i + "] = " + this.name_capture_piece[i] +
                 " cnp = " + Chess_board_0x88_C.PIECE_NAME[this.name_capture_piece[i]]);
-            console.log("score_move[" + i + "] = " + this.score_move[i]);     
+            console.log("score_move[" + i + "] = " + this.score_move[i]);
             console.log(" ");
         }
     }
@@ -143,12 +145,13 @@ class Move_list_0x88_С {
             this.piece_color[i] = -1;
             this.name_capture_piece[i] = -1;
             this.score_move[i] = 0;
+ 
         }
-
+        this.king_from = -1;
         this.number_move = 0;
     }
 
-   move_is_legal(from, to) {
+    move_is_legal(from, to) {
 
         let ret = false;
 
@@ -168,15 +171,71 @@ class Move_list_0x88_С {
         let i_move = -1;
 
         for (let i = 0; i < this.number_move; i++) {
-            if ((this.from[i] == from) && (this.to[i] == to)){
-               i_move = i;
-            } 
+            if ((this.from[i] == from) && (this.to[i] == to)) {
+                i_move = i;
+            }
         }
 
-        //console.log("Move_list_det_0x88_С-> from " + from + " to " + to);
-        //console.log("Move_list_det_0x88_С-> ret " + ret);
+       // console.log("Move_list_det_0x88_С-> from " + from + " to " + to);
+       // console.log("Move_list_det_0x88_С-> i_move " + i_move);
 
         return i_move;
+    }
+
+    sorting_list() {
+
+        let save_type_move;
+        let save_from;
+        let save_to;
+        let save_name_piece;
+        let save_piece_color;
+        let save_name_capture_piece;
+        let save_score_move;
+        // PIECE_NO = 0; // нет фигуры
+        // PAWN = 1;     // пешка 
+        // KNIGHT = 2;   // конь
+        // BISHOP = 3;   // слон
+        // ROOK = 4;     // ладья
+        // QUEEN = 5;    // ферзь
+        // KING = 6;     // король
+        // 1 шаг
+        //console.log("Move_list_det_0x88_С-> SORTING -----------------------------------");
+        // выводим в начало списка отсортированные взятия. так что самая слабая берущая фигура в самом начале
+        for (let i = 0; i < this.number_move; i++) {
+            for (let j = i + 1; j < this.number_move; j++) {// перебираем оставшийся список
+                // если на позиции есть взятая фигура
+                if (this.type_move[i] > this.type_move[j]) {
+                    // сохраняем позицию на которую будем писать
+                    save_type_move = this.type_move[i];
+                    save_from = this.from[i];
+                    save_to = this.to[i];
+                    save_name_piece = this.name_piece[i];
+                    save_piece_color = this.piece_color[i];
+                    save_name_capture_piece = this.name_capture_piece[i];
+                    save_score_move = this.score_move[i];
+
+                    // пишем на позицию
+                    this.type_move[i] = this.type_move[j];
+                    this.from[i] = this.from[j];
+                    this.to[i] = this.to[j];
+                    this.name_piece[i] = this.name_piece[j];
+                    this.piece_color[i] = this.piece_color[j];
+                    this.name_capture_piece[i] = this.name_capture_piece[j];
+                    this.score_move[i] = this.score_move[j];
+
+                    // сюда пишем начальную позицию. т.о. две позиции меняются местами
+                    this.type_move[j] = save_type_move;
+                    this.from[j] = save_from;
+                    this.to[j] = save_to;
+                    this.name_piece[j] = save_name_piece;
+                    this.piece_color[j] = save_piece_color;
+                    this.name_capture_piece[j] = save_name_capture_piece;
+                    this.score_move[j] = save_score_move;
+
+                }
+            }
+        }
+
     }
 
 

@@ -26,15 +26,11 @@ let IfritChessGame_R = {
     SQUARES_WIDTH: 50,
     SQUARES_HEIGHT: 50,
 
-    // https://www.chessprogramming.org/Perft_Results
-    INITIAL_POSITION_FEN: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-    POSITION_FEN_2: "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -",// ???    
-    POSITION_FEN_3: "8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 1",
-    POSITION_FEN_4: "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1",
-    POSITION_FEN_5: "rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8", // ???   
-    POSITION_FEN_6: "r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10",
+ 
 
-    depth_max: 4,
+    TEST_POSITION_FEN:"",
+
+    depth_max: -1,
 
     one_click_on_squares: 0,
     one_click_on_squares_x: 0,
@@ -42,9 +38,18 @@ let IfritChessGame_R = {
 
     stop_click: 0,
 
-
+   // https://www.chessprogramming.org/Perft_Results
+    INITIAL_POSITION_FEN: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+    POSITION_FEN_2: "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -",// ???    
+    POSITION_FEN_3: "8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 1",
+    POSITION_FEN_4: "r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1",
+    POSITION_FEN_5: "rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8", // ???   
+    POSITION_FEN_6: "r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10",
 
     iniM() {
+        IfritChessGame_R.depth_max = 4;
+        //IfritChessGame_R.TEST_POSITION_FEN = IfritChessGame_R.POSITION_FEN_2;
+          IfritChessGame_R.TEST_POSITION_FEN = IfritChessGame_R.INITIAL_POSITION_FEN;       
         //console.log('IfritChessGame_R->iniM');       
         IfritChessGame_R.chessEngine_0x88_O.iniM();
         IfritChessGame_R.chessBoard_8x8_O.iniM(IfritChessGame_R.X_START, IfritChessGame_R.Y_START,
@@ -52,6 +57,7 @@ let IfritChessGame_R = {
         IfritChessGame_R.draw_O.iniM();
         IfritChessGame_R.mouse_R.iniM(IfritChessGame_R.draw_O.html5Canvas_O.idCanvas, IfritChessGame_R);
         IfritChessGame_R.stop_click = 0;
+
     },
 
     startGame() {
@@ -63,7 +69,8 @@ let IfritChessGame_R = {
     updateGame() {
         //console.log('IfritChessGame_R->updateGame');
         // проверяем правильность полного перебора. что все правила соблюдены.
-        IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_fen(IfritChessGame_R.INITIAL_POSITION_FEN);
+        IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_fen(IfritChessGame_R.TEST_POSITION_FEN);        
+        //IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_fen(IfritChessGame_R.INITIAL_POSITION_FEN);
         //IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_fen(IfritChessGame_R.POSITION_FEN_2);
         //IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_fen(IfritChessGame_R.POSITION_FEN_3);
         //IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_fen(IfritChessGame_R.POSITION_FEN_4);
@@ -72,8 +79,12 @@ let IfritChessGame_R = {
 
 
         IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O.set_0x88_from_8x8(IfritChessGame_R.chessBoard_8x8_O);
+
+        IfritChessGame_R.chessEngine_0x88_O.test_go(IfritChessGame_R.depth_max);
+
+
         // комп за белых        
-        IfritChessGame_R.chessEngine_0x88_O.go(IfritChessGame_R.depth_max);
+        //IfritChessGame_R.chessEngine_0x88_O.go(IfritChessGame_R.depth_max);
         //IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_0x88(IfritChessGame_R.chessEngine_0x88_O.search_0x88_O.chess_board_0x88_O_move);
         //IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O.set_0x88_from_8x8(IfritChessGame_R.chessBoard_8x8_O);
     },
@@ -151,6 +162,7 @@ let IfritChessGame_R = {
                     IfritChessGame_R.chessEngine_0x88_O.move_generator_0x88_O.generated_pseudo_legal_moves_one_piece_for_gui(from,
                         IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O, IfritChessGame_R.chessEngine_0x88_O.move_list_gui_0x88_O,
                         IfritChessGame_R.chessEngine_0x88_O.move_generator_0x88_O);
+//console.log("from_king gui " + IfritChessGame_R.chessEngine_0x88_O.move_list_gui_0x88_O.king_from);
 
                     let move_i = IfritChessGame_R.chessEngine_0x88_O.move_list_gui_0x88_O.return_i_move(from, to);
 
@@ -158,12 +170,14 @@ let IfritChessGame_R = {
                     IfritChessGame_R.chessEngine_0x88_O.search_0x88_O.make_move_0x88_O.save_chess_board_0x88(
                         IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O,
                         IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O_save_gui);
+
                     let is_moove_legal = IfritChessGame_R.chessEngine_0x88_O.search_0x88_O.make_move_0x88_O.do_moves(move_i,
                         IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O,
                         IfritChessGame_R.chessEngine_0x88_O.move_list_gui_0x88_O, undo_0x88_O,
                         IfritChessGame_R.chessEngine_0x88_O.move_generator_0x88_O);
 
                     if (is_moove_legal == 0) {
+                        //console.log("ChessBoard_8x8_C->click(mouseDown) MOVE NOT LEGAL+++++++++++++++++++++++++++++++++++++++++++++++++++++");
                         IfritChessGame_R.chessEngine_0x88_O.search_0x88_O.make_move_0x88_O.restore_chess_board_0x88(
                             IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O,
                             IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O_save_gui);
@@ -173,8 +187,8 @@ let IfritChessGame_R = {
                         //IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_0x88(IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O);
                         //IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O);
 
-
-                        IfritChessGame_R.chessEngine_0x88_O.go(IfritChessGame_R.depth_max);
+                        IfritChessGame_R.chessEngine_0x88_O.test_go(IfritChessGame_R.depth_max);
+                        //IfritChessGame_R.chessEngine_0x88_O.go(IfritChessGame_R.depth_max);
 
                         console.log("ChessBoard_8x8_C->click(mouseDown) +++++++++++++++++++++++++++++++++++++++++++++++++++++");
 

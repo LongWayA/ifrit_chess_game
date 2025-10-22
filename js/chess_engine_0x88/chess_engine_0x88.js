@@ -22,7 +22,10 @@ class ChessEngine_0x88_С {
   move_list_gui_0x88_O = new Move_list_0x88_С();
 
   search_0x88_O = new Search_0x88_C();
-  
+
+  move_list_0x88_2_O = new Move_list_0x88_2_С();
+  move_generator_0x88_2_O = new Move_generator_0x88_2_С();
+
   score = 0;
 
   constructor() {
@@ -33,14 +36,20 @@ class ChessEngine_0x88_С {
     this.chess_board_0x88_O.iniM();
     this.move_list_0x88_O.iniM();
     this.move_generator_0x88_O.iniM();
-    this.search_0x88_O.iniM();  
+    this.search_0x88_O.iniM();
+    this.move_list_0x88_2_O.iniM();
+    this.move_generator_0x88_2_O.iniM();
+  }
+
+  test_go(depth_max) {
+      let score = this.search_0x88_O.start_search_2(this.chess_board_0x88_O, this.move_generator_0x88_2_O, depth_max);
   }
 
   go(depth_max) {
     this.chess_board_0x88_O.score = this.search_0x88_O.evaluate_0x88_O.score_position(this.chess_board_0x88_O);
     this.chess_board_0x88_O.test_print_0x88();
     this.chess_board_0x88_O.test_print_0x88_color();
-    this.chess_board_0x88_O.test_print_any_0x88(); 
+    this.chess_board_0x88_O.test_print_any_0x88();
     this.move_generator_0x88_O.generated_pseudo_legal_moves(this.chess_board_0x88_O, this.move_list_0x88_O);
     //this.move_list_0x88_O.test_print_list(IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O);
     /////////////////////
@@ -59,10 +68,10 @@ class ChessEngine_0x88_С {
     this.move_generator_0x88_O.generated_pseudo_legal_moves_one_piece_for_gui(from, this.chess_board_0x88_O,
       this.move_list_gui_0x88_O);
 
-   // console.log("IfritChessEngine_С-> print_list---------- ");
-   // this.move_list_gui_0x88_O.test_print_list(this.chess_board_0x88_O); 
-   // this.chess_board_0x88_O.test_print_0x88();
-   // this.chess_board_0x88_O.test_print_0x88_color();
+    // console.log("IfritChessEngine_С-> print_list---------- ");
+    // this.move_list_gui_0x88_O.test_print_list(this.chess_board_0x88_O); 
+    // this.chess_board_0x88_O.test_print_0x88();
+    // this.chess_board_0x88_O.test_print_0x88_color();
     let ret = this.move_list_gui_0x88_O.move_is_legal(from, to);
 
     //console.log("IfritChessEngine_С-> from_x " + from_x + " from_y " + from_y +" to_x " + to_x + " to_y " + to_y);
