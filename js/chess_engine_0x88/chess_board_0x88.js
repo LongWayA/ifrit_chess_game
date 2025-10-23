@@ -116,6 +116,7 @@ class Chess_board_0x88_C {
 
     // рисуем доску на консоле браузера (для тестирования)
     test_print_any_0x88() {
+        console.log("test_print_any_0x88 ****************");
         console.log("side_to_move " + this.side_to_move);
         console.log("en_passant_yes " + this.en_passant_yes);
         console.log("en_passant_target_square " + this.en_passant_target_square);
@@ -124,16 +125,15 @@ class Chess_board_0x88_C {
         console.log("castling_q " + this.castling_q);
         console.log("castling_k " + this.castling_k);
         console.log("score " + this.score);
+        console.log("**************** test_print_any_0x88");
     }
 
 
     // рисуем доску на консоле браузера (для тестирования)
     test_print_0x88() {
-        //console.log("draw");
+        console.log("test_print_0x88 ****************");
         let l = 0;// только один раз должен сработать перевод строки
         let line = "";//
-
-        console.log("------------------------------------------------");
 
         for (let i = 0; i < 128; i++) {
             if ((i & 136) == 0) {// 136 0x88
@@ -148,12 +148,12 @@ class Chess_board_0x88_C {
         }
         console.log("side_to_move = " + this.side_to_move);
         console.log("score = " + this.score);
-
+        console.log("**************** test_print_0x88");
     }
 
     // рисуем доску на консоле браузера (для тестирования)
     test_print_0x88_color() {
-        //console.log("draw");
+        console.log("test_print_0x88_color ****************");
         let l = 0;// только один раз должен сработать перевод строки
         let line = "";//
 
@@ -167,15 +167,17 @@ class Chess_board_0x88_C {
                 line = "";
             }
         }
+        console.log("**************** test_print_0x88_color");
     }
 
     test_print_0x88_line() {
-        console.log("draw");
+        console.log("test_print_0x88_line ****************");
         let line = "";//
         for (let i = 0; i < 128; i++) {
             line = line + String(this.sq_piece_0x88[i]) + ",";
         }
         console.log(line);
+        console.log("**************** test_print_0x88_line");
     }
 
     // инициализируем одномерную доску движка из двумерной доски оболочки
