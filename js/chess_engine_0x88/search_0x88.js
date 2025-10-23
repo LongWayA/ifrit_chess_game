@@ -75,11 +75,13 @@ class Search_0x88_C {
       //  move_list_0x88_O.test_print_list(chess_board_0x88_O);       
       for (let move_i = 0; move_i < move_list_0x88_O.number_move; move_i++) {
         //console.log("Search_0x88_C->2 ");
-        this.make_move_0x88_O.save_chess_board_0x88(chess_board_0x88_O, chess_board_0x88_O_save);
+        // записали доску
+        chess_board_0x88_O_save.save_chess_board_0x88(chess_board_0x88_O);
         is_moove_legal = this.make_move_0x88_O.do_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O, move_generator_0x88_O);
         //здесь должен быть контроль легальности хода
         if (is_moove_legal == 0) {
-          this.make_move_0x88_O.restore_chess_board_0x88(chess_board_0x88_O, chess_board_0x88_O_save);
+          // восстановили доску
+          chess_board_0x88_O.save_chess_board_0x88(chess_board_0x88_O_save);
           continue;
         }
         score = this.searching_alpha_beta(alpha, beta, chess_board_0x88_O, move_generator_0x88_O, (depth + 1), depth_max);
@@ -93,11 +95,13 @@ class Search_0x88_C {
             found_score = score;
             if (score > alpha) alpha = score; // alpha acts like max in MiniMax
             this.pv_line_0x88_O.add_move(move_i, move_list_0x88_O, depth);
-            if (depth == 0) this.make_move_0x88_O.save_chess_board_0x88(chess_board_0x88_O, this.chess_board_0x88_O_move);
+            if (depth == 0) this.chess_board_0x88_O_move.save_chess_board_0x88(chess_board_0x88_O);
+
             //console.log("Search_0x88_C->score > max_score depth " + depth + " found_score " + found_score);
           }
           if (score >= beta) {
-            this.make_move_0x88_O.restore_chess_board_0x88(chess_board_0x88_O, chess_board_0x88_O_save);
+            // восстановили доску
+            chess_board_0x88_O.save_chess_board_0x88(chess_board_0x88_O_save);
             return score;   // fail soft beta-cutoff
           }
         } else {
@@ -106,15 +110,17 @@ class Search_0x88_C {
             found_score = score;
             if (score < beta) beta = score; // beta acts like min in MiniMax
             this.pv_line_0x88_O.add_move(move_i, move_list_0x88_O, depth);
-            if (depth == 0) this.make_move_0x88_O.save_chess_board_0x88(chess_board_0x88_O, this.chess_board_0x88_O_move);
+            if (depth == 0) this.chess_board_0x88_O_move.save_chess_board_0x88(chess_board_0x88_O);
             //console.log("Search_0x88_C->score > min_score depth " + depth + " found_score " + found_score);
           }
           if (score <= alpha) {
-            this.make_move_0x88_O.restore_chess_board_0x88(chess_board_0x88_O, chess_board_0x88_O_save);
+            // восстановили доску
+            chess_board_0x88_O.save_chess_board_0x88(chess_board_0x88_O_save);
             return score; // fail soft alpha-cutoff, break can also be used here          
           }
         }
-        this.make_move_0x88_O.restore_chess_board_0x88(chess_board_0x88_O, chess_board_0x88_O_save);
+        // восстановили доску
+        chess_board_0x88_O.save_chess_board_0x88(chess_board_0x88_O_save);
       }
     }
     return found_score;
@@ -145,11 +151,13 @@ class Search_0x88_C {
       move_list_0x88_O.sorting_list();
       for (let move_i = 0; move_i < move_list_0x88_O.number_move; move_i++) {
         //console.log("Search_0x88_C->2 ");
-        this.make_move_0x88_O.save_chess_board_0x88(chess_board_0x88_O, chess_board_0x88_O_save);
+        // записали доску
+        chess_board_0x88_O_save.save_chess_board_0x88(chess_board_0x88_O);
         is_moove_legal = this.make_move_0x88_O.do_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O, move_generator_0x88_O);
         //здесь должен быть контроль легальности хода
         if (is_moove_legal == 0) {
-          this.make_move_0x88_O.restore_chess_board_0x88(chess_board_0x88_O, chess_board_0x88_O_save);
+          // восстановили доску
+          chess_board_0x88_O.save_chess_board_0x88(chess_board_0x88_O_save);
           continue;
         }
         score = this.searching_minimax(chess_board_0x88_O, move_generator_0x88_O, (depth + 1), depth_max);
@@ -162,7 +170,7 @@ class Search_0x88_C {
           if (score > found_score) {
             found_score = score;
             this.pv_line_0x88_O.add_move(move_i, move_list_0x88_O, depth);
-            if (depth == 0) this.make_move_0x88_O.save_chess_board_0x88(chess_board_0x88_O, this.chess_board_0x88_O_move);
+            if (depth == 0) this.chess_board_0x88_O_move.save_chess_board_0x88(chess_board_0x88_O);
             //console.log("Search_0x88_C->score > max_score depth " + depth + " found_score " + found_score);
           }
         } else {
@@ -170,11 +178,12 @@ class Search_0x88_C {
           if (score < found_score) {
             found_score = score;
             this.pv_line_0x88_O.add_move(move_i, move_list_0x88_O, depth);
-            if (depth == 0) this.make_move_0x88_O.save_chess_board_0x88(chess_board_0x88_O, this.chess_board_0x88_O_move);
+            if (depth == 0) this.chess_board_0x88_O_move.save_chess_board_0x88(chess_board_0x88_O);
             //console.log("Search_0x88_C->score > min_score depth " + depth + " found_score " + found_score);
           }
         }
-        this.make_move_0x88_O.restore_chess_board_0x88(chess_board_0x88_O, chess_board_0x88_O_save);
+        // восстановили доску
+        chess_board_0x88_O.save_chess_board_0x88(chess_board_0x88_O_save);
       }
     }
     return found_score;

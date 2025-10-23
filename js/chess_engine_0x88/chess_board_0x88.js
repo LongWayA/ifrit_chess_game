@@ -132,9 +132,10 @@ class Chess_board_0x88_C {
     // рисуем доску на консоле браузера (для тестирования)
     test_print_0x88() {
         console.log("test_print_0x88 ****************");
-        let l = 0;// только один раз должен сработать перевод строки
+        let l = 0;// 
         let line = "";//
-
+        // бежим по доске и добавляем в линию фигуры с доски. как достигли 
+        // конца доски с фигурами печатаем линию и все по новой
         for (let i = 0; i < 128; i++) {
             if ((i & 136) == 0) {// 136 0x88
                 l = 1;
@@ -179,6 +180,33 @@ class Chess_board_0x88_C {
         console.log(line);
         console.log("**************** test_print_0x88_line");
     }
+
+  //
+  save_chess_board_0x88(chess_board_0x88_O) {
+    //console.log("Make_move_0x88_C->do_undo_moves");
+    for (let i = 0; i < 128; i++) {
+      this.sq_piece_0x88[i] = chess_board_0x88_O.sq_piece_0x88[i];
+      this.sq_piece_color_0x88[i] = chess_board_0x88_O.sq_piece_color_0x88[i];
+    }
+
+    // цвет хода 0 - черные 1 - белые
+    this.side_to_move = chess_board_0x88_O.side_to_move;
+    // разрешение взятия на проходе 1/0
+    this.en_passant_yes = chess_board_0x88_O.en_passant_yes;
+    // координата битого поля
+    this.en_passant_target_square = chess_board_0x88_O.en_passant_target_square;
+    // рокировка белых в длинную сторону   1/0
+    this.castling_Q = chess_board_0x88_O.castling_Q;
+    // рокировка белых в короткую сторону  1/0
+    this.castling_K = chess_board_0x88_O.castling_K;
+    // рокировка черных в длинную сторону  1/0
+    this.castling_q = chess_board_0x88_O.castling_q;
+    // рокировка черных в короткую сторону 1/0
+    this.castling_k = chess_board_0x88_O.castling_k;
+    // оценка позиции
+    this.score = chess_board_0x88_O.score;
+  }
+
 
     // инициализируем одномерную доску движка из двумерной доски оболочки
     set_0x88_from_8x8(chessBoard_8x8_O) {

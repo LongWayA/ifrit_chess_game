@@ -53,11 +53,14 @@ class ChessBoard_8x8_C {
 
     // рокировка черных в короткую сторону 1/0
     castling_k = 1;
+
     // оценка позиции
     score = -1;
+
     //The number of halfmoves since the last capture or pawn advance, 
     // used for the fifty-move rule.(from wikipedia)
     halfmove_clock = -1;
+    
     //Fullmove number: The number of the full moves. 
     // It starts at 1 and is incremented after Black's move.(from wikipedia)   
     fullmove_number = -1;

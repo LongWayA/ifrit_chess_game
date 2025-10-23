@@ -58,11 +58,10 @@ class PV_line_0x88_C {
   }
 
   test_print_pv_line(chess_board_0x88_O) {
-    console.log(" ");
-    console.log("print pv line");
+    console.log("test_print_pv_line ********");
 
     for (let i = 0; i < this.depth_max + 1; i++) {
-      console.log("type_move[" + i + "] = " + this.type_move[i] + " nm = " + Move_list_0x88_С.TYPE_MOVE_NAME[this.type_move[i]]);
+      console.log("type_move[" + i + "] = " + this.type_move[i] + " " + Move_list_0x88_С.TYPE_MOVE_NAME[this.type_move[i]]);
       console.log("piece_color[" + i + "] = " + this.piece_color[i]);
       console.log("score_move[" + i + "] = " + this.score_move[i]);
       console.log("from[" + i + "] = " + this.from[i]);
@@ -75,6 +74,7 @@ class PV_line_0x88_C {
       console.log(" ");
     }
     console.log("depth_max = " + this.depth_max);
+    console.log("******** test_print_pv_line");   
   }
 
 }
