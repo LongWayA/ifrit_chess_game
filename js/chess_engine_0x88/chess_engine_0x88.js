@@ -61,9 +61,14 @@ class ChessEngine_0x88_С {
     ///IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O.test_print_0x88();
     ///IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O.test_print_0x88_color();
     ///////////////////
-    // с ответом компа                   
-    this.search_0x88_O.chess_board_0x88_O_move.test_print_0x88();
-    this.search_0x88_O.chess_board_0x88_O_move.test_print_0x88_color();
+    // с ответом компа   
+    
+    
+    //this.search_0x88_O.chess_board_0x88_O_move.test_print_0x88();
+    //this.search_0x88_O.chess_board_0x88_O_move.test_print_0x88_color();
+
+
+    
     //console.log("ChessEngine_0x88_С->score " + this.score);
     //this.chess_board_0x88_O.test_print_0x88();
     //this.chess_board_0x88_O.test_print_0x88_color();

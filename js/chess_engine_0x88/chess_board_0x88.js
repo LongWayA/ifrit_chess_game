@@ -181,31 +181,97 @@ class Chess_board_0x88_C {
         console.log("**************** test_print_0x88_line");
     }
 
-  //
-  save_chess_board_0x88(chess_board_0x88_O) {
-    //console.log("Make_move_0x88_C->do_undo_moves");
-    for (let i = 0; i < 128; i++) {
-      this.sq_piece_0x88[i] = chess_board_0x88_O.sq_piece_0x88[i];
-      this.sq_piece_color_0x88[i] = chess_board_0x88_O.sq_piece_color_0x88[i];
+    //
+    test_compare_chess_board_0x88(chess_board_0x88_O) {
+
+        let is_test_ok = 1;
+        //console.log("test_compare_chess_board_0x88****************");
+        for (let i = 0; i < 128; i++) {
+            if (this.sq_piece_0x88[i] != chess_board_0x88_O.sq_piece_0x88[i]) {
+                is_test_ok = 0;
+                console.log("this sq_piece_0x88[" + i + "] " + this.sq_piece_0x88[i]);
+                console.log("out this.sq_piece_0x88[" + i + "] " + chess_board_0x88_O.sq_piece_0x88[i]);
+            };
+            if (this.sq_piece_color_0x88[i] != chess_board_0x88_O.sq_piece_color_0x88[i]) {
+                is_test_ok = 0;
+                console.log("this sq_piece_color_0x88[" + i + "] " + this.sq_piece_color_0x88[i]);
+                console.log("out sq_piece_color_0x88[" + i + "] " + chess_board_0x88_O.sq_piece_color_0x88[i]);
+            };
+        }
+
+        // цвет хода 0 - черные 1 - белые
+        if (this.side_to_move != chess_board_0x88_O.side_to_move) {
+            is_test_ok = 0;
+            console.log("this side_to_move " + this.side_to_move);
+            console.log("out side_to_move " + chess_board_0x88_O.side_to_move);
+        };
+        if (this.en_passant_yes != chess_board_0x88_O.en_passant_yes) {
+            is_test_ok = 0;
+            console.log("this en_passant_yes " + this.en_passant_yes);
+            console.log("out en_passant_yes " + chess_board_0x88_O.en_passant_yes);
+        };
+        if (this.en_passant_target_square != chess_board_0x88_O.en_passant_target_square) {
+            is_test_ok = 0;
+            console.log("this en_passant_target_square " + this.en_passant_target_square);
+            console.log("out en_passant_target_square " + chess_board_0x88_O.en_passant_target_square);
+        };
+
+        if (this.castling_Q != chess_board_0x88_O.castling_Q) {
+            is_test_ok = 0;
+            console.log("this castling_Q " + this.castling_Q);
+            console.log("out castling_Q " + chess_board_0x88_O.castling_Q);
+        };
+        if (this.castling_K != chess_board_0x88_O.castling_K) {
+            is_test_ok = 0;
+            console.log("this castling_K " + this.castling_K);
+            console.log("out castling_K " + chess_board_0x88_O.castling_K);
+        };
+        if (this.castling_q != chess_board_0x88_O.castling_q) {
+            is_test_ok = 0;
+            console.log("this castling_q " + this.castling_q);
+            console.log("out castling_q " + chess_board_0x88_O.castling_q);
+        };
+        if (this.castling_k != chess_board_0x88_O.castling_k) {
+            is_test_ok = 0;
+            console.log("this castling_k " + this.castling_k);
+            console.log("out castling_k " + chess_board_0x88_O.castling_k);
+        };
+        if (this.score != chess_board_0x88_O.score) {
+            is_test_ok = 0;
+            console.log("this score " + this.score);
+            console.log("out score " + chess_board_0x88_O.score);
+        };
+        //console.log("**************** test_compare_chess_board_0x88");
+
+        return is_test_ok;
     }
 
-    // цвет хода 0 - черные 1 - белые
-    this.side_to_move = chess_board_0x88_O.side_to_move;
-    // разрешение взятия на проходе 1/0
-    this.en_passant_yes = chess_board_0x88_O.en_passant_yes;
-    // координата битого поля
-    this.en_passant_target_square = chess_board_0x88_O.en_passant_target_square;
-    // рокировка белых в длинную сторону   1/0
-    this.castling_Q = chess_board_0x88_O.castling_Q;
-    // рокировка белых в короткую сторону  1/0
-    this.castling_K = chess_board_0x88_O.castling_K;
-    // рокировка черных в длинную сторону  1/0
-    this.castling_q = chess_board_0x88_O.castling_q;
-    // рокировка черных в короткую сторону 1/0
-    this.castling_k = chess_board_0x88_O.castling_k;
-    // оценка позиции
-    this.score = chess_board_0x88_O.score;
-  }
+
+    //
+    save_chess_board_0x88(chess_board_0x88_O) {
+        //console.log("Make_move_0x88_C->do_undo_moves");
+        for (let i = 0; i < 128; i++) {
+            this.sq_piece_0x88[i] = chess_board_0x88_O.sq_piece_0x88[i];
+            this.sq_piece_color_0x88[i] = chess_board_0x88_O.sq_piece_color_0x88[i];
+        }
+
+        // цвет хода 0 - черные 1 - белые
+        this.side_to_move = chess_board_0x88_O.side_to_move;
+        // разрешение взятия на проходе 1/0
+        this.en_passant_yes = chess_board_0x88_O.en_passant_yes;
+        // координата битого поля
+        this.en_passant_target_square = chess_board_0x88_O.en_passant_target_square;
+        // рокировка белых в длинную сторону   1/0
+        this.castling_Q = chess_board_0x88_O.castling_Q;
+        // рокировка белых в короткую сторону  1/0
+        this.castling_K = chess_board_0x88_O.castling_K;
+        // рокировка черных в длинную сторону  1/0
+        this.castling_q = chess_board_0x88_O.castling_q;
+        // рокировка черных в короткую сторону 1/0
+        this.castling_k = chess_board_0x88_O.castling_k;
+        // оценка позиции
+        this.score = chess_board_0x88_O.score;
+    }
 
 
     // инициализируем одномерную доску движка из двумерной доски оболочки

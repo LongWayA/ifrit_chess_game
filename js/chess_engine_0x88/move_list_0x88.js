@@ -191,6 +191,25 @@ class Move_list_0x88_С {
         this.number_move = this.number_move + 1;
     }
 
+    test_print_i_move_list(i, chess_board_0x88_O) {
+        console.log("test_print_i_move_list ********");
+        console.log("type_move[" + i + "] = " + this.type_move[i] + " nm = " + Move_list_0x88_С.TYPE_MOVE_NAME[this.type_move[i]]);
+        console.log("piece_color[" + i + "] = " + this.piece_color[i]);
+        console.log("score_move[" + i + "] = " + this.score_move[i]);
+
+        console.log("from[" + i + "] = " + this.from[i]);
+        console.log("to[" + i + "] = " + this.to[i]);
+
+        console.log(Chess_board_0x88_C.LET_COOR[chess_board_0x88_O.s_0x88_to_x07(this.from[i])] + "" +
+            (8 - chess_board_0x88_O.s_0x88_to_y07(this.from[i])) + "-" +
+            Chess_board_0x88_C.LET_COOR[chess_board_0x88_O.s_0x88_to_x07(this.to[i])] + "" +
+            (8 - chess_board_0x88_O.s_0x88_to_y07(this.to[i])));
+
+        console.log("---- ");
+        console.log("*********** test_print_i_move_list");
+    }
+
+
     test_print_list(chess_board_0x88_O) {
         console.log("test_print_list ********");
         for (let i = 0; i < this.number_move; i++) {
@@ -228,7 +247,7 @@ class Move_list_0x88_С {
         let ret = false;
 
         for (let i = 0; i < this.number_move; i++) {
-            if ((this.from[i] == from) && (this.to[i] == to)){ 
+            if ((this.from[i] == from) && (this.to[i] == to)) {
                 ret = true;
                 return ret;
             }
@@ -337,7 +356,7 @@ class Move_list_0x88_С {
             out.PROMO_KNIGHT = Move_list_0x88_С.CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT;
         };
 
-            //console.log("Move_list_0x88_С->return_type_captures_pawn_promo out.PROMO_QUEEN " + out.PROMO_QUEEN);
+        //console.log("Move_list_0x88_С->return_type_captures_pawn_promo out.PROMO_QUEEN " + out.PROMO_QUEEN);
         return out;
     }
 
