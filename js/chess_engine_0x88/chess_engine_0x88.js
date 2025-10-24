@@ -68,10 +68,11 @@ class ChessEngine_0x88_С {
     //this.search_0x88_O.chess_board_0x88_O_move.test_print_0x88_color();
 
 
-    
+
     //console.log("ChessEngine_0x88_С->score " + this.score);
     //this.chess_board_0x88_O.test_print_0x88();
     //this.chess_board_0x88_O.test_print_0x88_color();
+    return this.score;
   }
 
   //this.one_click_on_squares_x, this.one_click_on_squares_y, x_b_n, y_b_n

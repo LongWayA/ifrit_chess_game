@@ -24,7 +24,7 @@ class Unmake_move_0x88_C {
 
   }
 
-  return_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O, move_generator_0x88_O) {
+  undo_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O, move_generator_0x88_O) {
     //console.log("Make_move_0x88_C->do_moves  move_i " + move_i);
     let type_move = move_list_0x88_O.type_move[move_i];
     undo_0x88_O.get_undo(chess_board_0x88_O);

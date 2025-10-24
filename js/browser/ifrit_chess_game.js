@@ -72,7 +72,7 @@ let IfritChessGame_R = {
         // тут рулим тестами. если test = 1 задаем режим тестов, когда сам ходишь за обе стороны
         IfritChessGame_R.test = 0;
         // задаем глубину перебора во время игры или обсчета тестовых позиций на количество узлов
-        IfritChessGame_R.depth_max = 4;
+        IfritChessGame_R.depth_max = 6;
 
         IfritChessGame_R.TEST_POSITION_FEN = IfritChessGame_R.INITIAL_POSITION_FEN;
         //IfritChessGame_R.TEST_POSITION_FEN = IfritChessGame_R.POSITION_FEN_6;//
@@ -153,7 +153,7 @@ let IfritChessGame_R = {
     mouseDown_2(x, y) {
         console.log("ChessBoard_8x8_C->click(mouseDown) START ======================================================= START ");
         IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O.set_0x88_from_8x8(IfritChessGame_R.chessBoard_8x8_O);
-
+        let score = 0;
         //console.log('IfritChessGame_R->mouseDown x ' + x + " y " + y);
         let undo_0x88_O = new Undo_0x88_C();
 
@@ -235,8 +235,8 @@ let IfritChessGame_R = {
                             IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_0x88(IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O);
 
                         } else {
-                            // режим игры движок отвечает на наш ход   
-                            IfritChessGame_R.chessEngine_0x88_O.go_search(IfritChessGame_R.depth_max);
+                            // режим игры движок отвечает на наш ход 
+                            score = IfritChessGame_R.chessEngine_0x88_O.go_search(IfritChessGame_R.depth_max);
                             // копируем доску движка с найденным ходом в игровую
                             IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_0x88(IfritChessGame_R.chessEngine_0x88_O.search_0x88_O.chess_board_0x88_O_move);
                         }
@@ -245,9 +245,11 @@ let IfritChessGame_R = {
                     }
                     // рисуем доску независимо от того  какой режим                   
                     IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O);
+                IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("score " + score ,
+                        450, 20, Html5Canvas_C.ITALIC_20PX_SANS_SERIF, Html5Canvas_C.RED, 1);                    
                     IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("max depth " + IfritChessGame_R.depth_max +
                         " nodes " + IfritChessGame_R.chessEngine_0x88_O.search_0x88_O.node,
-                        450, 20, Html5Canvas_C.ITALIC_20PX_SANS_SERIF, Html5Canvas_C.RED, 1);
+                        450, 50, Html5Canvas_C.ITALIC_20PX_SANS_SERIF, Html5Canvas_C.RED, 1);
 
                     if (is_moove_legal == 0) {
                         IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("Недопустимый ход.",
