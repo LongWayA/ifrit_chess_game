@@ -17,7 +17,7 @@ class ChessEngine_0x88_С {
 
   // для всех
   move_generator_0x88_O = new Move_generator_0x88_С();
-  search_0x88_O = new Search_0x88_C();
+  search_start_0x88_O = new Search_start_0x88_C();
   chess_board_0x88_O = new Chess_board_0x88_C();
 
   // для счета движка
@@ -38,12 +38,12 @@ class ChessEngine_0x88_С {
     this.chess_board_0x88_O.iniM();
     this.move_list_0x88_O.iniM();
     this.move_generator_0x88_O.iniM();
-    this.search_0x88_O.iniM();
+    this.search_start_0x88_O.iniM();
   }
 
   go_test(depth_max) {
     console.log("ChessEngine_0x88_С->go_test --------");
-    this.chess_board_0x88_O.score = this.search_0x88_O.evaluate_0x88_O.score_position(this.chess_board_0x88_O);
+    this.chess_board_0x88_O.score = this.search_start_0x88_O.evaluate_0x88_O.score_position(this.chess_board_0x88_O);
     this.chess_board_0x88_O.test_print_0x88();
     this.chess_board_0x88_O.test_print_0x88_color();
     console.log("ChessEngine_0x88_С->chess_board_0x88_O.score " + this.chess_board_0x88_O.score);
@@ -56,7 +56,7 @@ class ChessEngine_0x88_С {
 
   go_search(depth_max) {
 
-    this.score = this.search_0x88_O.start_search(this.chess_board_0x88_O, this.move_generator_0x88_O, depth_max);
+    this.score = this.search_start_0x88_O.start_search(this.chess_board_0x88_O, this.move_generator_0x88_O, depth_max);
     //режим без ответа компа                    
     ///IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O.test_print_0x88();
     ///IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O.test_print_0x88_color();
@@ -64,8 +64,8 @@ class ChessEngine_0x88_С {
     // с ответом компа   
     
     
-    //this.search_0x88_O.chess_board_0x88_O_move.test_print_0x88();
-    //this.search_0x88_O.chess_board_0x88_O_move.test_print_0x88_color();
+    //this.search_start_0x88_O.chess_board_0x88_O_move.test_print_0x88();
+    //this.search_start_0x88_O.chess_board_0x88_O_move.test_print_0x88_color();
 
 
 
