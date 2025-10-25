@@ -60,7 +60,7 @@ class ChessBoard_8x8_C {
     //The number of halfmoves since the last capture or pawn advance, 
     // used for the fifty-move rule.(from wikipedia)
     halfmove_clock = -1;
-    
+
     //Fullmove number: The number of the full moves. 
     // It starts at 1 and is incremented after Black's move.(from wikipedia)   
     fullmove_number = -1;
@@ -229,7 +229,7 @@ class ChessBoard_8x8_C {
         this.halfmove_clock = -1;
         this.fullmove_number = -1;
 
-        this.iniPosition_0();       
+        this.iniPosition_0();
 
         // for (let i_fen = 0; fen[i_fen] != undefined ; i_fen++) {            
         for (let i_fen = 0; i_fen < fen.length; i_fen++) {
@@ -372,6 +372,144 @@ class ChessBoard_8x8_C {
         return delta_x;
     }
 
+    // "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+    set_fen_from_8x8(chess_board_0x88_O) {//
+        //console.log('ChessBoard_8x8_C->set_fen_from_8x8************************');
+        let fen = "";
 
+        let i = 0;
+        //i = chess_board_0x88_O.x07_y07_to_0x88(x, y);
+        for (let y = 0; y < 8; y++) {
+            for (let x = 0; x < 8; x++) {
+                if (this.sq_piece_8x8[y][x] != ChessBoard_8x8_C.PIECE_NO) {
+                    if (i == 0) {
+                        // фигура есть. символ добавляем 
+                        fen = fen + this.fen_piece_to_char(x, y);
+                    } else {
+                        fen = fen + i;
+                        i = 0;
+                        fen = fen + this.fen_piece_to_char(x, y);
+                    }
+                } else {
+                    i = i + 1;
+                }
+            }
+            if (i != 0) {
+                fen = fen + i;
+                i = 0;
+            }
+            if (y != 7) fen = fen + "/";
+        }
+        fen = fen + " ";
+        if (this.side_to_move == ChessBoard_8x8_C.WHITE) {
+            fen = fen + "w";
+        } else {
+            fen = fen + "b";
+        }
+        fen = fen + " ";
+        let c = 0;
+        if (this.castling_K == 1) {
+            c = 1;
+            fen = fen + "K";
+        }
+        if (this.castling_Q == 1) {
+            c = 1;
+            fen = fen + "Q";
+        }
+        if (this.castling_k == 1) {
+            c = 1;
+            fen = fen + "k";
+        }
+        if (this.castling_q == 1) {
+            c = 1;
+            fen = fen + "q";
+        }
+        if (c == 1){
+            fen = fen + " ";
+        } else {
+            fen = fen + "-";
+            fen = fen + " ";                       
+        }
+
+        let yy = 8 - chess_board_0x88_O.s_0x88_to_y07(this.en_passant_target_square);
+        if (this.en_passant_yes == 1) {
+
+            fen = fen + Chess_board_0x88_C.LET_COOR[chess_board_0x88_O.s_0x88_to_x07(this.en_passant_target_square)];
+            fen = fen + yy;
+        } else {
+            fen = fen + "-";
+        }
+        fen = fen + " ";
+
+        return fen;
+
+    }
+
+    //
+    fen_piece_to_char(x, y) {
+        let char = "";
+        // KING
+        if (this.sq_piece_8x8[y][x] == ChessBoard_8x8_C.KING) {
+            if (this.sq_piece_color_8x8[y][x] == ChessBoard_8x8_C.BLACK) {
+                char = "k";
+                return char;
+            } else {
+                char = "K";
+                return char;
+            }
+        }
+        // QUEEN
+        if (this.sq_piece_8x8[y][x] == ChessBoard_8x8_C.QUEEN) {
+            if (this.sq_piece_color_8x8[y][x] == ChessBoard_8x8_C.BLACK) {
+                char = "q";
+                return char;
+            } else {
+                char = "Q";
+                return char;
+            }
+        }
+        // ROOK
+        if (this.sq_piece_8x8[y][x] == ChessBoard_8x8_C.ROOK) {
+            if (this.sq_piece_color_8x8[y][x] == ChessBoard_8x8_C.BLACK) {
+                char = "r";
+                return char;
+            } else {
+                char = "R";
+                return char;
+            }
+        }
+        // BISHOP
+        if (this.sq_piece_8x8[y][x] == ChessBoard_8x8_C.BISHOP) {
+            if (this.sq_piece_color_8x8[y][x] == ChessBoard_8x8_C.BLACK) {
+                char = "b";
+                return char;
+            } else {
+                char = "B";
+                return char;
+            }
+        }
+        // KNIGHT
+        if (this.sq_piece_8x8[y][x] == ChessBoard_8x8_C.KNIGHT) {
+            if (this.sq_piece_color_8x8[y][x] == ChessBoard_8x8_C.BLACK) {
+                char = "n";
+                return char;
+            } else {
+                char = "N";
+                return char;
+            }
+        }
+        // PAWN
+        if (this.sq_piece_8x8[y][x] == ChessBoard_8x8_C.PAWN) {
+            if (this.sq_piece_color_8x8[y][x] == ChessBoard_8x8_C.BLACK) {
+                char = "p";
+                return char;
+            } else {
+                char = "P";
+                return char;
+            }
+        }
+
+        return char;
+    }
 
 }

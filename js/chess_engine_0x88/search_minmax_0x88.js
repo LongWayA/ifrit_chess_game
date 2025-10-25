@@ -16,7 +16,6 @@ class Search_minmax_0x88_C {
   make_move_0x88_O = new Make_move_0x88_C();
   unmake_move_0x88_O = new Unmake_move_0x88_C();
   evaluate_0x88_O = new Evaluate_0x88_C();
-  pv_line_0x88_O = new PV_line_0x88_C();
 
   static NAME = "Search_minmax_0x88_C";
 
@@ -31,7 +30,7 @@ class Search_minmax_0x88_C {
     //for tactical and quiet moves
   }
 
-  searching_minimax(chess_board_0x88_O, move_generator_0x88_O, depth, depth_max) {
+  searching_minimax(pv_line_0x88_O, chess_board_0x88_O, move_generator_0x88_O, depth, depth_max) {
     //let chess_board_0x88_O_save = new Chess_board_0x88_C();
     let undo_0x88_O = new Undo_0x88_C();
     let score = 0;// текущая оценка позиции
@@ -74,7 +73,7 @@ class Search_minmax_0x88_C {
           //chess_board_0x88_O.save_chess_board_0x88(chess_board_0x88_O_save);
           continue;
         }
-        score = this.searching_minimax(chess_board_0x88_O, move_generator_0x88_O, (depth + 1), depth_max);
+        score = this.searching_minimax(pv_line_0x88_O, chess_board_0x88_O, move_generator_0x88_O, (depth + 1), depth_max);
         move_list_0x88_O.score_move[move_i] = score;
         //if (depth == 0)  console.log("Search_0x88_C->MAX depth == 0 depth " + depth + " score " + score);
         //console.log("Search_0x88_C->side_to_move--------- " + chess_board_0x88_O.side_to_move);
@@ -83,7 +82,7 @@ class Search_minmax_0x88_C {
           // белые ищут максимум
           if (score > found_score) {
             found_score = score;
-            this.pv_line_0x88_O.add_move(move_i, move_list_0x88_O, depth);
+            pv_line_0x88_O.add_move(move_i, move_list_0x88_O, depth);
             if (depth == 0) this.chess_board_0x88_O_move.save_chess_board_0x88(chess_board_0x88_O);
             //console.log("Search_0x88_C->score > max_score depth " + depth + " found_score " + found_score);
           }
@@ -91,7 +90,7 @@ class Search_minmax_0x88_C {
           // черные ищут минимум
           if (score < found_score) {
             found_score = score;
-            this.pv_line_0x88_O.add_move(move_i, move_list_0x88_O, depth);
+            pv_line_0x88_O.add_move(move_i, move_list_0x88_O, depth);
             if (depth == 0) this.chess_board_0x88_O_move.save_chess_board_0x88(chess_board_0x88_O);
             //console.log("Search_0x88_C->score > min_score depth " + depth + " found_score " + found_score);
           }
@@ -110,7 +109,7 @@ class Search_minmax_0x88_C {
   }
 
 
-  test_searching_minimax(chess_board_0x88_O, move_generator_0x88_O, depth, depth_max) {
+  test_searching_minimax(pv_line_0x88_O, chess_board_0x88_O, move_generator_0x88_O, depth, depth_max) {
     let chess_board_0x88_O_save = new Chess_board_0x88_C();
     let undo_0x88_O = new Undo_0x88_C();
     let score = 0;// текущая оценка позиции
@@ -155,7 +154,7 @@ class Search_minmax_0x88_C {
           //chess_board_0x88_O.save_chess_board_0x88(chess_board_0x88_O_save);
           continue;
         }
-        score = this.searching_minimax(chess_board_0x88_O, move_generator_0x88_O, (depth + 1), depth_max);
+        score = this.searching_minimax(pv_line_0x88_O, chess_board_0x88_O, move_generator_0x88_O, (depth + 1), depth_max);
         move_list_0x88_O.score_move[move_i] = score;
         //if (depth == 0)  console.log("Search_0x88_C->MAX depth == 0 depth " + depth + " score " + score);
         //console.log("Search_0x88_C->side_to_move--------- " + chess_board_0x88_O.side_to_move);
@@ -164,7 +163,7 @@ class Search_minmax_0x88_C {
           // белые ищут максимум
           if (score > found_score) {
             found_score = score;
-            this.pv_line_0x88_O.add_move(move_i, move_list_0x88_O, depth);
+            pv_line_0x88_O.add_move(move_i, move_list_0x88_O, depth);
             if (depth == 0) this.chess_board_0x88_O_move.save_chess_board_0x88(chess_board_0x88_O);
             //console.log("Search_0x88_C->score > max_score depth " + depth + " found_score " + found_score);
           }
@@ -172,7 +171,7 @@ class Search_minmax_0x88_C {
           // черные ищут минимум
           if (score < found_score) {
             found_score = score;
-            this.pv_line_0x88_O.add_move(move_i, move_list_0x88_O, depth);
+            pv_line_0x88_O.add_move(move_i, move_list_0x88_O, depth);
             if (depth == 0) this.chess_board_0x88_O_move.save_chess_board_0x88(chess_board_0x88_O);
             //console.log("Search_0x88_C->score > min_score depth " + depth + " found_score " + found_score);
           }

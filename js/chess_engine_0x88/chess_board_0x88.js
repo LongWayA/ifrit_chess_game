@@ -305,6 +305,180 @@ class Chess_board_0x88_C {
         this.score = chessBoard_8x8_O.score;
     }
 
+    // "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+    set_0x88_from_fen(fen) {
+        console.log('ChessBoard_0x88_C->set_0x88_from_fen');
+
+        let char = "";
+        let x = 0;
+        let y = 0;
+        let void_f = 0;
+        let x07_en_passant;
+        let y07_en_passant;
+
+        this.side_to_move = -1;
+
+        this.en_passant_yes = -1;
+        this.en_passant_target_square = -1;
+
+        // по умолчанию все по нулям
+        // рокировка белых в длинную сторону   1/0
+        this.castling_Q = 0;
+        // рокировка белых в короткую сторону  1/0
+        this.castling_K = 0;
+        // рокировка черных в длинную сторону  1/0
+        this.castling_q = 0;
+        // рокировка черных в короткую сторону 1/0
+        this.castling_k = 0;
+
+//        this.halfmove_clock = -1;
+//        this.fullmove_number = -1;
+
+        this.iniStartPositionForWhite();       
+
+        // for (let i_fen = 0; fen[i_fen] != undefined ; i_fen++) {            
+        for (let i_fen = 0; i_fen < fen.length; i_fen++) {
+
+            char = fen[i_fen];
+            //console.log('fen[' + i_fen + '] ' + char);
+
+            if (char == "/") { // переходим на следующую горизонталь шахматной доски
+                y = y + 1;
+                x = 0;
+            } else if (char == " ") {// обрабатываем пробелы. каждый пробел это переход к следующей ступени разбора строки. 
+                void_f = void_f + 1;
+
+            } else if (void_f == 0) {// разбираем положение фигур на доске
+                x = x + this.char_fen_to_board(char, x, y);
+
+            } else if (void_f == 1) {// цвет хода 0 - черные,1 - белые
+                if (char == "w") {
+                    this.side_to_move = ChessBoard_8x8_C.WHITE;
+                } else if (char == "b") {
+                    this.side_to_move = ChessBoard_8x8_C.BLACK;
+                }
+
+            } else if (void_f == 2) {// рокировки
+                if (char == "K") { // короткая рокировка белых 
+                    this.castling_K = 1;
+                } else if (char == "Q") {// длинная рокировка белых
+                    this.castling_Q = 1;
+                } else if (char == "k") {// короткая рокировка черных
+                    this.castling_k = 1;
+                } else if (char == "q") {// длинная рокировка черных
+                    this.castling_q = 1;
+                }
+
+            } else if (void_f == 3) {// взятие на проходе
+                if (char == "-") {
+                    this.en_passant_yes = 0;
+                    this.en_passant_target_square = 0;
+                } else {
+                    x07_en_passant = letter_to_x_coordinate(char);
+                    y07_en_passant = 8 - Number(fen[i_fen + 1]);
+                    this.en_passant_yes = 1;
+                    // сразу для доски 0x88 потому что для 8х8 информация все равно не используется
+                    this.en_passant_target_square = this.x07_y07_to_0x88(x07_en_passant, y07_en_passant);
+                }
+
+            } else if (void_f == 4) {//Halfmove clock: The number of halfmoves since the last capture or pawn advance, 
+                // used for the fifty-move rule.(from wikipedia)
+                if ((char != "-") && (char != "")) {
+                    //this.halfmove_clock = Number(char);
+                }
+            } else if (void_f == 5) {//Fullmove number: The number of the full moves. 
+                // It starts at 1 and is incremented after Black's move.(from wikipedia)
+                if ((char != "-") && (char != "")) {
+                    //this.fullmove_number = Number(char);
+                }
+            }
+        }
+
+    }
+
+    // переводим букву в координату
+    letter_to_x_coordinate(letter) {
+        if (letter == "a") return 0;
+        if (letter == "b") return 1;
+        if (letter == "c") return 2;
+        if (letter == "d") return 3;
+        if (letter == "e") return 4;
+        if (letter == "f") return 5;
+        if (letter == "g") return 6;
+        if (letter == "h") return 7;
+        return -1;
+    }
+
+
+    //
+    char_fen_to_board(char, x, y) {
+
+        let delta_x = 1;
+        let z_0x88 = this.x07_y07_to_0x88(x07, y07)
+
+        // смотрим символ из фен строки
+        switch (char) {
+            //черные фигуры
+            case "k":// король
+                this.sq_piece_8x8[z_0x88] = ChessBoard_8x8_C.KING;
+                this.sq_piece_color_8x8[z_0x88] = ChessBoard_8x8_C.BLACK;
+                break;
+            case "q":// ферзь
+                this.sq_piece_8x8[z_0x88] = ChessBoard_8x8_C.QUEEN;
+                this.sq_piece_color_8x8[z_0x88] = ChessBoard_8x8_C.BLACK;
+                break;
+            case "r":// ладья
+                this.sq_piece_8x8[z_0x88] = ChessBoard_8x8_C.ROOK;
+                this.sq_piece_color_8x8[z_0x88] = ChessBoard_8x8_C.BLACK;
+                break;
+            case "b":// слон
+                this.sq_piece_8x8[z_0x88] = ChessBoard_8x8_C.BISHOP;
+                this.sq_piece_color_8x8[z_0x88] = ChessBoard_8x8_C.BLACK;
+                break;
+            case "n":// конь
+                this.sq_piece_8x8[z_0x88] = ChessBoard_8x8_C.KNIGHT;
+                this.sq_piece_color_8x8[z_0x88] = ChessBoard_8x8_C.BLACK;
+                break;
+            case "p":// пешка
+                this.sq_piece_8x8[z_0x88] = ChessBoard_8x8_C.PAWN;
+                this.sq_piece_color_8x8[z_0x88] = ChessBoard_8x8_C.BLACK;
+                break;
+
+            //белые фигуры
+            case "K":// король
+                this.sq_piece_8x8[z_0x88] = ChessBoard_8x8_C.KING;
+                this.sq_piece_color_8x8[z_0x88] = ChessBoard_8x8_C.WHITE;
+                break;
+            case "Q":// ферзь
+                this.sq_piece_8x8[z_0x88] = ChessBoard_8x8_C.QUEEN;
+                this.sq_piece_color_8x8[z_0x88] = ChessBoard_8x8_C.WHITE;
+                break;
+            case "R":// ладья
+                this.sq_piece_8x8[z_0x88] = ChessBoard_8x8_C.ROOK;
+                this.sq_piece_color_8x8[z_0x88] = ChessBoard_8x8_C.WHITE;
+                break;
+            case "B":// слон
+                this.sq_piece_8x8[z_0x88] = ChessBoard_8x8_C.BISHOP;
+                this.sq_piece_color_8x8[z_0x88] = ChessBoard_8x8_C.WHITE;
+                break;
+            case "N":// конь
+                this.sq_piece_8x8[z_0x88] = ChessBoard_8x8_C.KNIGHT;
+                this.sq_piece_color_8x8[z_0x88] = ChessBoard_8x8_C.WHITE;
+                break;
+            case "P":// пешка
+                this.sq_piece_8x8[z_0x88] = ChessBoard_8x8_C.PAWN;
+                this.sq_piece_color_8x8[z_0x88] = ChessBoard_8x8_C.WHITE;
+                break;
+
+            // количество пустых клеток   
+            default://
+                delta_x = Number(char);
+        }
+
+        return delta_x;
+    }
+
+
     searching_king(piece_color) {
         for (let i = 0; i < 128; i++) {
             if ((i & 136) == 0) {// 136 0x88

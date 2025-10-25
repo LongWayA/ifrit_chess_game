@@ -22,6 +22,7 @@ class ChessEngine_0x88_С {
 
   // для счета движка
   move_list_0x88_O = new Move_list_0x88_С();
+  pv_line_0x88_O = new PV_line_0x88_C();
 
   // обеспечение оболочки
   chess_board_0x88_O_save_gui = new Chess_board_0x88_C();
@@ -41,7 +42,7 @@ class ChessEngine_0x88_С {
     this.search_start_0x88_O.iniM();
   }
 
-  go_test(depth_max) {
+  go_test() {
     console.log("ChessEngine_0x88_С->go_test --------");
     this.chess_board_0x88_O.score = this.search_start_0x88_O.evaluate_0x88_O.score_position(this.chess_board_0x88_O);
     this.chess_board_0x88_O.test_print_0x88();
@@ -53,21 +54,50 @@ class ChessEngine_0x88_С {
     //this.move_list_0x88_O.test_print_list(IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O);
   }
 
+  go_test_search(depth_max) {
 
-  go_search(depth_max) {
+    this.score = this.search_start_0x88_O.test_start_search(this.pv_line_0x88_O, this.chess_board_0x88_O, this.move_generator_0x88_O, depth_max);
+    this.pv_line_0x88_O.test_print_pv_line(chess_board_0x88_O);
 
-    this.score = this.search_start_0x88_O.start_search(this.chess_board_0x88_O, this.move_generator_0x88_O, depth_max);
     //режим без ответа компа                    
     ///IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O.test_print_0x88();
     ///IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O.test_print_0x88_color();
     ///////////////////
     // с ответом компа   
-    
-    
+
+
     //this.search_start_0x88_O.chess_board_0x88_O_move.test_print_0x88();
     //this.search_start_0x88_O.chess_board_0x88_O_move.test_print_0x88_color();
 
 
+
+    //console.log("ChessEngine_0x88_С->score " + this.score);
+    //this.chess_board_0x88_O.test_print_0x88();
+    //this.chess_board_0x88_O.test_print_0x88_color();
+    return this.score;
+  }
+
+  ini_chess_board_0x88_O_from_fen(fen_position, chess_board_0x88_O) {
+
+  }
+
+
+  go_search(fen_position, depth_max) {
+
+    //this.ini_chess_board_0x88_O_from_fen(fen_position, this.chess_board_0x88_O);
+
+    this.score = this.search_start_0x88_O.start_search(this.pv_line_0x88_O, this.chess_board_0x88_O, this.move_generator_0x88_O, depth_max);
+    console.log("ChessEngine_0x88_С->А ЧТО В ГЛАВНОМ ВАРИАНТЕ?");
+    this.pv_line_0x88_O.test_print_pv_line(this.chess_board_0x88_O);
+    //режим без ответа компа                    
+    ///IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O.test_print_0x88();
+    ///IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O.test_print_0x88_color();
+    ///////////////////
+    // с ответом компа   
+
+
+    //this.search_start_0x88_O.chess_board_0x88_O_move.test_print_0x88();
+    //this.search_start_0x88_O.chess_board_0x88_O_move.test_print_0x88_color();
 
     //console.log("ChessEngine_0x88_С->score " + this.score);
     //this.chess_board_0x88_O.test_print_0x88();
