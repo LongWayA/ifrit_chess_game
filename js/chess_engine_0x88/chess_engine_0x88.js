@@ -47,7 +47,7 @@ class ChessEngine_0x88_С {
     pv_line: "-",
     node_count: 0,
     fen: "-",
-    chess_board_0x88_O_save_gui: null
+    chess_board_0x88_O_move: null
   };
 
 
@@ -64,7 +64,7 @@ class ChessEngine_0x88_С {
 
   // set position
   position(chessBoard_8x8_O) {
-    this.chess_board_0x88_O.set_0x88_from_8x8(chessBoard_8x8_O)
+    this.chess_board_0x88_O.set_0x88_from_8x8(chessBoard_8x8_O);
 
   }
 
@@ -77,7 +77,7 @@ class ChessEngine_0x88_С {
     this.info_return_e.score = info_return_search.score;
     this.info_return_e.pv_line_0x88_O = info_return_search.pv_line_0x88_O;
     this.info_return_e.node_count = info_return_search.node_count;
-    this.info_return_e.chess_board_0x88_O_save_gui = info_return_search.chess_board_0x88_O_move;
+    this.info_return_e.chess_board_0x88_O_move = info_return_search.chess_board_0x88_O_move;
 
     //this.pv_line_0x88_O.test_print_pv_line(this.chess_board_0x88_O);
 
@@ -92,7 +92,7 @@ class ChessEngine_0x88_С {
     this.info_return_e.score = info_return_search.score;
     this.info_return_e.pv_line_0x88_O = info_return_search.pv_line_0x88_O;
     this.info_return_e.node_count = info_return_search.node_count;
-    this.info_return_e.chess_board_0x88_O_save_gui = info_return_search.chess_board_0x88_O_move;
+    this.info_return_e.chess_board_0x88_O_move = info_return_search.chess_board_0x88_O_move;
 
     //this.pv_line_0x88_O.test_print_pv_line(this.chess_board_0x88_O);
 
@@ -113,7 +113,7 @@ class ChessEngine_0x88_С {
 
 
 
-  ini_chess_board_0x88_O_from_fen(fen_position, chess_board_0x88_O) {
+  position_fen(fen_position, chess_board_0x88_O) {
     //this.ini_chess_board_0x88_O_from_fen(fen_position, this.chess_board_0x88_O);
   }
 
@@ -178,13 +178,13 @@ class ChessEngine_0x88_С {
 
 
   draw_rect_move(from_x, from_y, chessBoard_8x8_O, draw_O) {
-
+    this.chess_board_0x88_O_gui.set_0x88_from_8x8(chessBoard_8x8_O);
     let from = this.chess_board_0x88_O.x07_y07_to_0x88(from_x, from_y);
     this.move_list_gui_0x88_O.clear_list();
-    this.move_generator_0x88_O.generated_pseudo_legal_moves_one_piece_for_gui(from, this.chess_board_0x88_O,
+    this.move_generator_0x88_O.generated_pseudo_legal_moves_one_piece_for_gui(from, this.chess_board_0x88_O_gui,
       this.move_list_gui_0x88_O, this.move_generator_0x88_O);
 
-    draw_O.draw_rect_move(this.move_list_gui_0x88_O, this.chess_board_0x88_O, chessBoard_8x8_O, Html5Canvas_C.BLUE);
+    draw_O.draw_rect_move(this.move_list_gui_0x88_O, this.chess_board_0x88_O_gui, chessBoard_8x8_O, Html5Canvas_C.BLUE);
   }
 }
 /*

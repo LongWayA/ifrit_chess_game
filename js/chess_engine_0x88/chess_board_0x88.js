@@ -99,9 +99,7 @@ class Chess_board_0x88_C {
     }
 
     iniM() {
-
         this.iniStartPositionForWhite();
-
     }
 
     // переводим координаты х и у в линейную координату доски 128(0x88)
@@ -315,37 +313,25 @@ class Chess_board_0x88_C {
 
     // https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
     // "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+    // SET BOARD инициируем позицию из фена
     set_0x88_from_fen(fen) {
-        console.log('ChessBoard_0x88_C->set_0x88_from_fen');
+        //console.log('ChessBoard_0x88_C->set_0x88_from_fen');
 
         let char = "";
         let x = 0;
         let y = 0;
         let void_f = 0;
-        let x07_en_passant;
-        let y07_en_passant;
+        let x07_en_passant = -1;
+        let y07_en_passant = -1;
 
         this.side_to_move = -1;
 
         this.en_passant_yes = -1;
         this.en_passant_target_square = -1;
 
-        // по умолчанию все по нулям
-        // рокировка белых в длинную сторону   1/0
-        this.castling_Q = 0;
-        // рокировка белых в короткую сторону  1/0
-        this.castling_K = 0;
-        // рокировка черных в длинную сторону  1/0
-        this.castling_q = 0;
-        // рокировка черных в короткую сторону 1/0
-        this.castling_k = 0;
+        this.iniPositionFor_0();
 
-        // количество ходов без взятий или движений пешки. нужно для правила 50 ходов.
-        this.halfmove_clock = -1;
-        // количество полных ходов приведших к данной позиции. увеличиваем только на ходе белых
-        this.fullmove_number = -1;
-
-        this.iniStartPositionForWhite();
+        //console.log('fen.length ' + fen.length);
 
         // for (let i_fen = 0; fen[i_fen] != undefined ; i_fen++) {            
         for (let i_fen = 0; i_fen < fen.length; i_fen++) {
@@ -361,12 +347,15 @@ class Chess_board_0x88_C {
 
             } else if (void_f == 0) {// разбираем положение фигур на доске
                 x = x + this.char_fen_to_board(char, x, y);
+                //console.log('fen[' + i_fen + '] ' + char);
+                //console.log('x ' + x + 'y ' + y);
+
 
             } else if (void_f == 1) {// цвет хода 0 - черные,1 - белые
                 if (char == "w") {
-                    this.side_to_move = ChessBoard_8x8_C.WHITE;
+                    this.side_to_move = Chess_board_0x88_C.WHITE;
                 } else if (char == "b") {
-                    this.side_to_move = ChessBoard_8x8_C.BLACK;
+                    this.side_to_move = Chess_board_0x88_C.BLACK;
                 }
 
             } else if (void_f == 2) {// рокировки
@@ -381,15 +370,24 @@ class Chess_board_0x88_C {
                 }
 
             } else if (void_f == 3) {// взятие на проходе
+                console.log('fen[' + i_fen + '] ' + char);
+
                 if (char == "-") {
                     this.en_passant_yes = 0;
                     this.en_passant_target_square = 0;
                 } else {
-                    x07_en_passant = letter_to_x_coordinate(char);
-                    y07_en_passant = 8 - Number(fen[i_fen + 1]);
-                    this.en_passant_yes = 1;
-                    // сразу для доски 0x88 потому что для 8х8 информация все равно не используется
-                    this.en_passant_target_square = this.x07_y07_to_0x88(x07_en_passant, y07_en_passant);
+                    // 
+                    if (x07_en_passant == -1) {
+                        x07_en_passant = this.letter_to_x_coordinate(char);
+                    } else {
+                        y07_en_passant = 8 - Number(char);
+                        this.en_passant_yes = 1;
+                        // сразу для доски 0x88 потому что для 8х8 информация все равно не используется
+                        this.en_passant_target_square = this.x07_y07_to_0x88(x07_en_passant, y07_en_passant);
+                        //console.log('x07_en_passant ' + x07_en_passant);
+                        //console.log('y07_en_passant ' + y07_en_passant);
+                        //console.log('this.en_passant_target_square ' + this.en_passant_target_square);
+                    }
                 }
 
             } else if (void_f == 4) {//Halfmove clock: The number of halfmoves since the last capture or pawn advance, 
@@ -425,60 +423,60 @@ class Chess_board_0x88_C {
     char_fen_to_board(char, x, y) {
 
         let delta_x = 1;
-        let z_0x88 = this.x07_y07_to_0x88(x07, y07)
+        let z_0x88 = this.x07_y07_to_0x88(x, y);
 
         // смотрим символ из фен строки
         switch (char) {
             //черные фигуры
             case "k":// король
-                this.sq_piece_8x8[z_0x88] = ChessBoard_8x8_C.KING;
-                this.sq_piece_color_8x8[z_0x88] = ChessBoard_8x8_C.BLACK;
+                this.sq_piece_0x88[z_0x88] = Chess_board_0x88_C.KING;
+                this.sq_piece_color_0x88[z_0x88] = Chess_board_0x88_C.BLACK;
                 break;
             case "q":// ферзь
-                this.sq_piece_8x8[z_0x88] = ChessBoard_8x8_C.QUEEN;
-                this.sq_piece_color_8x8[z_0x88] = ChessBoard_8x8_C.BLACK;
+                this.sq_piece_0x88[z_0x88] = Chess_board_0x88_C.QUEEN;
+                this.sq_piece_color_0x88[z_0x88] = Chess_board_0x88_C.BLACK;
                 break;
             case "r":// ладья
-                this.sq_piece_8x8[z_0x88] = ChessBoard_8x8_C.ROOK;
-                this.sq_piece_color_8x8[z_0x88] = ChessBoard_8x8_C.BLACK;
+                this.sq_piece_0x88[z_0x88] = Chess_board_0x88_C.ROOK;
+                this.sq_piece_color_0x88[z_0x88] = Chess_board_0x88_C.BLACK;
                 break;
             case "b":// слон
-                this.sq_piece_8x8[z_0x88] = ChessBoard_8x8_C.BISHOP;
-                this.sq_piece_color_8x8[z_0x88] = ChessBoard_8x8_C.BLACK;
+                this.sq_piece_0x88[z_0x88] = Chess_board_0x88_C.BISHOP;
+                this.sq_piece_color_0x88[z_0x88] = Chess_board_0x88_C.BLACK;
                 break;
             case "n":// конь
-                this.sq_piece_8x8[z_0x88] = ChessBoard_8x8_C.KNIGHT;
-                this.sq_piece_color_8x8[z_0x88] = ChessBoard_8x8_C.BLACK;
+                this.sq_piece_0x88[z_0x88] = Chess_board_0x88_C.KNIGHT;
+                this.sq_piece_color_0x88[z_0x88] = Chess_board_0x88_C.BLACK;
                 break;
             case "p":// пешка
-                this.sq_piece_8x8[z_0x88] = ChessBoard_8x8_C.PAWN;
-                this.sq_piece_color_8x8[z_0x88] = ChessBoard_8x8_C.BLACK;
+                this.sq_piece_0x88[z_0x88] = Chess_board_0x88_C.PAWN;
+                this.sq_piece_color_0x88[z_0x88] = Chess_board_0x88_C.BLACK;
                 break;
 
             //белые фигуры
             case "K":// король
-                this.sq_piece_8x8[z_0x88] = ChessBoard_8x8_C.KING;
-                this.sq_piece_color_8x8[z_0x88] = ChessBoard_8x8_C.WHITE;
+                this.sq_piece_0x88[z_0x88] = Chess_board_0x88_C.KING;
+                this.sq_piece_color_0x88[z_0x88] = Chess_board_0x88_C.WHITE;
                 break;
             case "Q":// ферзь
-                this.sq_piece_8x8[z_0x88] = ChessBoard_8x8_C.QUEEN;
-                this.sq_piece_color_8x8[z_0x88] = ChessBoard_8x8_C.WHITE;
+                this.sq_piece_0x88[z_0x88] = Chess_board_0x88_C.QUEEN;
+                this.sq_piece_color_0x88[z_0x88] = Chess_board_0x88_C.WHITE;
                 break;
             case "R":// ладья
-                this.sq_piece_8x8[z_0x88] = ChessBoard_8x8_C.ROOK;
-                this.sq_piece_color_8x8[z_0x88] = ChessBoard_8x8_C.WHITE;
+                this.sq_piece_0x88[z_0x88] = Chess_board_0x88_C.ROOK;
+                this.sq_piece_color_0x88[z_0x88] = Chess_board_0x88_C.WHITE;
                 break;
             case "B":// слон
-                this.sq_piece_8x8[z_0x88] = ChessBoard_8x8_C.BISHOP;
-                this.sq_piece_color_8x8[z_0x88] = ChessBoard_8x8_C.WHITE;
+                this.sq_piece_0x88[z_0x88] = Chess_board_0x88_C.BISHOP;
+                this.sq_piece_color_0x88[z_0x88] = Chess_board_0x88_C.WHITE;
                 break;
             case "N":// конь
-                this.sq_piece_8x8[z_0x88] = ChessBoard_8x8_C.KNIGHT;
-                this.sq_piece_color_8x8[z_0x88] = ChessBoard_8x8_C.WHITE;
+                this.sq_piece_0x88[z_0x88] = Chess_board_0x88_C.KNIGHT;
+                this.sq_piece_color_0x88[z_0x88] = Chess_board_0x88_C.WHITE;
                 break;
             case "P":// пешка
-                this.sq_piece_8x8[z_0x88] = ChessBoard_8x8_C.PAWN;
-                this.sq_piece_color_8x8[z_0x88] = ChessBoard_8x8_C.WHITE;
+                this.sq_piece_0x88[z_0x88] = Chess_board_0x88_C.PAWN;
+                this.sq_piece_color_0x88[z_0x88] = Chess_board_0x88_C.WHITE;
                 break;
 
             // количество пустых клеток   
@@ -487,6 +485,151 @@ class Chess_board_0x88_C {
         }
 
         return delta_x;
+    }
+
+
+    // "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+    // SET FEN инициируем фен из позиции    
+    set_fen_from_0x88() {//
+        //console.log('Chess_board_0x88_C->set_fen_from_8x8************************');
+        let fen = "";
+        let z = 0;
+        let i = 0;
+        //i = chess_board_0x88_O.x07_y07_to_0x88(x, y);
+        for (let y = 0; y < 8; y++) {
+            for (let x = 0; x < 8; x++) {
+
+                z = this.x07_y07_to_0x88(x, y);
+
+                if (this.sq_piece_0x88[z] != Chess_board_0x88_C.PIECE_NO) {
+                    if (i == 0) {
+                        // фигура есть. символ добавляем 
+                        fen = fen + this.fen_piece_to_char(z);
+                    } else {
+                        fen = fen + i;
+                        i = 0;
+                        fen = fen + this.fen_piece_to_char(z);
+                    }
+                } else {
+                    i = i + 1;
+                }
+            }
+            if (i != 0) {
+                fen = fen + i;
+                i = 0;
+            }
+            if (y != 7) fen = fen + "/";
+        }
+        fen = fen + " ";
+        if (this.side_to_move == Chess_board_0x88_C.WHITE) {
+            fen = fen + "w";
+        } else {
+            fen = fen + "b";
+        }
+        fen = fen + " ";
+        let c = 0;
+        if (this.castling_K == 1) {
+            c = 1;
+            fen = fen + "K";
+        }
+        if (this.castling_Q == 1) {
+            c = 1;
+            fen = fen + "Q";
+        }
+        if (this.castling_k == 1) {
+            c = 1;
+            fen = fen + "k";
+        }
+        if (this.castling_q == 1) {
+            c = 1;
+            fen = fen + "q";
+        }
+        if (c == 1) {
+            fen = fen + " ";
+        } else {
+            fen = fen + "-";
+            fen = fen + " ";
+        }
+
+        let yy = 8 - this.s_0x88_to_y07(this.en_passant_target_square);
+        if (this.en_passant_yes == 1) {
+
+            fen = fen + Chess_board_0x88_C.LET_COOR[this.s_0x88_to_x07(this.en_passant_target_square)];
+            fen = fen + yy;
+        } else {
+            fen = fen + "-";
+        }
+        fen = fen + " ";
+
+        return fen;
+
+    }
+
+    //
+    fen_piece_to_char(z) {
+        let char = "";
+        // KING
+        if (this.sq_piece_0x88[z] == Chess_board_0x88_C.KING) {
+            if (this.sq_piece_color_0x88[z] == Chess_board_0x88_C.BLACK) {
+                char = "k";
+                return char;
+            } else {
+                char = "K";
+                return char;
+            }
+        }
+        // QUEEN
+        if (this.sq_piece_0x88[z] == Chess_board_0x88_C.QUEEN) {
+            if (this.sq_piece_color_0x88[z] == Chess_board_0x88_C.BLACK) {
+                char = "q";
+                return char;
+            } else {
+                char = "Q";
+                return char;
+            }
+        }
+        // ROOK
+        if (this.sq_piece_0x88[z] == Chess_board_0x88_C.ROOK) {
+            if (this.sq_piece_color_0x88[z] == Chess_board_0x88_C.BLACK) {
+                char = "r";
+                return char;
+            } else {
+                char = "R";
+                return char;
+            }
+        }
+        // BISHOP
+        if (this.sq_piece_0x88[z] == Chess_board_0x88_C.BISHOP) {
+            if (this.sq_piece_color_0x88[z] == Chess_board_0x88_C.BLACK) {
+                char = "b";
+                return char;
+            } else {
+                char = "B";
+                return char;
+            }
+        }
+        // KNIGHT
+        if (this.sq_piece_0x88[z] == Chess_board_0x88_C.KNIGHT) {
+            if (this.sq_piece_color_0x88[z] == Chess_board_0x88_C.BLACK) {
+                char = "n";
+                return char;
+            } else {
+                char = "N";
+                return char;
+            }
+        }
+        // PAWN
+        if (this.sq_piece_0x88[z] == Chess_board_0x88_C.PAWN) {
+            if (this.sq_piece_color_0x88[z] == Chess_board_0x88_C.BLACK) {
+                char = "p";
+                return char;
+            } else {
+                char = "P";
+                return char;
+            }
+        }
+
+        return char;
     }
 
 
@@ -555,6 +698,51 @@ class Chess_board_0x88_C {
         this.castling_q = 1;
         // рокировка черных в короткую сторону 1/0
         this.castling_k = 1;
+        // оценка позиции
+        this.score = -1;
+    }
+
+    //
+    iniPositionFor_0() {
+
+        // раставляем фигуры
+        this.sq_piece_0x88 = [
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        ];
+
+        // инициируем цвет фигур
+        this.sq_piece_color_0x88 = [
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+        ];
+
+        // цвет хода 0 - черные 1 - белые
+        this.side_to_move = 0;
+        // разрешение взятия на проходе 1/0
+        this.en_passant_yes = 0;
+        // координата битого поля
+        this.en_passant_target_square = 0;
+        // рокировка белых в длинную сторону   1/0
+        this.castling_Q = 0;
+        // рокировка белых в короткую сторону  1/0
+        this.castling_K = 0;
+        // рокировка черных в длинную сторону  1/0
+        this.castling_q = 0;
+        // рокировка черных в короткую сторону 1/0
+        this.castling_k = 0;
         // оценка позиции
         this.score = -1;
     }

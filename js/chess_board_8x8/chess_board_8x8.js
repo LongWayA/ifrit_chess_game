@@ -169,7 +169,46 @@ class ChessBoard_8x8_C {
             [0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0]
         ];
+
+        this.side_to_move = -1;
+
+        this.en_passant_yes = -1;
+        this.en_passant_target_square = -1;
+
+        // по умолчанию все по нулям
+        // рокировка белых в длинную сторону   1/0
+        this.castling_Q = 0;
+        // рокировка белых в короткую сторону  1/0
+        this.castling_K = 0;
+        // рокировка черных в длинную сторону  1/0
+        this.castling_q = 0;
+        // рокировка черных в короткую сторону 1/0
+        this.castling_k = 0;
+        // количество ходов без взятий или движений пешки. нужно для правила 50 ходов.
+        this.halfmove_clock = -1;
+        // количество полных ходов приведших к данной позиции. увеличиваем только на ходе белых
+        this.fullmove_number = -1;
     }
+
+    // нужно для расчета позиции бития на проходе
+    // переводим координаты х и у в линейную координату доски 128(0x88)
+    x07_y07_to_0x88(x07, y07) {//rank07, file07
+        let s_0x88 = 16 * y07 + x07;
+        return s_0x88;
+    }
+
+    // переводим линейную координату доски 128(0x88) в х
+    s_0x88_to_x07(s_0x88) {//rank07, file07
+        let x07 = s_0x88 & 7;
+        return x07;
+    }
+
+    // переводим линейную координату доски 128(0x88) в у
+    s_0x88_to_y07(s_0x88) {//rank07, file07
+        let y07 = s_0x88 >> 4; // s_0x88 / 16    
+        return y07;
+    }
+
 
     // инициализируем двумерную доску оболочки из одномерной доски движка
     set_8x8_from_0x88(chess_board_0x88_O) {
@@ -203,7 +242,9 @@ class ChessBoard_8x8_C {
 
     // https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
     // "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-    set_8x8_from_fen(fen, chess_board_0x88_O) {
+    // SET BOARD инициируем позицию из фена
+    // проверено на тестах. грубых ошибок нет. проверить взятие на проходе  
+    set_8x8_from_fen(fen) {
         //console.log('ChessBoard_8x8_C->set_8x8_from_fen');
         let char = "";
         let x = 0;
@@ -211,25 +252,6 @@ class ChessBoard_8x8_C {
         let void_f = 0;
         let x07_en_passant;
         let y07_en_passant;
-
-        this.side_to_move = -1;
-
-        this.en_passant_yes = -1;
-        this.en_passant_target_square = -1;
-
-        // по умолчанию все по нулям
-        // рокировка белых в длинную сторону   1/0
-        this.castling_Q = 0;
-        // рокировка белых в короткую сторону  1/0
-        this.castling_K = 0;
-        // рокировка черных в длинную сторону  1/0
-        this.castling_q = 0;
-        // рокировка черных в короткую сторону 1/0
-        this.castling_k = 0;
-        // количество ходов без взятий или движений пешки. нужно для правила 50 ходов.
-        this.halfmove_clock = -1;
-        // количество полных ходов приведших к данной позиции. увеличиваем только на ходе белых
-        this.fullmove_number = -1;
 
         this.iniPosition_0();
 
@@ -271,11 +293,18 @@ class ChessBoard_8x8_C {
                     this.en_passant_yes = 0;
                     this.en_passant_target_square = 0;
                 } else {
-                    x07_en_passant = letter_to_x_coordinate(char);
-                    y07_en_passant = 8 - Number(fen[i_fen + 1]);
-                    this.en_passant_yes = 1;
-                    // сразу для доски 0x88 потому что для 8х8 информация все равно не используется
-                    this.en_passant_target_square = chess_board_0x88_O.x07_y07_to_0x88(x07_en_passant, y07_en_passant);
+                    // 
+                    if (x07_en_passant == -1) {
+                        x07_en_passant = this.letter_to_x_coordinate(char);
+                    } else {
+                        y07_en_passant = 8 - Number(char);
+                        this.en_passant_yes = 1;
+                        // сразу для доски 0x88 потому что для 8х8 информация все равно не используется
+                        this.en_passant_target_square = this.x07_y07_to_0x88(x07_en_passant, y07_en_passant);
+                        //console.log('x07_en_passant ' + x07_en_passant);
+                        //console.log('y07_en_passant ' + y07_en_passant);
+                        //console.log('this.en_passant_target_square ' + this.en_passant_target_square);
+                    }
                 }
 
             } else if (void_f == 4) {//Halfmove clock: The number of halfmoves since the last capture or pawn advance, 
@@ -375,7 +404,9 @@ class ChessBoard_8x8_C {
     }
 
     // "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-    set_fen_from_8x8(chess_board_0x88_O) {//
+    // SET FEN инициируем фен из позиции
+    // насколько я видел нормально отображает. 
+    set_fen_from_8x8() {//
         //console.log('ChessBoard_8x8_C->set_fen_from_8x8************************');
         let fen = "";
 
@@ -426,17 +457,17 @@ class ChessBoard_8x8_C {
             c = 1;
             fen = fen + "q";
         }
-        if (c == 1){
+        if (c == 1) {
             fen = fen + " ";
         } else {
             fen = fen + "-";
-            fen = fen + " ";                       
+            fen = fen + " ";
         }
 
-        let yy = 8 - chess_board_0x88_O.s_0x88_to_y07(this.en_passant_target_square);
+        let yy = 8 - this.s_0x88_to_y07(this.en_passant_target_square);
         if (this.en_passant_yes == 1) {
 
-            fen = fen + Chess_board_0x88_C.LET_COOR[chess_board_0x88_O.s_0x88_to_x07(this.en_passant_target_square)];
+            fen = fen + Chess_board_0x88_C.LET_COOR[this.s_0x88_to_x07(this.en_passant_target_square)];
             fen = fen + yy;
         } else {
             fen = fen + "-";
