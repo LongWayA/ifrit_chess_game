@@ -201,9 +201,10 @@ class ChessBoard_8x8_C {
         this.score = chess_board_0x88_O.score;
     }
 
+    // https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
     // "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
     set_8x8_from_fen(fen, chess_board_0x88_O) {
-        console.log('ChessBoard_8x8_C->set_8x8_from_fen');
+        //console.log('ChessBoard_8x8_C->set_8x8_from_fen');
         let char = "";
         let x = 0;
         let y = 0;
@@ -225,8 +226,9 @@ class ChessBoard_8x8_C {
         this.castling_q = 0;
         // рокировка черных в короткую сторону 1/0
         this.castling_k = 0;
-
+        // количество ходов без взятий или движений пешки. нужно для правила 50 ходов.
         this.halfmove_clock = -1;
+        // количество полных ходов приведших к данной позиции. увеличиваем только на ходе белых
         this.fullmove_number = -1;
 
         this.iniPosition_0();

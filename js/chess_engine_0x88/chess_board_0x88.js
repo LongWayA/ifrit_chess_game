@@ -87,6 +87,14 @@ class Chess_board_0x88_C {
     // оценка позиции
     score = -1;
 
+    //The number of halfmoves since the last capture or pawn advance, 
+    // used for the fifty-move rule.(from wikipedia)
+    halfmove_clock = -1;
+
+    //Fullmove number: The number of the full moves. 
+    // It starts at 1 and is incremented after Black's move.(from wikipedia)   
+    fullmove_number = -1;
+
     constructor() {
     }
 
@@ -305,6 +313,7 @@ class Chess_board_0x88_C {
         this.score = chessBoard_8x8_O.score;
     }
 
+    // https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
     // "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
     set_0x88_from_fen(fen) {
         console.log('ChessBoard_0x88_C->set_0x88_from_fen');
@@ -331,10 +340,12 @@ class Chess_board_0x88_C {
         // рокировка черных в короткую сторону 1/0
         this.castling_k = 0;
 
-//        this.halfmove_clock = -1;
-//        this.fullmove_number = -1;
+        // количество ходов без взятий или движений пешки. нужно для правила 50 ходов.
+        this.halfmove_clock = -1;
+        // количество полных ходов приведших к данной позиции. увеличиваем только на ходе белых
+        this.fullmove_number = -1;
 
-        this.iniStartPositionForWhite();       
+        this.iniStartPositionForWhite();
 
         // for (let i_fen = 0; fen[i_fen] != undefined ; i_fen++) {            
         for (let i_fen = 0; i_fen < fen.length; i_fen++) {

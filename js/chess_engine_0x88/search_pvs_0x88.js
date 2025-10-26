@@ -59,14 +59,15 @@ class Search_pvs_0x88_C {
 
         if (move_list_0x88_O.piece_color[move_i] == 1) {//
 
-          // if (move_i == 0) {
-          //   score = this.searching_PVS(alpha, beta, chess_board_0x88_O, move_generator_0x88_O, (depth + 1), depth_max);
-          //   move_list_0x88_O.score_move[move_i] = score;
-          // } else {
-          score = this.searching_PVS(alpha, (alpha + 1), pv_line_0x88_O, chess_board_0x88_O, move_generator_0x88_O, (depth + 1), depth_max);
-          move_list_0x88_O.score_move[move_i] = score;
-          //console.log("Search_0x88_C->side_to_move--------- " + chess_board_0x88_O.side_to_move);
-          //         }
+          if (move_i == 0) {
+            score = this.searching_PVS(alpha, beta, pv_line_0x88_O, chess_board_0x88_O, move_generator_0x88_O, (depth + 1), depth_max);
+            move_list_0x88_O.score_move[move_i] = score;
+          } else {
+            score = this.searching_PVS(alpha, (alpha + 1), pv_line_0x88_O, chess_board_0x88_O, move_generator_0x88_O, (depth + 1), depth_max);
+            move_list_0x88_O.score_move[move_i] = score;
+            //console.log("Search_0x88_C->side_to_move--------- " + chess_board_0x88_O.side_to_move);
+          }
+
           if (score > alpha && score < beta) {
             score = this.searching_PVS(alpha, beta, pv_line_0x88_O, chess_board_0x88_O, move_generator_0x88_O, (depth + 1), depth_max);
             move_list_0x88_O.score_move[move_i] = score;
@@ -87,15 +88,15 @@ class Search_pvs_0x88_C {
 
         } else {
 
-          // if (move_i == 0) {
-          //   score = this.searching_PVS(alpha, beta, chess_board_0x88_O, move_generator_0x88_O, (depth + 1), depth_max);
-          //   move_list_0x88_O.score_move[move_i] = score;
-          // } else {
-          score = this.searching_PVS((beta - 1), beta, pv_line_0x88_O, chess_board_0x88_O, move_generator_0x88_O, (depth + 1), depth_max);
-          move_list_0x88_O.score_move[move_i] = score;
-          //if (depth == 0)  console.log("Search_0x88_C->MAX depth == 0 depth " + depth + " score " + score);
-          //console.log("Search_0x88_C->side_to_move--------- " + chess_board_0x88_O.side_to_move);
-          //          }
+          if (move_i == 0) {
+            score = this.searching_PVS(alpha, beta, pv_line_0x88_O, chess_board_0x88_O, move_generator_0x88_O, (depth + 1), depth_max);
+            move_list_0x88_O.score_move[move_i] = score;
+          } else {
+            score = this.searching_PVS((beta - 1), beta, pv_line_0x88_O, chess_board_0x88_O, move_generator_0x88_O, (depth + 1), depth_max);
+            move_list_0x88_O.score_move[move_i] = score;
+            //if (depth == 0)  console.log("Search_0x88_C->MAX depth == 0 depth " + depth + " score " + score);
+            //console.log("Search_0x88_C->side_to_move--------- " + chess_board_0x88_O.side_to_move);
+          }
 
           if (score < beta && score > alpha) {
             score = this.searching_PVS(alpha, beta, pv_line_0x88_O, chess_board_0x88_O, move_generator_0x88_O, (depth + 1), depth_max);

@@ -48,6 +48,9 @@ let IfritChessGame_R = {
 
     fen_position: "no",
 
+    nodes: 0,
+    score: 0,
+
     test: 1,
     // тестовые позиции с сайта:
     // https://www.chessprogramming.org/Perft_Results
@@ -83,7 +86,7 @@ let IfritChessGame_R = {
         // test = 1 проверка генер. ход., test = 2 проверка поиска, test = 3 углубление в цикле
         IfritChessGame_R.test = 3;
         // задаем глубину перебора во время игры или обсчета тестовых позиций на количество узлов
-        IfritChessGame_R.depth_max = 5;
+        IfritChessGame_R.depth_max = 4;
 
         IfritChessGame_R.TEST_POSITION_FEN = IfritChessGame_R.INITIAL_POSITION_FEN;
         //IfritChessGame_R.TEST_POSITION_FEN = IfritChessGame_R.POSITION_FEN_6;//
@@ -121,10 +124,17 @@ let IfritChessGame_R = {
         //IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_fen(IfritChessGame_R.POSITION_FEN_6);       
 
 
-        IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O.set_0x88_from_8x8(IfritChessGame_R.chessBoard_8x8_O);
+        IfritChessGame_R.chessEngine_0x88_O.position(IfritChessGame_R.chessBoard_8x8_O);
         if (IfritChessGame_R.test == 1) {
             // тестируем начальные позиции еще до хода        
-            IfritChessGame_R.chessEngine_0x88_O.go_search(IfritChessGame_R.fen_position, IfritChessGame_R.depth_max);
+            // режим тестовой игры движок отвечает на наш ход 
+            let info_return_g = IfritChessGame_R.chessEngine_0x88_O.test_go_depth(IfritChessGame_R.depth_max);
+            this.score = info_return_g.score;
+            this.nodes = info_return_g.node_count
+            //console.log("ChessEngine_0x88_С->А ЧТО В ГЛАВНОМ ВАРИАНТЕ?");
+            //this.pv_line_0x88_O.test_print_pv_line(this.chess_board_0x88_O);
+            // копируем доску движка с найденным ходом в игровую
+            //IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_0x88(info_return_g.chess_board_0x88_O_save_gui);
         }
         //IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_0x88(IfritChessGame_R.chessEngine_0x88_O.search_start_0x88_O.chess_board_0x88_O_move);
         //IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O.set_0x88_from_8x8(IfritChessGame_R.chessBoard_8x8_O);
@@ -134,7 +144,7 @@ let IfritChessGame_R = {
         //console.log('IfritChessGame_R->drawGame');
         IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O);
         IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("max depth " + IfritChessGame_R.depth_max +
-            " nodes " + IfritChessGame_R.chessEngine_0x88_O.search_start_0x88_O.search_pvs_0x88_O.node,
+            " nodes " + this.nodes + " score " + this.score,
             450, 20, Html5Canvas_C.ITALIC_20PX_SANS_SERIF, Html5Canvas_C.RED, 1);
     },
 
@@ -162,11 +172,9 @@ let IfritChessGame_R = {
 
 
     mouseDown_2(x, y) {
-        console.log("ChessBoard_8x8_C->click(mouseDown) START ======================================================= START ");
-        IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O.set_0x88_from_8x8(IfritChessGame_R.chessBoard_8x8_O);      
-        let score = 0;
+        //console.log("ChessBoard_8x8_C->click(mouseDown) START ======================================================= START ");
         //console.log('IfritChessGame_R->mouseDown x ' + x + " y " + y);
-        let undo_0x88_O = new Undo_0x88_C();
+
 
         let x_b_n = -1; // номер клетки по х
         let y_b_n = -1; // номер клетки по у
@@ -190,36 +198,13 @@ let IfritChessGame_R = {
                     IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O);
 
                     // смотрим допустим ли ход но это ход из списка псевдолегальных ходов********************
-                } else if (IfritChessGame_R.chessEngine_0x88_O.move_is_legal(IfritChessGame_R.one_click_on_squares_x,
-                    IfritChessGame_R.one_click_on_squares_y, x_b_n, y_b_n)) { // это второй клик по другой клетке значит делаем ход
+                } else if (IfritChessGame_R.chessEngine_0x88_O.pseudo_move_is_ok(IfritChessGame_R.one_click_on_squares_x,
+                    IfritChessGame_R.one_click_on_squares_y, x_b_n, y_b_n, IfritChessGame_R.chessBoard_8x8_O )) { // это второй клик по другой клетке значит делаем ход
                     //console.log("ChessBoard_8x8_C->click(mouseDown) кликнули по другой клетке");
                     //console.log("ChessBoard_8x8_C->click(mouseDown) после пройденной проверки на легальность хода из списка");
 
-                    // переводим кординаты х у в одну для генератора позиций
-                    let from = IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O.x07_y07_to_0x88(IfritChessGame_R.one_click_on_squares_x,
-                        IfritChessGame_R.one_click_on_squares_y);
-                    let to = IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O.x07_y07_to_0x88(x_b_n, y_b_n);
-                    //------
-                    // обсчитываем всевозможные ходы и заполняем специальный список move_list_gui_0x88_O
-                    IfritChessGame_R.chessEngine_0x88_O.move_list_gui_0x88_O.clear_list();
-                    IfritChessGame_R.chessEngine_0x88_O.move_generator_0x88_O.generated_pseudo_legal_moves_one_piece_for_gui(from,
-                        IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O, IfritChessGame_R.chessEngine_0x88_O.move_list_gui_0x88_O,
-                        IfritChessGame_R.chessEngine_0x88_O.move_generator_0x88_O);
-                    //------
-                    //console.log("from_king gui " + IfritChessGame_R.chessEngine_0x88_O.move_list_gui_0x88_O.king_from);
-                    // находим номер нашего хода в списке ходов
-                    let move_i = IfritChessGame_R.chessEngine_0x88_O.move_list_gui_0x88_O.return_i_move(from, to);
-
-                    // сохраняем доску в специальную chess_board_0x88_O_save_gui
-                    IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O_save_gui.save_chess_board_0x88(
-                        IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O);
-
-                    // делаем ход и возвращаем флаг легальности хода  
-                    //console.log("ChessBoard_8x8_C->click(mouseDown) СДЕЛАЕМ ХОД ДЛЯ ПРОВЕРКИ ЛЕГАЛЬНОСТИ from " + from + " to "+ to);
-                    let is_moove_legal = IfritChessGame_R.chessEngine_0x88_O.search_start_0x88_O.make_move_0x88_O.do_moves(move_i,
-                        IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O,
-                        IfritChessGame_R.chessEngine_0x88_O.move_list_gui_0x88_O, undo_0x88_O,
-                        IfritChessGame_R.chessEngine_0x88_O.move_generator_0x88_O);
+                    let is_moove_legal = IfritChessGame_R.chessEngine_0x88_O.move_is_legal(IfritChessGame_R.one_click_on_squares_x, 
+                        IfritChessGame_R.one_click_on_squares_y, x_b_n, y_b_n, IfritChessGame_R.chessBoard_8x8_O);
 
                     // console.log("ChessBoard_8x8_C->click(mouseDown) после сделанного во время проверки хода");
                     // console.log("ChessBoard_8x8_C->click(mouseDown) side_to_move "
@@ -229,40 +214,60 @@ let IfritChessGame_R = {
                     if (is_moove_legal == 0) {
                         //console.log("ChessBoard_8x8_C->click(mouseDown) MOVE NOT LEGAL");
                         // если ход не легальный то восстанавливаем доску из chess_board_0x88_O_save_gui
-                        IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O.save_chess_board_0x88(
-                            IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O_save_gui);
+                        //IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O.save_chess_board_0x88(
+                        //    IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O_save_gui);
 
                     } else {
 
-                        IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_0x88(IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O);
-                        IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O);
-                        IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("2 После Вашего хода Ифрит будет думать.",
-                            20, 450, Html5Canvas_C.ITALIC_20PX_SANS_SERIF, Html5Canvas_C.GREEN, 1);
-                        IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("На это время доска зависнет < 30 сек.", 20, 480, Html5Canvas_C.ITALIC_20PX_SANS_SERIF,
-                            Html5Canvas_C.GREEN, 1);
-
+                        IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_0x88(IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O_gui);
                         //console.log("ChessBoard_8x8_C->click(mouseDown) +++++++++++++++++++++++++++");
                         // console.log("ChessBoard_8x8_C->click(mouseDown) MOVE LEGAL");
                         //console.log("ChessBoard_8x8_C->click(mouseDown) side_to_move "
                         //    + IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O.side_to_move);
                         // тут ход уже сделан на доске движка chess_board_0x88_O и мы считаем ответ
                         if (IfritChessGame_R.test == 1) {
+
+                            IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O);
+
+                            IfritChessGame_R.chessEngine_0x88_O.position(IfritChessGame_R.chessBoard_8x8_O);
                             // тестовый режим сами делаем ходы и смотрим тестовый вывод
                             IfritChessGame_R.chessEngine_0x88_O.go_test(IfritChessGame_R.depth_max);
                             // копируем доску движка в игровую
                             IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_0x88(IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O);
 
                         } else if (IfritChessGame_R.test == 2) {
+
+                            IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O);
+
+                            IfritChessGame_R.chessEngine_0x88_O.position(IfritChessGame_R.chessBoard_8x8_O);
                             // режим тестовой игры движок отвечает на наш ход 
-                            score = IfritChessGame_R.chessEngine_0x88_O.go_test_search(IfritChessGame_R.depth_max);
+                            let info_return_g = IfritChessGame_R.chessEngine_0x88_O.test_go_depth(IfritChessGame_R.depth_max);
+                            this.score = info_return_g.score;
+                            this.nodes = info_return_g.node_count
+                            //console.log("ChessEngine_0x88_С->А ЧТО В ГЛАВНОМ ВАРИАНТЕ?");
+                            //this.pv_line_0x88_O.test_print_pv_line(this.chess_board_0x88_O);
                             // копируем доску движка с найденным ходом в игровую
-                            IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_0x88(IfritChessGame_R.chessEngine_0x88_O.search_start_0x88_O.chess_board_0x88_O_move);
+                            IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_0x88(info_return_g.chess_board_0x88_O_save_gui);
 
                         } else if (IfritChessGame_R.test == 3) {
+
+                            IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O);
+
+                            IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("2 После Вашего хода Ифрит будет думать.",
+                                20, 450, Html5Canvas_C.ITALIC_20PX_SANS_SERIF, Html5Canvas_C.GREEN, 1);
+                            IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("На это время доска зависнет < 30 сек.",
+                                20, 480, Html5Canvas_C.ITALIC_20PX_SANS_SERIF, Html5Canvas_C.GREEN, 1);
+
+                            IfritChessGame_R.chessEngine_0x88_O.position(IfritChessGame_R.chessBoard_8x8_O);    
                             // режим игры движок отвечает на наш ход есть углубление в цикле
-                            score = IfritChessGame_R.chessEngine_0x88_O.go_search(IfritChessGame_R.fen_position, IfritChessGame_R.depth_max);
+                            // IfritChessGame_R.fen_position
+                            let info_return_g = IfritChessGame_R.chessEngine_0x88_O.go_depth(IfritChessGame_R.depth_max);
+                            this.score = info_return_g.score;
+                            this.nodes = info_return_g.node_count
+                            //IfritChessGame_R.chess_board_0x88_O_save_gui = info_return_g.chess_board_0x88_O_save_gui;
+
                             // копируем доску движка с найденным ходом в игровую
-                            IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_0x88(IfritChessGame_R.chessEngine_0x88_O.search_start_0x88_O.chess_board_0x88_O_move);
+                            IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_0x88(info_return_g.chess_board_0x88_O_save_gui);
                         }
 
 
@@ -270,20 +275,20 @@ let IfritChessGame_R = {
                     // рисуем доску независимо от того  какой режим                   
                     IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O);
 
-                    IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("score " + score,
+                    IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("score " + this.score,
                         450, 20, Html5Canvas_C.ITALIC_20PX_SANS_SERIF, Html5Canvas_C.RED, 1);
                     IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("max depth " + IfritChessGame_R.depth_max +
-                        " nodes " + IfritChessGame_R.chessEngine_0x88_O.search_start_0x88_O.node,
+                        " nodes " + this.nodes,
                         450, 50, Html5Canvas_C.ITALIC_20PX_SANS_SERIF, Html5Canvas_C.RED, 1);
-                     //console.log("ChessBoard_8x8_C->click(mouseDown) start f ");
-                     let f = "f";
-                     f = IfritChessGame_R.chessBoard_8x8_O.set_fen_from_8x8(IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O);                     
-                     //console.log("ChessBoard_8x8_C->click(mouseDown) f " + f);
-                     console.log("ChessBoard_8x8_C->click(mouseDown) side_to_move " + IfritChessGame_R.chessBoard_8x8_O.side_to_move);
-                     IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("fen " + f,
-                         20, 470, Html5Canvas_C.ITALIC_20PX_SANS_SERIF, Html5Canvas_C.BLUE, 1);
+                    //console.log("ChessBoard_8x8_C->click(mouseDown) start f ");
+                    let f = "f";
+                    f = IfritChessGame_R.chessBoard_8x8_O.set_fen_from_8x8(IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O);
+                    //console.log("ChessBoard_8x8_C->click(mouseDown) f " + f);
+                    //console.log("ChessBoard_8x8_C->click(mouseDown) side_to_move " + IfritChessGame_R.chessBoard_8x8_O.side_to_move);
+                    IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("fen " + f,
+                        20, 470, Html5Canvas_C.ITALIC_20PX_SANS_SERIF, Html5Canvas_C.BLUE, 1);
 
-                        
+
 
                     if (is_moove_legal == 0) {
                         IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("Недопустимый ход.",
