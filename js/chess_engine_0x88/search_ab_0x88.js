@@ -22,7 +22,7 @@ class Search_ab_0x88_C {
   node = 0;
 
   chess_board_0x88_O_move = new Chess_board_0x88_C();
-
+  quiescence_search_0x88_O = new Quiescence_search_0x88_C();
 
   constructor() {
 
@@ -132,7 +132,7 @@ class Search_ab_0x88_C {
   }
 
 
-  searching_alpha_beta(alpha, beta, pv_line_0x88_O, chess_board_0x88_O, move_generator_0x88_O, depth, depth_max) {
+  searching_alpha_beta(alpha, beta, pv_line_0x88_O, chess_board_0x88_O, move_gen_1_captures_0x88_O, move_generator_0x88_O, depth, depth_max) {
     let undo_0x88_O = new Undo_0x88_C();
     let score = 0;// текущая оценка позиции
     let found_score;// максимальная оценка позиции
@@ -142,8 +142,11 @@ class Search_ab_0x88_C {
       found_score = 20000;// минимальная оценка позиции
     }
     if (depth >= depth_max) {
-      found_score = this.evaluate_0x88_O.score_position(chess_board_0x88_O);
-      this.node = this.node + 1;
+      //found_score = this.evaluate_0x88_O.score_position(chess_board_0x88_O);
+      //this.node = this.node + 1;
+      found_score = this.quiescence_search_0x88_O.quiescence_search(alpha, beta, pv_line_0x88_O, chess_board_0x88_O,
+         move_gen_1_captures_0x88_O, depth);      
+      this.node = this.node + this.quiescence_search_0x88_O.node;      
       //console.log("Search_0x88_C->MAX depth " + depth + " found_score " + found_score);
       //chess_board_0x88_O.test_print_0x88();
     } else {
@@ -169,7 +172,8 @@ class Search_ab_0x88_C {
           }
           continue;
         }
-        score = this.searching_alpha_beta(alpha, beta, pv_line_0x88_O, chess_board_0x88_O, move_generator_0x88_O, (depth + 1), depth_max);
+        score = this.searching_alpha_beta(alpha, beta, pv_line_0x88_O, chess_board_0x88_O, move_gen_1_captures_0x88_O,
+           move_generator_0x88_O, (depth + 1), depth_max);
         move_list_0x88_O.score_move[move_i] = score;
         //if (depth == 0)  console.log("Search_0x88_C->MAX depth == 0 depth " + depth + " score " + score);
         //console.log("Search_0x88_C->side_to_move--------- " + chess_board_0x88_O.side_to_move);

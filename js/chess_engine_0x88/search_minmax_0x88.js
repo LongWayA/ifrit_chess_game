@@ -43,7 +43,7 @@ class Search_minmax_0x88_C {
     }
     if (depth >= depth_max) {
       found_score = this.evaluate_0x88_O.score_position(chess_board_0x88_O);
-      this.node = this.node + 1;
+      this.node = this.node + 1;      
       //console.log("Search_0x88_C->MAX depth " + depth + " found_score " + found_score);
       //chess_board_0x88_O.test_print_0x88();
     } else {
