@@ -82,10 +82,10 @@ let IfritChessGame_R = {
         // test = 4 alpha beta fail hard         
         // test = 5 iterative deepening with PVS
         // test = 6 message_to_engine(message) работа с воркером
-        IfritChessGame_R.test = 6;
+        IfritChessGame_R.test = 1;
 
         // задаем глубину перебора во время игры или обсчета тестовых позиций на количество узлов
-        IfritChessGame_R.depth_max = 4;
+        IfritChessGame_R.depth_max = 2;
 
         IfritChessGame_R.TEST_POSITION_FEN = IfritChessGame_R.INITIAL_POSITION_FEN;
         //IfritChessGame_R.TEST_POSITION_FEN = IfritChessGame_R.POSITION_FEN_6;//
@@ -410,9 +410,9 @@ let IfritChessGame_R = {
 
 };
 
-const worker_egine_0x88 = new Worker('js/worker_chess_engine_0x88/w_chess_engine_0x88.js');
+// const worker_egine_0x88 = new Worker('js/worker_chess_engine_0x88/w_chess_engine_0x88.js');
 
-worker_egine_0x88.onmessage = function (event) {
-    //console.log('Сообщение от движка : ', event.data);
-    IfritChessGame_R.message_egnine_to_gui(event.data);
-};
+// worker_egine_0x88.onmessage = function (event) {
+//     //console.log('Сообщение от движка : ', event.data);
+//     IfritChessGame_R.message_egnine_to_gui(event.data);
+// };

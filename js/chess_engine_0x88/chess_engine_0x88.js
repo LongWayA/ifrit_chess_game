@@ -24,6 +24,8 @@ class ChessEngine_0x88_С {
 
   // для всех
   move_generator_0x88_O = new Move_generator_0x88_С();
+  move_gen_1_captures_0x88_O = new Move_gen_1_captures_0x88_С();
+  move_gen_2_quiet_0x88_O = new Move_gen_2_quiet_0x88_С();
   search_start_0x88_O = new Search_start_0x88_C();
   chess_board_0x88_O = new Chess_board_0x88_C();
 
@@ -73,9 +75,12 @@ class ChessEngine_0x88_С {
     this.chess_board_0x88_O.test_print_0x88_color();
     console.log("ChessEngine_0x88_С->chess_board_0x88_O.score " + this.chess_board_0x88_O.score);
     this.chess_board_0x88_O.test_print_any_0x88();
-    this.move_generator_0x88_O.generated_pseudo_legal_moves(this.chess_board_0x88_O, this.move_list_0x88_O);
-    this.move_list_0x88_O.sorting_list();
-    //this.move_list_0x88_O.test_print_list(IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O);
+    //this.move_generator_0x88_O.generated_pseudo_legal_moves(this.chess_board_0x88_O, this.move_list_0x88_O);
+    this.move_gen_1_captures_0x88_O.generated_pseudo_legal_moves(this.chess_board_0x88_O, this.move_list_0x88_O);
+    this.move_gen_2_quiet_0x88_O.generated_pseudo_legal_moves(this.chess_board_0x88_O, this.move_list_0x88_O);
+
+    //this.move_list_0x88_O.sorting_list();
+    this.move_list_0x88_O.test_print_list(this.chess_board_0x88_O);
   }
 
   // запуск полного перебора minmax
@@ -83,7 +88,7 @@ class ChessEngine_0x88_С {
   test_go_depth_mm(depth_max) {
 
     let info_return_search = this.search_start_0x88_O.test_start_search_mm(this.pv_line_0x88_O, this.chess_board_0x88_O,
-      this.move_generator_0x88_O, depth_max);
+       this.move_gen_1_captures_0x88_O, this.move_gen_2_quiet_0x88_O, depth_max);
 
     this.info_return_e.score = info_return_search.score;
     this.info_return_e.pv_line_0x88_O = info_return_search.pv_line_0x88_O;

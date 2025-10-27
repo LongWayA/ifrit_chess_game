@@ -30,7 +30,8 @@ class Search_minmax_0x88_C {
     //for tactical and quiet moves
   }
 
-  searching_minimax(pv_line_0x88_O, chess_board_0x88_O, move_generator_0x88_O, depth, depth_max) {
+  searching_minimax(pv_line_0x88_O, chess_board_0x88_O,  
+    move_gen_1_captures_0x88_O, move_gen_2_quiet_0x88_O, depth, depth_max) {
     //let chess_board_0x88_O_save = new Chess_board_0x88_C();
     let undo_0x88_O = new Undo_0x88_C();
     let score = 0;// текущая оценка позиции
@@ -50,20 +51,23 @@ class Search_minmax_0x88_C {
       let is_moove_legal = -1;
       let move_list_0x88_O = new Move_list_0x88_С();
       move_list_0x88_O.iniM();
-      move_generator_0x88_O.generated_pseudo_legal_moves(chess_board_0x88_O, move_list_0x88_O);
+
+      move_gen_1_captures_0x88_O.generated_pseudo_legal_moves(chess_board_0x88_O, move_list_0x88_O);
+      move_gen_2_quiet_0x88_O.generated_pseudo_legal_moves(chess_board_0x88_O, move_list_0x88_O);   
+
       move_list_0x88_O.sorting_list();
       for (let move_i = 0; move_i < move_list_0x88_O.number_move; move_i++) {
         //console.log("Search_0x88_C->2 ");
         // записали доску
         //chess_board_0x88_O_save.save_chess_board_0x88(chess_board_0x88_O);
-        is_moove_legal = this.make_move_0x88_O.do_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O, move_generator_0x88_O);
+        is_moove_legal = this.make_move_0x88_O.do_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O, move_gen_1_captures_0x88_O,);
         //здесь должен быть контроль легальности хода
         if (is_moove_legal == 0) {
           /////////////////////////////////////////////////////////////////////
           // особый случай. нелегальные рокировки не генерируются
           if ((move_list_0x88_O.type_move[move_i] != Move_list_0x88_С.MOVE_KING_CASTLE) &&
             (move_list_0x88_O.type_move[move_i] != Move_list_0x88_С.MOVE_KING_QUEEN_CASTLE)) {
-            this.unmake_move_0x88_O.undo_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O, move_generator_0x88_O);
+            this.unmake_move_0x88_O.undo_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O, move_gen_1_captures_0x88_O,);
             // if (chess_board_0x88_O.test_compare_chess_board_0x88(chess_board_0x88_O_save) != 1) {
             //   console.log("Search_0x88_C-> отмена нелегального хода прошла с ошибкой --------------------------");
             //   move_list_0x88_O.test_print_i_move_list(move_i, chess_board_0x88_O);
@@ -73,7 +77,9 @@ class Search_minmax_0x88_C {
           //chess_board_0x88_O.save_chess_board_0x88(chess_board_0x88_O_save);
           continue;
         }
-        score = this.searching_minimax(pv_line_0x88_O, chess_board_0x88_O, move_generator_0x88_O, (depth + 1), depth_max);
+        score = this.searching_minimax(pv_line_0x88_O, chess_board_0x88_O,  
+          move_gen_1_captures_0x88_O, move_gen_2_quiet_0x88_O, (depth + 1), depth_max);
+
         move_list_0x88_O.score_move[move_i] = score;
         //if (depth == 0)  console.log("Search_0x88_C->MAX depth == 0 depth " + depth + " score " + score);
         //console.log("Search_0x88_C->side_to_move--------- " + chess_board_0x88_O.side_to_move);
@@ -96,7 +102,7 @@ class Search_minmax_0x88_C {
           }
         }
         /////////////////////////////////////////////////////////////////////
-        this.unmake_move_0x88_O.undo_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O, move_generator_0x88_O);
+        this.unmake_move_0x88_O.undo_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O, move_gen_1_captures_0x88_O,);
         // if (chess_board_0x88_O.test_compare_chess_board_0x88(chess_board_0x88_O_save) != 1) {
         //   console.log("Search_0x88_C-> отмена хода прошла с ошибкой --------------------------");
         //   move_list_0x88_O.test_print_i_move_list(move_i, chess_board_0x88_O);

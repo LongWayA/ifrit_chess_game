@@ -21,6 +21,9 @@ class Search_start_0x88_C {
   search_ab_0x88_O = new Search_ab_0x88_C();
   search_pvs_0x88_O = new Search_pvs_0x88_C();
 
+chess_board_0x88_O_save_test = new Chess_board_0x88_C();
+
+
   static NAME = "Search_start_0x88_C";
 
   info_return_search = {
@@ -43,12 +46,16 @@ class Search_start_0x88_C {
   }
 
   // min max
-  test_start_search_mm(pv_line_0x88_O, chess_board_0x88_O, move_generator_0x88_O, depth_max) {
+  test_start_search_mm(pv_line_0x88_O, chess_board_0x88_O, move_gen_1_captures_0x88_O, move_gen_2_quiet_0x88_O, depth_max) {
     let depth = 0;
+
+    this.chess_board_0x88_O_save_test.save_chess_board_0x88(chess_board_0x88_O);
 
     // min max
     let score = this.search_minmax_0x88_O.searching_minimax(pv_line_0x88_O, chess_board_0x88_O,
-      move_generator_0x88_O, depth, depth_max);
+      move_gen_1_captures_0x88_O, move_gen_2_quiet_0x88_O, depth, depth_max);
+
+    this.chess_board_0x88_O_save_test.test_compare_chess_board_0x88(chess_board_0x88_O);
 
     this.info_return_search.best_move = "-";
     this.info_return_search.score = score;
