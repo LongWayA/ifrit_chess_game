@@ -44,7 +44,9 @@ class W_ChessEngine_0x88_С {
       let end = message.length;
       fen = message.slice(13, end);
       console.log('e fen from gui : ' + fen);
+
       w_chessEngine_0x88_O.chessEngine_0x88_O.chess_board_0x88_O.set_0x88_from_fen(fen);
+      
      console.log("e-> ini chess_board_0x88_O");
      w_chessEngine_0x88_O.chessEngine_0x88_O.chess_board_0x88_O.test_print_0x88();
      w_chessEngine_0x88_O.chessEngine_0x88_O.chess_board_0x88_O.test_print_0x88_color();
@@ -55,7 +57,9 @@ class W_ChessEngine_0x88_С {
       let depth_max_s = message.slice(9, end);
       console.log('e depth_max : ' + depth_max_s); 
       let depth_max = Number(depth_max_s);
+
       let info_return_e = w_chessEngine_0x88_O.chessEngine_0x88_O.go_depth(depth_max);
+
       console.log("e-> info_return_e");
      info_return_e.chess_board_0x88_O_move.test_print_0x88();
      info_return_e.chess_board_0x88_O_move.test_print_0x88_color();

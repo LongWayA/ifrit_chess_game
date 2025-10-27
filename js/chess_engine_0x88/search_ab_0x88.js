@@ -131,6 +131,7 @@ class Search_ab_0x88_C {
     }
   }
 
+
   searching_alpha_beta(alpha, beta, pv_line_0x88_O, chess_board_0x88_O, move_generator_0x88_O, depth, depth_max) {
     let undo_0x88_O = new Undo_0x88_C();
     let score = 0;// текущая оценка позиции
@@ -180,7 +181,6 @@ class Search_ab_0x88_C {
             if (score > alpha) alpha = score; // alpha acts like max in MiniMax
             pv_line_0x88_O.add_move(move_i, move_list_0x88_O, depth);
             if (depth == 0) this.chess_board_0x88_O_move.save_chess_board_0x88(chess_board_0x88_O);
-
             //console.log("Search_0x88_C->score > max_score depth " + depth + " found_score " + found_score);
           }
           if (score >= beta) {
