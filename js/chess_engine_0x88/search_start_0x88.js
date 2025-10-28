@@ -93,9 +93,9 @@ chess_board_0x88_O_save_test = new Chess_board_0x88_C();
     //  this.search_minmax_0x88_O.chess_board_0x88_O_move.test_print_0x88();
     //  this.search_minmax_0x88_O.chess_board_0x88_O_move.test_print_0x88_color();
     //  this.search_minmax_0x88_O.chess_board_0x88_O_move.test_print_any_0x88();
-    //console.log("Search_0x88_C->start_search ***************************************");
+    console.log("Search_0x88_C->start_search ***************************************");
     //pv_line_0x88_O.test_print_pv_line(chess_board_0x88_O);
-    //this.info_return_search.pv_line.test_print_pv_line(chess_board_0x88_O);
+    this.info_return_search.pv_line.test_print_pv_line(chess_board_0x88_O);
 
     return this.info_return_search;
   }

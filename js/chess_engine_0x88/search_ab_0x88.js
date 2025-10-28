@@ -46,9 +46,9 @@ class Search_ab_0x88_C {
     is_update_pv_line = 0;
 
     if (chess_board_0x88_O.side_to_move == 1) {
-      found_score = -40000;// максимальная оценка позиции
+      found_score = -20000;// максимальная оценка позиции
     } else {
-      found_score = 40000;// минимальная оценка позиции
+      found_score = 20000;// минимальная оценка позиции
     }
 
     if (depth >= depth_max) {
@@ -150,18 +150,22 @@ class Search_ab_0x88_C {
 
       //это мат или пат
       if (number_moove_legal == 0) {
+        //console.log("Search_0x88_C->side_to_move--------- " + chess_board_0x88_O.side_to_move);
         //console.log(' ALLERT  number_moove_legal == 0 !!!!!!!!!!!!!');
         if (chess_board_0x88_O.side_to_move == 1) {
+          // ход белых. а ходов нет. это 0 пат, если же белый король под шахом это мат
           if (move_gen_1_captures_0x88_O.check_detected(chess_board_0x88_O.searching_king(1), 1, chess_board_0x88_O) != 0) {
-            pv_line_0x88_O.score_depth_max = -20000;
-            return -20000;
+            //console.log("Search_0x88_C-> W chek ");
+            pv_line_0x88_O.score_depth_max = -1*(20000 - depth);
+            return -1*(20000 - depth);
           }
           pv_line_0x88_O.score_depth_max = 0;          
           return 0;
         } else {
           if (move_gen_1_captures_0x88_O.check_detected(chess_board_0x88_O.searching_king(0), 0, chess_board_0x88_O) != 0) {
-            pv_line_0x88_O.score_depth_max = 20000;            
-            return 20000;
+            //console.log("Search_0x88_C-> B chek ");
+            pv_line_0x88_O.score_depth_max = (20000 - depth);            
+            return (20000 - depth);
           }
           pv_line_0x88_O.score_depth_max = 0;          
           return 0;
@@ -169,7 +173,6 @@ class Search_ab_0x88_C {
       }
 
     }
-
     return found_score;
   }
 
@@ -260,6 +263,7 @@ class Search_ab_0x88_C {
 
     // это мат или пат
     if (number_moove_legal == 0) {
+      console.log("Search_0x88_C->side_to_move--------- " + chess_board_0x88_O.side_to_move);
       if (chess_board_0x88_O.side_to_move == 1) {
         if (move_generator_0x88_O.check_detected(chess_board_0x88_O.searching_king(1), 1, chess_board_0x88_O) != 0) {
           return -20000;
