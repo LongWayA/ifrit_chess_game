@@ -82,7 +82,7 @@ let IfritChessGame_R = {
         // test = 4 alpha beta fail hard         
         // test = 5 iterative deepening with PVS
         // test = 6 message_to_engine(message) работа с воркером
-        IfritChessGame_R.test = 3;
+        IfritChessGame_R.test = 6;
 
         // задаем глубину перебора во время игры или обсчета тестовых позиций на количество узлов
         IfritChessGame_R.depth_max = 5;
@@ -116,13 +116,16 @@ let IfritChessGame_R = {
         //console.log('IfritChessGame_R->updateGame');
         // проверяем правильность полного перебора. что все правила соблюдены.
         IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_fen(IfritChessGame_R.TEST_POSITION_FEN);
-
+        //console.log("8x8_O.en_passant_target_square " + IfritChessGame_R.chessBoard_8x8_O.en_passant_target_square);
 
         IfritChessGame_R.chessEngine_0x88_O.position(IfritChessGame_R.chessBoard_8x8_O);
         if (IfritChessGame_R.test == 1) {
             // тестируем начальные позиции еще до хода        
             // режим тестовой игры движок отвечает на наш ход 
-            let info_return_g = IfritChessGame_R.chessEngine_0x88_O.test_go_depth_mm(IfritChessGame_R.depth_max);
+
+            //let info_return_g = IfritChessGame_R.chessEngine_0x88_O.test_go_depth_mm(IfritChessGame_R.depth_max);
+            let info_return_g = IfritChessGame_R.chessEngine_0x88_O.test_go_depth_ab(IfritChessGame_R.depth_max);
+            //let info_return_g = IfritChessGame_R.chessEngine_0x88_O.test_go_depth_abfh(IfritChessGame_R.depth_max);            
             this.score = info_return_g.score;
             this.nodes = info_return_g.node_count;
             //console.log("ChessEngine_0x88_С->А ЧТО В ГЛАВНОМ ВАРИАНТЕ?");
@@ -276,23 +279,39 @@ let IfritChessGame_R = {
                         // тут ход уже сделан на доске движка chess_board_0x88_O и мы считаем ответ
                         if (IfritChessGame_R.test == 1) {// test просто генерируем избыточные ходы (без проверки на шах)
                             IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O);
+
+                            // let fen22 = IfritChessGame_R.chessBoard_8x8_O.set_fen_from_8x8();
+                            // IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_fen(fen22);
+                            // console.log("m fen22 " + fen22);
+                            // console.log("m 8x8_O.en_passant_target_square " + IfritChessGame_R.chessBoard_8x8_O.en_passant_target_square);
+
+                            // IfritChessGame_R.chessEngine_0x88_O.position(IfritChessGame_R.chessBoard_8x8_O);
+                            // // тестовый режим сами делаем ходы и смотрим тестовый вывод
+                            // IfritChessGame_R.chessEngine_0x88_O.test_pseudo_legal_moves(IfritChessGame_R.depth_max);
+                            // // копируем доску движка в игровую
+                            // IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_0x88(IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O);
                             IfritChessGame_R.chessEngine_0x88_O.position(IfritChessGame_R.chessBoard_8x8_O);
-                            // тестовый режим сами делаем ходы и смотрим тестовый вывод
-                            IfritChessGame_R.chessEngine_0x88_O.test_pseudo_legal_moves(IfritChessGame_R.depth_max);
-                            // копируем доску движка в игровую
-                            IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_0x88(IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O);
+                            //let info_return_g = IfritChessGame_R.chessEngine_0x88_O.test_go_depth_mm(IfritChessGame_R.depth_max);
+                            let info_return_g = IfritChessGame_R.chessEngine_0x88_O.test_go_depth_ab(IfritChessGame_R.depth_max);  
+                            //let info_return_g = IfritChessGame_R.chessEngine_0x88_O.test_go_depth_abfh(IfritChessGame_R.depth_max);   
+                            this.score = info_return_g.score;
+                            this.nodes = info_return_g.node_count;
+
 
                         } else if (IfritChessGame_R.test == 2) {// test minmax запуск полного перебора                  
                             IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O);
                             IfritChessGame_R.chessEngine_0x88_O.position(IfritChessGame_R.chessBoard_8x8_O);
                             // режим тестовой игры движок отвечает на наш ход 
-                            let info_return_g = IfritChessGame_R.chessEngine_0x88_O.test_go_depth_mm(IfritChessGame_R.depth_max);
+                            //let info_return_g = IfritChessGame_R.chessEngine_0x88_O.test_go_depth_mm(IfritChessGame_R.depth_max);
+                            //let info_return_g = IfritChessGame_R.chessEngine_0x88_O.test_go_depth_ab(IfritChessGame_R.depth_max);  
+                            let info_return_g = IfritChessGame_R.chessEngine_0x88_O.test_go_depth_abfh(IfritChessGame_R.depth_max);                             
+                            
                             this.score = info_return_g.score;
                             this.nodes = info_return_g.node_count
                             // копируем доску движка с найденным ходом в игровую
                             IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_0x88(info_return_g.chess_board_0x88_O_move);
 
-                        }  else if (IfritChessGame_R.test == 3) { // test  alpha beta
+                        } else if (IfritChessGame_R.test == 3) { // test  alpha beta
                             IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O);
                             IfritChessGame_R.chessEngine_0x88_O.position(IfritChessGame_R.chessBoard_8x8_O);
                             // режим тестовой игры движок отвечает на наш ход 
@@ -347,7 +366,7 @@ let IfritChessGame_R = {
                         }
                     }
                     // рисуем доску независимо от того  какой режим                   
-                    IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O);
+                    //IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O);
 
                     IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("score " + this.score,
                         450, 20, Html5Canvas_C.ITALIC_20PX_SANS_SERIF, Html5Canvas_C.RED, 1);
@@ -410,9 +429,9 @@ let IfritChessGame_R = {
 
 };
 
-// const worker_egine_0x88 = new Worker('js/worker_chess_engine_0x88/w_chess_engine_0x88.js');
+const worker_egine_0x88 = new Worker('js/worker_chess_engine_0x88/w_chess_engine_0x88.js');
 
-// worker_egine_0x88.onmessage = function (event) {
-//     //console.log('Сообщение от движка : ', event.data);
-//     IfritChessGame_R.message_egnine_to_gui(event.data);
-// };
+worker_egine_0x88.onmessage = function (event) {
+    //console.log('Сообщение от движка : ', event.data);
+    IfritChessGame_R.message_egnine_to_gui(event.data);
+};

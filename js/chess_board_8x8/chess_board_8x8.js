@@ -37,22 +37,22 @@ class ChessBoard_8x8_C {
     side_to_move = 1;
 
     // разрешение взятия на проходе 1/0
-    en_passant_yes = 0;
+    en_passant_yes = -1;
 
     // координата битого поля
-    en_passant_target_square = 0;
+    en_passant_target_square = -1;
 
     // рокировка белых в длинную сторону   1/0
-    castling_Q = 1;
+    castling_Q = -1;
 
     // рокировка белых в короткую сторону  1/0
-    castling_K = 1;
+    castling_K = -1;
 
     // рокировка черных в длинную сторону  1/0
-    castling_q = 1;
+    castling_q = -1;
 
     // рокировка черных в короткую сторону 1/0
-    castling_k = 1;
+    castling_k = -1;
 
     // оценка позиции
     score = -1;
@@ -100,7 +100,7 @@ class ChessBoard_8x8_C {
         // разрешение взятия на проходе 1/0
         this.en_passant_yes = 0;
         // координата битого поля
-        this.en_passant_target_square = 0;
+        this.en_passant_target_square = -1;
         // рокировка белых в длинную сторону   1/0
         this.castling_Q = 1;
         // рокировка белых в короткую сторону  1/0
@@ -250,8 +250,8 @@ class ChessBoard_8x8_C {
         let x = 0;
         let y = 0;
         let void_f = 0;
-        let x07_en_passant;
-        let y07_en_passant;
+        let x07_en_passant = -1;
+        let y07_en_passant = -1;
 
         this.iniPosition_0();
 
@@ -464,9 +464,8 @@ class ChessBoard_8x8_C {
             fen = fen + " ";
         }
 
-        let yy = 8 - this.s_0x88_to_y07(this.en_passant_target_square);
         if (this.en_passant_yes == 1) {
-
+            let yy = 8 - this.s_0x88_to_y07(this.en_passant_target_square);
             fen = fen + Chess_board_0x88_C.LET_COOR[this.s_0x88_to_x07(this.en_passant_target_square)];
             fen = fen + yy;
         } else {

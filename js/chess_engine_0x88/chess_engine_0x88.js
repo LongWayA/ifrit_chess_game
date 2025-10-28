@@ -31,8 +31,14 @@ class ChessEngine_0x88_С {
 
   // для счета движка
   move_list_0x88_O = new Move_list_0x88_С();
-  pv_line_0x88_O = new PV_line_0x88_C();
 
+  // погружаясь вниз мы записываем ходы погружения
+  // понятно что эта линия постоянно обновляется и 
+  // завист от того где мы находимся
+  // мы обнавляем ее с опорой на лучшую линию узлов.
+  // это и текущая при погружении вниз и лучшая линия 
+  // которую мы нашли. это и есть PV вариант
+  pv_line_0x88_O = new PV_line_0x88_C();   
   // обеспечение оболочки
   chess_board_0x88_O_gui = new Chess_board_0x88_C();
   chess_board_0x88_O_save_gui = new Chess_board_0x88_C();
@@ -69,26 +75,26 @@ class ChessEngine_0x88_С {
 
   // просто генерация ходов и просмотр в консоле
   test_pseudo_legal_moves() {
-    console.log("ChessEngine_0x88_С->go_test --------");
+    // console.log("ChessEngine_0x88_С->go_test --------");
     this.chess_board_0x88_O.score = this.search_start_0x88_O.evaluate_0x88_O.score_position(this.chess_board_0x88_O);
-    this.chess_board_0x88_O.test_print_0x88();
-    this.chess_board_0x88_O.test_print_0x88_color();
-    console.log("ChessEngine_0x88_С->chess_board_0x88_O.score " + this.chess_board_0x88_O.score);
-    this.chess_board_0x88_O.test_print_any_0x88();
+    //  this.chess_board_0x88_O.test_print_0x88();
+    //  this.chess_board_0x88_O.test_print_0x88_color();
+    //  console.log("ChessEngine_0x88_С->chess_board_0x88_O.score " + this.chess_board_0x88_O.score);
+    //  this.chess_board_0x88_O.test_print_any_0x88();
     //this.move_generator_0x88_O.generated_pseudo_legal_moves(this.chess_board_0x88_O, this.move_list_0x88_O);
     this.move_gen_1_captures_0x88_O.generated_pseudo_legal_moves(this.chess_board_0x88_O, this.move_list_0x88_O);
     this.move_gen_2_quiet_0x88_O.generated_pseudo_legal_moves(this.chess_board_0x88_O, this.move_list_0x88_O);
 
     //this.move_list_0x88_O.sorting_list();
-    this.move_list_0x88_O.test_print_list(this.chess_board_0x88_O);
+    //this.move_list_0x88_O.test_print_list(this.chess_board_0x88_O);
   }
 
   // запуск полного перебора minmax
   // тут можно проверить корректность игрового движка с помощью perf_t. как правильно он генерирует позиции.
   test_go_depth_mm(depth_max) {
 
-    let info_return_search = this.search_start_0x88_O.test_start_search_mm(this.pv_line_0x88_O, this.chess_board_0x88_O,
-      this.move_gen_1_captures_0x88_O, this.move_gen_2_quiet_0x88_O, depth_max);
+    let info_return_search = this.search_start_0x88_O.test_start_search_mm(this.pv_line_0x88_O, 
+      this.chess_board_0x88_O, this.move_gen_1_captures_0x88_O, this.move_gen_2_quiet_0x88_O, depth_max);
 
     this.info_return_e.score = info_return_search.score;
     this.info_return_e.pv_line_0x88_O = info_return_search.pv_line_0x88_O;
@@ -102,7 +108,7 @@ class ChessEngine_0x88_С {
   test_go_depth_ab(depth_max) {
 
     let info_return_search = this.search_start_0x88_O.test_start_search_ab(this.pv_line_0x88_O,
-      this.chess_board_0x88_O, this.move_gen_1_captures_0x88_O, this.move_generator_0x88_O, depth_max);
+      this.chess_board_0x88_O, this.move_gen_1_captures_0x88_O, this.move_gen_2_quiet_0x88_O, depth_max);
 
     this.info_return_e.score = info_return_search.score;
     this.info_return_e.pv_line_0x88_O = info_return_search.pv_line_0x88_O;
@@ -132,8 +138,11 @@ class ChessEngine_0x88_С {
   // iterative deepening with PVS
   go_depth_id(depth_max) {
 
-    let info_return_search = this.search_start_0x88_O.start_search_id(this.pv_line_0x88_O, this.chess_board_0x88_O,
-      this.move_generator_0x88_O, depth_max);
+    // let info_return_search = this.search_start_0x88_O.start_search_id(this.pv_line_0x88_O, this.chess_board_0x88_O,
+    //   this.move_gen_1_captures_0x88_O, this.move_generator_0x88_O, depth_max);
+
+    let info_return_search = this.search_start_0x88_O.test_start_search_ab(this.pv_line_0x88_O, this.chess_board_0x88_O,
+      this.move_gen_1_captures_0x88_O, this.move_generator_0x88_O, depth_max);
 
     this.info_return_e.score = info_return_search.score;
     this.info_return_e.pv_line_0x88_O = info_return_search.pv_line_0x88_O;
@@ -147,8 +156,11 @@ class ChessEngine_0x88_С {
   // iterative deepening with PVS
   go_depth(depth_max) {
 
-    let info_return_search = this.search_start_0x88_O.start_search_id(this.pv_line_0x88_O, this.chess_board_0x88_O,
-      this.move_generator_0x88_O, depth_max);
+    // let info_return_search = this.search_start_0x88_O.start_search_id(this.pv_line_0x88_O, this.chess_board_0x88_O,
+    //   this.move_gen_1_captures_0x88_O, this.move_generator_0x88_O, depth_max);
+
+    let info_return_search = this.search_start_0x88_O.test_start_search_ab(this.pv_line_0x88_O, this.chess_board_0x88_O,
+      this.move_gen_1_captures_0x88_O, this.move_generator_0x88_O, depth_max);
 
     this.info_return_e.score = info_return_search.score;
     this.info_return_e.pv_line_0x88_O = info_return_search.pv_line_0x88_O;

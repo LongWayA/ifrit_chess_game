@@ -50,7 +50,8 @@ chess_board_0x88_O_save_test = new Chess_board_0x88_C();
     let depth = 0;
 
     this.chess_board_0x88_O_save_test.save_chess_board_0x88(chess_board_0x88_O);
-
+    console.log("=========================================================================");    
+    console.log("Search_0x88_C->start_search =============================================");
     // min max
     let score = this.search_minmax_0x88_O.searching_minimax(pv_line_0x88_O, chess_board_0x88_O,
       move_gen_1_captures_0x88_O, move_gen_2_quiet_0x88_O, depth, depth_max);
@@ -66,19 +67,23 @@ chess_board_0x88_O_save_test = new Chess_board_0x88_C();
     //  this.search_minmax_0x88_O.chess_board_0x88_O_move.test_print_0x88();
     //  this.search_minmax_0x88_O.chess_board_0x88_O_move.test_print_0x88_color();
     //  this.search_minmax_0x88_O.chess_board_0x88_O_move.test_print_any_0x88();
+    console.log("Search_0x88_C->start_print_pv_line ***************************************");
+    //this.info_return_search.pv_line.test_print_pv_line(chess_board_0x88_O);
+    pv_line_0x88_O.test_print_pv_line(chess_board_0x88_O);
 
     return this.info_return_search;
   }
 
   // alpha beta
-  test_start_search_ab(pv_line_0x88_O, chess_board_0x88_O, move_gen_1_captures_0x88_O, move_generator_0x88_O, depth_max) {
+  test_start_search_ab(pv_line_0x88_O, chess_board_0x88_O, move_gen_1_captures_0x88_O, move_gen_2_quiet_0x88_O, depth_max) {
     let depth = 0;
     let alpha = -50000;
     let beta = 50000;
-
+    this.node = 0;
+    this.search_ab_0x88_O.node = 0;
     // alpha beta
     let score = this.search_ab_0x88_O.searching_alpha_beta(alpha, beta, pv_line_0x88_O, chess_board_0x88_O,
-      move_gen_1_captures_0x88_O, move_generator_0x88_O, depth, depth_max);
+      move_gen_1_captures_0x88_O, move_gen_2_quiet_0x88_O, depth, depth_max);
 
     this.info_return_search.best_move = "-";
     this.info_return_search.score = score;
@@ -88,7 +93,9 @@ chess_board_0x88_O_save_test = new Chess_board_0x88_C();
     //  this.search_minmax_0x88_O.chess_board_0x88_O_move.test_print_0x88();
     //  this.search_minmax_0x88_O.chess_board_0x88_O_move.test_print_0x88_color();
     //  this.search_minmax_0x88_O.chess_board_0x88_O_move.test_print_any_0x88();
-    this.info_return_search.pv_line.test_print_pv_line(chess_board_0x88_O);
+    //console.log("Search_0x88_C->start_search ***************************************");
+    //pv_line_0x88_O.test_print_pv_line(chess_board_0x88_O);
+    //this.info_return_search.pv_line.test_print_pv_line(chess_board_0x88_O);
 
     return this.info_return_search;
   }
@@ -99,6 +106,7 @@ chess_board_0x88_O_save_test = new Chess_board_0x88_C();
     let depth = 0;
     let alpha = -50000;
     let beta = 50000;
+    this.node = 0;
 
     // alpha beta fail hard
     score = this.search_ab_0x88_O.searching_alpha_beta_fail_hard(alpha, beta, pv_line_0x88_O, chess_board_0x88_O,
@@ -110,14 +118,18 @@ chess_board_0x88_O_save_test = new Chess_board_0x88_C();
     this.info_return_search.node_count = this.search_ab_0x88_O.node;
     this.info_return_search.chess_board_0x88_O_move = this.search_ab_0x88_O.chess_board_0x88_O_move;
 
+    console.log("Search_0x88_C->start_search ***************************************");    
+    this.info_return_search.pv_line.test_print_pv_line(chess_board_0x88_O);
+    
     return this.info_return_search;
   }
 
   // iterative deepening with PVS
-  start_search_id(pv_line_0x88_O, chess_board_0x88_O, move_generator_0x88_O, depth_max) {
+  start_search_id(pv_line_0x88_O, chess_board_0x88_O, move_gen_1_captures_0x88_O, move_generator_0x88_O, depth_max) {
 
     this.node = 0;
-    this.info_return_search = this.searching_iterative_deepening(pv_line_0x88_O, chess_board_0x88_O, move_generator_0x88_O, depth_max);
+    this.info_return_search = this.searching_iterative_deepening(pv_line_0x88_O, chess_board_0x88_O, 
+      move_gen_1_captures_0x88_O, move_generator_0x88_O, depth_max);
     //console.log("Search_0x88_C->start_search " + depth + " score " + score);
     return this.info_return_search;
   }
@@ -125,7 +137,7 @@ chess_board_0x88_O_save_test = new Chess_board_0x88_C();
   /////////////////////////////////
 
   // 
-  searching_iterative_deepening(pv_line_0x88_O, chess_board_0x88_O, move_generator_0x88_O, depth_max_2) {
+  searching_iterative_deepening(pv_line_0x88_O, chess_board_0x88_O, move_gen_1_captures_0x88_O, move_generator_0x88_O, depth_max_2) {
 
     let alpha = -50000;
     let beta = 50000;
@@ -173,7 +185,7 @@ chess_board_0x88_O_save_test = new Chess_board_0x88_C();
 
         this.search_pvs_0x88_O.node = 0;
         score = this.search_pvs_0x88_O.searching_PVS(alpha, beta, pv_line_0x88_O, chess_board_0x88_O,
-          move_generator_0x88_O, (depth + 1), depth_max);
+          move_gen_1_captures_0x88_O, move_generator_0x88_O, (depth + 1), depth_max);
         this.node = this.node + this.search_pvs_0x88_O.node + 1;
 
         //score = this.searching_alpha_beta_fail_hard(alpha, beta, chess_board_0x88_O, move_generator_0x88_O, (depth + 1), depth_max);
