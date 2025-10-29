@@ -51,6 +51,7 @@ let IfritChessGame_R = {
 
     nodes: 0,
     score: 0,
+    pv_line_str: " no",
 
     test: 1,
     // тестовые позиции с сайта:
@@ -90,7 +91,7 @@ let IfritChessGame_R = {
         // test = 4 alpha beta fail hard         
         // test = 5 iterative deepening with PVS
         // test = 6 message_to_engine(message) работа с воркером
-        IfritChessGame_R.test = 6;
+        IfritChessGame_R.test = 3;//3
 
         // задаем глубину перебора во время игры или обсчета тестовых позиций на количество узлов
         IfritChessGame_R.depth_max = 4;
@@ -161,7 +162,7 @@ let IfritChessGame_R = {
         text_chess_game.value += "\n Кнопка стоп не работает.";
         text_chess_game.value += "\n Глубину больше 6 задавать не стоит.";
         text_chess_game.value += "\n Игры за черных пока нет.";
-        text_chess_game.value += "\n Записи игры пока нет. Вернуть ход не получится.";                            
+        text_chess_game.value += "\n Записи игры пока нет. Вернуть ход не получится.";
     },
 
 
@@ -171,30 +172,40 @@ let IfritChessGame_R = {
 
     //
     message_egnine_to_gui(message) {
-
+         //console.log('TO GUI message ' + message);
         //this.score = 0;
         //this.nodes = 0;
 
         if (message.includes("position fen ")) {
             let end = message.length;
             let fen = message.slice(13, end);
-            console.log('g fen from engine : ' + fen);
+            //console.log('g fen from engine : ' + fen);
             IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_fen(fen, IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O);
+        } 
 
-        } if (message.includes("score ")) {
+        if (message.includes("score ")) {
             let end = message.length;
             let score_s = message.slice(6, end);
-            //console.log('g score ' + score_s);
+            //console.log('Gg score ' + score_s);
             this.score = Number(score_s);
             //console.log('g score ' + this.score);            
-        } if (message.includes("node ")) {
+        } 
+
+        if (message.includes("node ")) {
             let end = message.length;
             let node_s = message.slice(5, end);
             //console.log('g node ' + node_s);
             this.nodes = Number(node_s);
             //console.log('g node ' + this.nodes);           
-        } if (message.includes("go")) {
-            console.log('g go');
+        }
+
+        if (message.includes("PV line: ")) {
+            this.pv_line_str = message;   
+
+        }
+
+        if (message.includes("go")) {
+            //console.log('g go');
             // рисуем доску                 
             IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O);
             //console.log('g2 node ' + this.nodes); 
@@ -206,16 +217,15 @@ let IfritChessGame_R = {
             //     450, 50, Html5Canvas_C.ITALIC_20PX_SANS_SERIF, Html5Canvas_C.RED, 1);
 
             //console.log("ChessBoard_8x8_C->click(mouseDown) start f ");
-            let f = "f";
-            f = IfritChessGame_R.chessBoard_8x8_O.set_fen_from_8x8(IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O);
+            let f = IfritChessGame_R.chessBoard_8x8_O.set_fen_from_8x8(IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O);
             //console.log("ChessBoard_8x8_C->click(mouseDown) f " + f);
             //console.log("ChessBoard_8x8_C->click(mouseDown) side_to_move " + IfritChessGame_R.chessBoard_8x8_O.side_to_move);
             // IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("fen " + f,
             //     20, 470, Html5Canvas_C.ITALIC_20PX_SANS_SERIF, Html5Canvas_C.BLUE, 1);
 
-            text_engine.value = " score " + this.score + " max depth " + IfritChessGame_R.depth_max +
-                " nodes " + this.nodes + "\n fen " + f;
-
+            text_engine.value = " max depth " + IfritChessGame_R.depth_max + " nodes " + this.nodes +" score " + this.score + 
+                "\n " + this.pv_line_str + "\n fen " + f;
+          
             IfritChessGame_R.stop_click = 0;
             IfritChessGame_R.stop_click_2 = 0;
         }
@@ -343,6 +353,12 @@ let IfritChessGame_R = {
                             // копируем доску движка с найденным ходом в игровую
                             IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_0x88(info_return_g.chess_board_0x88_O_move);
                             IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O);
+
+                           text_engine.value = " max depth " + IfritChessGame_R.depth_max +
+                            " nodes " + this.nodes + " score " + this.score +
+                            "\n " + info_return_g.pv_line_str;
+
+
                         } else if (IfritChessGame_R.test == 4) { // test alpha beta fail hard
                             IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O);
                             IfritChessGame_R.chessEngine_0x88_O.position(IfritChessGame_R.chessBoard_8x8_O);
@@ -398,8 +414,8 @@ let IfritChessGame_R = {
                     }
                     // рисуем доску независимо от того  какой режим                   
                     //IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O);
-                    text_engine.value = " max depth " + IfritChessGame_R.depth_max +
-                        " nodes " + this.nodes + " score " + this.score;
+                    //text_engine.value = " max depth " + IfritChessGame_R.depth_max +
+                    //    " nodes " + this.nodes + " score " + this.score;
 
                     // IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("score " + this.score,
                     //     450, 20, Html5Canvas_C.ITALIC_20PX_SANS_SERIF, Html5Canvas_C.RED, 1);
@@ -468,13 +484,19 @@ let IfritChessGame_R = {
     },
 
     startGameButton() {
-        console.log("IfritChessGame_R->startGameButton click кликнули");
-        if (checkbox_is_black_game.checked) {
-            console.log("IfritChessGame_R->startGameButton играем за черных");
+        // console.log("IfritChessGame_R->startGameButton click кликнули");
+        // if (checkbox_is_black_game.checked) {
+        //     console.log("IfritChessGame_R->startGameButton играем за черных");
+        // } else {
+        //     console.log("IfritChessGame_R->startGameButton играем за белых");
+        // }
+
+        if (isNaN(parseInt(input_max_depth.value))) {
+            IfritChessGame_R.depth_max = 1;
         } else {
-            console.log("IfritChessGame_R->startGameButton играем за белых");
+            IfritChessGame_R.depth_max = parseInt(input_max_depth.value);
         }
-        IfritChessGame_R.depth_max = Number(input_max_depth.value);
+
 
         IfritChessGame_R.TEST_POSITION_FEN = IfritChessGame_R.INITIAL_POSITION_FEN;
         IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_fen(IfritChessGame_R.TEST_POSITION_FEN);
@@ -509,6 +531,12 @@ let IfritChessGame_R = {
         IfritChessGame_R.chessEngine_0x88_O.position(IfritChessGame_R.chessBoard_8x8_O);
         IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O);
 
+        if (isNaN(parseInt(input_max_depth.value))) {
+            IfritChessGame_R.depth_max = 1;
+        } else {
+            IfritChessGame_R.depth_max = parseInt(input_max_depth.value);
+        }
+
         text_engine.value = " max depth " + IfritChessGame_R.depth_max +
             " nodes " + this.nodes + " score " + this.score;
         text_engine.value += "\n Позиция задана из fen. Сами следите за его корректностью. Новая игра";
@@ -516,9 +544,9 @@ let IfritChessGame_R = {
     },
 };
 
-const worker_egine_0x88 = new Worker('js/worker_chess_engine_0x88/w_chess_engine_0x88.js');
+// const worker_egine_0x88 = new Worker('js/worker_chess_engine_0x88/w_chess_engine_0x88.js');
 
-worker_egine_0x88.onmessage = function (event) {
-    //console.log('Сообщение от движка : ', event.data);
-    IfritChessGame_R.message_egnine_to_gui(event.data);
-};
+// worker_egine_0x88.onmessage = function (event) {
+//     //console.log('Сообщение от движка : ', event.data);
+//     IfritChessGame_R.message_egnine_to_gui(event.data);
+// };

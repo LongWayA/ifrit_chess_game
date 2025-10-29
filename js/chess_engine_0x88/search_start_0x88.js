@@ -21,8 +21,8 @@ class Search_start_0x88_C {
   search_ab_0x88_O = new Search_ab_0x88_C();
   search_pvs_0x88_O = new Search_pvs_0x88_C();
 
-chess_board_0x88_O_save_test = new Chess_board_0x88_C();
-
+  chess_board_0x88_O_save_test = new Chess_board_0x88_C();
+  move_list_0x88_O = new Move_list_0x88_С();
 
   static NAME = "Search_start_0x88_C";
 
@@ -30,6 +30,7 @@ chess_board_0x88_O_save_test = new Chess_board_0x88_C();
     best_move: "-",
     score: 0,
     pv_line: "-",
+    pv_line_str: "-",    
     node_count: 0,
     chess_board_0x88_O_move: null
   };
@@ -88,15 +89,16 @@ chess_board_0x88_O_save_test = new Chess_board_0x88_C();
     this.info_return_search.best_move = "-";
     this.info_return_search.score = score;
     this.info_return_search.pv_line = pv_line_0x88_O;
+    this.info_return_search.pv_line_str = pv_line_0x88_O.pv_line_to_string(chess_board_0x88_O, this.move_list_0x88_O);
     this.info_return_search.node_count = this.search_ab_0x88_O.node;
     this.info_return_search.chess_board_0x88_O_move = this.search_ab_0x88_O.chess_board_0x88_O_move;
     //  this.search_minmax_0x88_O.chess_board_0x88_O_move.test_print_0x88();
     //  this.search_minmax_0x88_O.chess_board_0x88_O_move.test_print_0x88_color();
     //  this.search_minmax_0x88_O.chess_board_0x88_O_move.test_print_any_0x88();
-    console.log("Search_0x88_C->start_search ***************************************");
+    //console.log("Search_0x88_C->start_search ***************************************");
     //pv_line_0x88_O.test_print_pv_line(chess_board_0x88_O);
-    this.info_return_search.pv_line.test_print_pv_line(chess_board_0x88_O);
-
+    //this.info_return_search.pv_line.test_print_pv_line(chess_board_0x88_O);
+    //console.log("Search_0x88_C->pv_line_str " + this.info_return_search.pv_line_str);
     return this.info_return_search;
   }
 

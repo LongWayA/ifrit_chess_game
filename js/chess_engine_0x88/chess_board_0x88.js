@@ -370,7 +370,7 @@ class Chess_board_0x88_C {
                 }
 
             } else if (void_f == 3) {// взятие на проходе
-                console.log('fen[' + i_fen + '] ' + char);
+                //console.log('fen[' + i_fen + '] ' + char);
 
                 if (char == "-") {
                     this.en_passant_yes = 0;

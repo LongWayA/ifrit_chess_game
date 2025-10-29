@@ -41,38 +41,38 @@ class W_ChessEngine_0x88_С {
   }
 
   message_to_engine(message) {
-    console.log('e message : ' + message);
+    //console.log('e message : ' + message);
     let fen;
     if (message.includes("position fen ")) {
       let end = message.length;
       fen = message.slice(13, end);
-      console.log('e fen from gui : ' + fen);
+      //console.log('e fen from gui : ' + fen);
 
       w_chessEngine_0x88_O.chessEngine_0x88_O.chess_board_0x88_O.set_0x88_from_fen(fen);
       
-     console.log("e-> ini chess_board_0x88_O");
-     w_chessEngine_0x88_O.chessEngine_0x88_O.chess_board_0x88_O.test_print_0x88();
-     w_chessEngine_0x88_O.chessEngine_0x88_O.chess_board_0x88_O.test_print_0x88_color();
-     w_chessEngine_0x88_O.chessEngine_0x88_O.chess_board_0x88_O.test_print_any_0x88();
+     //console.log("e-> ini chess_board_0x88_O");
+     //w_chessEngine_0x88_O.chessEngine_0x88_O.chess_board_0x88_O.test_print_0x88();
+     //w_chessEngine_0x88_O.chessEngine_0x88_O.chess_board_0x88_O.test_print_0x88_color();
+     //w_chessEngine_0x88_O.chessEngine_0x88_O.chess_board_0x88_O.test_print_any_0x88();
 
     } else if (message.includes("go depth ")) {
       let end = message.length;
-      let depth_max_s = message.slice(9, end);
-      console.log('e depth_max : ' + depth_max_s); 
+      let depth_max_s = message.slice(9, end); 
       let depth_max = Number(depth_max_s);
 
       let info_return_e = w_chessEngine_0x88_O.chessEngine_0x88_O.go_depth(depth_max);
 
-      console.log("e-> info_return_e");
-     info_return_e.chess_board_0x88_O_move.test_print_0x88();
-     info_return_e.chess_board_0x88_O_move.test_print_0x88_color();
-     info_return_e.chess_board_0x88_O_move.test_print_any_0x88();
+      //console.log("e-> info_return_e");
+     //info_return_e.chess_board_0x88_O_move.test_print_0x88();
+     //info_return_e.chess_board_0x88_O_move.test_print_0x88_color();
+     //info_return_e.chess_board_0x88_O_move.test_print_any_0x88();
 
       fen = info_return_e.chess_board_0x88_O_move.set_fen_from_0x88();
-      console.log('e fen to gui : ' + fen); 
+      //console.log('e fen to gui : ' + fen); 
       postMessage("position fen " + fen);
       postMessage("score " + info_return_e.score);
       postMessage("node " + info_return_e.node_count);
+      postMessage(info_return_e.pv_line_str);      
       postMessage("go");                  
     }
   }

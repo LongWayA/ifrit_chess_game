@@ -169,7 +169,7 @@ class Move_list_0x88_С {
     to = new Array(Move_list_0x88_С.LENGTH_LIST).fill(-1);
     score_move = new Array(Move_list_0x88_С.LENGTH_LIST).fill(-1);
 
-    number_captures_move = 0;   
+    number_captures_move = 0;
     number_move = 0;
 
     constructor() {
@@ -177,7 +177,7 @@ class Move_list_0x88_С {
     }
 
     iniM() {
-        this.number_captures_move = 0;        
+        this.number_captures_move = 0;
         this.number_move = 0;
     }
 
@@ -228,9 +228,9 @@ class Move_list_0x88_С {
                 (8 - chess_board_0x88_O.s_0x88_to_y07(this.to[i])));
 
             console.log("---- ");
-        }     
+        }
         console.log("number_captures_move = " + this.number_captures_move);
-        console.log("number_move = " + this.number_move);        
+        console.log("number_move = " + this.number_move);
         console.log("*********** test_print_list");
     }
 
@@ -242,7 +242,7 @@ class Move_list_0x88_С {
             this.from[i] = -1;
             this.to[i] = -1;
         }
-        this.number_captures_move = 0;        
+        this.number_captures_move = 0;
         this.number_move = 0;
     }
 
@@ -555,6 +555,133 @@ class Move_list_0x88_С {
         if (type_move == Move_list_0x88_С.CAPTURES_PAWN_BISHOP) return Chess_board_0x88_C.BISHOP;
         if (type_move == Move_list_0x88_С.CAPTURES_PAWN_KNIGHT) return Chess_board_0x88_C.KNIGHT;
         if (type_move == Move_list_0x88_С.CAPTURES_PAWN_PAWN) return Chess_board_0x88_C.PAWN;
+    }
 
+    type_move_to_name_piese(type_move) {
+        if (type_move == Move_list_0x88_С.MOVE_NO) return "NO";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_QUEEN_PROMO_QUEEN) return "P";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_ROOK_PROMO_QUEEN) return "P";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_BISHOP_PROMO_QUEEN) return "P";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_KNIGHT_PROMO_QUEEN) return "P";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_QUEEN_PROMO_ROOK) return "P";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_ROOK_PROMO_ROOK) return "P";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_BISHOP_PROMO_ROOK) return "P";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_KNIGHT_PROMO_ROOK) return "P";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_QUEEN_PROMO_BISHOP) return "P";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_ROOK_PROMO_BISHOP) return "P";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_BISHOP_PROMO_BISHOP) return "P";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_KNIGHT_PROMO_BISHOP) return "P";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_QUEEN_PROMO_KNIGHT) return "P";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_ROOK_PROMO_KNIGHT) return "P";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_BISHOP_PROMO_KNIGHT) return "P";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT) return "P";
+        if (type_move == Move_list_0x88_С.MOVE_PAWN_PROMO_QUEEN) return "P";
+        if (type_move == Move_list_0x88_С.MOVE_PAWN_PROMO_ROOK) return "P";
+        if (type_move == Move_list_0x88_С.MOVE_PAWN_PROMO_BISHOP) return "P";
+        if (type_move == Move_list_0x88_С.MOVE_PAWN_PROMO_KNIGHT) return "P";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_QUEEN) return "P";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_ROOK) return "P";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_BISHOP) return "P";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_KNIGHT) return "P";
+        if (type_move == Move_list_0x88_С.CAPTURES_KNIGHT_QUEEN) return "N";
+        if (type_move == Move_list_0x88_С.CAPTURES_KNIGHT_ROOK) return "N";
+        if (type_move == Move_list_0x88_С.CAPTURES_BISHOP_QUEEN) return "B";
+        if (type_move == Move_list_0x88_С.CAPTURES_BISHOP_ROOK) return "B";
+        if (type_move == Move_list_0x88_С.CAPTURES_ROOK_QUEEN) return "R";
+        if (type_move == Move_list_0x88_С.CAPTURES_KNIGHT_BISHOP) return "N";
+        if (type_move == Move_list_0x88_С.CAPTURES_KNIGHT_KNIGHT) return "N";
+        if (type_move == Move_list_0x88_С.CAPTURES_BISHOP_BISHOP) return "B";
+        if (type_move == Move_list_0x88_С.CAPTURES_BISHOP_KNIGHT) return "B";
+        if (type_move == Move_list_0x88_С.CAPTURES_ROOK_ROOK) return "R";
+        if (type_move == Move_list_0x88_С.CAPTURES_QUEEN_QUEEN) return "Q";
+        if (type_move == Move_list_0x88_С.CAPTURES_ROOK_BISHOP) return "R";
+        if (type_move == Move_list_0x88_С.CAPTURES_ROOK_KNIGHT) return "R";
+        if (type_move == Move_list_0x88_С.CAPTURES_QUEEN_ROOK) return "Q";
+        if (type_move == Move_list_0x88_С.CAPTURES_QUEEN_BISHOP) return "Q";
+        if (type_move == Move_list_0x88_С.CAPTURES_QUEEN_KNIGHT) return "Q";
+        if (type_move == Move_list_0x88_С.CAPTURES_KING_QUEEN) return "K";
+        if (type_move == Move_list_0x88_С.CAPTURES_KING_ROOK) return "K";
+        if (type_move == Move_list_0x88_С.CAPTURES_KING_BISHOP) return "K";
+        if (type_move == Move_list_0x88_С.CAPTURES_KING_KNIGHT) return "K";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_PAWN) return "P";
+        if (type_move == Move_list_0x88_С.EP_CAPTURES) return "P";
+        if (type_move == Move_list_0x88_С.CAPTURES_KNIGHT_PAWN) return "N";
+        if (type_move == Move_list_0x88_С.CAPTURES_BISHOP_PAWN) return "B";
+        if (type_move == Move_list_0x88_С.CAPTURES_ROOK_PAWN) return "R";
+        if (type_move == Move_list_0x88_С.CAPTURES_QUEEN_PAWN) return "Q";
+        if (type_move == Move_list_0x88_С.CAPTURES_KING_PAWN) return "K";
+        if (type_move == Move_list_0x88_С.MOVE_QUEEN) return "Q";
+        if (type_move == Move_list_0x88_С.MOVE_ROOK) return "R";
+        if (type_move == Move_list_0x88_С.MOVE_BISHOP) return "B";
+        if (type_move == Move_list_0x88_С.MOVE_KNIGHT) return "N";
+        if (type_move == Move_list_0x88_С.MOVE_KING) return "K";
+        if (type_move == Move_list_0x88_С.MOVE_PAWN) return "P";
+        if (type_move == Move_list_0x88_С.MOVE_DOUBLE_PAWN) return "P";
+        if (type_move == Move_list_0x88_С.MOVE_KING_CASTLE) return "0-0";
+        if (type_move == Move_list_0x88_С.MOVE_KING_QUEEN_CASTLE) return "0-0-0";
+    }
+    
+    type_move_to_name_piese_f(type_move) {
+        if (type_move == Move_list_0x88_С.MOVE_NO) return "NO";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_QUEEN_PROMO_QUEEN) return "PAWN";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_ROOK_PROMO_QUEEN) return "PAWN";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_BISHOP_PROMO_QUEEN) return "PAWN";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_KNIGHT_PROMO_QUEEN) return "PAWN";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_QUEEN_PROMO_ROOK) return "PAWN";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_ROOK_PROMO_ROOK) return "PAWN";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_BISHOP_PROMO_ROOK) return "PAWN";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_KNIGHT_PROMO_ROOK) return "PAWN";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_QUEEN_PROMO_BISHOP) return "PAWN";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_ROOK_PROMO_BISHOP) return "PAWN";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_BISHOP_PROMO_BISHOP) return "PAWN";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_KNIGHT_PROMO_BISHOP) return "PAWN";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_QUEEN_PROMO_KNIGHT) return "PAWN";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_ROOK_PROMO_KNIGHT) return "PAWN";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_BISHOP_PROMO_KNIGHT) return "PAWN";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT) return "PAWN";
+        if (type_move == Move_list_0x88_С.MOVE_PAWN_PROMO_QUEEN) return "PAWN";
+        if (type_move == Move_list_0x88_С.MOVE_PAWN_PROMO_ROOK) return "PAWN";
+        if (type_move == Move_list_0x88_С.MOVE_PAWN_PROMO_BISHOP) return "PAWN";
+        if (type_move == Move_list_0x88_С.MOVE_PAWN_PROMO_KNIGHT) return "PAWN";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_QUEEN) return "PAWN";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_ROOK) return "PAWN";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_BISHOP) return "PAWN";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_KNIGHT) return "PAWN";
+        if (type_move == Move_list_0x88_С.CAPTURES_KNIGHT_QUEEN) return "KNIGHT";
+        if (type_move == Move_list_0x88_С.CAPTURES_KNIGHT_ROOK) return "KNIGHT";
+        if (type_move == Move_list_0x88_С.CAPTURES_BISHOP_QUEEN) return "BISHOP";
+        if (type_move == Move_list_0x88_С.CAPTURES_BISHOP_ROOK) return "BISHOP";
+        if (type_move == Move_list_0x88_С.CAPTURES_ROOK_QUEEN) return "ROOK";
+        if (type_move == Move_list_0x88_С.CAPTURES_KNIGHT_BISHOP) return "KNIGHT";
+        if (type_move == Move_list_0x88_С.CAPTURES_KNIGHT_KNIGHT) return "KNIGHT";
+        if (type_move == Move_list_0x88_С.CAPTURES_BISHOP_BISHOP) return "BISHOP";
+        if (type_move == Move_list_0x88_С.CAPTURES_BISHOP_KNIGHT) return "BISHOP";
+        if (type_move == Move_list_0x88_С.CAPTURES_ROOK_ROOK) return "ROOK";
+        if (type_move == Move_list_0x88_С.CAPTURES_QUEEN_QUEEN) return "QUEEN";
+        if (type_move == Move_list_0x88_С.CAPTURES_ROOK_BISHOP) return "ROOK";
+        if (type_move == Move_list_0x88_С.CAPTURES_ROOK_KNIGHT) return "ROOK";
+        if (type_move == Move_list_0x88_С.CAPTURES_QUEEN_ROOK) return "QUEEN";
+        if (type_move == Move_list_0x88_С.CAPTURES_QUEEN_BISHOP) return "QUEEN";
+        if (type_move == Move_list_0x88_С.CAPTURES_QUEEN_KNIGHT) return "QUEEN";
+        if (type_move == Move_list_0x88_С.CAPTURES_KING_QUEEN) return "KING";
+        if (type_move == Move_list_0x88_С.CAPTURES_KING_ROOK) return "KING";
+        if (type_move == Move_list_0x88_С.CAPTURES_KING_BISHOP) return "KING";
+        if (type_move == Move_list_0x88_С.CAPTURES_KING_KNIGHT) return "KING";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_PAWN) return "PAWN";
+        if (type_move == Move_list_0x88_С.EP_CAPTURES) return "PAWN";
+        if (type_move == Move_list_0x88_С.CAPTURES_KNIGHT_PAWN) return "KNIGHT";
+        if (type_move == Move_list_0x88_С.CAPTURES_BISHOP_PAWN) return "BISHOP";
+        if (type_move == Move_list_0x88_С.CAPTURES_ROOK_PAWN) return "ROOK";
+        if (type_move == Move_list_0x88_С.CAPTURES_QUEEN_PAWN) return "QUEEN";
+        if (type_move == Move_list_0x88_С.CAPTURES_KING_PAWN) return "KING";
+        if (type_move == Move_list_0x88_С.MOVE_QUEEN) return "QUEEN";
+        if (type_move == Move_list_0x88_С.MOVE_ROOK) return "ROOK";
+        if (type_move == Move_list_0x88_С.MOVE_BISHOP) return "BISHOP";
+        if (type_move == Move_list_0x88_С.MOVE_KNIGHT) return "KNIGHT";
+        if (type_move == Move_list_0x88_С.MOVE_KING) return "KING";
+        if (type_move == Move_list_0x88_С.MOVE_PAWN) return "PAWN";
+        if (type_move == Move_list_0x88_С.MOVE_DOUBLE_PAWN) return "PAWN";
+        if (type_move == Move_list_0x88_С.MOVE_KING_CASTLE) return "KING";
+        if (type_move == Move_list_0x88_С.MOVE_KING_QUEEN_CASTLE) return "KING";
     }
 }
