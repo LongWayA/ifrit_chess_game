@@ -11,6 +11,13 @@
  *  
 */
 
+const checkbox_is_black_game = document.getElementById('is_black_game');
+const input_max_depth = document.getElementById('max_depth');
+const input_set_fen = document.getElementById('set_fen');
+
+const text_chess_game = document.getElementById('text_chess_game');
+const text_engine = document.getElementById('text_engine');
+
 // корневой объект программы. поэтому объект, а не класс
 let IfritChessGame_R = {
 
@@ -22,7 +29,7 @@ let IfritChessGame_R = {
     NAME: "IfritChessGame_R",
 
     X_START: 15,
-    Y_START: 10,
+    Y_START: 5,
 
     SQUARES_WIDTH: 50,
     SQUARES_HEIGHT: 50,
@@ -74,7 +81,7 @@ let IfritChessGame_R = {
     POSITION_FEN_CASTLE_1: "r3k2r/8/p6p/8/8/P6P/8/R3K2R w KQkq - 0 1",
     POSITION_FEN_CASTLE_2: "r3k2r/8/p6p/8/3BB3/P6P/8/R3K2R w KQkq - 0 1",
     POSITION_FEN_CASTLE_3: "r3k2r/8/p6p/8/3bb3/P6P/8/R3K2R b KQkq - 0 1",
-    POSITION_FEN_MAT: "7Q/8/8/1R6/R7/4k3/8/8 b - - 0 1",    
+    POSITION_FEN_MAT: "7Q/8/8/1R6/R7/4k3/8/8 b - - 0 1",
 
     iniM() {
         // test = 1 просто генерация ходов и просмотр в консоле
@@ -143,9 +150,18 @@ let IfritChessGame_R = {
     drawGame() {
         //console.log('IfritChessGame_R->drawGame');
         IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O);
-        IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("max depth " + IfritChessGame_R.depth_max +
-            " nodes " + this.nodes + " score " + this.score,
-            450, 20, Html5Canvas_C.ITALIC_20PX_SANS_SERIF, Html5Canvas_C.RED, 1);
+        // IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("max depth " + IfritChessGame_R.depth_max +
+        //     " nodes " + this.nodes + " score " + this.score,
+        //     450, 20, Html5Canvas_C.ITALIC_20PX_SANS_SERIF, Html5Canvas_C.RED, 1);
+
+        text_engine.value = " max depth " + IfritChessGame_R.depth_max +
+            " nodes " + this.nodes + " score " + this.score;
+
+        text_chess_game.value = " Последний матующий ход сделать не получится.";
+        text_chess_game.value += "\n Кнопка стоп не работает.";
+        text_chess_game.value += "\n Глубину больше 6 задавать не стоит.";
+        text_chess_game.value += "\n Игры за черных пока нет.";
+        text_chess_game.value += "\n Записи игры пока нет. Вернуть ход не получится.";                            
     },
 
 
@@ -182,19 +198,23 @@ let IfritChessGame_R = {
             // рисуем доску                 
             IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O);
             //console.log('g2 node ' + this.nodes); 
-            IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("score " + this.score,
-                450, 20, Html5Canvas_C.ITALIC_20PX_SANS_SERIF, Html5Canvas_C.RED, 1);
-            IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("max depth " + IfritChessGame_R.depth_max +
-                " nodes " + this.nodes,
-                450, 50, Html5Canvas_C.ITALIC_20PX_SANS_SERIF, Html5Canvas_C.RED, 1);
+
+            // IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("score " + this.score,
+            //     450, 20, Html5Canvas_C.ITALIC_20PX_SANS_SERIF, Html5Canvas_C.RED, 1);
+            // IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("max depth " + IfritChessGame_R.depth_max +
+            //     " nodes " + this.nodes,
+            //     450, 50, Html5Canvas_C.ITALIC_20PX_SANS_SERIF, Html5Canvas_C.RED, 1);
 
             //console.log("ChessBoard_8x8_C->click(mouseDown) start f ");
             let f = "f";
             f = IfritChessGame_R.chessBoard_8x8_O.set_fen_from_8x8(IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O);
             //console.log("ChessBoard_8x8_C->click(mouseDown) f " + f);
             //console.log("ChessBoard_8x8_C->click(mouseDown) side_to_move " + IfritChessGame_R.chessBoard_8x8_O.side_to_move);
-            IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("fen " + f,
-                20, 470, Html5Canvas_C.ITALIC_20PX_SANS_SERIF, Html5Canvas_C.BLUE, 1);
+            // IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("fen " + f,
+            //     20, 470, Html5Canvas_C.ITALIC_20PX_SANS_SERIF, Html5Canvas_C.BLUE, 1);
+
+            text_engine.value = " score " + this.score + " max depth " + IfritChessGame_R.depth_max +
+                " nodes " + this.nodes + "\n fen " + f;
 
             IfritChessGame_R.stop_click = 0;
             IfritChessGame_R.stop_click_2 = 0;
@@ -271,7 +291,6 @@ let IfritChessGame_R = {
                         // если ход не легальный то восстанавливаем доску из chess_board_0x88_O_save_gui
                         //IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O.save_chess_board_0x88(
                         //    IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O_save_gui);
-
                     } else {
 
                         IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_0x88(IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O_gui);
@@ -295,7 +314,7 @@ let IfritChessGame_R = {
                             // IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_0x88(IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O);
                             IfritChessGame_R.chessEngine_0x88_O.position(IfritChessGame_R.chessBoard_8x8_O);
                             //let info_return_g = IfritChessGame_R.chessEngine_0x88_O.test_go_depth_mm(IfritChessGame_R.depth_max);
-                            let info_return_g = IfritChessGame_R.chessEngine_0x88_O.test_go_depth_ab(IfritChessGame_R.depth_max);  
+                            let info_return_g = IfritChessGame_R.chessEngine_0x88_O.test_go_depth_ab(IfritChessGame_R.depth_max);
                             //let info_return_g = IfritChessGame_R.chessEngine_0x88_O.test_go_depth_abfh(IfritChessGame_R.depth_max);   
                             this.score = info_return_g.score;
                             this.nodes = info_return_g.node_count;
@@ -307,8 +326,8 @@ let IfritChessGame_R = {
                             // режим тестовой игры движок отвечает на наш ход 
                             //let info_return_g = IfritChessGame_R.chessEngine_0x88_O.test_go_depth_mm(IfritChessGame_R.depth_max);
                             //let info_return_g = IfritChessGame_R.chessEngine_0x88_O.test_go_depth_ab(IfritChessGame_R.depth_max);  
-                            let info_return_g = IfritChessGame_R.chessEngine_0x88_O.test_go_depth_abfh(IfritChessGame_R.depth_max);                             
-                            
+                            let info_return_g = IfritChessGame_R.chessEngine_0x88_O.test_go_depth_abfh(IfritChessGame_R.depth_max);
+
                             this.score = info_return_g.score;
                             this.nodes = info_return_g.node_count
                             // копируем доску движка с найденным ходом в игровую
@@ -337,10 +356,15 @@ let IfritChessGame_R = {
                         } else if (IfritChessGame_R.test == 5) {  // iterative deepening with PVS
                             IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O);
 
-                            IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("2 После Вашего хода Ифрит будет думать.",
-                                20, 450, Html5Canvas_C.ITALIC_20PX_SANS_SERIF, Html5Canvas_C.GREEN, 1);
-                            IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("На это время доска зависнет < 30 сек.",
-                                20, 480, Html5Canvas_C.ITALIC_20PX_SANS_SERIF, Html5Canvas_C.GREEN, 1);
+                            // text_engine.value = "max depth " + IfritChessGame_R.depth_max +
+                            //     " nodes " + this.nodes + " score " + this.score;
+
+                            text_engine.value = " 2 После Вашего хода Ифрит будет думать. На это время доска зависнет < 30 сек.";
+
+                            // IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("2 После Вашего хода Ифрит будет думать.",
+                            //     20, 450, Html5Canvas_C.ITALIC_20PX_SANS_SERIF, Html5Canvas_C.GREEN, 1);
+                            // IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("На это время доска зависнет < 30 сек.",
+                            //     20, 480, Html5Canvas_C.ITALIC_20PX_SANS_SERIF, Html5Canvas_C.GREEN, 1);
 
                             IfritChessGame_R.chessEngine_0x88_O.position(IfritChessGame_R.chessBoard_8x8_O);
                             let info_return_g = IfritChessGame_R.chessEngine_0x88_O.go_depth_id(IfritChessGame_R.depth_max);
@@ -353,9 +377,13 @@ let IfritChessGame_R = {
                         } else if (IfritChessGame_R.test == 6) { // игра в режиме отдельного потока
 
                             IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O);
+                            // text_engine.value = "max depth " + IfritChessGame_R.depth_max +
+                            //     " nodes " + this.nodes + " score " + this.score;
 
-                            IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("Ифрит изволит думать. В это время фигуры недоступны",
-                                20, 450, Html5Canvas_C.ITALIC_20PX_SANS_SERIF, Html5Canvas_C.GREEN, 1);
+                            text_engine.value = " Ифрит изволит думать. В это время фигуры недоступны";
+
+                            // IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("Ифрит изволит думать. В это время фигуры недоступны",
+                            //     20, 450, Html5Canvas_C.ITALIC_20PX_SANS_SERIF, Html5Canvas_C.GREEN, 1);
 
                             // message_gui_to_engine    
                             let fen = IfritChessGame_R.chessBoard_8x8_O.set_fen_from_8x8(IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O);
@@ -370,23 +398,29 @@ let IfritChessGame_R = {
                     }
                     // рисуем доску независимо от того  какой режим                   
                     //IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O);
+                    text_engine.value = " max depth " + IfritChessGame_R.depth_max +
+                        " nodes " + this.nodes + " score " + this.score;
 
-                    IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("score " + this.score,
-                        450, 20, Html5Canvas_C.ITALIC_20PX_SANS_SERIF, Html5Canvas_C.RED, 1);
-                    IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("max depth " + IfritChessGame_R.depth_max +
-                        " nodes " + this.nodes,
-                        450, 50, Html5Canvas_C.ITALIC_20PX_SANS_SERIF, Html5Canvas_C.RED, 1);
+                    // IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("score " + this.score,
+                    //     450, 20, Html5Canvas_C.ITALIC_20PX_SANS_SERIF, Html5Canvas_C.RED, 1);
+                    // IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("max depth " + IfritChessGame_R.depth_max +
+                    //     " nodes " + this.nodes,
+                    //     450, 50, Html5Canvas_C.ITALIC_20PX_SANS_SERIF, Html5Canvas_C.RED, 1);
                     //console.log("ChessBoard_8x8_C->click(mouseDown) start f ");
                     let f = "f";
                     f = IfritChessGame_R.chessBoard_8x8_O.set_fen_from_8x8(IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O);
                     //console.log("ChessBoard_8x8_C->click(mouseDown) f " + f);
                     //console.log("ChessBoard_8x8_C->click(mouseDown) side_to_move " + IfritChessGame_R.chessBoard_8x8_O.side_to_move);
-                    IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("fen " + f,
-                        20, 480, Html5Canvas_C.ITALIC_20PX_SANS_SERIF, Html5Canvas_C.BLUE, 1);
+                    text_engine.value += "\n fen " + f;
+
+                    // IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("fen " + f,
+                    //     20, 480, Html5Canvas_C.ITALIC_20PX_SANS_SERIF, Html5Canvas_C.BLUE, 1);
 
                     if (is_moove_legal == 0) {
-                        IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("Недопустимый ход.",
-                            20, 510, Html5Canvas_C.ITALIC_20PX_SANS_SERIF, Html5Canvas_C.RED, 1);
+                        text_engine.value = " Недопустимый ход.";
+
+                        // IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("Недопустимый ход.",
+                        //     20, 510, Html5Canvas_C.ITALIC_20PX_SANS_SERIF, Html5Canvas_C.RED, 1);
                     }
 
                 } else {
@@ -394,8 +428,10 @@ let IfritChessGame_R = {
                     //console.log("ChessBoard_8x8_C->click(mouseDown) проверка на легальность хода из списка не пройдена");
                     // рисуем доску если ход не легальный                    
                     IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O);
-                    IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("Недопустимый ход",
-                        20, 470, Html5Canvas_C.ITALIC_20PX_SANS_SERIF, Html5Canvas_C.RED, 1);
+
+                    text_engine.value = " Недопустимый ход";
+                    // IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("Недопустимый ход",
+                    //     20, 470, Html5Canvas_C.ITALIC_20PX_SANS_SERIF, Html5Canvas_C.RED, 1);
                 }
             }
         } else { // это первый клик
@@ -416,8 +452,9 @@ let IfritChessGame_R = {
                     // рисуем квадратик кликнутой клетки
                     IfritChessGame_R.draw_O.draw_rect(IfritChessGame_R.chessBoard_8x8_O, x_b_n, y_b_n, Html5Canvas_C.GREEN);
 
-                    IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("После Вашего хода Ифрит будет думать. Меньше 30 сек",
-                        20, 450, Html5Canvas_C.ITALIC_20PX_SANS_SERIF, Html5Canvas_C.GREEN, 1);
+                    text_engine.value = " После Вашего хода Ифрит будет думать. Меньше 30 сек";
+                    // IfritChessGame_R.draw_O.html5Sprites_O.html5Canvas_R.drawText("После Вашего хода Ифрит будет думать. Меньше 30 сек",
+                    //     20, 450, Html5Canvas_C.ITALIC_20PX_SANS_SERIF, Html5Canvas_C.GREEN, 1);
                 } else {
                     //console.log("ChessBoard_8x8_C->click(mouseDown) не попали по клетке или нет фигуры нужного цвета");
                 }
@@ -430,6 +467,53 @@ let IfritChessGame_R = {
         //console.log('IfritChessGame_R->mouseUp x ' + x + " y " + y);
     },
 
+    startGameButton() {
+        console.log("IfritChessGame_R->startGameButton click кликнули");
+        if (checkbox_is_black_game.checked) {
+            console.log("IfritChessGame_R->startGameButton играем за черных");
+        } else {
+            console.log("IfritChessGame_R->startGameButton играем за белых");
+        }
+        IfritChessGame_R.depth_max = Number(input_max_depth.value);
+
+        IfritChessGame_R.TEST_POSITION_FEN = IfritChessGame_R.INITIAL_POSITION_FEN;
+        IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_fen(IfritChessGame_R.TEST_POSITION_FEN);
+        IfritChessGame_R.chessEngine_0x88_O.position(IfritChessGame_R.chessBoard_8x8_O);
+        IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O);
+
+        text_engine.value = " max depth " + IfritChessGame_R.depth_max +
+            " nodes " + this.nodes + " score " + this.score;
+        text_engine.value += "\n Новая игра";
+
+        // // message_gui_to_engine    
+        // let fen = IfritChessGame_R.chessBoard_8x8_O.set_fen_from_8x8(IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O);
+        // let message = "position fen " + fen;
+        // worker_egine_0x88.postMessage(message);
+        // message = "go depth " + IfritChessGame_R.depth_max;
+        // worker_egine_0x88.postMessage(message);
+
+        // IfritChessGame_R.stop_click_2 = 1;
+
+    },
+
+    stopGameButton() {
+
+    },
+
+    fenGameButton() {
+
+        IfritChessGame_R.depth_max = Number(input_max_depth.value);
+
+        IfritChessGame_R.TEST_POSITION_FEN = input_set_fen.value;
+        IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_fen(IfritChessGame_R.TEST_POSITION_FEN);
+        IfritChessGame_R.chessEngine_0x88_O.position(IfritChessGame_R.chessBoard_8x8_O);
+        IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O);
+
+        text_engine.value = " max depth " + IfritChessGame_R.depth_max +
+            " nodes " + this.nodes + " score " + this.score;
+        text_engine.value += "\n Позиция задана из fen. Сами следите за его корректностью. Новая игра";
+
+    },
 };
 
 const worker_egine_0x88 = new Worker('js/worker_chess_engine_0x88/w_chess_engine_0x88.js');

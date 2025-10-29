@@ -14,25 +14,57 @@
 </head>
 
 <body>
+    <!--block 1 ***************************-->
+    <div class="block_1">
+        <h2 class="w"> <img src="resource/images/creatures/cr_1.png" alt="g" title="Игра в разработке">
+            Ifrit Chess Game [in development]
+            <img src="resource/images/creatures/cr_1.png" alt="g">
+        </h2>
 
-    <h2 class="w"> <img src="resource/images/creatures/cr_1.png" alt="g" title="Игра в разработке">
-        Ifrit Chess Game [in development]
-        <img src="resource/images/creatures/cr_1.png" alt="g">
-    </h2>
-
-    <!-- дата в виде  The dateTime is specified in the following form "YYYY-MM-DDThh:mm:ss" 
+        <!-- дата в виде  The dateTime is specified in the following form "YYYY-MM-DDThh:mm:ss" 
         where: YYYY indicates the year. MM indicates the month. DD indicates the day.-->
-    <h4 class="w"> Last update <time datetime="2025-10-28">28.10m.25 </time><br>
+        <h4 class="w"> Last update <time datetime="2025-10-29">28.10m.29 </time><br>
 
-        Посещений: <input type="text" name="t_requests" id="text_requests" value="requests"
-            style="background-color: rgb(215, 215, 223)">
-    </h4>
-    <a href="https://alphagameset.ru/"> На главную</a><br>
-    <!--The game canvas-1600-800 -->
-    <canvas id='game-canvas' width='800' height='600'>
-        Your browser does not support HTML5 Canvas<br>
-        Ваш браузер не поддерживает HTML5 графику<br>
-    </canvas>
+            Посещений: <input type="text" name="t_requests" id="text_requests" value="requests"
+                style="background-color: rgb(215, 215, 223)">
+        </h4>
+        <a href="https://alphagameset.ru/"> На главную</a><br>
+    </div>
+    <!-- *************************** block 1-->
+
+    <!--block 2 ***************************-->
+    
+    <div class="block_2">
+        <!--The game canvas-1600-800 -->
+        <canvas id='game-canvas' width='420' height='430'>
+            Your browser does not support HTML5 Canvas<br>
+            Ваш браузер не поддерживает HTML5 графику<br>
+        </canvas>
+        <!-- кнопка -->
+        <input type="button" id="buttonStart" value="Start Game" onclick="IfritChessGame_R.startGameButton()" />
+        <input type="button" id="buttonStop" value="Stop Game" onclick="IfritChessGame_R.stopGameButton()" />        
+        <input type="button" id="buttonFen" value="Fen Game" onclick="IfritChessGame_R.fenGameButton()" />
+        <input type="checkbox" id="is_black_game"  name="is_black_game" > Играть за черных <br>
+        Макcимальная глубина перебора: <input type="text" id="max_depth" name="max_depth" value="4" style="width: 20px"/><br>
+        fen: <input type="text" id="set_fen" name="set_fen" value="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" style="width: 400px" />        
+    </div>
+    <!-- *************************** block 2-->
+
+     <!--block 3 ***************************-->   
+    <div class="block_3">
+        <textarea id="text_chess_game" name="text_chess_game" rows="27" cols="46" readonly = "true" style = "resize: none">
+          Запись шахматной партии
+       </textarea>
+    </div>
+    <!--*************************** block 3 -->
+
+     <!--block 4 ***************************-->   
+    <div class="block_4">
+        <textarea id="text_engine" name="text_engine" rows="7" cols="106" readonly = "true" style = "resize: none">
+          Вывод размышлений Ифрита
+       </textarea>
+    </div>
+    <!--*************************** block 4 -->
 
     <!-- Scripts -->
     <!-- =========================================================================== -->

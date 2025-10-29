@@ -169,6 +169,7 @@ class Move_list_0x88_С {
     to = new Array(Move_list_0x88_С.LENGTH_LIST).fill(-1);
     score_move = new Array(Move_list_0x88_С.LENGTH_LIST).fill(-1);
 
+    number_captures_move = 0;   
     number_move = 0;
 
     constructor() {
@@ -176,6 +177,7 @@ class Move_list_0x88_С {
     }
 
     iniM() {
+        this.number_captures_move = 0;        
         this.number_move = 0;
     }
 
@@ -226,7 +228,9 @@ class Move_list_0x88_С {
                 (8 - chess_board_0x88_O.s_0x88_to_y07(this.to[i])));
 
             console.log("---- ");
-        }
+        }     
+        console.log("number_captures_move = " + this.number_captures_move);
+        console.log("number_move = " + this.number_move);        
         console.log("*********** test_print_list");
     }
 
@@ -238,7 +242,7 @@ class Move_list_0x88_С {
             this.from[i] = -1;
             this.to[i] = -1;
         }
-
+        this.number_captures_move = 0;        
         this.number_move = 0;
     }
 
@@ -358,6 +362,7 @@ class Move_list_0x88_С {
         }
 
     }
+
     sorting_list() {
 
         let save_type_move;
@@ -396,7 +401,6 @@ class Move_list_0x88_С {
                 }
             }
         }
-
     }
 
     // возвращаем название хода превращения пешки со взятием по взятой фигуре

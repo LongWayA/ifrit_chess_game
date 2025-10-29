@@ -86,7 +86,7 @@ class Move_gen_1_captures_0x88_С {
         for (let from = 0; from < 128; from++) {
             this.generated_pseudo_legal_moves_one_piece(piece_name, piece_color, side_to_move, from, chess_board_0x88_O, move_list_0x88_O);
         }
-
+        move_list_0x88_O.number_captures_move = move_list_0x88_O.number_move;
 
     }
 
