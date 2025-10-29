@@ -199,13 +199,13 @@ class ChessEngine_0x88_С {
 
   }
 
-  draw_rect_move(from_x, from_y, chessBoard_8x8_O, draw_O) {
+  draw_rect_move(from_x, from_y, chessBoard_8x8_O, draw_O, is_white) {
     this.chess_board_0x88_O_gui.set_0x88_from_8x8(chessBoard_8x8_O);
     let from = this.chess_board_0x88_O.x07_y07_to_0x88(from_x, from_y);
     this.move_list_gui_0x88_O.clear_list();
     this.move_generator_0x88_O.generated_pseudo_legal_moves_one_piece_for_gui(from, this.chess_board_0x88_O_gui,
       this.move_list_gui_0x88_O, this.move_generator_0x88_O);
 
-    draw_O.draw_rect_move(this.move_list_gui_0x88_O, this.chess_board_0x88_O_gui, chessBoard_8x8_O, Html5Canvas_C.BLUE);
+    draw_O.draw_rect_move(this.move_list_gui_0x88_O, this.chess_board_0x88_O_gui, chessBoard_8x8_O, Html5Canvas_C.BLUE, is_white);
   }
 }
