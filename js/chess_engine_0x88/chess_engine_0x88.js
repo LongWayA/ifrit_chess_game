@@ -104,11 +104,8 @@ class ChessEngine_0x88_С {
   // iterative deepening with PVS
   go_depth_id(depth_max) {
 
-    // let info_return_search = this.search_start_0x88_O.start_search_id(this.pv_line_0x88_O, this.chess_board_0x88_O,
-    //   this.move_gen_1_captures_0x88_O, this.move_generator_0x88_O, depth_max);
-
-    let info_return_search = this.search_start_0x88_O.test_start_search_ab(this.pv_line_0x88_O, this.chess_board_0x88_O,
-      this.move_gen_1_captures_0x88_O, this.move_generator_0x88_O, depth_max);
+    let info_return_search = this.search_start_0x88_O.start_search_id(this.pv_line_0x88_O,
+      this.chess_board_0x88_O, this.move_gen_1_captures_0x88_O, this.move_gen_2_quiet_0x88_O, depth_max);
 
     return info_return_search;
   }

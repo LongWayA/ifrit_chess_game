@@ -205,7 +205,7 @@ let IfritChessGame_R = {
 
             let f = IfritChessGame_R.chessBoard_8x8_O.set_fen_from_8x8(IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O);
 
-            text_engine.value = " max depth " + IfritChessGame_R.depth_max + " nodes " + this.nodes + " score " + this.score +
+            text_engine.value = " max depth:" + IfritChessGame_R.depth_max + " nodes:" + this.nodes + " score:" + this.score +
                 "\n " + this.pv_line_str;
 
 
@@ -328,7 +328,8 @@ let IfritChessGame_R = {
                             IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O, this.is_white);
                             IfritChessGame_R.chessEngine_0x88_O.position(IfritChessGame_R.chessBoard_8x8_O);
                             // режим тестовой игры движок отвечает на наш ход 
-                            let info_return_g = IfritChessGame_R.chessEngine_0x88_O.test_go_depth_ab(IfritChessGame_R.depth_max);
+                            //let info_return_g = IfritChessGame_R.chessEngine_0x88_O.test_go_depth_ab(IfritChessGame_R.depth_max);
+                            let info_return_g = IfritChessGame_R.chessEngine_0x88_O.go_depth_id(IfritChessGame_R.depth_max);
                             this.score = info_return_g.score;
                             this.nodes = info_return_g.node_count
                             // копируем доску движка с найденным ходом в игровую
@@ -464,7 +465,7 @@ let IfritChessGame_R = {
         } else {
             IfritChessGame_R.depth_max = parseInt(input_max_depth.value);
             if (IfritChessGame_R.depth_max <= 0) IfritChessGame_R.depth_max = 1;
-            if (IfritChessGame_R.depth_max > 5) IfritChessGame_R.depth_max = 5;
+            if (IfritChessGame_R.depth_max > 6) IfritChessGame_R.depth_max = 6;
             input_max_depth.value = IfritChessGame_R.depth_max;
         }
 
@@ -529,7 +530,7 @@ let IfritChessGame_R = {
         } else {
             IfritChessGame_R.depth_max = parseInt(input_max_depth.value);
             if (IfritChessGame_R.depth_max <= 0) IfritChessGame_R.depth_max = 1;
-            if (IfritChessGame_R.depth_max > 5) IfritChessGame_R.depth_max = 5;
+            if (IfritChessGame_R.depth_max > 6) IfritChessGame_R.depth_max = 6;
             input_max_depth.value = IfritChessGame_R.depth_max;
         }
 
