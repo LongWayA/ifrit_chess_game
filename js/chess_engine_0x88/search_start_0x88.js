@@ -83,6 +83,10 @@ class Search_start_0x88_C {
     this.node = 0;
     this.search_ab_0x88_O.node = 0;
     // alpha beta
+
+    // копируем доску чтобы когда у движка не будет ходов он не откатывался к предыдущей.
+    this.search_ab_0x88_O.chess_board_0x88_O_move.save_chess_board_0x88(chess_board_0x88_O);
+
     let score = this.search_ab_0x88_O.searching_alpha_beta(alpha, beta, pv_line_0x88_O, chess_board_0x88_O,
       move_gen_1_captures_0x88_O, move_gen_2_quiet_0x88_O, depth, depth_max);
 
