@@ -60,7 +60,7 @@ class W_ChessEngine_0x88_С {
       let depth_max_s = message.slice(9, end); 
       let depth_max = Number(depth_max_s);
 
-      let info_return_e = w_chessEngine_0x88_O.chessEngine_0x88_O.go_depth(depth_max);
+      let info_return_e = w_chessEngine_0x88_O.chessEngine_0x88_O.test_go_depth_ab(depth_max);
 
       //console.log("e-> info_return_e");
      //info_return_e.chess_board_0x88_O_move.test_print_0x88();

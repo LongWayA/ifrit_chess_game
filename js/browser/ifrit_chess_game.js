@@ -18,6 +18,7 @@ const input_set_fen = document.getElementById('set_fen');
 const text_chess_game = document.getElementById('text_chess_game');
 const text_engine = document.getElementById('text_engine');
 
+
 // корневой объект программы. поэтому объект, а не класс
 let IfritChessGame_R = {
 
@@ -51,6 +52,7 @@ let IfritChessGame_R = {
     score: 0,
     pv_line_str: " no",
     is_white: 1,
+    nomber_move: 0,
 
     test: 1,
     // тестовые позиции с сайта:
@@ -93,7 +95,8 @@ let IfritChessGame_R = {
         IfritChessGame_R.test = 3;//3
 
         // задаем глубину перебора во время игры или обсчета тестовых позиций на количество узлов
-        IfritChessGame_R.depth_max = 1;
+        IfritChessGame_R.depth_max = 4;
+        input_max_depth.value = IfritChessGame_R.depth_max;
 
         IfritChessGame_R.TEST_POSITION_FEN = IfritChessGame_R.INITIAL_POSITION_FEN;
         //IfritChessGame_R.TEST_POSITION_FEN = IfritChessGame_R.POSITION_FEN_6;//
@@ -112,6 +115,7 @@ let IfritChessGame_R = {
         IfritChessGame_R.stop_click = 0;
         IfritChessGame_R.stop_click_2 = 0;
         this.is_white = 1;
+        this.nomber_move = 0;
     },
 
     startGame() {
@@ -145,16 +149,17 @@ let IfritChessGame_R = {
     drawGame() {
         //console.log('IfritChessGame_R->drawGame');
         IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O, this.is_white);
- 
-        if (IfritChessGame_R.test == 1) {
-        text_engine.value = " max depth " + IfritChessGame_R.depth_max +
-            " nodes " + this.nodes + " score " + this.score;
-        }
 
-        text_chess_game.value = " Кнопка стоп не работает.";
-        text_chess_game.value += "\n Глубину больше 6 задавать не стоит.";
+        if (IfritChessGame_R.test == 1) {
+            text_engine.value = " max depth " + IfritChessGame_R.depth_max +
+                " nodes " + this.nodes + " score " + this.score;
+        }
+        text_chess_game.value = " Версия js от 30 10м 25";
+        text_chess_game.value += "\n Для обновления нажмите ctrl+f5 в chrome";
+        text_chess_game.value += "\n Кнопка стоп не работает.";
         text_chess_game.value += "\n Записи игры пока нет.";
-        text_chess_game.value += "\n Вернуть ход не получится.";        
+        text_chess_game.value += "\n Вернуть ход не получится.";
+        text_chess_game.value += "\n Game: ";
     },
 
     mouseMove(x, y) {
@@ -197,12 +202,20 @@ let IfritChessGame_R = {
         if (message.includes("go")) {
             //console.log('g go');
             // рисуем доску                 
-            IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O, this.is_white); 
+            IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O, this.is_white);
 
             let f = IfritChessGame_R.chessBoard_8x8_O.set_fen_from_8x8(IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O);
- 
+
             text_engine.value = " max depth " + IfritChessGame_R.depth_max + " nodes " + this.nodes + " score " + this.score +
                 "\n " + this.pv_line_str + "\n fen " + f;
+
+        this.nomber_move = this.nomber_move + 1;
+
+            text_chess_game.value += this.nomber_move + "." +
+            IfritChessGame_R.chessEngine_0x88_O.move_list_gui_0x88_O.move_to_string(IfritChessGame_R.chessEngine_0x88_O.i_move,
+                IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O_gui) +
+                this.pv_line_str.slice(11, 18);
+
 
             IfritChessGame_R.stop_click = 0;
             IfritChessGame_R.stop_click_2 = 0;
@@ -325,6 +338,12 @@ let IfritChessGame_R = {
                             text_engine.value = " max depth " + IfritChessGame_R.depth_max +
                                 " nodes " + this.nodes + " score " + this.score +
                                 "\n " + info_return_g.pv_line_str;
+                            // PV line: это 9
+                            this.nomber_move = this.nomber_move + 1;
+                            text_chess_game.value += this.nomber_move + "." +
+                                IfritChessGame_R.chessEngine_0x88_O.move_list_gui_0x88_O.move_to_string(IfritChessGame_R.chessEngine_0x88_O.i_move,
+                                    info_return_g.chess_board_0x88_O_move) +
+                                info_return_g.pv_line_str.slice(11, 18);
 
 
                         } else if (IfritChessGame_R.test == 4) { // test alpha beta fail hard
@@ -356,7 +375,7 @@ let IfritChessGame_R = {
                         } else if (IfritChessGame_R.test == 6) { // игра в режиме отдельного потока
 
                             IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O, this.is_white);
- 
+
                             text_engine.value = " Ифрит изволит думать. В это время фигуры недоступны";
 
                             // message_gui_to_engine    
@@ -429,8 +448,12 @@ let IfritChessGame_R = {
 
         if (isNaN(parseInt(input_max_depth.value))) {
             IfritChessGame_R.depth_max = 1;
+            input_max_depth.value = IfritChessGame_R.depth_max;
         } else {
             IfritChessGame_R.depth_max = parseInt(input_max_depth.value);
+            if (IfritChessGame_R.depth_max <= 0) IfritChessGame_R.depth_max = 1;
+            if (IfritChessGame_R.depth_max > 5) IfritChessGame_R.depth_max = 5;
+            input_max_depth.value = IfritChessGame_R.depth_max;
         }
 
         IfritChessGame_R.TEST_POSITION_FEN = IfritChessGame_R.INITIAL_POSITION_FEN;
@@ -468,7 +491,9 @@ let IfritChessGame_R = {
             "\n " + this.pv_line_str;
 
         text_engine.value += "\n Новая игра";
-
+        text_chess_game.value = "Новая игра";
+        text_chess_game.value += "\n Game: ";
+        this.nomber_move = 0;
 
 
     },
@@ -488,8 +513,12 @@ let IfritChessGame_R = {
 
         if (isNaN(parseInt(input_max_depth.value))) {
             IfritChessGame_R.depth_max = 1;
+            input_max_depth.value = IfritChessGame_R.depth_max;
         } else {
             IfritChessGame_R.depth_max = parseInt(input_max_depth.value);
+            if (IfritChessGame_R.depth_max <= 0) IfritChessGame_R.depth_max = 1;
+            if (IfritChessGame_R.depth_max > 5) IfritChessGame_R.depth_max = 5;
+            input_max_depth.value = IfritChessGame_R.depth_max;
         }
 
         text_engine.value = " max depth " + IfritChessGame_R.depth_max +

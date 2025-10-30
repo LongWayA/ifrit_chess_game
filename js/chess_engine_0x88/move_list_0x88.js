@@ -281,6 +281,20 @@ class Move_list_0x88_С {
         return i_move;
     }
 
+    move_to_string(i_move, chess_board_0x88_O) {
+
+        let move_str = "" + this.type_move_to_name_piese(this.type_move[i_move]) + "" +
+            //pv_line_str = pv_line_str + this.type_move[i] + "" +       
+            Chess_board_0x88_C.LET_COOR[chess_board_0x88_O.s_0x88_to_x07(this.from[i_move])] + "" +
+            (8 - chess_board_0x88_O.s_0x88_to_y07(this.from[i_move])) + "-" +
+            Chess_board_0x88_C.LET_COOR[chess_board_0x88_O.s_0x88_to_x07(this.to[i_move])] + "" +
+            (8 - chess_board_0x88_O.s_0x88_to_y07(this.to[i_move])) + " ";
+
+        return move_str;
+    }
+
+
+
     sorting_list_top_max_score() {
 
         let save_type_move;
@@ -362,6 +376,7 @@ class Move_list_0x88_С {
         }
 
     }
+
 
     sorting_list() {
 
@@ -620,7 +635,7 @@ class Move_list_0x88_С {
         if (type_move == Move_list_0x88_С.MOVE_KING_CASTLE) return "0-0";
         if (type_move == Move_list_0x88_С.MOVE_KING_QUEEN_CASTLE) return "0-0-0";
     }
-    
+
     type_move_to_name_piese_f(type_move) {
         if (type_move == Move_list_0x88_С.MOVE_NO) return "NO";
         if (type_move == Move_list_0x88_С.CAPTURES_PAWN_QUEEN_PROMO_QUEEN) return "PAWN";

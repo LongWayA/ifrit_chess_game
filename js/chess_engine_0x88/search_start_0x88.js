@@ -106,42 +106,7 @@ class Search_start_0x88_C {
     return this.info_return_search;
   }
 
-  // alpha beta fail hard
-  test_start_search_abfh(pv_line_0x88_O, chess_board_0x88_O, move_generator_0x88_O, depth_max) {
-    let score;// текущая оценка позиции
-    let depth = 0;
-    let alpha = -50000;
-    let beta = 50000;
-    this.node = 0;
-
-    // alpha beta fail hard
-    score = this.search_ab_0x88_O.searching_alpha_beta_fail_hard(alpha, beta, pv_line_0x88_O, chess_board_0x88_O,
-      move_generator_0x88_O, depth, depth_max);
-
-    this.info_return_search.best_move = "-";
-    this.info_return_search.score = score;
-    this.info_return_search.pv_line = pv_line_0x88_O;
-    this.info_return_search.node_count = this.search_ab_0x88_O.node;
-    this.info_return_search.chess_board_0x88_O_move = this.search_ab_0x88_O.chess_board_0x88_O_move;
-
-    console.log("Search_0x88_C->start_search ***************************************");    
-    this.info_return_search.pv_line.test_print_pv_line(chess_board_0x88_O);
-    
-    return this.info_return_search;
-  }
-
-  // iterative deepening with PVS
-  start_search_id(pv_line_0x88_O, chess_board_0x88_O, move_gen_1_captures_0x88_O, move_generator_0x88_O, depth_max) {
-
-    this.node = 0;
-    this.info_return_search = this.searching_iterative_deepening(pv_line_0x88_O, chess_board_0x88_O, 
-      move_gen_1_captures_0x88_O, move_generator_0x88_O, depth_max);
-    //console.log("Search_0x88_C->start_search " + depth + " score " + score);
-    return this.info_return_search;
-  }
-
   /////////////////////////////////
-
   // 
   searching_iterative_deepening(pv_line_0x88_O, chess_board_0x88_O, move_gen_1_captures_0x88_O, move_generator_0x88_O, depth_max_2) {
 
@@ -244,4 +209,17 @@ class Search_start_0x88_C {
 
     return this.info_return_search;
   }
+
+  // iterative deepening with PVS
+  start_search_id(pv_line_0x88_O, chess_board_0x88_O, move_gen_1_captures_0x88_O, move_generator_0x88_O, depth_max) {
+
+    this.node = 0;
+    this.info_return_search = this.searching_iterative_deepening(pv_line_0x88_O, chess_board_0x88_O, 
+      move_gen_1_captures_0x88_O, move_generator_0x88_O, depth_max);
+    //console.log("Search_0x88_C->start_search " + depth + " score " + score);
+    return this.info_return_search;
+  }
+
+
+
 }

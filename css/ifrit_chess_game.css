@@ -10,11 +10,18 @@
 * НАЗНАЧЕНИЕ
 */
 
-/*
-textarea {
-  resize: none;
+/* по совету Google AI ============ */
+/* Делаем стрелки видимыми всегда для WebKit-браузеров */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button {
+  opacity: 1;
 }
-*/
+
+/* Некоторые браузеры могут требовать дополнительных стилей */
+input[type=number] {
+  -moz-appearance: textfield; /* Для Firefox */
+}
+/* ================================ */
 
 .block_1 {
   position: absolute;

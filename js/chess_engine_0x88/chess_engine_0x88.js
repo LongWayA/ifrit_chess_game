@@ -48,7 +48,7 @@ class ChessEngine_0x88_С {
   //---------
 
   score = 0;
-
+  i_move = 0;
   constructor() {
 
   }
@@ -98,33 +98,11 @@ class ChessEngine_0x88_С {
     return info_return_search;
   }
 
-  // alpha beta fail hard
-  test_go_depth_abfh(depth_max) {
-
-    let info_return_search = this.search_start_0x88_O.test_start_search_abfh(this.pv_line_0x88_O, this.chess_board_0x88_O,
-      this.move_generator_0x88_O, depth_max);
-
-    return info_return_search;
-  }
-
   //////////////////////
   // GAME
 
   // iterative deepening with PVS
   go_depth_id(depth_max) {
-
-    // let info_return_search = this.search_start_0x88_O.start_search_id(this.pv_line_0x88_O, this.chess_board_0x88_O,
-    //   this.move_gen_1_captures_0x88_O, this.move_generator_0x88_O, depth_max);
-
-    let info_return_search = this.search_start_0x88_O.test_start_search_ab(this.pv_line_0x88_O, this.chess_board_0x88_O,
-      this.move_gen_1_captures_0x88_O, this.move_generator_0x88_O, depth_max);
-
-    return info_return_search;
-  }
-
-  // для режима отдельного потока
-  // iterative deepening with PVS
-  go_depth(depth_max) {
 
     // let info_return_search = this.search_start_0x88_O.start_search_id(this.pv_line_0x88_O, this.chess_board_0x88_O,
     //   this.move_gen_1_captures_0x88_O, this.move_generator_0x88_O, depth_max);
@@ -186,7 +164,7 @@ class ChessEngine_0x88_С {
     //console.log("from_king gui " + IfritChessGame_R.chessEngine_0x88_O.move_list_gui_0x88_O.king_from);
     // находим номер нашего хода в списке ходов
     let move_i = this.move_list_gui_0x88_O.return_i_move(from, to);
-
+    this.i_move = move_i;
     // сохраняем доску в специальную chess_board_0x88_O_save_gui
     this.chess_board_0x88_O_save_gui.save_chess_board_0x88(this.chess_board_0x88_O_gui);
 
