@@ -92,7 +92,7 @@ let IfritChessGame_R = {
         // test = 4 alpha beta fail hard         
         // test = 5 iterative deepening with PVS
         // test = 6 message_to_engine(message) работа с воркером
-        IfritChessGame_R.test = 3;//3
+        IfritChessGame_R.test = 6;//3
 
         // задаем глубину перебора во время игры или обсчета тестовых позиций на количество узлов
         IfritChessGame_R.depth_max = 4;
@@ -209,13 +209,14 @@ let IfritChessGame_R = {
             text_engine.value = " max depth " + IfritChessGame_R.depth_max + " nodes " + this.nodes + " score " + this.score +
                 "\n " + this.pv_line_str + "\n fen " + f;
 
-        this.nomber_move = this.nomber_move + 1;
 
-            text_chess_game.value += this.nomber_move + "." +
-            IfritChessGame_R.chessEngine_0x88_O.move_list_gui_0x88_O.move_to_string(IfritChessGame_R.chessEngine_0x88_O.i_move,
-                IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O_gui) +
-                this.pv_line_str.slice(11, 18);
 
+            if (this.is_white == 1) {
+                text_chess_game.value += this.pv_line_str.slice(11, 18);
+            } else {
+                this.nomber_move = this.nomber_move + 1;                
+                text_chess_game.value += this.nomber_move + "." + this.pv_line_str.slice(11, 18);
+            }
 
             IfritChessGame_R.stop_click = 0;
             IfritChessGame_R.stop_click_2 = 0;
@@ -385,6 +386,18 @@ let IfritChessGame_R = {
                             message = "go depth " + IfritChessGame_R.depth_max;
                             worker_egine_0x88.postMessage(message);
 
+                            if (this.is_white == 1) {
+                                this.nomber_move = this.nomber_move + 1;
+                                text_chess_game.value += this.nomber_move + "." +
+                                    IfritChessGame_R.chessEngine_0x88_O.move_list_gui_0x88_O.move_to_string(IfritChessGame_R.chessEngine_0x88_O.i_move,
+                                        IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O_gui);                                
+
+                            } else {
+                                text_chess_game.value += 
+                                    IfritChessGame_R.chessEngine_0x88_O.move_list_gui_0x88_O.move_to_string(IfritChessGame_R.chessEngine_0x88_O.i_move,
+                                        IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O_gui);
+
+                            }
                             IfritChessGame_R.stop_click_2 = 1;
 
                         }
@@ -528,9 +541,9 @@ let IfritChessGame_R = {
     },
 };
 
-// const worker_egine_0x88 = new Worker('js/worker_chess_engine_0x88/w_chess_engine_0x88.js');
+const worker_egine_0x88 = new Worker('js/worker_chess_engine_0x88/w_chess_engine_0x88.js');
 
-// worker_egine_0x88.onmessage = function (event) {
-//     //console.log('Сообщение от движка : ', event.data);
-//     IfritChessGame_R.message_egnine_to_gui(event.data);
-// };
+worker_egine_0x88.onmessage = function (event) {
+    //console.log('Сообщение от движка : ', event.data);
+    IfritChessGame_R.message_egnine_to_gui(event.data);
+};
