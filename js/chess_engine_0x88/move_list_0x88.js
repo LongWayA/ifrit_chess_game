@@ -632,8 +632,8 @@ class Move_list_0x88_С {
         if (type_move == Move_list_0x88_С.MOVE_KING) return "K";
         if (type_move == Move_list_0x88_С.MOVE_PAWN) return "P";
         if (type_move == Move_list_0x88_С.MOVE_DOUBLE_PAWN) return "P";
-        if (type_move == Move_list_0x88_С.MOVE_KING_CASTLE) return "0-0";
-        if (type_move == Move_list_0x88_С.MOVE_KING_QUEEN_CASTLE) return "0-0-0";
+        if (type_move == Move_list_0x88_С.MOVE_KING_CASTLE) return "K";
+        if (type_move == Move_list_0x88_С.MOVE_KING_QUEEN_CASTLE) return "K";
     }
 
     type_move_to_name_piese_f(type_move) {

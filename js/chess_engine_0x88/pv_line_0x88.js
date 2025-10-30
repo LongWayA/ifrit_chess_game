@@ -46,7 +46,7 @@ class PV_line_0x88_C {
       this.from[i] = -1;
       this.to[i] = -1;
       this.quiescence[i] = -1;
-      
+
     }
     this.score_depth_max = -1;
     this.depth_max = 0;
@@ -65,7 +65,7 @@ class PV_line_0x88_C {
       // console.log('Move_list_0x88_С->save_list ALLERT  type_move -1 !!!!!!!!!!!!!');
       // console.log('Move_list_0x88_С->save_list ' + i);  
       // }    
-      
+
     }
     this.score_depth_max = pv_line_0x88_O.score_depth_max;
     this.depth_max = pv_line_0x88_O.depth_max;
@@ -110,21 +110,38 @@ class PV_line_0x88_C {
     }
     console.log("score_depth_max = " + this.score_depth_max);
     console.log("depth_max = " + this.depth_max);
-    console.log("******** test_print_pv_line");   
+    console.log("******** test_print_pv_line");
   }
 
   pv_line_to_string(chess_board_0x88_O, move_list_0x88_O) {
-  
+
     let pv_line_str = "PV line: ";
+    let v = 0;
+    let v_i = 0;
 
     for (let i = 0; i < this.depth_max + 1; i++) {
 
-     pv_line_str = pv_line_str + (i+1) + "." + move_list_0x88_O.type_move_to_name_piese(this.type_move[i]) + "" +
-     //pv_line_str = pv_line_str + this.type_move[i] + "" +       
-     Chess_board_0x88_C.LET_COOR[chess_board_0x88_O.s_0x88_to_x07(this.from[i])] + "" +
-     (8 - chess_board_0x88_O.s_0x88_to_y07(this.from[i])) + "-" +
-      Chess_board_0x88_C.LET_COOR[chess_board_0x88_O.s_0x88_to_x07(this.to[i])] + "" +
-      (8 - chess_board_0x88_O.s_0x88_to_y07(this.to[i])) + " " ;
+      if (v == 0) {
+        v = 1;
+        v_i = v_i + 1;
+        pv_line_str = pv_line_str + (v_i) + "." + move_list_0x88_O.type_move_to_name_piese(this.type_move[i]) + "" +
+          //pv_line_str = pv_line_str + this.type_move[i] + "" +       
+          Chess_board_0x88_C.LET_COOR[chess_board_0x88_O.s_0x88_to_x07(this.from[i])] + "" +
+          (8 - chess_board_0x88_O.s_0x88_to_y07(this.from[i])) + "-" +
+          Chess_board_0x88_C.LET_COOR[chess_board_0x88_O.s_0x88_to_x07(this.to[i])] + "" +
+          (8 - chess_board_0x88_O.s_0x88_to_y07(this.to[i])) + " ";
+      } else {
+        v = 0;
+        pv_line_str = pv_line_str + move_list_0x88_O.type_move_to_name_piese(this.type_move[i]) + "" +
+          //pv_line_str = pv_line_str + this.type_move[i] + "" +       
+          Chess_board_0x88_C.LET_COOR[chess_board_0x88_O.s_0x88_to_x07(this.from[i])] + "" +
+          (8 - chess_board_0x88_O.s_0x88_to_y07(this.from[i])) + "-" +
+          Chess_board_0x88_C.LET_COOR[chess_board_0x88_O.s_0x88_to_x07(this.to[i])] + "" +
+          (8 - chess_board_0x88_O.s_0x88_to_y07(this.to[i])) + " ";
+
+      }
+
+
     }
     pv_line_str = pv_line_str + "val = " + this.score_depth_max;
     return pv_line_str;

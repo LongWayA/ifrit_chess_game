@@ -155,7 +155,6 @@ let IfritChessGame_R = {
                 " nodes " + this.nodes + " score " + this.score;
         }
         text_chess_game.value = " Версия js от 30 10м 25";
-        text_chess_game.value += "\n Для обновления нажмите ctrl+f5 в chrome";
         text_chess_game.value += "\n Кнопка стоп не работает.";
         text_chess_game.value += "\n Записи игры пока нет.";
         text_chess_game.value += "\n Вернуть ход не получится.";
@@ -207,7 +206,7 @@ let IfritChessGame_R = {
             let f = IfritChessGame_R.chessBoard_8x8_O.set_fen_from_8x8(IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O);
 
             text_engine.value = " max depth " + IfritChessGame_R.depth_max + " nodes " + this.nodes + " score " + this.score +
-                "\n " + this.pv_line_str + "\n fen " + f;
+                "\n " + this.pv_line_str;
 
 
 
@@ -377,7 +376,7 @@ let IfritChessGame_R = {
 
                             IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O, this.is_white);
 
-                            text_engine.value = " Ифрит изволит думать. В это время фигуры недоступны";
+                            text_engine.value = " Ифрит думает как выиграть Вас максимально эффектно.";
 
                             // message_gui_to_engine    
                             let fen = IfritChessGame_R.chessBoard_8x8_O.set_fen_from_8x8(IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O);
