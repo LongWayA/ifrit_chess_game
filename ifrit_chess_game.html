@@ -23,7 +23,7 @@
 
         <!-- дата в виде  The dateTime is specified in the following form "YYYY-MM-DDThh:mm:ss" 
         where: YYYY indicates the year. MM indicates the month. DD indicates the day.-->
-        <h4 class="w"> Last update <time datetime="2025-10-30">30.10m.25 </time><br>
+        <h4 class="w"> Last update <time datetime="2025-10-31">31.10m.25 </time><br>
 
             Посещений: <input type="text" name="t_requests" id="text_requests" value="requests"
                 style="background-color: rgb(215, 215, 223)">
@@ -42,11 +42,11 @@
         </canvas>
         <!-- кнопка -->
         <input type="button" id="buttonStart" value="Start Game" onclick="IfritChessGame_R.startGameButton()" />
-        <input type="button" id="buttonStop" value="Stop Game" onclick="IfritChessGame_R.stopGameButton()" />        
+        <input type="button" id="buttonGo" value="Go" onclick="IfritChessGame_R.goGameButton()" />        
         <input type="button" id="buttonFen" value="Fen Game" onclick="IfritChessGame_R.fenGameButton()" />
         <input type="checkbox" id="is_black_game"  name="is_black_game" > Играть за черных <br>
-        Макcимальная глубина перебора:
-           <input type="number" id="max_depth" name="max_depth" min="1" max="6" step="1" value="4" style="width: 40px">
+        Макcимальная глубина перебора: 
+        <input type="number" id="max_depth" name="max_depth" min="1" max="6" step="1" value="4" style="width: 40px"><br>
         fen: <input type="text" id="set_fen" name="set_fen" value="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" style="width: 400px" />        
     </div>
     <!-- *************************** block 2-->

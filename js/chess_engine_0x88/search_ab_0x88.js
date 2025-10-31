@@ -54,9 +54,9 @@ class Search_ab_0x88_C {
     is_update_pv_line = 0;
 
     if (chess_board_0x88_O.side_to_move == 1) {
-      found_score = -20000;// максимальная оценка позиции
+      found_score = -80000;// максимальная оценка позиции
     } else {
-      found_score = 20000;// минимальная оценка позиции
+      found_score = 80000;// минимальная оценка позиции
     }
 
     if (depth >= depth_max) {
@@ -184,7 +184,7 @@ class Search_ab_0x88_C {
 
   ////////////////////////////////////////////////////
   // searching_alpha_beta_fail_soft
-  searching_alpha_beta(alpha, beta, pv_line_0x88_O, chess_board_0x88_O, move_gen_1_captures_0x88_O,
+  searching_alpha_beta_test(alpha, beta, pv_line_0x88_O, chess_board_0x88_O, move_gen_1_captures_0x88_O,
     move_gen_2_quiet_0x88_O, depth, depth_max) {
 
     let undo_0x88_O = new Undo_0x88_C();
@@ -246,7 +246,7 @@ class Search_ab_0x88_C {
 
         number_moove_legal = number_moove_legal + 1;
 
-        score = this.searching_alpha_beta(alpha, beta, pv_line_0x88_O, chess_board_0x88_O, move_gen_1_captures_0x88_O,
+        score = this.searching_alpha_beta_test(alpha, beta, pv_line_0x88_O, chess_board_0x88_O, move_gen_1_captures_0x88_O,
           move_gen_2_quiet_0x88_O, (depth + 1), depth_max);
 
         move_list_0x88_O.score_move[move_i] = score;
