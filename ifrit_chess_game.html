@@ -33,7 +33,7 @@
     <!-- *************************** block 1-->
 
     <!--block 2 ***************************-->
-    
+
     <div class="block_2">
         <!--The game canvas-1600-800 -->
         <canvas id='game-canvas' width='420' height='430'>
@@ -42,26 +42,27 @@
         </canvas>
         <!-- кнопка -->
         <input type="button" id="buttonStart" value="Start Game" onclick="IfritChessGame_R.startGameButton()" />
-        <input type="button" id="buttonGo" value="Go" onclick="IfritChessGame_R.goGameButton()" />        
+        <input type="button" id="buttonGo" value="Go" onclick="IfritChessGame_R.goGameButton()" />
         <input type="button" id="buttonFen" value="Fen Game" onclick="IfritChessGame_R.fenGameButton()" />
-        <input type="checkbox" id="is_black_game"  name="is_black_game" > Играть за черных <br>
-        Макcимальная глубина перебора: 
-        <input type="number" id="max_depth" name="max_depth" min="1" max="6" step="1" value="4" style="width: 40px"><br>
-        fen: <input type="text" id="set_fen" name="set_fen" value="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" style="width: 400px" />        
+        <input type="checkbox" id="is_black_game" name="is_black_game"> Играть за черных <br>
+        Макcимальная глубина перебора:
+        <input type="number" id="max_depth" name="max_depth" min="1" max="7" step="1" value="4" style="width: 40px"><br>
+        fen: <input type="text" id="set_fen" name="set_fen"
+            value="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" style="width: 400px" />
     </div>
     <!-- *************************** block 2-->
 
-     <!--block 3 ***************************-->   
+    <!--block 3 ***************************-->
     <div class="block_3">
-        <textarea id="text_chess_game" name="text_chess_game" rows="27" cols="46" readonly = "true" style = "resize: none">
+        <textarea id="text_chess_game" name="text_chess_game" rows="27" cols="46" readonly="true" style="resize: none">
           Запись шахматной партии
        </textarea>
     </div>
     <!--*************************** block 3 -->
 
-     <!--block 4 ***************************-->   
+    <!--block 4 ***************************-->
     <div class="block_4">
-        <textarea id="text_engine" name="text_engine" rows="7" cols="106" readonly = "true" style = "resize: none">
+        <textarea id="text_engine" name="text_engine" rows="7" cols="106" readonly="true" style="resize: none">
           Вывод размышлений Ифрита
        </textarea>
     </div>
@@ -85,12 +86,13 @@
     <script src='js/chess_engine_0x88/search_ab_0x88.js'></script>
     <script src='js/chess_engine_0x88/search_pvs_0x88.js'></script>
     <script src='js/chess_engine_0x88/search_start_0x88.js'></script>
+
     <script src='js/chess_engine_0x88/chess_engine_0x88.js'></script>
 
     <!-- =========================================================================== -->
     <!-- browser/ -->
+    <script src='js/browser/state_game.js'></script>
     <script src='js/browser/pathes_browser.js'></script>
-
 
     <!-- html5_canvas/ -->
     <script src='js/html5_canvas/html5_canvas_text.js'></script>
@@ -117,8 +119,11 @@
     <script src='js/web/counter.js'></script>
 
 
-    <!-- js/ -->
+    <!-- browser/ -->
+    <script src='js/browser/gui_worker.js'></script>
     <script src='js/browser/ifrit_chess_game.js'></script>
+
+    <!-- worker_chess_engine_0x88/w_chess_engine_0x88.js отдельный поток -->
 
     <script>
         IfritChessGame_R.iniM();

@@ -65,7 +65,7 @@ class ChessEngine_0x88_С {
 
   // просто генерация ходов и просмотр в консоле
   test_pseudo_legal_moves() {
-    // console.log("ChessEngine_0x88_С->go_test --------");
+     //console.log("ChessEngine_0x88_С->test_pseudo_legal_moves --------");
     this.chess_board_0x88_O.score = this.search_start_0x88_O.evaluate_0x88_O.score_position(this.chess_board_0x88_O);
     //  this.chess_board_0x88_O.test_print_0x88();
     //  this.chess_board_0x88_O.test_print_0x88_color();
@@ -82,7 +82,7 @@ class ChessEngine_0x88_С {
   // запуск полного перебора minmax
   // тут можно проверить корректность игрового движка с помощью perf_t. как правильно он генерирует позиции.
   test_go_depth_mm(depth_max) {
-
+     //console.log("ChessEngine_0x88_С->test_go_depth_mm --------");
     let info_return_search = this.search_start_0x88_O.test_start_search_mm(this.pv_line_0x88_O, 
       this.chess_board_0x88_O, this.move_gen_1_captures_0x88_O, this.move_gen_2_quiet_0x88_O, depth_max);
 
@@ -91,7 +91,7 @@ class ChessEngine_0x88_С {
 
   // alpha beta
   test_go_depth_ab(depth_max) {
-
+     //console.log("ChessEngine_0x88_С->test_go_depth_ab --------");
     let info_return_search = this.search_start_0x88_O.test_start_search_ab(this.pv_line_0x88_O,
       this.chess_board_0x88_O, this.move_gen_1_captures_0x88_O, this.move_gen_2_quiet_0x88_O, depth_max);
 
@@ -101,9 +101,9 @@ class ChessEngine_0x88_С {
   //////////////////////
   // GAME
 
-  // iterative deepening with PVS
+  // iterative deepening
   go_depth_id(depth_max) {
-
+     //console.log("ChessEngine_0x88_С->go_depth_id depth_max " + depth_max);
     let info_return_search = this.search_start_0x88_O.searching_iterative_deepening(this.pv_line_0x88_O,
       this.chess_board_0x88_O, this.move_gen_1_captures_0x88_O, this.move_gen_2_quiet_0x88_O, depth_max);
 

@@ -126,6 +126,9 @@ class Search_start_0x88_C {
     let is_moove_legal = -1;
     move_list_0x88_O.iniM();
 
+    // копируем доску чтобы когда у движка не будет ходов он не откатывался к предыдущей.
+   chess_board_0x88_O_move.save_chess_board_0x88(chess_board_0x88_O);
+
     move_gen_1_captures_0x88_O.generated_pseudo_legal_moves(chess_board_0x88_O, move_list_0x88_O);
     move_gen_2_quiet_0x88_O.generated_pseudo_legal_moves(chess_board_0x88_O, move_list_0x88_O);
     // первый раз сортируем по типу хода.
@@ -133,6 +136,7 @@ class Search_start_0x88_C {
 
     // увеличение по максимальной глубине
     for (let depth_max = 1; depth_max <= depth_max_2; depth_max++) {
+
 
       if (chess_board_0x88_O.side_to_move == 1) {
         best_score = - 40000;
