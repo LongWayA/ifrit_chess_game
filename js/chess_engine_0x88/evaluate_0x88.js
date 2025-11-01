@@ -71,6 +71,7 @@ class Evaluate_0x88_C {
       }
     }
 
+    if (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.BLACK) score = -1 * score;
     chess_board_0x88_O.score = score;
     return score;
   }
@@ -78,3 +79,8 @@ class Evaluate_0x88_C {
 
 
 }
+
+/*
+score = materialWeight * (numWhitePieces - numBlackPieces) * who2move 
+where who2move = 1 for white, and who2move = -1 for black.
+*/

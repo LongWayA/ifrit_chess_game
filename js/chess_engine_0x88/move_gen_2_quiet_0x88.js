@@ -77,7 +77,7 @@ class Move_gen_2_quiet_0x88_С {
 
     // генерируем всевозможные ходы, но не учитываем шахи и вскрытые шахи.
     generated_pseudo_legal_moves(chess_board_0x88_O, move_list_0x88_O) {
-        //console.log('Move_generator_0x88_С->generated_pseudo_legal_moves');
+        //console.log('Move_gen_2_quiet_0x88_С->generated_pseudo_legal_moves');
         // здесь определил чтобы в цикле не определять
         let piece_color = -1;
         let piece_name = -1;
@@ -92,7 +92,7 @@ class Move_gen_2_quiet_0x88_С {
 
     //  считаем ходы одной фигуры из конкретной позиции
     generated_pseudo_legal_moves_one_piece_for_gui(from, chess_board_0x88_O, move_list_0x88_O) {
-        //console.log('Move_generator_0x88_С->generated_pseudo_legal_moves');
+        //console.log('Move_gen_2_quiet_0x88_С->generated_pseudo_legal_moves');
         let piece_color = -1;
         let piece_name = -1;
         let side_to_move = -1;
@@ -280,48 +280,48 @@ class Move_gen_2_quiet_0x88_С {
         let type_move = -1;
         let score_move = -1;
 
-        if (from == Move_generator_0x88_С.E1) {// король стоит на стартовой позиции
+        if (from == Move_gen_2_quiet_0x88_С.E1) {// король стоит на стартовой позиции
             if (piece_color == 1) {// король белый
                 if (chess_board_0x88_O.castling_Q == 1) {// рокировка белых в длинную сторону   1/0
-                    piece_to_1 = chess_board_0x88_O.sq_piece_0x88[Move_generator_0x88_С.B1];
-                    piece_to_2 = chess_board_0x88_O.sq_piece_0x88[Move_generator_0x88_С.C1];
-                    piece_to_3 = chess_board_0x88_O.sq_piece_0x88[Move_generator_0x88_С.D1];
+                    piece_to_1 = chess_board_0x88_O.sq_piece_0x88[Move_gen_2_quiet_0x88_С.B1];
+                    piece_to_2 = chess_board_0x88_O.sq_piece_0x88[Move_gen_2_quiet_0x88_С.C1];
+                    piece_to_3 = chess_board_0x88_O.sq_piece_0x88[Move_gen_2_quiet_0x88_С.D1];
                     if ((piece_to_1 == 0) && (piece_to_2 == 0) && (piece_to_3 == 0)) {//
-                        to = Move_generator_0x88_С.C1;
+                        to = Move_gen_2_quiet_0x88_С.C1;
                         type_move = Move_list_0x88_С.MOVE_KING_QUEEN_CASTLE;
                         move_list_0x88_O.add_move(type_move, piece_color, score_move, from, to);
                     }
                 }
 
                 if (chess_board_0x88_O.castling_K == 1) {// рокировка белых в короткую сторону  1/0
-                    piece_to_1 = chess_board_0x88_O.sq_piece_0x88[Move_generator_0x88_С.F1];
-                    piece_to_2 = chess_board_0x88_O.sq_piece_0x88[Move_generator_0x88_С.G1];
+                    piece_to_1 = chess_board_0x88_O.sq_piece_0x88[Move_gen_2_quiet_0x88_С.F1];
+                    piece_to_2 = chess_board_0x88_O.sq_piece_0x88[Move_gen_2_quiet_0x88_С.G1];
                     if ((piece_to_1 == 0) && (piece_to_2 == 0)) {//
-                        to = Move_generator_0x88_С.G1;
+                        to = Move_gen_2_quiet_0x88_С.G1;
                         type_move = Move_list_0x88_С.MOVE_KING_CASTLE;
                         move_list_0x88_O.add_move(type_move, piece_color, score_move, from, to);
                     }
                 }
             }
 
-        } else if (from == Move_generator_0x88_С.E8) {// король стоит на стартовой позиции
+        } else if (from == Move_gen_2_quiet_0x88_С.E8) {// король стоит на стартовой позиции
             if (piece_color == 0) {// король черный
                 if (chess_board_0x88_O.castling_q == 1) {// рокировка черных в длинную сторону   1/0
-                    piece_to_1 = chess_board_0x88_O.sq_piece_0x88[Move_generator_0x88_С.B8];
-                    piece_to_2 = chess_board_0x88_O.sq_piece_0x88[Move_generator_0x88_С.C8];
-                    piece_to_3 = chess_board_0x88_O.sq_piece_0x88[Move_generator_0x88_С.D8];
+                    piece_to_1 = chess_board_0x88_O.sq_piece_0x88[Move_gen_2_quiet_0x88_С.B8];
+                    piece_to_2 = chess_board_0x88_O.sq_piece_0x88[Move_gen_2_quiet_0x88_С.C8];
+                    piece_to_3 = chess_board_0x88_O.sq_piece_0x88[Move_gen_2_quiet_0x88_С.D8];
                     if ((piece_to_1 == 0) && (piece_to_2 == 0) && (piece_to_3 == 0)) {//
-                        to = Move_generator_0x88_С.C8;
+                        to = Move_gen_2_quiet_0x88_С.C8;
                         type_move = Move_list_0x88_С.MOVE_KING_QUEEN_CASTLE;
                         move_list_0x88_O.add_move(type_move, piece_color, score_move, from, to);
                     }
                 }
 
                 if (chess_board_0x88_O.castling_k == 1) {// рокировка черных в короткую сторону  1/0
-                    piece_to_1 = chess_board_0x88_O.sq_piece_0x88[Move_generator_0x88_С.F8];
-                    piece_to_2 = chess_board_0x88_O.sq_piece_0x88[Move_generator_0x88_С.G8];
+                    piece_to_1 = chess_board_0x88_O.sq_piece_0x88[Move_gen_2_quiet_0x88_С.F8];
+                    piece_to_2 = chess_board_0x88_O.sq_piece_0x88[Move_gen_2_quiet_0x88_С.G8];
                     if ((piece_to_1 == 0) && (piece_to_2 == 0)) {//
-                        to = Move_generator_0x88_С.G8;
+                        to = Move_gen_2_quiet_0x88_С.G8;
                         type_move = Move_list_0x88_С.MOVE_KING_CASTLE;
                         move_list_0x88_O.add_move(type_move, piece_color, score_move, from, to);
                     }

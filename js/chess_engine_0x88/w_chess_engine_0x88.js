@@ -15,16 +15,14 @@ importScripts("../chess_engine_0x88/chess_board_0x88.js");
 importScripts("../chess_engine_0x88/move_list_0x88.js");
 importScripts("../chess_engine_0x88/move_gen_1_captures_0x88.js");
 importScripts("../chess_engine_0x88/move_gen_2_quiet_0x88.js");
-importScripts("../chess_engine_0x88/move_generator_0x88.js");
 importScripts("../chess_engine_0x88/undo_0x88.js");
 importScripts("../chess_engine_0x88/make_move_0x88.js");
 importScripts("../chess_engine_0x88/unmake_move_0x88.js");
 importScripts("../chess_engine_0x88/evaluate_0x88.js");
 importScripts("../chess_engine_0x88/pv_line_0x88.js");
 importScripts("../chess_engine_0x88/quiescence_search_0x88.js");
-importScripts("../chess_engine_0x88/search_minmax_0x88.js");
+importScripts("../chess_engine_0x88/search_negamax_0x88.js");
 importScripts("../chess_engine_0x88/search_ab_0x88.js");
-importScripts("../chess_engine_0x88/search_pvs_0x88.js");
 importScripts("../chess_engine_0x88/search_start_0x88.js");
 importScripts("../chess_engine_0x88/chess_engine_0x88.js");
 
@@ -60,6 +58,7 @@ class W_ChessEngine_0x88_С {
       let depth_max_s = message.slice(9, end); 
       let depth_max = Number(depth_max_s);
 
+      //let info_return_e = w_chessEngine_0x88_O.chessEngine_0x88_O.test_go_depth_nm(depth_max);      
       //let info_return_e = w_chessEngine_0x88_O.chessEngine_0x88_O.test_go_depth_ab(depth_max);
       let info_return_e = w_chessEngine_0x88_O.chessEngine_0x88_O.go_depth_id(depth_max);      
 

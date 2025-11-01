@@ -23,7 +23,7 @@ class ChessEngine_0x88_С {
   static NAME = "ChessEngine_0x88";
 
   // для всех
-  move_generator_0x88_O = new Move_generator_0x88_С();
+  //move_generator_0x88_O = new Move_generator_0x88_С();
   move_gen_1_captures_0x88_O = new Move_gen_1_captures_0x88_С();
   move_gen_2_quiet_0x88_O = new Move_gen_2_quiet_0x88_С();
   search_start_0x88_O = new Search_start_0x88_C();
@@ -56,7 +56,7 @@ class ChessEngine_0x88_С {
   iniM() {
     this.chess_board_0x88_O.iniM();
     this.move_list_0x88_O.iniM();
-    this.move_generator_0x88_O.iniM();
+//    this.move_generator_0x88_O.iniM();
     this.search_start_0x88_O.iniM();
   }
 
@@ -71,7 +71,6 @@ class ChessEngine_0x88_С {
     //  this.chess_board_0x88_O.test_print_0x88_color();
     //  console.log("ChessEngine_0x88_С->chess_board_0x88_O.score " + this.chess_board_0x88_O.score);
     //  this.chess_board_0x88_O.test_print_any_0x88();
-    //this.move_generator_0x88_O.generated_pseudo_legal_moves(this.chess_board_0x88_O, this.move_list_0x88_O);
     this.move_gen_1_captures_0x88_O.generated_pseudo_legal_moves(this.chess_board_0x88_O, this.move_list_0x88_O);
     this.move_gen_2_quiet_0x88_O.generated_pseudo_legal_moves(this.chess_board_0x88_O, this.move_list_0x88_O);
 
@@ -81,9 +80,9 @@ class ChessEngine_0x88_С {
 
   // запуск полного перебора minmax
   // тут можно проверить корректность игрового движка с помощью perf_t. как правильно он генерирует позиции.
-  test_go_depth_mm(depth_max) {
-     //console.log("ChessEngine_0x88_С->test_go_depth_mm --------");
-    let info_return_search = this.search_start_0x88_O.test_start_search_mm(this.pv_line_0x88_O, 
+  test_go_depth_nm(depth_max) {
+     //console.log("ChessEngine_0x88_С->test_go_depth_nm --------");
+    let info_return_search = this.search_start_0x88_O.test_start_search_nm(this.pv_line_0x88_O, 
       this.chess_board_0x88_O, this.move_gen_1_captures_0x88_O, this.move_gen_2_quiet_0x88_O, depth_max);
 
     return info_return_search;
@@ -127,7 +126,10 @@ class ChessEngine_0x88_С {
     let from = this.chess_board_0x88_O_gui.x07_y07_to_0x88(from_x, from_y);
     let to = this.chess_board_0x88_O_gui.x07_y07_to_0x88(to_x, to_y);
     this.move_list_gui_0x88_O.clear_list();
-    this.move_generator_0x88_O.generated_pseudo_legal_moves_one_piece_for_gui(from, this.chess_board_0x88_O_gui,
+
+   this.move_gen_1_captures_0x88_O.generated_pseudo_legal_moves_one_piece_for_gui(from, this.chess_board_0x88_O_gui,
+      this.move_list_gui_0x88_O);
+    this.move_gen_2_quiet_0x88_O.generated_pseudo_legal_moves_one_piece_for_gui(from, this.chess_board_0x88_O_gui,
       this.move_list_gui_0x88_O);
 
     // console.log("IfritChessEngine_С-> print_list---------- ");
@@ -155,8 +157,10 @@ class ChessEngine_0x88_С {
     //------
     // обсчитываем всевозможные ходы и заполняем специальный список move_list_gui_0x88_O
     this.move_list_gui_0x88_O.clear_list();
-    this.move_generator_0x88_O.generated_pseudo_legal_moves_one_piece_for_gui(from, this.chess_board_0x88_O_gui,
-      this.move_list_gui_0x88_O, this.move_generator_0x88_O);
+   this.move_gen_1_captures_0x88_O.generated_pseudo_legal_moves_one_piece_for_gui(from, this.chess_board_0x88_O_gui,
+      this.move_list_gui_0x88_O);
+    this.move_gen_2_quiet_0x88_O.generated_pseudo_legal_moves_one_piece_for_gui(from, this.chess_board_0x88_O_gui,
+      this.move_list_gui_0x88_O);    
     //------
     //console.log("from_king gui " + IfritChessGame_R.chessEngine_0x88_O.move_list_gui_0x88_O.king_from);
     // находим номер нашего хода в списке ходов
@@ -168,7 +172,7 @@ class ChessEngine_0x88_С {
     // делаем ход и возвращаем флаг легальности хода  
     //console.log("ChessBoard_8x8_C->click(mouseDown) СДЕЛАЕМ ХОД ДЛЯ ПРОВЕРКИ ЛЕГАЛЬНОСТИ from " + from + " to "+ to);
     let is_moove_legal = IfritChessGame_R.chessEngine_0x88_O.search_start_0x88_O.make_move_0x88_O.do_moves(move_i,
-      this.chess_board_0x88_O_gui, this.move_list_gui_0x88_O, this.undo_0x88_O, this.move_generator_0x88_O);
+      this.chess_board_0x88_O_gui, this.move_list_gui_0x88_O, this.undo_0x88_O, this.move_gen_1_captures_0x88_O);
 
     return is_moove_legal;
 
@@ -178,8 +182,10 @@ class ChessEngine_0x88_С {
     this.chess_board_0x88_O_gui.set_0x88_from_8x8(chessBoard_8x8_O);
     let from = this.chess_board_0x88_O.x07_y07_to_0x88(from_x, from_y);
     this.move_list_gui_0x88_O.clear_list();
-    this.move_generator_0x88_O.generated_pseudo_legal_moves_one_piece_for_gui(from, this.chess_board_0x88_O_gui,
-      this.move_list_gui_0x88_O, this.move_generator_0x88_O);
+   this.move_gen_1_captures_0x88_O.generated_pseudo_legal_moves_one_piece_for_gui(from, this.chess_board_0x88_O_gui,
+      this.move_list_gui_0x88_O);
+    this.move_gen_2_quiet_0x88_O.generated_pseudo_legal_moves_one_piece_for_gui(from, this.chess_board_0x88_O_gui,
+      this.move_list_gui_0x88_O);
 
     draw_O.draw_rect_move(this.move_list_gui_0x88_O, this.chess_board_0x88_O_gui, chessBoard_8x8_O, Html5Canvas_C.BLUE, is_white);
   }

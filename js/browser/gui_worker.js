@@ -72,6 +72,7 @@ let GuiWorker_R = {
                               IfritChessGame_R.stateGame_O.pv_line_str.slice(11, 18);
                   }
 
+
                   IfritChessGame_R.stop_click = 0;
                   IfritChessGame_R.stop_click_2 = 0;
             }

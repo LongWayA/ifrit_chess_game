@@ -77,7 +77,7 @@ class Move_gen_1_captures_0x88_С {
 
     // генерируем всевозможные ходы, но не учитываем шахи и вскрытые шахи.
     generated_pseudo_legal_moves(chess_board_0x88_O, move_list_0x88_O) {
-        //console.log('Move_generator_0x88_С->generated_pseudo_legal_moves');
+        //console.log('->generated_pseudo_legal_moves');
         // здесь определил чтобы в цикле не определять
         let piece_color = -1;
         let piece_name = -1;
@@ -92,7 +92,7 @@ class Move_gen_1_captures_0x88_С {
 
     //  считаем ходы одной фигуры из конкретной позиции
     generated_pseudo_legal_moves_one_piece_for_gui(from, chess_board_0x88_O, move_list_0x88_O) {
-        //console.log('Move_generator_0x88_С->generated_pseudo_legal_moves');
+        //console.log('->generated_pseudo_legal_moves');
         let piece_color = -1;
         let piece_name = -1;
         let side_to_move = -1;
