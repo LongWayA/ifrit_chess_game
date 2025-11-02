@@ -336,6 +336,47 @@ class Move_list_0x88_С {
 
     }
 
+    sorting_list_top_min_score() {
+
+        let save_type_move;
+        let save_piece_color;
+        let save_score_move;
+
+        let save_from;
+        let save_to;
+
+        //console.log("Move_list_0x88_С-> SORTING -----------------------------------");
+        // выводим в начало списка ходы с максимальной оценкой. нужно белым
+        for (let i = 0; i < this.number_move; i++) {
+            for (let j = i + 1; j < this.number_move; j++) {// перебираем оставшийся список
+                // если на позиции есть взятая фигура
+                if (this.score_move[i] > this.score_move[j]) {
+                    // сохраняем позицию на которую будем писать
+                    save_type_move = this.type_move[i];
+                    save_piece_color = this.piece_color[i];
+                    save_score_move = this.score_move[i];
+                    save_from = this.from[i];
+                    save_to = this.to[i];
+
+                    // пишем на позицию
+                    this.type_move[i] = this.type_move[j];
+                    this.piece_color[i] = this.piece_color[j];
+                    this.score_move[i] = this.score_move[j];
+                    this.from[i] = this.from[j];
+                    this.to[i] = this.to[j];
+
+                    // сюда пишем начальную позицию. т.о. две позиции меняются местами
+                    this.type_move[j] = save_type_move;
+                    this.piece_color[j] = save_piece_color;
+                    this.score_move[j] = save_score_move;
+                    this.from[j] = save_from;
+                    this.to[j] = save_to;
+                }
+            }
+        }
+
+    }
+
     sorting_list() {
 
         let save_type_move;

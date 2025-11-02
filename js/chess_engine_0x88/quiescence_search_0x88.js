@@ -43,11 +43,15 @@ class Quiescence_search_0x88_C {
     // Stand Pat =====================================
     best_value = static_eval;
 
+    if (chess_board_0x88_O.side_to_move == 1) {
       if (best_value >= beta) return best_value;
       if (best_value > alpha) alpha = best_value;
-
+    } else {
+      if (best_value <= alpha) return best_value;
+      if (best_value < beta) alpha = best_value;
+    }
     // ===================================== Stand Pat
-   
+
     move_list_0x88_O.iniM();
     move_gen_1_captures_0x88_O.generated_pseudo_legal_moves(chess_board_0x88_O, move_list_0x88_O);
     move_list_0x88_O.sorting_list();
@@ -56,33 +60,40 @@ class Quiescence_search_0x88_C {
     for (let move_i = 0; move_i < move_list_0x88_O.number_move; move_i++) {
 
       is_moove_legal = this.make_move_0x88_O.do_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O, move_gen_1_captures_0x88_O);
- 
+
       if (is_moove_legal == 0) {
-        /////////////////////////////////////////////////////////////////////
         // особый случай. нелегальные рокировки не генерируются
         if ((move_list_0x88_O.type_move[move_i] != Move_list_0x88_С.MOVE_KING_CASTLE) &&
           (move_list_0x88_O.type_move[move_i] != Move_list_0x88_С.MOVE_KING_QUEEN_CASTLE)) {
           this.unmake_move_0x88_O.undo_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O);
         }
- 
         continue;
       }
- 
-      score = -1 * this.quiescence_search(-1 * beta, -1 * alpha, chess_board_0x88_O, move_gen_1_captures_0x88_O, (depth + 1));
 
-      move_list_0x88_O.score_move[move_i] = score;
+      score = this.quiescence_search(alpha, beta, chess_board_0x88_O, move_gen_1_captures_0x88_O, (depth + 1));
 
+      //move_list_0x88_O.score_move[move_i] = score;
+
+      if (move_list_0x88_O.piece_color[move_i] == Chess_board_0x88_C.WHITE) {
         if (score >= beta) {
           this.unmake_move_0x88_O.undo_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O);
           return score;
         }
         if (score > best_value) best_value = score;
-        if( score > alpha ) alpha = score;
+        if (score > alpha) alpha = score;
+      } else {
 
-      /////////////////////////////////////////////////////////////////////
+        if (score <= alpha) {
+          this.unmake_move_0x88_O.undo_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O);
+          return score;
+        }
+        if (score < best_value) best_value = score;
+        if (score < beta) alpha = score;
+      }
+ 
       this.unmake_move_0x88_O.undo_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O);
     }
- 
+
     return best_value;
   }
 }

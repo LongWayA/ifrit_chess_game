@@ -71,7 +71,7 @@ class Search_negamax_0x88_C {
         }//if (is_moove_legal == 0) {
 
         pv_line_0x88_O.add_move(move_i, move_list_0x88_O, depth);
-        pv_line_0x88_O.quiescence[depth] = "nm";
+        pv_line_0x88_O.type_variant[depth] = "nm";
 
         score = -1 * this.searching_negamax(pv_line_0x88_O, chess_board_0x88_O,
           move_gen_1_captures_0x88_O, move_gen_2_quiet_0x88_O, (depth + 1), depth_max);
@@ -81,7 +81,7 @@ class Search_negamax_0x88_C {
         if (score > found_score) {
           found_score = score;
           best_node_line_0x88_O.save_list(pv_line_0x88_O);
-          best_node_line_0x88_O.quiescence[depth] = "nm_M";
+          best_node_line_0x88_O.type_variant[depth] = "nm_M";
 
           if (depth == 0) this.chess_board_0x88_O_move.save_chess_board_0x88(chess_board_0x88_O);
           //console.log("Search_0x88_C->score > max_score depth " + depth + " found_score " + found_score);

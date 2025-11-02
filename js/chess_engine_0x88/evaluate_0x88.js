@@ -37,7 +37,49 @@ class Evaluate_0x88_C {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   ];
 
+  white_king_0x88 = [
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 5, 10, 0, 0, 0, 20, 5, 0, 0, 0, 0, 0, 0, 0, 0,
+  ];
 
+  black_king_0x88 = [
+    0, 5, 10, 0, 0, 0, 20, 5, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  ];
+
+  white_pawn_0x88 = [
+    100, 100, 100, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    30, 30, 30, 30, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    25, 25, 25, 25, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    20, 20, 20, 20, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    15, 15, 15, 15, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    10, 10, 10, 10, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    5, 5, 5, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  ];
+
+  black_pawn_0x88 = [
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    5, 5, 5, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    10, 10, 10, 10, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    15, 15, 15, 15, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    20, 20, 20, 20, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    25, 25, 25, 25, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    30, 30, 30, 30, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    100, 100, 100, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  ];
 
   constructor() {
 
@@ -53,7 +95,6 @@ class Evaluate_0x88_C {
     let score_piece = 0;
     let index_piece = 0;
     let score = 0;
-    let center = 0;
 
     for (let sq = 0; sq < 128; sq++) {
       if ((sq & 136) == 0) {// 136 0x88
@@ -61,23 +102,59 @@ class Evaluate_0x88_C {
         score_piece = Evaluate_0x88_C.PIECE_SCORE[index_piece];
         color_piece = chess_board_0x88_O.sq_piece_color_0x88[sq];
 
-        if (color_piece == 1) {// белая фигура
-          score = score + score_piece;
-          if (index_piece != 0) score = score + this.center_0x88[sq];
-        } else {// черная фигура
-          score = score - score_piece;
-          if (index_piece != 0) score = score - this.center_0x88[sq];
-        }
-      }
-    }
+        // есть фигура на доске
+        if (index_piece != 0) {
+          if (color_piece == 1) {// белая фигура
+            score = score + score_piece;
+            if (index_piece == Chess_board_0x88_C.KING) {
+              score = score + this.white_king_0x88[sq];
+            } else if (index_piece == Chess_board_0x88_C.QUEEN) {
 
-    if (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.BLACK) score = -1 * score;
+            } else if (index_piece == Chess_board_0x88_C.ROOK) {
+
+            } else if (index_piece == Chess_board_0x88_C.BISHOP) {
+              score = score + this.center_0x88[sq];
+            } else if (index_piece == Chess_board_0x88_C.KNIGHT) {
+              score = score + this.center_0x88[sq];
+            } else if (index_piece == Chess_board_0x88_C.PAWN) {
+              score = score + this.white_pawn_0x88[sq];
+            }
+          } else {// черная фигура
+            score = score - score_piece;
+            if (index_piece == Chess_board_0x88_C.KING) {
+              score = score - this.black_king_0x88[sq];
+            } else if (index_piece == Chess_board_0x88_C.QUEEN) {
+
+            } else if (index_piece == Chess_board_0x88_C.ROOK) {
+
+            } else if (index_piece == Chess_board_0x88_C.BISHOP) {
+              score = score - this.center_0x88[sq];
+            } else if (index_piece == Chess_board_0x88_C.KNIGHT) {
+              score = score - this.center_0x88[sq];
+            } else if (index_piece == Chess_board_0x88_C.PAWN) {
+              score = score - this.black_pawn_0x88[sq];
+            }
+          }//if (color_piece == 1) {// белая фигура
+        }//if (index_piece != 0) {
+
+
+        // if (color_piece == 1) {// белая фигура
+        //   score = score + score_piece;
+        //   if (index_piece != 0) score = score + this.center_0x88[sq];
+        // } else {// черная фигура
+        //   score = score - score_piece;
+        //   if (index_piece != 0) score = score - this.center_0x88[sq];
+        // }
+      }// if ((sq & 136) == 0) {// 136 0x88
+    }//for (let sq = 0; sq < 128; sq++) {
+
+    // совершенно точно, что если ход черных тогда умножаем на минус один 
+    // потому что сходили белые и к ним оценка вернется умноженная на минус один, а это плюс 
+    // белые оценивают абсолютную оценку потому что белые фигуры в плюс.
+    //if (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.BLACK) score = -1 * score;
     chess_board_0x88_O.score = score;
     return score;
-  }
-
-
-
+  }//score_position(chess_board_0x88_O) {
 }
 
 /*

@@ -184,7 +184,7 @@ let IfritChessGame_R = {
                 " nodes " + IfritChessGame_R.stateGame_O.nodes +
                 " score " + IfritChessGame_R.stateGame_O.score;
         }
-        text_chess_game.value = " Версия 01.11м.25";
+        text_chess_game.value = " Версия 02.11м.25";
         text_chess_game.value += "\n Записи игры пока нет.";
         text_chess_game.value += " Вернуть ход не получится.";
         text_chess_game.value += "\n Game: ";
@@ -443,7 +443,8 @@ let IfritChessGame_R = {
             if (IfritChessGame_R.stateGame_O.test != StateGame_C.TEST_MESSAGE) {
                 IfritChessGame_R.chessEngine_0x88_O.position(IfritChessGame_R.chessBoard_8x8_O);
                 // режим тестовой игры движок отвечает на наш ход 
-                let info_return_g = IfritChessGame_R.chessEngine_0x88_O.go_depth_id(IfritChessGame_R.stateGame_O.depth_max);
+                let info_return_g = IfritChessGame_R.chessEngine_0x88_O.test_go_depth_ab(IfritChessGame_R.stateGame_O.depth_max);                
+                //let info_return_g = IfritChessGame_R.chessEngine_0x88_O.go_depth_id(IfritChessGame_R.stateGame_O.depth_max);
                 IfritChessGame_R.stateGame_O.score = info_return_g.score;
                 IfritChessGame_R.stateGame_O.nodes = info_return_g.node_count;
                 IfritChessGame_R.stateGame_O.pv_line_str = info_return_g.pv_line_str;
@@ -485,10 +486,10 @@ let IfritChessGame_R = {
             IfritChessGame_R.chessEngine_0x88_O.position(IfritChessGame_R.chessBoard_8x8_O);
             // режим тестовой игры движок отвечает на наш ход 
             IfritChessGame_R.stateGame_O.nodes = 0;
-            let info_return_g = IfritChessGame_R.chessEngine_0x88_O.test_go_depth_nm(IfritChessGame_R.stateGame_O.depth_max);           
+            //let info_return_g = IfritChessGame_R.chessEngine_0x88_O.test_go_depth_nm(IfritChessGame_R.stateGame_O.depth_max);           
             //let info_return_g = IfritChessGame_R.chessEngine_0x88_O.test_go_depth_ab(IfritChessGame_R.stateGame_O.depth_max);
 
-            //let info_return_g = IfritChessGame_R.chessEngine_0x88_O.go_depth_id(IfritChessGame_R.stateGame_O.depth_max);
+            let info_return_g = IfritChessGame_R.chessEngine_0x88_O.go_depth_id(IfritChessGame_R.stateGame_O.depth_max);
 
             IfritChessGame_R.stateGame_O.score = info_return_g.score;
             IfritChessGame_R.stateGame_O.nodes = info_return_g.node_count;

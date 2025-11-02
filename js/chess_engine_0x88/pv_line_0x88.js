@@ -24,7 +24,7 @@ class PV_line_0x88_C {
   from = new Array(PV_line_0x88_C.MAX_DEPTH).fill(-1);
   to = new Array(PV_line_0x88_C.MAX_DEPTH).fill(-1);
 
-  quiescence = new Array(PV_line_0x88_C.MAX_DEPTH).fill(-1);
+  type_variant = new Array(PV_line_0x88_C.MAX_DEPTH).fill(-1);
 
   score_depth_max = -1;
   depth_max = 0;
@@ -45,7 +45,7 @@ class PV_line_0x88_C {
       this.score_move[i] = -1;
       this.from[i] = -1;
       this.to[i] = -1;
-      this.quiescence[i] = -1;
+      this.type_variant[i] = -1;
 
     }
     this.score_depth_max = -1;
@@ -59,7 +59,7 @@ class PV_line_0x88_C {
       this.score_move[i] = pv_line_0x88_O.score_move[i];
       this.from[i] = pv_line_0x88_O.from[i];
       this.to[i] = pv_line_0x88_O.to[i];
-      this.quiescence[i] = pv_line_0x88_O.quiescence[i];
+      this.type_variant[i] = pv_line_0x88_O.type_variant[i];
 
       // if(this.type_move[i] == -1)  {
       // console.log('Move_list_0x88_С->save_list ALLERT  type_move -1 !!!!!!!!!!!!!');
@@ -104,7 +104,7 @@ class PV_line_0x88_C {
         Chess_board_0x88_C.LET_COOR[chess_board_0x88_O.s_0x88_to_x07(this.to[i])] + "" +
         (8 - chess_board_0x88_O.s_0x88_to_y07(this.to[i])));
 
-      console.log("quiescence[" + i + "] = " + this.quiescence[i]);
+      console.log("type_variant[" + i + "] = " + this.type_variant[i]);
 
       //console.log(" ");
     }
