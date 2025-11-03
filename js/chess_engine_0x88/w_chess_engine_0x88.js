@@ -12,6 +12,7 @@
 */
 
 importScripts("../chess_engine_0x88/chess_board_0x88.js");
+importScripts("../chess_engine_0x88/hash_table_0x88.js");
 importScripts("../chess_engine_0x88/move_list_0x88.js");
 importScripts("../chess_engine_0x88/move_gen_1_captures_0x88.js");
 importScripts("../chess_engine_0x88/move_gen_2_quiet_0x88.js");
@@ -36,6 +37,7 @@ class W_ChessEngine_0x88_С {
   }
 
   iniM() {
+      this.chessEngine_0x88_O.iniM();
   }
 
   message_to_engine(message) {
@@ -79,6 +81,7 @@ class W_ChessEngine_0x88_С {
 }
 
 let w_chessEngine_0x88_O = new W_ChessEngine_0x88_С();
+w_chessEngine_0x88_O.iniM();
 
 onmessage = function (event) {
   //console.log('Сообщение от оболочки : ', event.data);

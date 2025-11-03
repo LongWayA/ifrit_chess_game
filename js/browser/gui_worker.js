@@ -64,12 +64,13 @@ let GuiWorker_R = {
                         IfritChessGame_R.stateGame_O.nodes + " score:" + IfritChessGame_R.stateGame_O.score +
                         "\n " + IfritChessGame_R.stateGame_O.pv_line_str;
 
-                  if (IfritChessGame_R.stateGame_O.is_white == StateGame_C.WHITE) {
-                        text_chess_game.value += IfritChessGame_R.stateGame_O.pv_line_str.slice(11, 18);
-                  } else {
+                  if (IfritChessGame_R.chessBoard_8x8_O.side_to_move != StateGame_C.WHITE) {
                         IfritChessGame_R.stateGame_O.nomber_move = IfritChessGame_R.stateGame_O.nomber_move + 1;
                         text_chess_game.value += IfritChessGame_R.stateGame_O.nomber_move + "." +
                               IfritChessGame_R.stateGame_O.pv_line_str.slice(11, 18);
+                  } else {
+
+                        text_chess_game.value += IfritChessGame_R.stateGame_O.pv_line_str.slice(11, 18);
                   }
 
 
@@ -78,11 +79,11 @@ let GuiWorker_R = {
             }
       },
 
-      test_message() {
+      test_message(not_go) {
             IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O,
                   IfritChessGame_R.stateGame_O.is_white);
 
-            text_engine.value = " Ифрит думает как выиграть Вас максимально эффектно.";
+            text_engine.value = " Ифрит думает.";
 
             // message_gui_to_engine    
             let fen = IfritChessGame_R.chessBoard_8x8_O.set_fen_from_8x8(IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O);
@@ -91,18 +92,23 @@ let GuiWorker_R = {
             message = "go depth " + IfritChessGame_R.stateGame_O.depth_max;
             worker_egine_0x88.postMessage(message);
 
-            if (IfritChessGame_R.stateGame_O.is_white == StateGame_C.WHITE) {
-                  IfritChessGame_R.stateGame_O.nomber_move = IfritChessGame_R.stateGame_O.nomber_move + 1;
-                  text_chess_game.value += IfritChessGame_R.stateGame_O.nomber_move + "." +
-                        IfritChessGame_R.chessEngine_0x88_O.move_list_gui_0x88_O.move_to_string(
-                              IfritChessGame_R.chessEngine_0x88_O.i_move,
-                              IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O_gui);
+            if (IfritChessGame_R.chessBoard_8x8_O.side_to_move != StateGame_C.WHITE) {
+                  // IfritChessGame_R.stateGame_O.nomber_move = IfritChessGame_R.stateGame_O.nomber_move + 1;
+                  if (not_go == 1) {
+                        IfritChessGame_R.stateGame_O.nomber_move = IfritChessGame_R.stateGame_O.nomber_move + 1;
+                        text_chess_game.value += IfritChessGame_R.stateGame_O.nomber_move + "." +
+                              IfritChessGame_R.chessEngine_0x88_O.move_list_gui_0x88_O.move_to_string(
+                                    IfritChessGame_R.chessEngine_0x88_O.i_move,
+                                    IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O_gui);
+                  }
 
             } else {
-                  text_chess_game.value +=
-                        IfritChessGame_R.chessEngine_0x88_O.move_list_gui_0x88_O.move_to_string(
-                              IfritChessGame_R.chessEngine_0x88_O.i_move,
-                              IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O_gui);
+                  if (not_go == 1) {
+                        text_chess_game.value +=
+                              IfritChessGame_R.chessEngine_0x88_O.move_list_gui_0x88_O.move_to_string(
+                                    IfritChessGame_R.chessEngine_0x88_O.i_move,
+                                    IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O_gui);
+                  }
 
             }
             IfritChessGame_R.stop_click_2 = 1;

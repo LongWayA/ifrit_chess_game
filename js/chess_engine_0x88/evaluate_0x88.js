@@ -89,7 +89,7 @@ class Evaluate_0x88_C {
 
   }
 
-  score_position(chess_board_0x88_O) {
+  score_position(chess_board_0x88_O, hash_table_0x88_O) {
 
     let color_piece = 0;
     let score_piece = 0;
@@ -137,7 +137,6 @@ class Evaluate_0x88_C {
           }//if (color_piece == 1) {// белая фигура
         }//if (index_piece != 0) {
 
-
         // if (color_piece == 1) {// белая фигура
         //   score = score + score_piece;
         //   if (index_piece != 0) score = score + this.center_0x88[sq];
@@ -153,6 +152,7 @@ class Evaluate_0x88_C {
     // белые оценивают абсолютную оценку потому что белые фигуры в плюс.
     //if (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.BLACK) score = -1 * score;
     chess_board_0x88_O.score = score;
+    //hash_table_0x88_O.set_key_from_board_0x88(chess_board_0x88_O);    
     return score;
   }//score_position(chess_board_0x88_O) {
 }
