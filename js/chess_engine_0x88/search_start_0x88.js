@@ -160,7 +160,7 @@ class Search_start_0x88_C {
     this.hash_table_0x88_O.iniM();
     //move_list_0x88_O.test_print_list(chess_board_0x88_O);
 
-    //move_list_0x88_O.set_move_after_the_captures(56);
+    //move_list_0x88_O.set_move_after_the_captures(58,69);
     //move_list_0x88_O.test_print_list(chess_board_0x88_O);
 
     console.log("Search_0x88_C->начало поиска searching_alpha_beta_id ");

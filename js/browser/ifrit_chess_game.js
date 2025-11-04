@@ -38,7 +38,7 @@ input_max_depth.addEventListener('input', function () {
     } else {
         IfritChessGame_R.stateGame_O.depth_max = parseInt(input_max_depth.value);
         if (IfritChessGame_R.stateGame_O.depth_max <= 0) IfritChessGame_R.stateGame_O.depth_max = 1;
-        if (IfritChessGame_R.stateGame_O.depth_max > 8) IfritChessGame_R.stateGame_O.depth_max = 8;
+        if (IfritChessGame_R.stateGame_O.depth_max > 10) IfritChessGame_R.stateGame_O.depth_max = 10;
         input_max_depth.value = IfritChessGame_R.stateGame_O.depth_max;//
     }
     //console.log('Событие input: ' + input_max_depth.value);

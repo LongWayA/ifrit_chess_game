@@ -294,7 +294,7 @@ class Move_list_0x88_С {
     }
 
     // ставим сразу после взятий. это для киллеров
-    set_move_after_the_captures(type_move) {
+    set_move_after_the_captures(type_move, to) {
  
         let save_type_move = -1;
         let save_piece_color;
@@ -312,7 +312,7 @@ class Move_list_0x88_С {
        //console.log("Move_list_0x88_С-> UP -----------------------------------");
         // 1 ищем ход в списке
         for (s_m = start; s_m < this.number_move; s_m++) {// перебираем оставшийся список
-            if (this.type_move[s_m] == type_move) {
+            if ((this.type_move[s_m] == type_move) && (this.to[s_m] == to)){
                 // ход нашли и записали
                 save_type_move = this.type_move[s_m];
                 save_piece_color = this.piece_color[s_m];

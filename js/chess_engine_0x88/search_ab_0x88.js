@@ -123,19 +123,21 @@ class Search_ab_0x88_C {
       move_gen_2_quiet_0x88_O.generated_pseudo_legal_moves(chess_board_0x88_O, move_list_0x88_O);
       move_list_0x88_O.sorting_list();
 
-      if (killer_heuristic_0x88_C.killer_moves_2[depth] != -1) {
+      if (killer_heuristic_0x88_C.killer_moves_type_move_2[depth] != -1) {
         // console.log("Search_0x88_C->killer_moves_2");
         // console.log("Search_0x88_C->killer_heuristic_0x88_C.killer_moves_2[" + depth + "] " + killer_heuristic_0x88_C.killer_moves_2[depth]);
         // console.log("Search_0x88_C->type_move[0] до " + move_list_0x88_O.type_move[0]);
-        move_list_0x88_O.set_move_after_the_captures(killer_heuristic_0x88_C.killer_moves_2[depth]);
+        move_list_0x88_O.set_move_after_the_captures(killer_heuristic_0x88_C.killer_moves_type_move_2[depth],
+          killer_heuristic_0x88_C.killer_moves_to_2[depth]);
         //console.log("Search_0x88_C->type_move[0] после " + move_list_0x88_O.type_move[0]);
       };
 
-      if (killer_heuristic_0x88_C.killer_moves_1[depth] != -1) {
+      if (killer_heuristic_0x88_C.killer_moves_type_move_1[depth] != -1) {
         // console.log("Search_0x88_C->killer_moves_1");
         // console.log("Search_0x88_C->killer_heuristic_0x88_C.killer_moves_1[" + depth + "] " + killer_heuristic_0x88_C.killer_moves_1[depth]);
         // console.log("Search_0x88_C->type_move[0] до " + move_list_0x88_O.type_move[0]);
-        move_list_0x88_O.set_move_after_the_captures(killer_heuristic_0x88_C.killer_moves_1[depth]);
+        move_list_0x88_O.set_move_after_the_captures(killer_heuristic_0x88_C.killer_moves_type_move_1[depth], 
+          killer_heuristic_0x88_C.killer_moves_to_1[depth]);
         //console.log("Search_0x88_C->type_move[0] после " + move_list_0x88_O.type_move[0]);
       };
 
@@ -209,7 +211,7 @@ class Search_ab_0x88_C {
           if (score >= beta) {
             // восстановили доску
             this.unmake_move_0x88_O.undo_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O);
-            killer_heuristic_0x88_C.add_move(move_list_0x88_O.type_move[move_i], depth);
+            killer_heuristic_0x88_C.add_move(move_list_0x88_O.type_move[move_i], move_list_0x88_O.to[move_i], depth);
             hash_table_0x88_O.add_position(Hash_table_0x88_C.BETA_CUT, move_i, depth, depth_max, score, chess_board_0x88_O);
             return score;   // 
           }//
@@ -233,7 +235,7 @@ class Search_ab_0x88_C {
           if (score <= alpha) {
             // восстановили доску
             this.unmake_move_0x88_O.undo_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O);
-            killer_heuristic_0x88_C.add_move(move_list_0x88_O.type_move[move_i], depth);
+            killer_heuristic_0x88_C.add_move(move_list_0x88_O.type_move[move_i], move_list_0x88_O.to[move_i], depth);
             hash_table_0x88_O.add_position(Hash_table_0x88_C.ALPHA_CUT, move_i, depth, depth_max, score, chess_board_0x88_O);
             return score;   //
           }//
