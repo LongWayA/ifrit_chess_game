@@ -244,7 +244,8 @@ class Search_start_0x88_C {
       this.info_return_search.chess_board_0x88_O_move = chess_board_0x88_O_move;
       console.log("Search_0x88_C->pv_line_str " + this.info_return_search.pv_line_str + " depth_max " + depth_max);
 
-      console.log("Search_0x88_C->z " + this.hash_table_0x88_O.z);      
+      console.log("Search_0x88_C->z " + this.hash_table_0x88_O.z); 
+      console.log("Search_0x88_C->z_add " + this.hash_table_0x88_O.z_add);      
       console.log("Search_0x88_C->no_colz " + this.hash_table_0x88_O.no_colz);
       console.log("Search_0x88_C->colz " + this.hash_table_0x88_O.colz);
 

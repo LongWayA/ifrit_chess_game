@@ -184,7 +184,7 @@ let IfritChessGame_R = {
                 " nodes " + IfritChessGame_R.stateGame_O.nodes +
                 " score " + IfritChessGame_R.stateGame_O.score;
         }
-        text_chess_game.value = " Версия 03.11м.25";
+        text_chess_game.value = " Версия 04.11м.25";
         text_chess_game.value += "\n Возврат хода еще не сделан.";
         text_chess_game.value += "\n Game: ";
     },
