@@ -84,8 +84,8 @@ class Hash_table_0x88_C {
         //Math.floor();
 
         if (hi_key > Hash_table_0x88_C.MAX_MAX_LENTH) {
-            console.log("Hash_table_0x88_C -> при чтении превышен максимальный размер хеш таблицы ");
-            console.log("Hash_table_0x88_C -> hi_key " + hi_key);
+           // console.log("Hash_table_0x88_C -> при чтении превышен максимальный размер хеш таблицы ");
+           // console.log("Hash_table_0x88_C -> hi_key " + hi_key);
             return 0;
         }
 
@@ -143,8 +143,8 @@ class Hash_table_0x88_C {
         //console.log("Hash_table_0x88_C -> hi_key " + hi_key + " hi_key_board_0x88 " + hi_key_board_0x88);
 
         if (hi_key > Hash_table_0x88_C.MAX_MAX_LENTH) {
-            console.log("Hash_table_0x88_C -> при чтении превышен максимальный размер хеш таблицы ");
-            console.log("Hash_table_0x88_C -> hi_key " + hi_key);
+           // console.log("Hash_table_0x88_C -> при чтении превышен максимальный размер хеш таблицы ");
+           // console.log("Hash_table_0x88_C -> hi_key " + hi_key);
             return 0;
         }
 
@@ -154,12 +154,12 @@ class Hash_table_0x88_C {
             for (max_lenth_2 = 2; max_lenth_2 < hi_key; max_lenth_2 = max_lenth_2 * 2);
 
             if (max_lenth_2 > Hash_table_0x88_C.MAX_MAX_LENTH) {
-                console.log("Hash_table_0x88_C -> достигнут предел расширения массива ");
-                console.log("Hash_table_0x88_C -> hi_key " + hi_key);
+              //  console.log("Hash_table_0x88_C -> достигнут предел расширения массива ");
+              //  console.log("Hash_table_0x88_C -> hi_key " + hi_key);
                 this.hash_table_max_lenth = Hash_table_0x88_C.MAX_MAX_LENTH;
             } else {
-                console.log("Hash_table_0x88_C -> расширяем массив ");
-                console.log("Hash_table_0x88_C -> hi_key " + hi_key);
+               // console.log("Hash_table_0x88_C -> расширяем массив ");
+               // console.log("Hash_table_0x88_C -> hi_key " + hi_key);
 
                 // расширяем массив
                 // for (let h = this.hash_table_max_lenth; h < (max_lenth_2 + 1); h++) {

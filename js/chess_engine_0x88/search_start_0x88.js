@@ -17,6 +17,7 @@ class Search_start_0x88_C {
   unmake_move_0x88_O = new Unmake_move_0x88_C();
   evaluate_0x88_O = new Evaluate_0x88_C();
   hash_table_0x88_O = new Hash_table_0x88_C();
+  killer_heuristic_0x88_C = new Killer_heuristic_0x88_C();
 
   search_negamax_0x88_O = new Search_negamax_0x88_C();//TEST_NEGAMAX
   search_ab_0x88_O = new Search_ab_0x88_C();
@@ -52,7 +53,8 @@ class Search_start_0x88_C {
   }
 
   // negamax
-  test_start_search_nm(pv_line_0x88_O, chess_board_0x88_O, move_gen_1_captures_0x88_O, move_gen_2_quiet_0x88_O, depth_max) {
+  test_start_search_nm(pv_line_0x88_O, chess_board_0x88_O, move_gen_1_captures_0x88_O, 
+    move_gen_2_quiet_0x88_O, depth_max) {
     let depth = 0;
 
     this.chess_board_0x88_O_save_test.save_chess_board_0x88(chess_board_0x88_O);
@@ -88,7 +90,8 @@ class Search_start_0x88_C {
   }
 
   // alpha beta
-  test_start_search_ab(pv_line_0x88_O, chess_board_0x88_O, move_gen_1_captures_0x88_O, move_gen_2_quiet_0x88_O, depth_max) {
+  test_start_search_ab(pv_line_0x88_O, chess_board_0x88_O, move_gen_1_captures_0x88_O, 
+    move_gen_2_quiet_0x88_O, depth_max) {
     let depth = 0;
     let alpha = Search_start_0x88_C.ALPHA_VALUE;
     let beta = Search_start_0x88_C.BETA_VALUE;
@@ -102,7 +105,7 @@ class Search_start_0x88_C {
     this.search_ab_0x88_O.node = 0;
 
     let score = this.search_ab_0x88_O.searching_alpha_beta_id(alpha, beta, pv_line_0x88_O, chess_board_0x88_O,//
-      move_gen_1_captures_0x88_O, move_gen_2_quiet_0x88_O, depth, depth_max, isPV_node);
+      move_gen_1_captures_0x88_O, move_gen_2_quiet_0x88_O, depth, depth_max, isPV_node, this.killer_heuristic_0x88_C);
 
     // let score = this.search_ab_0x88_O.searching_alpha_beta_test(alpha, beta, pv_line_0x88_O, chess_board_0x88_O,//
     //   move_gen_1_captures_0x88_O, move_gen_2_quiet_0x88_O, depth, depth_max);
@@ -125,7 +128,8 @@ class Search_start_0x88_C {
 
   /////////////////////////////////
   // 
-  searching_iterative_deepening(pv_line_0x88_O, chess_board_0x88_O, move_gen_1_captures_0x88_O, move_gen_2_quiet_0x88_O, depth_max_2) {
+  searching_iterative_deepening(pv_line_0x88_O, chess_board_0x88_O, move_gen_1_captures_0x88_O, 
+    move_gen_2_quiet_0x88_O, depth_max_2) {
 
     let undo_0x88_O = new Undo_0x88_C();
     let best_node_line_0x88_O = new PV_line_0x88_C();
@@ -153,6 +157,11 @@ class Search_start_0x88_C {
     move_gen_2_quiet_0x88_O.generated_pseudo_legal_moves(chess_board_0x88_O, move_list_0x88_O);
     // первый раз сортируем по типу хода.
     move_list_0x88_O.sorting_list();
+    this.hash_table_0x88_O.iniM();
+    //move_list_0x88_O.test_print_list(chess_board_0x88_O);
+
+    //move_list_0x88_O.set_move_after_the_captures(56);
+    //move_list_0x88_O.test_print_list(chess_board_0x88_O);
 
     console.log("Search_0x88_C->начало поиска searching_alpha_beta_id ");
     //    move_list_0x88_O.test_print_list(chess_board_0x88_O);
@@ -170,8 +179,9 @@ class Search_start_0x88_C {
       alpha = Search_start_0x88_C.ALPHA_VALUE;
       beta = Search_start_0x88_C.BETA_VALUE;
 
-      pv_line_0x88_O.clear_list()
-      this.hash_table_0x88_O.iniM();
+      pv_line_0x88_O.clear_list();
+      //this.hash_table_0x88_O.iniM();
+      this.killer_heuristic_0x88_C.clear_list();
       // идем по списку ходов
       for (let move_i = 0; move_i < move_list_0x88_O.number_move; move_i++) {
 
@@ -196,7 +206,8 @@ class Search_start_0x88_C {
         //        score = -1 * this.search_ab_0x88_O.searching_alpha_beta_test(alpha, beta, pv_line_0x88_O, chess_board_0x88_O,
         //move_gen_1_captures_0x88_O, move_gen_2_quiet_0x88_O, (depth + 1), depth_max);
         score = this.search_ab_0x88_O.searching_alpha_beta_id(alpha, beta, pv_line_0x88_O, chess_board_0x88_O,
-          move_gen_1_captures_0x88_O, move_gen_2_quiet_0x88_O, (depth + 1), depth_max, isPV_node, this.hash_table_0x88_O);
+          move_gen_1_captures_0x88_O, move_gen_2_quiet_0x88_O, (depth + 1), depth_max, 
+          isPV_node, this.hash_table_0x88_O, this.killer_heuristic_0x88_C);
 
         this.node = this.node + this.search_ab_0x88_O.node + 1;
 

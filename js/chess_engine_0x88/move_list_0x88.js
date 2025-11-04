@@ -293,7 +293,61 @@ class Move_list_0x88_С {
         return move_str;
     }
 
+    // ставим сразу после взятий. это для киллеров
+    set_move_after_the_captures(type_move) {
+ 
+        let save_type_move = -1;
+        let save_piece_color;
+        let save_score_move;
 
+        let save_from;
+        let save_to;
+
+        let s_m;
+        let start = this.number_captures_move;
+
+
+       if (this.type_move[start] == type_move) return -1;
+
+       //console.log("Move_list_0x88_С-> UP -----------------------------------");
+        // 1 ищем ход в списке
+        for (s_m = start; s_m < this.number_move; s_m++) {// перебираем оставшийся список
+            if (this.type_move[s_m] == type_move) {
+                // ход нашли и записали
+                save_type_move = this.type_move[s_m];
+                save_piece_color = this.piece_color[s_m];
+                save_score_move = this.score_move[s_m];
+                save_from = this.from[s_m];
+                save_to = this.to[s_m];
+                break;
+            }
+        }
+       // console.log("Move_list_0x88_С-> UP 2 start " + start);
+      //console.log("Move_list_0x88_С-> UP 2 s_m " + s_m);
+
+        // ход не нашли
+        if (save_type_move == -1) return -1;
+
+        // 2 сдвигаем позиции выше найденной вниз
+        for (let i = s_m; i > start; i--) {
+            // если на позиции есть взятая фигура
+            // пишем на позицию
+            this.type_move[i] = this.type_move[i - 1];
+            this.piece_color[i] = this.piece_color[i - 1];
+            this.score_move[i] = this.score_move[i - 1];
+            this.from[i] = this.from[i - 1];
+            this.to[i] = this.to[i - 1];
+
+        }
+
+        // сюда пишем начальную позицию. т.о. две позиции меняются местами
+        this.type_move[start] = save_type_move;
+        this.piece_color[start] = save_piece_color;
+        this.score_move[start] = save_score_move;
+        this.from[start] = save_from;
+        this.to[start] = save_to;
+
+    }//
 
     sorting_list_top_max_score() {
 
@@ -333,7 +387,6 @@ class Move_list_0x88_С {
                 }
             }
         }
-
     }
 
     sorting_list_top_min_score() {

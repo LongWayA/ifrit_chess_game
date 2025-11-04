@@ -14,6 +14,7 @@
 importScripts("../chess_engine_0x88/chess_board_0x88.js");
 importScripts("../chess_engine_0x88/hash_table_0x88.js");
 importScripts("../chess_engine_0x88/move_list_0x88.js");
+importScripts("../chess_engine_0x88/killer_heuristic_0x88.js");
 importScripts("../chess_engine_0x88/move_gen_1_captures_0x88.js");
 importScripts("../chess_engine_0x88/move_gen_2_quiet_0x88.js");
 importScripts("../chess_engine_0x88/undo_0x88.js");
