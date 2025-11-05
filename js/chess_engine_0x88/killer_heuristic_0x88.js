@@ -11,16 +11,16 @@
 
 */
 
-class Killer_heuristic_0x88_C {
+class killer_heuristic_0x88_O {
 
-  static NAME = "Killer_heuristic_0x88_C";
+  static NAME = "killer_heuristic_0x88_O";
 
   static MAX_DEPTH = 100;
 
-  killer_moves_type_move_1 = new Array(Killer_heuristic_0x88_C.MAX_DEPTH).fill(-1);
-  killer_moves_to_1 = new Array(Killer_heuristic_0x88_C.MAX_DEPTH).fill(-1);
-  killer_moves_type_move_2 = new Array(Killer_heuristic_0x88_C.MAX_DEPTH).fill(-1);
-  killer_moves_to_2 = new Array(Killer_heuristic_0x88_C.MAX_DEPTH).fill(-1);
+  killer_moves_type_move_1 = new Array(killer_heuristic_0x88_O.MAX_DEPTH).fill(-1);
+  killer_moves_to_1 = new Array(killer_heuristic_0x88_O.MAX_DEPTH).fill(-1);
+  killer_moves_type_move_2 = new Array(killer_heuristic_0x88_O.MAX_DEPTH).fill(-1);
+  killer_moves_to_2 = new Array(killer_heuristic_0x88_O.MAX_DEPTH).fill(-1);
 
   depth_max = 0;
 
@@ -33,7 +33,7 @@ class Killer_heuristic_0x88_C {
   }
 
   clear_list() {
-    for (let i = 0; i < Killer_heuristic_0x88_C.MAX_DEPTH; i++) {
+    for (let i = 0; i < killer_heuristic_0x88_O.MAX_DEPTH; i++) {
       this.killer_moves_type_move_1[i] = -1;
       this.killer_moves_to_1[i] = -1;
       this.killer_moves_type_move_2[i] = -1;
@@ -46,7 +46,7 @@ class Killer_heuristic_0x88_C {
   add_move(type_move, to, depth) {
 
     if (type_move > Move_list_0x88_С.CAPTURES_KING_PAWN) {// ход не взятие
-      //console.log('Killer_heuristic_0x88_C->add_move depth ' + depth +" type_move " + type_move);
+      //console.log('killer_heuristic_0x88_O->add_move depth ' + depth +" type_move " + type_move);
       if (this.killer_moves_type_move_1[depth] != type_move) {
         this.killer_moves_type_move_2[depth] = this.killer_moves_type_move_1[depth];
          this.killer_moves_to_2[depth] = this.killer_moves_to_1[depth];       

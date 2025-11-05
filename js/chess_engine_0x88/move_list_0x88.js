@@ -293,6 +293,52 @@ class Move_list_0x88_С {
         return move_str;
     }
 
+    sorting_list_history_heuristic(history_heuristic_0x88_O) {
+
+        let save_type_move;
+        let save_piece_color;
+        let save_score_move;
+
+        let save_from;
+        let save_to;
+
+        let start = this.number_captures_move;
+
+        //console.log("Move_list_0x88_С-> SORTING -----------------------------------");
+        // выводим в начало списка ходы с максимальной оценкой. нужно белым
+        for (let i = start; i < this.number_move; i++) {
+            for (let j = i + 1; j < this.number_move; j++) {// перебираем оставшийся список
+                // 
+
+                if (history_heuristic_0x88_O.history[this.piece_color[i]][this.type_move[i]][this.to[i]] < 
+                    history_heuristic_0x88_O.history[this.piece_color[j]][this.type_move[j]][this.to[j]]) {
+                    // сохраняем позицию на которую будем писать
+                    save_type_move = this.type_move[i];
+                    save_piece_color = this.piece_color[i];
+                    save_score_move = this.score_move[i];
+                    save_from = this.from[i];
+                    save_to = this.to[i];
+
+                    // пишем на позицию
+                    this.type_move[i] = this.type_move[j];
+                    this.piece_color[i] = this.piece_color[j];
+                    this.score_move[i] = this.score_move[j];
+                    this.from[i] = this.from[j];
+                    this.to[i] = this.to[j];
+
+                    // сюда пишем начальную позицию. т.о. две позиции меняются местами
+                    this.type_move[j] = save_type_move;
+                    this.piece_color[j] = save_piece_color;
+                    this.score_move[j] = save_score_move;
+                    this.from[j] = save_from;
+                    this.to[j] = save_to;
+                }
+            }
+        }
+    }
+
+
+
     // ставим сразу после взятий. это для киллеров
     set_move_after_the_captures(type_move, to) {
  

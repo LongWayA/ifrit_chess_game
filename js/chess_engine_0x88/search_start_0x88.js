@@ -17,7 +17,8 @@ class Search_start_0x88_C {
   unmake_move_0x88_O = new Unmake_move_0x88_C();
   evaluate_0x88_O = new Evaluate_0x88_C();
   hash_table_0x88_O = new Hash_table_0x88_C();
-  killer_heuristic_0x88_C = new Killer_heuristic_0x88_C();
+  killer_heuristic_0x88_O = new killer_heuristic_0x88_O();
+  history_heuristic_0x88_O = new History_heuristic_0x88_C; 
 
   search_negamax_0x88_O = new Search_negamax_0x88_C();//TEST_NEGAMAX
   search_ab_0x88_O = new Search_ab_0x88_C();
@@ -49,6 +50,7 @@ class Search_start_0x88_C {
 
   iniM() {
     this.hash_table_0x88_O.iniM();
+    this.history_heuristic_0x88_O.iniM();
     //for tactical and quiet moves
   }
 
@@ -105,7 +107,8 @@ class Search_start_0x88_C {
     this.search_ab_0x88_O.node = 0;
 
     let score = this.search_ab_0x88_O.searching_alpha_beta_id(alpha, beta, pv_line_0x88_O, chess_board_0x88_O,//
-      move_gen_1_captures_0x88_O, move_gen_2_quiet_0x88_O, depth, depth_max, isPV_node, this.killer_heuristic_0x88_C);
+      move_gen_1_captures_0x88_O, move_gen_2_quiet_0x88_O, depth, depth_max, isPV_node, 
+      this.killer_heuristic_0x88_O, this.history_heuristic_0x88_O);
 
     // let score = this.search_ab_0x88_O.searching_alpha_beta_test(alpha, beta, pv_line_0x88_O, chess_board_0x88_O,//
     //   move_gen_1_captures_0x88_O, move_gen_2_quiet_0x88_O, depth, depth_max);
@@ -181,7 +184,7 @@ class Search_start_0x88_C {
 
       pv_line_0x88_O.clear_list();
       //this.hash_table_0x88_O.iniM();
-      this.killer_heuristic_0x88_C.clear_list();
+      this.killer_heuristic_0x88_O.clear_list();
       // идем по списку ходов
       for (let move_i = 0; move_i < move_list_0x88_O.number_move; move_i++) {
 
@@ -207,7 +210,7 @@ class Search_start_0x88_C {
         //move_gen_1_captures_0x88_O, move_gen_2_quiet_0x88_O, (depth + 1), depth_max);
         score = this.search_ab_0x88_O.searching_alpha_beta_id(alpha, beta, pv_line_0x88_O, chess_board_0x88_O,
           move_gen_1_captures_0x88_O, move_gen_2_quiet_0x88_O, (depth + 1), depth_max, 
-          isPV_node, this.hash_table_0x88_O, this.killer_heuristic_0x88_C);
+          isPV_node, this.hash_table_0x88_O, this.killer_heuristic_0x88_O, this.history_heuristic_0x88_O);
 
         this.node = this.node + this.search_ab_0x88_O.node + 1;
 

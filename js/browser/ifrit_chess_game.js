@@ -127,9 +127,9 @@ let IfritChessGame_R = {
         //IfritChessGame_R.stateGame_O.test = StateGame_C.TEST_NEGAMAX;//        
         //IfritChessGame_R.stateGame_O.test = StateGame_C.TEST_AB;//
 
-        //IfritChessGame_R.stateGame_O.test = StateGame_C.TEST_ID;//
+        IfritChessGame_R.stateGame_O.test = StateGame_C.TEST_ID;//
 
-        IfritChessGame_R.stateGame_O.test = StateGame_C.TEST_MESSAGE;//       
+        //IfritChessGame_R.stateGame_O.test = StateGame_C.TEST_MESSAGE;//       
 
         // задаем глубину перебора во время игры или обсчета тестовых позиций на количество узлов
         IfritChessGame_R.stateGame_O.depth_max = 2;
@@ -184,7 +184,7 @@ let IfritChessGame_R = {
                 " nodes " + IfritChessGame_R.stateGame_O.nodes +
                 " score " + IfritChessGame_R.stateGame_O.score;
         }
-        text_chess_game.value = " Версия 04.11м.25";
+        text_chess_game.value = " Версия 05.11м.25";
         text_chess_game.value += "\n Возврат хода еще не сделан.";
         text_chess_game.value += "\n Game: ";
     },

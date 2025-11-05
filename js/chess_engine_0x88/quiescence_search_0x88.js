@@ -29,7 +29,7 @@ class Quiescence_search_0x88_C {
   }
 
   //quiescence_search(alpha, beta, pv_line_0x88_O, chess_board_0x88_O, move_gen_1_captures_0x88_O, depth) {
-  quiescence_search(alpha, beta, chess_board_0x88_O, move_gen_1_captures_0x88_O, depth, hash_table_0x88_O) {
+  quiescence_search(alpha, beta, chess_board_0x88_O, move_gen_1_captures_0x88_O, depth) {
     let undo_0x88_O = new Undo_0x88_C();
     let score = 0;// текущая оценка позиции
     let best_value;// максимальная оценка позиции
@@ -37,7 +37,7 @@ class Quiescence_search_0x88_C {
     let is_moove_legal = -1;
     let move_list_0x88_O = new Move_list_0x88_С();
 
-    let static_eval = this.evaluate_0x88_O.score_position(chess_board_0x88_O, hash_table_0x88_O);
+    let static_eval = this.evaluate_0x88_O.score_position(chess_board_0x88_O);
     this.node = this.node + 1;
 
     // Stand Pat =====================================
@@ -70,7 +70,7 @@ class Quiescence_search_0x88_C {
         continue;
       }
 
-      score = this.quiescence_search(alpha, beta, chess_board_0x88_O, move_gen_1_captures_0x88_O, (depth + 1), hash_table_0x88_O);
+      score = this.quiescence_search(alpha, beta, chess_board_0x88_O, move_gen_1_captures_0x88_O, (depth + 1));
 
       //move_list_0x88_O.score_move[move_i] = score;
 
