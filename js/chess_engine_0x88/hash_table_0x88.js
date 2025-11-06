@@ -18,7 +18,9 @@ class Hash_table_0x88_C {
 
     static NAME = "Hash_table_0x88_C";
     //8 388 480
-    static MAX_MAX_LENTH = 8_388_608;//2 097 152; 4 194 304; 8 388 608; 16 777 216
+    //static MAX_MAX_LENTH = 2_097_152;//2 097 152; 4 194 304; 8 388 608; 16 777 216
+    //static MAX_MAX_LENTH = 16_777_216;//2 097 152; 4 194 304; 8 388 608; 16 777 216
+    static MAX_MAX_LENTH = 1_024;//1_024 2_048 4_096 8_192 16_384 32_768 65_536
 
     static ALPHA_UPDATE = 1;
     static BETA_UPDATE = 2;
@@ -67,6 +69,39 @@ class Hash_table_0x88_C {
         this.z_add = 0;
     }
 
+    clear_hash() {
+        for (let i = 0; i < Hash_table_0x88_C.MAX_MAX_LENTH; i++) {
+            hash_table_lo_key = -1; // тип хода в записанной позиции
+            hash_table_type_move = -1; // тип хода в записанной позиции
+            hash_table_i_move = -1; // номер хода в записанной позиции 
+            hash_table_score = -1; // оценка записанной позиции      
+            hash_table_delta_depth = -1;// дельта просчитанной глубины max_depth - depth
+
+            hash_table_fen = ""; // тип хода в записанной позиции
+        }
+        hash_table_max_lenth = 10;
+    }
+
+
+    test_uses_hash() {
+
+        let us = 0;
+        let not_us = 0;
+
+        for (let i = 0; i < Hash_table_0x88_C.MAX_MAX_LENTH; i++) {
+
+            if (this.hash_table_lo_key[i] != -1) {
+                us = us + 1;
+            } else {
+                not_us = not_us + 1;
+            }
+        }
+
+        console.log("Hash_table_0x88_C -> us " + us + " not_us " + not_us);
+
+    }
+
+
     is_save_position(chess_board_0x88_O, depth, max_depth) {
 
         this.z = this.z + 1;
@@ -84,8 +119,8 @@ class Hash_table_0x88_C {
         //Math.floor();
 
         if (hi_key > Hash_table_0x88_C.MAX_MAX_LENTH) {
-           // console.log("Hash_table_0x88_C -> при чтении превышен максимальный размер хеш таблицы ");
-           // console.log("Hash_table_0x88_C -> hi_key " + hi_key);
+            // console.log("Hash_table_0x88_C -> при чтении превышен максимальный размер хеш таблицы ");
+            // console.log("Hash_table_0x88_C -> hi_key " + hi_key);
             return 0;
         }
 
@@ -143,8 +178,8 @@ class Hash_table_0x88_C {
         //console.log("Hash_table_0x88_C -> hi_key " + hi_key + " hi_key_board_0x88 " + hi_key_board_0x88);
 
         if (hi_key > Hash_table_0x88_C.MAX_MAX_LENTH) {
-           // console.log("Hash_table_0x88_C -> при чтении превышен максимальный размер хеш таблицы ");
-           // console.log("Hash_table_0x88_C -> hi_key " + hi_key);
+            // console.log("Hash_table_0x88_C -> при чтении превышен максимальный размер хеш таблицы ");
+            // console.log("Hash_table_0x88_C -> hi_key " + hi_key);
             return 0;
         }
 
@@ -154,12 +189,12 @@ class Hash_table_0x88_C {
             for (max_lenth_2 = 2; max_lenth_2 < hi_key; max_lenth_2 = max_lenth_2 * 2);
 
             if (max_lenth_2 > Hash_table_0x88_C.MAX_MAX_LENTH) {
-              //  console.log("Hash_table_0x88_C -> достигнут предел расширения массива ");
-              //  console.log("Hash_table_0x88_C -> hi_key " + hi_key);
+                //  console.log("Hash_table_0x88_C -> достигнут предел расширения массива ");
+                //  console.log("Hash_table_0x88_C -> hi_key " + hi_key);
                 this.hash_table_max_lenth = Hash_table_0x88_C.MAX_MAX_LENTH;
             } else {
-               // console.log("Hash_table_0x88_C -> расширяем массив ");
-               // console.log("Hash_table_0x88_C -> hi_key " + hi_key);
+                // console.log("Hash_table_0x88_C -> расширяем массив ");
+                // console.log("Hash_table_0x88_C -> hi_key " + hi_key);
 
                 // расширяем массив
                 // for (let h = this.hash_table_max_lenth; h < (max_lenth_2 + 1); h++) {

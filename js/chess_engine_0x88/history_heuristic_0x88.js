@@ -37,10 +37,12 @@ class History_heuristic_0x88_C {
   }
 
   clear_history() {
+    //let g = 0;
     for (let color = 0; color < History_heuristic_0x88_C.MAX_COLOR; color++) {
       for (let type_move = 1; type_move < History_heuristic_0x88_C.MAX_TYPE_MOVE; type_move++) {
         for (let sq = 1; sq < History_heuristic_0x88_C.MAX_COORDINATE; sq++) {
-          this.history[color][type_move][sq] = -1;
+          //g = g + 1;
+          this.history[color][type_move][Chess_board_0x88_C.SQUARE_64[sq]] = -1;//-1 g
         }
       }
     }
@@ -50,13 +52,15 @@ class History_heuristic_0x88_C {
 
     let delta_depth = depth_max - depth;
 
-    this.history[color][type_move][to] = this.history[color][type_move][to] + delta_depth * delta_depth;
+    this.history[color][type_move][Chess_board_0x88_C.SQUARE_64[to]] = 
+    this.history[color][type_move][Chess_board_0x88_C.SQUARE_64[to]] + delta_depth * delta_depth;
 
-    if (this.history[color][type_move][to] > History_heuristic_0x88_C.MAX_HISTORY) {
+    if (this.history[color][type_move][Chess_board_0x88_C.SQUARE_64[to]] > History_heuristic_0x88_C.MAX_HISTORY) {
       for (let color = 0; color < History_heuristic_0x88_C.MAX_COLOR; color++) {
         for (let type_move = 1; type_move < History_heuristic_0x88_C.MAX_TYPE_MOVE; type_move++) {
           for (let sq = 1; sq < History_heuristic_0x88_C.MAX_COORDINATE; sq++) {
-            this.history[color][type_move][sq] = this.history[color][type_move][sq]/2;
+            this.history[color][type_move][Chess_board_0x88_C.SQUARE_64[sq]] = 
+            this.history[color][type_move][Chess_board_0x88_C.SQUARE_64[sq]]/2;
           }
         }
       }
@@ -67,18 +71,19 @@ class History_heuristic_0x88_C {
 
     let delta_depth = depth_max - depth;
 
-    this.history[color][type_move][to] = this.history[color][type_move][to] - delta_depth * delta_depth;
+    this.history[color][type_move][Chess_board_0x88_C.SQUARE_64[to]] = 
+    this.history[color][type_move][Chess_board_0x88_C.SQUARE_64[to]] - delta_depth * delta_depth;
 
-    if (this.history[color][type_move][to] < -1 * History_heuristic_0x88_C.MAX_HISTORY) {
+    if (this.history[color][type_move][Chess_board_0x88_C.SQUARE_64[to]] < -1 * History_heuristic_0x88_C.MAX_HISTORY) {
       for (let color = 0; color < History_heuristic_0x88_C.MAX_COLOR; color++) {
         for (let type_move = 1; type_move < History_heuristic_0x88_C.MAX_TYPE_MOVE; type_move++) {
           for (let sq = 1; sq < History_heuristic_0x88_C.MAX_COORDINATE; sq++) {
-            this.history[color][type_move][sq] = this.history[color][type_move][sq]/2;
+            this.history[color][type_move][Chess_board_0x88_C.SQUARE_64[sq]] = 
+            this.history[color][type_move][Chess_board_0x88_C.SQUARE_64[sq]]/2;
           }
         }
       }
     }
   }
-
 }
 

@@ -54,6 +54,8 @@ class Search_ab_0x88_C {
 
     let undo_0x88_O = new Undo_0x88_C();
     let best_node_line_0x88_O = new PV_line_0x88_C();
+    //let test_save_move_list_0x88_O = new Move_list_0x88_С();
+
     let score = 0;// текущая оценка позиции
     let found_score;// максимальная оценка позиции
     //let found_score_test;// максимальная оценка позиции    
@@ -121,7 +123,11 @@ class Search_ab_0x88_C {
       //  console.log("Search_0x88_C->depth " + depth + "после сортировки <<<<<<<<<<<<<<<<<<<<<<<<<<<<<");       
       //  move_list_0x88_O.test_print_list(chess_board_0x88_O); 
       move_gen_2_quiet_0x88_O.generated_pseudo_legal_moves(chess_board_0x88_O, move_list_0x88_O);
+
+      //test_save_move_list_0x88_O.save_list_from(move_list_0x88_O);
+
       move_list_0x88_O.sorting_list();
+
       move_list_0x88_O.sorting_list_history_heuristic(history_heuristic_0x88_O);
 
       if (killer_heuristic_0x88_O.killer_moves_type_move_2[depth] != -1) {
@@ -141,6 +147,8 @@ class Search_ab_0x88_C {
           killer_heuristic_0x88_O.killer_moves_to_1[depth]);
         //console.log("Search_0x88_C->type_move[0] после " + move_list_0x88_O.type_move[0]);
       };
+
+      //test_save_move_list_0x88_O.test_compare_list_from(move_list_0x88_O);
 
       for (let move_i = 0; move_i < move_list_0x88_O.number_move; move_i++) {
 
@@ -203,8 +211,8 @@ class Search_ab_0x88_C {
             //if (depth == 0) this.chess_board_0x88_O_move.save_chess_board_0x88(chess_board_0x88_O);
             if (score > alpha) {
               alpha = score; //
-              history_heuristic_0x88_O.history_good_save(move_list_0x88_O.piece_color[move_i],
-                move_list_0x88_O.type_move[move_i], move_list_0x88_O.to[move_i], depth, depth_max);
+              // history_heuristic_0x88_O.history_good_save(move_list_0x88_O.piece_color[move_i],
+              //   move_list_0x88_O.type_move[move_i], move_list_0x88_O.to[move_i], depth, depth_max);
               if (isPV == 1) {
                 best_node_line_0x88_O.save_list(pv_line_0x88_O);
                 best_node_line_0x88_O.type_variant[depth] = "ab_W";
@@ -232,8 +240,8 @@ class Search_ab_0x88_C {
             //if (depth == 0) this.chess_board_0x88_O_move.save_chess_board_0x88(chess_board_0x88_O);
             if (score < beta) {
               beta = score; //
-              history_heuristic_0x88_O.history_good_save(move_list_0x88_O.piece_color[move_i],
-                move_list_0x88_O.type_move[move_i], move_list_0x88_O.to[move_i], depth, depth_max);
+              // history_heuristic_0x88_O.history_good_save(move_list_0x88_O.piece_color[move_i],
+              //   move_list_0x88_O.type_move[move_i], move_list_0x88_O.to[move_i], depth, depth_max);
               if (isPV == 1) {
                 best_node_line_0x88_O.save_list(pv_line_0x88_O);
                 best_node_line_0x88_O.type_variant[depth] = "ab_B";

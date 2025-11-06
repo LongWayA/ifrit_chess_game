@@ -181,6 +181,150 @@ class Move_list_0x88_С {
         this.number_move = 0;
     }
 
+    sorting_list_history_heuristic(history_heuristic_0x88_O) {
+
+        let save_type_move;
+        let save_piece_color;
+        let save_score_move;
+
+        let save_from;
+        let save_to;
+
+        let start = this.number_captures_move;
+
+        //console.log("Move_list_0x88_С-> SORTING -----------------------------------");
+        // выводим в начало списка ходы с максимальной оценкой. нужно белым
+        for (let i = start; i < this.number_move; i++) {
+            for (let j = i + 1; j < this.number_move; j++) {// перебираем оставшийся список
+                // 
+
+                if (history_heuristic_0x88_O.history[this.piece_color[i]][this.type_move[i]][this.to[i]] <
+                    history_heuristic_0x88_O.history[this.piece_color[j]][this.type_move[j]][this.to[j]]) {
+                    // сохраняем позицию на которую будем писать
+                    save_type_move = this.type_move[i];
+                    save_piece_color = this.piece_color[i];
+                    save_score_move = this.score_move[i];
+                    save_from = this.from[i];
+                    save_to = this.to[i];
+
+                    // пишем на позицию
+                    this.type_move[i] = this.type_move[j];
+                    this.piece_color[i] = this.piece_color[j];
+                    this.score_move[i] = this.score_move[j];
+                    //this.score_move[i] = history_heuristic_0x88_O.history[this.piece_color[j]][this.type_move[j]][this.to[j]];
+                    this.from[i] = this.from[j];
+                    this.to[i] = this.to[j];
+
+                    // сюда пишем начальную позицию. т.о. две позиции меняются местами
+                    this.type_move[j] = save_type_move;
+                    this.piece_color[j] = save_piece_color;
+                    this.score_move[j] = save_score_move;
+                    this.from[j] = save_from;
+                    this.to[j] = save_to;
+                }
+            }
+        }
+    }
+
+    save_list_from(move_list_0x88_O) {
+        for (let i = 0; i < move_list_0x88_O.number_move; i++) {
+            this.type_move[i] = move_list_0x88_O.type_move[i];
+            this.piece_color[i] = move_list_0x88_O.piece_color[i];
+            this.score_move[i] = move_list_0x88_O.score_move[i];
+            this.from[i] = move_list_0x88_O.from[i];
+            this.to[i] = move_list_0x88_O.to[i];
+        }
+        this.number_captures_move = move_list_0x88_O.number_captures_move;
+        this.number_move = move_list_0x88_O.number_move;
+
+    }
+
+    test_compare_list_from(move_list_0x88_O) {
+
+        let number_move_equal = 0;
+        let number_move_not_equal = 0;
+
+        for (let i = 0; i < this.number_move; i++) {
+            for (let j = 0; j < this.number_move; j++) {
+                if (
+                    (this.type_move[i] == move_list_0x88_O.type_move[j]) &&
+                    (this.piece_color[i] == move_list_0x88_O.piece_color[j]) &&
+                    (this.score_move[i] == move_list_0x88_O.score_move[j]) &&
+                    (this.from[i] == move_list_0x88_O.from[j]) &&
+                    (this.to[i] == move_list_0x88_O.to[j])
+                ) {
+                    number_move_equal = number_move_equal + 1;
+                    // console.log('Move_list_0x88_С->i ' + i + " j " + j);
+                    // console.log('Move_list_0x88_С->this.from[i] ' + this.from[i] +
+                    //     " this.to[i] " + this.to[i]);
+
+                } else {
+                    number_move_not_equal = number_move_not_equal + 1;
+                }
+            }
+        }
+        this.number_captures_move = move_list_0x88_O.number_captures_move;
+        this.number_move = move_list_0x88_O.number_move;
+
+        //console.log('Move_list_0x88_С-> test_compare_list_from');
+        if (this.number_captures_move != move_list_0x88_O.number_captures_move) {
+            console.log('Move_list_0x88_С->this.number_captures_move ' + this.number_captures_move +
+                " move_list_0x88_O.number_captures_move " + move_list_0x88_O.number_captures_move);
+        }
+
+        if (this.number_move != move_list_0x88_O.number_move) {
+            console.log('Move_list_0x88_С->this.number_move ' + this.number_move +
+                " move_list_0x88_O.number_move " + move_list_0x88_O.number_move);
+        }
+
+        if (this.number_move != number_move_equal) {
+            console.log('Move_list_0x88_С->this.number_move ' + this.number_move);
+            console.log('Move_list_0x88_С->number_move_equal ' + number_move_equal);
+            console.log('Move_list_0x88_С->number_move_not_equal ' + number_move_not_equal);
+        }
+    }
+
+    sorting_list() {
+
+        let save_type_move;
+        let save_piece_color;
+        let save_score_move;
+
+        let save_from;
+        let save_to;
+
+        //console.log("Move_list_0x88_С-> SORTING -----------------------------------");
+        // выводим в начало списка отсортированные взятия. так что самая слабая берущая фигура в самом начале
+        for (let i = 0; i < this.number_move; i++) {
+            for (let j = i + 1; j < this.number_move; j++) {// перебираем оставшийся список
+                // если на позиции есть взятая фигура
+                if (this.type_move[i] >= this.type_move[j]) {
+                    // сохраняем позицию на которую будем писать
+                    save_type_move = this.type_move[i];
+                    save_piece_color = this.piece_color[i];
+                    save_score_move = this.score_move[i];
+                    save_from = this.from[i];
+                    save_to = this.to[i];
+
+                    // пишем на позицию
+                    this.type_move[i] = this.type_move[j];
+                    this.piece_color[i] = this.piece_color[j];
+                    this.score_move[i] = this.score_move[j];
+                    this.from[i] = this.from[j];
+                    this.to[i] = this.to[j];
+
+                    // сюда пишем начальную позицию. т.о. две позиции меняются местами
+                    this.type_move[j] = save_type_move;
+                    this.piece_color[j] = save_piece_color;
+                    this.score_move[j] = save_score_move;
+                    this.from[j] = save_from;
+                    this.to[j] = save_to;
+                }
+            }
+        }
+    }
+
+
     // 
     add_move(type_move, piece_color, score_move, from, to) {
         //console.log('Move_list_0x88_С->add_move');
@@ -293,55 +437,9 @@ class Move_list_0x88_С {
         return move_str;
     }
 
-    sorting_list_history_heuristic(history_heuristic_0x88_O) {
-
-        let save_type_move;
-        let save_piece_color;
-        let save_score_move;
-
-        let save_from;
-        let save_to;
-
-        let start = this.number_captures_move;
-
-        //console.log("Move_list_0x88_С-> SORTING -----------------------------------");
-        // выводим в начало списка ходы с максимальной оценкой. нужно белым
-        for (let i = start; i < this.number_move; i++) {
-            for (let j = i + 1; j < this.number_move; j++) {// перебираем оставшийся список
-                // 
-
-                if (history_heuristic_0x88_O.history[this.piece_color[i]][this.type_move[i]][this.to[i]] < 
-                    history_heuristic_0x88_O.history[this.piece_color[j]][this.type_move[j]][this.to[j]]) {
-                    // сохраняем позицию на которую будем писать
-                    save_type_move = this.type_move[i];
-                    save_piece_color = this.piece_color[i];
-                    save_score_move = this.score_move[i];
-                    save_from = this.from[i];
-                    save_to = this.to[i];
-
-                    // пишем на позицию
-                    this.type_move[i] = this.type_move[j];
-                    this.piece_color[i] = this.piece_color[j];
-                    this.score_move[i] = this.score_move[j];
-                    this.from[i] = this.from[j];
-                    this.to[i] = this.to[j];
-
-                    // сюда пишем начальную позицию. т.о. две позиции меняются местами
-                    this.type_move[j] = save_type_move;
-                    this.piece_color[j] = save_piece_color;
-                    this.score_move[j] = save_score_move;
-                    this.from[j] = save_from;
-                    this.to[j] = save_to;
-                }
-            }
-        }
-    }
-
-
-
     // ставим сразу после взятий. это для киллеров
     set_move_after_the_captures(type_move, to) {
- 
+
         let save_type_move = -1;
         let save_piece_color;
         let save_score_move;
@@ -353,12 +451,12 @@ class Move_list_0x88_С {
         let start = this.number_captures_move;
 
 
-       if (this.type_move[start] == type_move) return -1;
+        if (this.type_move[start] == type_move) return -1;
 
-       //console.log("Move_list_0x88_С-> UP -----------------------------------");
+        //console.log("Move_list_0x88_С-> UP -----------------------------------");
         // 1 ищем ход в списке
         for (s_m = start; s_m < this.number_move; s_m++) {// перебираем оставшийся список
-            if ((this.type_move[s_m] == type_move) && (this.to[s_m] == to)){
+            if ((this.type_move[s_m] == type_move) && (this.to[s_m] == to)) {
                 // ход нашли и записали
                 save_type_move = this.type_move[s_m];
                 save_piece_color = this.piece_color[s_m];
@@ -368,8 +466,8 @@ class Move_list_0x88_С {
                 break;
             }
         }
-       // console.log("Move_list_0x88_С-> UP 2 start " + start);
-      //console.log("Move_list_0x88_С-> UP 2 s_m " + s_m);
+        // console.log("Move_list_0x88_С-> UP 2 start " + start);
+        //console.log("Move_list_0x88_С-> UP 2 s_m " + s_m);
 
         // ход не нашли
         if (save_type_move == -1) return -1;
@@ -476,45 +574,6 @@ class Move_list_0x88_С {
 
     }
 
-    sorting_list() {
-
-        let save_type_move;
-        let save_piece_color;
-        let save_score_move;
-
-        let save_from;
-        let save_to;
-
-        //console.log("Move_list_0x88_С-> SORTING -----------------------------------");
-        // выводим в начало списка отсортированные взятия. так что самая слабая берущая фигура в самом начале
-        for (let i = 0; i < this.number_move; i++) {
-            for (let j = i + 1; j < this.number_move; j++) {// перебираем оставшийся список
-                // если на позиции есть взятая фигура
-                if (this.type_move[i] > this.type_move[j]) {
-                    // сохраняем позицию на которую будем писать
-                    save_type_move = this.type_move[i];
-                    save_piece_color = this.piece_color[i];
-                    save_score_move = this.score_move[i];
-                    save_from = this.from[i];
-                    save_to = this.to[i];
-
-                    // пишем на позицию
-                    this.type_move[i] = this.type_move[j];
-                    this.piece_color[i] = this.piece_color[j];
-                    this.score_move[i] = this.score_move[j];
-                    this.from[i] = this.from[j];
-                    this.to[i] = this.to[j];
-
-                    // сюда пишем начальную позицию. т.о. две позиции меняются местами
-                    this.type_move[j] = save_type_move;
-                    this.piece_color[j] = save_piece_color;
-                    this.score_move[j] = save_score_move;
-                    this.from[j] = save_from;
-                    this.to[j] = save_to;
-                }
-            }
-        }
-    }
 
     // возвращаем название хода превращения пешки со взятием по взятой фигуре
     // например CAPTURES_PAWN_QUEEN_PROMO_QUEEN -> QUEEN; CAPTURES_PAWN_ROOK_PROMO_QUEEN -> QUEEN

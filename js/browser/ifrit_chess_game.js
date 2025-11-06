@@ -127,9 +127,9 @@ let IfritChessGame_R = {
         //IfritChessGame_R.stateGame_O.test = StateGame_C.TEST_NEGAMAX;//        
         //IfritChessGame_R.stateGame_O.test = StateGame_C.TEST_AB;//
 
-        IfritChessGame_R.stateGame_O.test = StateGame_C.TEST_ID;//
+        //IfritChessGame_R.stateGame_O.test = StateGame_C.TEST_ID;//
 
-        //IfritChessGame_R.stateGame_O.test = StateGame_C.TEST_MESSAGE;//       
+        IfritChessGame_R.stateGame_O.test = StateGame_C.TEST_MESSAGE;//       
 
         // задаем глубину перебора во время игры или обсчета тестовых позиций на количество узлов
         IfritChessGame_R.stateGame_O.depth_max = 2;
@@ -184,8 +184,7 @@ let IfritChessGame_R = {
                 " nodes " + IfritChessGame_R.stateGame_O.nodes +
                 " score " + IfritChessGame_R.stateGame_O.score;
         }
-        text_chess_game.value = " Версия 05.11м.25";
-        text_chess_game.value += "\n Возврат хода еще не сделан.";
+        text_chess_game.value = " Возврат хода еще не сделан.";
         text_chess_game.value += "\n Game: ";
     },
 
@@ -356,7 +355,7 @@ let IfritChessGame_R = {
                             // text_engine.value = "max depth " + IfritChessGame_R.stateGame_O.depth_max +
                             //     " nodes " + this.nodes + " score " + this.score;
 
-                            text_engine.value = " 2 После Вашего хода Ифрит будет думать. На это время доска зависнет < 30 сек.";
+                            text_engine.value = " После Вашего хода Ифрит будет думать. На это время доска зависнет.";
 
                             IfritChessGame_R.chessEngine_0x88_O.position(IfritChessGame_R.chessBoard_8x8_O);
                             let info_return_g = IfritChessGame_R.chessEngine_0x88_O.go_depth_id(IfritChessGame_R.stateGame_O.depth_max);
@@ -421,7 +420,7 @@ let IfritChessGame_R = {
                     // рисуем квадратик кликнутой клетки
                     IfritChessGame_R.draw_O.draw_rect(IfritChessGame_R.chessBoard_8x8_O, x_b_n, y_b_n, Html5Canvas_C.GREEN,);
 
-                    text_engine.value = " После Вашего хода Ифрит будет думать. Меньше 30 сек";
+                    text_engine.value = " После Вашего хода Ифрит будет думать.";
 
                 }
             }
