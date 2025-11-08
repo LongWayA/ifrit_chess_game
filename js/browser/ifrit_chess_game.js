@@ -23,10 +23,8 @@ checkbox_is_black_game.addEventListener('change', function () {
 
     if (checkbox_is_black_game.checked) {
         IfritChessGame_R.stateGame_O.is_white = StateGame_C.BLACK;
-        //console.log('Чекбокс отмечен!');
     } else {
         IfritChessGame_R.stateGame_O.is_white = StateGame_C.WHITE;
-        //console.log('Чекбокс снят!');
     }
     IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O, IfritChessGame_R.stateGame_O.is_white);
 });
@@ -41,7 +39,6 @@ input_max_depth.addEventListener('input', function () {
         if (IfritChessGame_R.stateGame_O.depth_max > 10) IfritChessGame_R.stateGame_O.depth_max = 10;
         input_max_depth.value = IfritChessGame_R.stateGame_O.depth_max;//
     }
-    //console.log('Событие input: ' + input_max_depth.value);
 });
 
 
@@ -53,8 +50,6 @@ let IfritChessGame_R = {
     draw_O: new Draw_С(),// рисуем в браузере   
     mouse_R: Mouse_R, // это мышка работающая в граф окне
     stateGame_O: new StateGame_C(),//
-
-
 
     NAME: "IfritChessGame_R",
 
@@ -164,14 +159,9 @@ let IfritChessGame_R = {
             // режим тестовой игры движок отвечает на наш ход 
 
             //let info_return_g = IfritChessGame_R.chessEngine_0x88_O.test_go_depth_mm(IfritChessGame_R.stateGame_O.depth_max);
-            let info_return_g = IfritChessGame_R.chessEngine_0x88_O.test_go_depth_ab(IfritChessGame_R.stateGame_O.depth_max);
-            //let info_return_g = IfritChessGame_R.chessEngine_0x88_O.test_go_depth_abfh(IfritChessGame_R.stateGame_O.depth_max);            
+            let info_return_g = IfritChessGame_R.chessEngine_0x88_O.test_go_depth_ab(IfritChessGame_R.stateGame_O.depth_max);         
             IfritChessGame_R.stateGame_O.score = info_return_g.score;
             IfritChessGame_R.stateGame_O.nodes = info_return_g.node_count;
-            //console.log("ChessEngine_0x88_С->А ЧТО В ГЛАВНОМ ВАРИАНТЕ?");
-            //this.pv_line_0x88_O.test_print_pv_line(this.chess_board_0x88_O);
-            // копируем доску движка с найденным ходом в игровую
-            //IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_0x88(info_return_g.chess_board_0x88_O_save_gui);
         }
     },
 
@@ -351,9 +341,6 @@ let IfritChessGame_R = {
 
                             IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O,
                                 IfritChessGame_R.stateGame_O.is_white);
-
-                            // text_engine.value = "max depth " + IfritChessGame_R.stateGame_O.depth_max +
-                            //     " nodes " + this.nodes + " score " + this.score;
 
                             text_engine.value = " После Вашего хода Ифрит будет думать. На это время доска зависнет.";
 
