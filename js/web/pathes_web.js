@@ -54,3 +54,5 @@ let PathesWeb_R = {
 };
 
 PathesWeb_R.iniM();
+
+export{PathesWeb_R};

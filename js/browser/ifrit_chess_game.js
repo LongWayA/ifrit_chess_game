@@ -11,6 +11,16 @@
  *  
 */
 
+import { ChessEngine_0x88_С } from "../engine_chess_0x88/chess_engine_0x88.js";
+import { ChessBoard_8x8_C } from "../gui_chess/chess_board_8x8.js";
+import { Draw_С } from "../gui_chess/draw.js";
+import { StateGame_C } from "../gui_chess/state_game.js";
+import { Game_line_0x88_C } from "../gui_chess/game_line_0x88.js";
+import { Mouse_R } from "../gui_chess/mouse.js";
+import { GuiWorker_R } from "../gui_chess/gui_worker.js";
+import { Html5Canvas_C } from "../gui_chess/html5_canvas/html5_canvas.js";
+
+
 const checkbox_is_black_game = document.getElementById('is_black_game');
 const input_max_depth = document.getElementById('max_depth');
 const input_set_fen = document.getElementById('set_fen');
@@ -48,8 +58,10 @@ let IfritChessGame_R = {
     chessEngine_0x88_O: new ChessEngine_0x88_С(),// встроенный шахматный движок на доске 0x88
     chessBoard_8x8_O: new ChessBoard_8x8_C(),// доска 8x8 для графического отображения в браузере
     draw_O: new Draw_С(),// рисуем в браузере   
-    mouse_R: Mouse_R, // это мышка работающая в граф окне
+    mouse_O: Mouse_R, // это мышка работающая в граф окне
+    GuiWorker_O : GuiWorker_R,
     stateGame_O: new StateGame_C(),//
+    game_line_0x88_O: new Game_line_0x88_C(),//
 
     NAME: "IfritChessGame_R",
 
@@ -135,7 +147,8 @@ let IfritChessGame_R = {
         IfritChessGame_R.chessBoard_8x8_O.iniM(IfritChessGame_R.X_START, IfritChessGame_R.Y_START,
             IfritChessGame_R.SQUARES_WIDTH, IfritChessGame_R.SQUARES_HEIGHT);
         IfritChessGame_R.draw_O.iniM();
-        IfritChessGame_R.mouse_R.iniM(IfritChessGame_R.draw_O.html5Canvas_O.idCanvas, IfritChessGame_R);
+        IfritChessGame_R.mouse_O.iniM(IfritChessGame_R.draw_O.html5Canvas_O.idCanvas, IfritChessGame_R);
+        IfritChessGame_R.GuiWorker_O.iniM(IfritChessGame_R);
 
         IfritChessGame_R.stop_click = 0;
         IfritChessGame_R.stop_click_2 = 0;
@@ -367,7 +380,7 @@ let IfritChessGame_R = {
 
                         } else if (IfritChessGame_R.stateGame_O.test == StateGame_C.TEST_MESSAGE) { // игра в режиме отдельного потока
                             //console.log("IfritChessGame_R -> TEST_MESSAGE");
-                            GuiWorker_R.test_message(1);
+                            IfritChessGame_R.GuiWorker_O.test_message(1);
                         }
                     }
 
@@ -450,7 +463,7 @@ let IfritChessGame_R = {
 
             } else {
                 // message_gui_to_engine    
-                GuiWorker_R.test_message(1);
+                IfritChessGame_R.GuiWorker_O.test_message(1);
             }
         }
 
@@ -497,7 +510,7 @@ let IfritChessGame_R = {
 
         } else {
 
-            GuiWorker_R.test_message(0);
+            IfritChessGame_R.GuiWorker_O.test_message(0);
         }
     },
 
@@ -515,3 +528,5 @@ let IfritChessGame_R = {
 
     },
 };
+
+export{IfritChessGame_R};

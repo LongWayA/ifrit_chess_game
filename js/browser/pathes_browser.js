@@ -29,3 +29,5 @@ let PathesBrowser_R = {
 };
 
 PathesBrowser_R.iniM();
+
+export{PathesBrowser_R};
