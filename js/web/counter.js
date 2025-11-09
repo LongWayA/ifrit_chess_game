@@ -6,7 +6,7 @@
  * last modified 07.09m.2025
 */
 
-import { PathesWeb_R } from "./pathes_web";
+import { PathesWeb_R } from "./pathes_web.js";
 
 /**
  * НАЗНАЧЕНИЕ

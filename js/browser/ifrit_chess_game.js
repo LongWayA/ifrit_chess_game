@@ -17,40 +17,10 @@ import { Draw_С } from "../gui_chess/draw.js";
 import { StateGame_C } from "../gui_chess/state_game.js";
 import { Game_line_0x88_C } from "../gui_chess/game_line_0x88.js";
 import { Mouse_R } from "../gui_chess/mouse.js";
-import { GuiWorker_R } from "../gui_chess/gui_worker.js";
+import { GuiWorker_R } from "../worker/gui_worker.js";
 import { Html5Canvas_C } from "../gui_chess/html5_canvas/html5_canvas.js";
-
-
-const checkbox_is_black_game = document.getElementById('is_black_game');
-const input_max_depth = document.getElementById('max_depth');
-const input_set_fen = document.getElementById('set_fen');
-
-const text_chess_game = document.getElementById('text_chess_game');
-const text_engine = document.getElementById('text_engine');
-
-
-checkbox_is_black_game.addEventListener('change', function () {
-
-    if (checkbox_is_black_game.checked) {
-        IfritChessGame_R.stateGame_O.is_white = StateGame_C.BLACK;
-    } else {
-        IfritChessGame_R.stateGame_O.is_white = StateGame_C.WHITE;
-    }
-    IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O, IfritChessGame_R.stateGame_O.is_white);
-});
-
-input_max_depth.addEventListener('input', function () {
-    if (isNaN(parseInt(input_max_depth.value))) {
-        IfritChessGame_R.stateGame_O.depth_max = 1;
-        input_max_depth.value = IfritChessGame_R.stateGame_O.depth_max;
-    } else {
-        IfritChessGame_R.stateGame_O.depth_max = parseInt(input_max_depth.value);
-        if (IfritChessGame_R.stateGame_O.depth_max <= 0) IfritChessGame_R.stateGame_O.depth_max = 1;
-        if (IfritChessGame_R.stateGame_O.depth_max > 10) IfritChessGame_R.stateGame_O.depth_max = 10;
-        input_max_depth.value = IfritChessGame_R.stateGame_O.depth_max;//
-    }
-});
-
+import { checkbox_R } from "./checkbox.js";
+import { get_text_requests } from "../web/counter.js";
 
 // корневой объект программы. поэтому объект, а не класс
 let IfritChessGame_R = {
@@ -62,6 +32,7 @@ let IfritChessGame_R = {
     GuiWorker_O : GuiWorker_R,
     stateGame_O: new StateGame_C(),//
     game_line_0x88_O: new Game_line_0x88_C(),//
+    checkbox_O: checkbox_R,
 
     NAME: "IfritChessGame_R",
 
@@ -114,6 +85,8 @@ let IfritChessGame_R = {
 
     iniM() {
 
+        console.log('IfritChessGame_R->iniM get_text_requests.value ' + get_text_requests.value);
+
         IfritChessGame_R.stateGame_O.iniM();
 
         IfritChessGame_R.TEST_POSITION_FEN = IfritChessGame_R.INITIAL_POSITION_FEN;
@@ -140,15 +113,16 @@ let IfritChessGame_R = {
 
         // задаем глубину перебора во время игры или обсчета тестовых позиций на количество узлов
         IfritChessGame_R.stateGame_O.depth_max = 2;
-        input_max_depth.value = IfritChessGame_R.stateGame_O.depth_max;
-
+        IfritChessGame_R.checkbox_O.set_input_max_depth_value(IfritChessGame_R.stateGame_O.depth_max);
+    
         //console.log('IfritChessGame_R->iniM');       
         IfritChessGame_R.chessEngine_0x88_O.iniM();
         IfritChessGame_R.chessBoard_8x8_O.iniM(IfritChessGame_R.X_START, IfritChessGame_R.Y_START,
             IfritChessGame_R.SQUARES_WIDTH, IfritChessGame_R.SQUARES_HEIGHT);
         IfritChessGame_R.draw_O.iniM();
         IfritChessGame_R.mouse_O.iniM(IfritChessGame_R.draw_O.html5Canvas_O.idCanvas, IfritChessGame_R);
-        IfritChessGame_R.GuiWorker_O.iniM(IfritChessGame_R);
+        IfritChessGame_R.checkbox_O.iniM(IfritChessGame_R);        
+        IfritChessGame_R.GuiWorker_O.iniM(IfritChessGame_R, IfritChessGame_R.checkbox_O);
 
         IfritChessGame_R.stop_click = 0;
         IfritChessGame_R.stop_click_2 = 0;
@@ -436,7 +410,7 @@ let IfritChessGame_R = {
 
         IfritChessGame_R.TEST_POSITION_FEN = IfritChessGame_R.INITIAL_POSITION_FEN;
         IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_fen(IfritChessGame_R.TEST_POSITION_FEN);
-        input_set_fen.value = IfritChessGame_R.TEST_POSITION_FEN;
+        IfritChessGame_R.checkbox_O.set_input_set_fen(IfritChessGame_R.TEST_POSITION_FEN)
         IfritChessGame_R.stateGame_O.nomber_move = 0;
 
         if (IfritChessGame_R.stateGame_O.is_white == StateGame_C.BLACK) {
@@ -492,7 +466,7 @@ let IfritChessGame_R = {
             // копируем доску движка с найденным ходом в игровую
             IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_0x88(info_return_g.chess_board_0x88_O_move);
             let fen2 = IfritChessGame_R.chessBoard_8x8_O.set_fen_from_8x8(IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O);
-            input_set_fen.value = fen2;
+            IfritChessGame_R.checkbox_O.set_input_set_fen(fen2);
 
             text_engine.value = " max depth:" + IfritChessGame_R.stateGame_O.depth_max + " nodes:" + IfritChessGame_R.stateGame_O.nodes +
                 " score:" + IfritChessGame_R.stateGame_O.score + "\n " + IfritChessGame_R.stateGame_O.pv_line_str;
@@ -516,7 +490,7 @@ let IfritChessGame_R = {
 
     fenGameButton() {
 
-        IfritChessGame_R.TEST_POSITION_FEN = input_set_fen.value;
+        IfritChessGame_R.TEST_POSITION_FEN = IfritChessGame_R.checkbox_O.get_input_set_fen();
         IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_fen(IfritChessGame_R.TEST_POSITION_FEN);
 
         IfritChessGame_R.chessEngine_0x88_O.position(IfritChessGame_R.chessBoard_8x8_O);

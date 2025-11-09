@@ -13,15 +13,16 @@ import { StateGame_C } from "../gui_chess/state_game.js";
  *  
  *  
 */
-const input_set_fen = document.getElementById('set_fen');
 
 let GuiWorker_R = {
 
       NAME: "GuiWorker_R",
       IfritChessGame_O: 0,
+      checkbox_O: 0,
 
-      iniM(IfritChessGame_R) {
+      iniM(IfritChessGame_R, checkbox_R) {
           GuiWorker_R.IfritChessGame_O = IfritChessGame_R;
+          GuiWorker_R.checkbox_O = checkbox_R;
       },
 
       // функция работы с движком запущенным в отдельном потоке.
@@ -31,7 +32,7 @@ let GuiWorker_R = {
             if (message.includes("position fen ")) {
                   let end = message.length;
                   let fen = message.slice(13, end);
-                  input_set_fen.value = fen;
+                  GuiWorker_R.checkbox_O.set_input_set_fen(fen);
                   //console.log('g fen from engine : ' + fen);
                   GuiWorker_R.IfritChessGame_O.chessBoard_8x8_O.set_8x8_from_fen(fen, GuiWorker_R.IfritChessGame_O.chessEngine_0x88_O.chess_board_0x88_O);
             }
@@ -61,6 +62,7 @@ let GuiWorker_R = {
                   //console.log('g go');
                   // рисуем доску                 
                   GuiWorker_R.IfritChessGame_O.draw_O.draw_chess_board_8x8(GuiWorker_R.IfritChessGame_O.chessBoard_8x8_O, GuiWorker_R.IfritChessGame_O.stateGame_O.is_white);
+
 
                   text_engine.value = " max depth:" + GuiWorker_R.IfritChessGame_O.stateGame_O.depth_max + " nodes:" +
                         GuiWorker_R.IfritChessGame_O.stateGame_O.nodes + " score:" + GuiWorker_R.IfritChessGame_O.stateGame_O.score +
@@ -122,8 +124,7 @@ let GuiWorker_R = {
 
 export{GuiWorker_R};
 
-//const worker_egine_0x88 = new Worker('js/chess_engine_0x88/w_chess_engine_0x88.js', {type: "module"});
-const worker_egine_0x88 = new Worker('js/engine_chess_0x88/w_chess_engine_0x88.js', {type: "module"});
+const worker_egine_0x88 = new Worker('js/worker/w_chess_engine_0x88.js', {type: "module"});
 
 worker_egine_0x88.onmessage = function (event) {
       //console.log('Сообщение от движка : ', event.data);

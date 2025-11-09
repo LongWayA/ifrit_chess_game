@@ -11,7 +11,7 @@
 
 */
 
-import { ChessEngine_0x88_С } from "./chess_engine_0x88.js";
+import { ChessEngine_0x88_С } from "../engine_chess_0x88/chess_engine_0x88.js";
 
 class W_ChessEngine_0x88_С {
 
