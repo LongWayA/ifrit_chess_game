@@ -80,6 +80,30 @@ class Checkbox_C {
             return input_set_fen.value;
       }      
 
+      set_text_engine(value) {
+            text_engine.value = value;
+      }
+
+      add_text_engine(value) {
+            text_engine.value += value;
+      }
+
+      get_text_engine() {
+            return text_engine.value;
+      }      
+
+      set_text_chess_game(value) {
+            text_chess_game.value = value;
+      }
+
+      add_text_chess_game(value) {
+            text_chess_game.value += value;
+      }
+
+      get_text_chess_game() {
+            return text_chess_game.value;
+      }      
+
 
 };
 

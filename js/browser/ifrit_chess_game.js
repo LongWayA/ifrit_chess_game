@@ -29,7 +29,7 @@ let IfritChessGame_R = {
     chessBoard_8x8_O: new ChessBoard_8x8_C(),// доска 8x8 для графического отображения в браузере
     draw_O: new Draw_С(),// рисуем в браузере   
     mouse_O: Mouse_R, // это мышка работающая в граф окне
-    GuiWorker_O : GuiWorker_R,
+    GuiWorker_O: GuiWorker_R,
     stateGame_O: new StateGame_C(),//
     game_line_0x88_O: new Game_line_0x88_C(),//
     checkbox_O: checkbox_R,
@@ -114,14 +114,14 @@ let IfritChessGame_R = {
         // задаем глубину перебора во время игры или обсчета тестовых позиций на количество узлов
         IfritChessGame_R.stateGame_O.depth_max = 2;
         IfritChessGame_R.checkbox_O.set_input_max_depth_value(IfritChessGame_R.stateGame_O.depth_max);
-    
+
         //console.log('IfritChessGame_R->iniM');       
         IfritChessGame_R.chessEngine_0x88_O.iniM();
         IfritChessGame_R.chessBoard_8x8_O.iniM(IfritChessGame_R.X_START, IfritChessGame_R.Y_START,
             IfritChessGame_R.SQUARES_WIDTH, IfritChessGame_R.SQUARES_HEIGHT);
         IfritChessGame_R.draw_O.iniM();
         IfritChessGame_R.mouse_O.iniM(IfritChessGame_R.draw_O.html5Canvas_O.idCanvas, IfritChessGame_R);
-        IfritChessGame_R.checkbox_O.iniM(IfritChessGame_R);        
+        IfritChessGame_R.checkbox_O.iniM(IfritChessGame_R);
         IfritChessGame_R.GuiWorker_O.iniM(IfritChessGame_R, IfritChessGame_R.checkbox_O);
 
         IfritChessGame_R.stop_click = 0;
@@ -146,7 +146,7 @@ let IfritChessGame_R = {
             // режим тестовой игры движок отвечает на наш ход 
 
             //let info_return_g = IfritChessGame_R.chessEngine_0x88_O.test_go_depth_mm(IfritChessGame_R.stateGame_O.depth_max);
-            let info_return_g = IfritChessGame_R.chessEngine_0x88_O.test_go_depth_ab(IfritChessGame_R.stateGame_O.depth_max);         
+            let info_return_g = IfritChessGame_R.chessEngine_0x88_O.test_go_depth_ab(IfritChessGame_R.stateGame_O.depth_max);
             IfritChessGame_R.stateGame_O.score = info_return_g.score;
             IfritChessGame_R.stateGame_O.nodes = info_return_g.node_count;
         }
@@ -157,12 +157,13 @@ let IfritChessGame_R = {
         IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O, IfritChessGame_R.stateGame_O.is_white);
 
         if (IfritChessGame_R.stateGame_O.test == StateGame_C.TEST_GEN_MOOVE) {
-            text_engine.value = " max depth " + IfritChessGame_R.stateGame_O.depth_max +
+            IfritChessGame_R.checkbox_O.set_text_engine(
+                " max depth " + IfritChessGame_R.stateGame_O.depth_max +
                 " nodes " + IfritChessGame_R.stateGame_O.nodes +
-                " score " + IfritChessGame_R.stateGame_O.score;
+                " score " + IfritChessGame_R.stateGame_O.score);
         }
-        text_chess_game.value = " Возврат хода еще не сделан.";
-        text_chess_game.value += "\n Game: ";
+
+        IfritChessGame_R.checkbox_O.set_text_chess_game(" Возврат хода еще не сделан." + "\n Game: ");
     },
 
     mouseMove(x, y) {
@@ -278,17 +279,18 @@ let IfritChessGame_R = {
                             IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O,
                                 IfritChessGame_R.stateGame_O.is_white);
 
-                            text_engine.value = " max depth " + IfritChessGame_R.stateGame_O.depth_max +
+                            IfritChessGame_R.checkbox_O.set_text_engine(
+                                " max depth " + IfritChessGame_R.stateGame_O.depth_max +
                                 " nodes " + IfritChessGame_R.stateGame_O.nodes + " score " + IfritChessGame_R.stateGame_O.score +
-                                "\n " + info_return_g.pv_line_str;
+                                "\n " + info_return_g.pv_line_str);
 
                             // PV line: это 9
                             IfritChessGame_R.stateGame_O.nomber_move = IfritChessGame_R.stateGame_O.nomber_move + 1;
 
-                            text_chess_game.value += IfritChessGame_R.stateGame_O.nomber_move + "." +
+                            IfritChessGame_R.checkbox_O.add_text_chess_game(IfritChessGame_R.stateGame_O.nomber_move + "." +
                                 IfritChessGame_R.chessEngine_0x88_O.move_list_gui_0x88_O.move_to_string(IfritChessGame_R.chessEngine_0x88_O.i_move,
                                     info_return_g.chess_board_0x88_O_move) +
-                                info_return_g.pv_line_str.slice(11, 18);
+                                info_return_g.pv_line_str.slice(11, 18));
 
                         } else if (IfritChessGame_R.stateGame_O.test == StateGame_C.TEST_AB) { // test  alpha beta
                             //console.log("IfritChessGame_R -> TEST_AB");
@@ -311,17 +313,18 @@ let IfritChessGame_R = {
                             IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O,
                                 IfritChessGame_R.stateGame_O.is_white);
 
-                            text_engine.value = " max depth " + IfritChessGame_R.stateGame_O.depth_max +
+                            IfritChessGame_R.checkbox_O.set_text_engine(
+                                " max depth " + IfritChessGame_R.stateGame_O.depth_max +
                                 " nodes " + IfritChessGame_R.stateGame_O.nodes + " score " + IfritChessGame_R.stateGame_O.score +
-                                "\n " + info_return_g.pv_line_str;
+                                "\n " + info_return_g.pv_line_str);
 
                             // PV line: это 9
                             IfritChessGame_R.stateGame_O.nomber_move = IfritChessGame_R.stateGame_O.nomber_move + 1;
 
-                            text_chess_game.value += IfritChessGame_R.stateGame_O.nomber_move + "." +
+                            IfritChessGame_R.checkbox_O.add_text_chess_game(IfritChessGame_R.stateGame_O.nomber_move + "." +
                                 IfritChessGame_R.chessEngine_0x88_O.move_list_gui_0x88_O.move_to_string(IfritChessGame_R.chessEngine_0x88_O.i_move,
                                     info_return_g.chess_board_0x88_O_move) +
-                                info_return_g.pv_line_str.slice(11, 18);
+                                info_return_g.pv_line_str.slice(11, 18));
 
                         } else if (IfritChessGame_R.stateGame_O.test == StateGame_C.TEST_ID) {  // iterative deepening
                             //console.log("IfritChessGame_R -> TEST_ID");
@@ -329,7 +332,7 @@ let IfritChessGame_R = {
                             IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O,
                                 IfritChessGame_R.stateGame_O.is_white);
 
-                            text_engine.value = " После Вашего хода Ифрит будет думать. На это время доска зависнет.";
+                            IfritChessGame_R.checkbox_O.set_text_engine(" После Вашего хода Ифрит будет думать. На это время доска зависнет.");
 
                             IfritChessGame_R.chessEngine_0x88_O.position(IfritChessGame_R.chessBoard_8x8_O);
                             let info_return_g = IfritChessGame_R.chessEngine_0x88_O.go_depth_id(IfritChessGame_R.stateGame_O.depth_max);
@@ -342,15 +345,16 @@ let IfritChessGame_R = {
                             IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O,
                                 IfritChessGame_R.stateGame_O.is_white);
 
-                            text_engine.value = " max depth " + IfritChessGame_R.stateGame_O.depth_max +
+                            IfritChessGame_R.checkbox_O.set_text_engine(" max depth " + IfritChessGame_R.stateGame_O.depth_max +
                                 " nodes " + IfritChessGame_R.stateGame_O.nodes + " score " + IfritChessGame_R.stateGame_O.score +
-                                "\n " + info_return_g.pv_line_str;
+                                "\n " + info_return_g.pv_line_str);
+
                             // PV line: это 9
                             IfritChessGame_R.stateGame_O.nomber_move = IfritChessGame_R.stateGame_O.nomber_move + 1;
-                            text_chess_game.value += IfritChessGame_R.stateGame_O.nomber_move + "." +
+                            IfritChessGame_R.checkbox_O.add_text_chess_game(IfritChessGame_R.stateGame_O.nomber_move + "." +
                                 IfritChessGame_R.chessEngine_0x88_O.move_list_gui_0x88_O.move_to_string(IfritChessGame_R.chessEngine_0x88_O.i_move,
                                     info_return_g.chess_board_0x88_O_move) +
-                                info_return_g.pv_line_str.slice(11, 18);
+                                info_return_g.pv_line_str.slice(11, 18));
 
                         } else if (IfritChessGame_R.stateGame_O.test == StateGame_C.TEST_MESSAGE) { // игра в режиме отдельного потока
                             //console.log("IfritChessGame_R -> TEST_MESSAGE");
@@ -359,7 +363,7 @@ let IfritChessGame_R = {
                     }
 
                     if (is_moove_legal == 0) {
-                        text_engine.value = " Недопустимый ход.";
+                        IfritChessGame_R.checkbox_O.set_text_engine(" Недопустимый ход.");
                     }
 
                 } else {
@@ -368,7 +372,7 @@ let IfritChessGame_R = {
                     // рисуем доску если ход не легальный                    
                     IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O, IfritChessGame_R.stateGame_O.is_white);
 
-                    text_engine.value = " Недопустимый ход";
+                    IfritChessGame_R.checkbox_O.set_text_engine(" Недопустимый ход");
                 }
             }
         } else { // это первый клик
@@ -394,7 +398,7 @@ let IfritChessGame_R = {
                     // рисуем квадратик кликнутой клетки
                     IfritChessGame_R.draw_O.draw_rect(IfritChessGame_R.chessBoard_8x8_O, x_b_n, y_b_n, Html5Canvas_C.GREEN,);
 
-                    text_engine.value = " После Вашего хода Ифрит будет думать.";
+                    IfritChessGame_R.checkbox_O.set_text_engine(" После Вашего хода Ифрит будет думать.");
 
                 }
             }
@@ -426,13 +430,15 @@ let IfritChessGame_R = {
                 // копируем доску движка с найденным ходом в игровую
                 IfritChessGame_R.chessBoard_8x8_O.set_8x8_from_0x88(info_return_g.chess_board_0x88_O_move);
 
-                text_engine.value = " max depth " + IfritChessGame_R.stateGame_O.depth_max +
+                IfritChessGame_R.checkbox_O.set_text_engine(
+                    " max depth " + IfritChessGame_R.stateGame_O.depth_max +
                     " nodes " + IfritChessGame_R.stateGame_O.nodes + " score " + IfritChessGame_R.stateGame_O.score +
-                    "\n " + IfritChessGame_R.stateGame_O.pv_line_str;
+                    "\n " + IfritChessGame_R.stateGame_O.pv_line_str);
 
                 IfritChessGame_R.stateGame_O.nomber_move = IfritChessGame_R.stateGame_O.nomber_move + 1;
-                text_chess_game.value += IfritChessGame_R.stateGame_O.nomber_move + "." +
-                    IfritChessGame_R.stateGame_O.pv_line_str.slice(11, 18);
+
+                IfritChessGame_R.checkbox_O.add_text_chess_game(IfritChessGame_R.stateGame_O.nomber_move + "." +
+                    IfritChessGame_R.stateGame_O.pv_line_str.slice(11, 18));
 
 
             } else {
@@ -441,9 +447,9 @@ let IfritChessGame_R = {
             }
         }
 
-        text_engine.value = "\n Новая игра";
-        text_chess_game.value = "Новая игра";
-        text_chess_game.value += "\n Game: ";
+        IfritChessGame_R.checkbox_O.set_text_engine("\n Новая игра");
+        IfritChessGame_R.checkbox_O.set_text_chess_game("Новая игра");
+        IfritChessGame_R.checkbox_O.add_text_chess_game("\n Game: ");
 
         IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O, IfritChessGame_R.stateGame_O.is_white);
 
@@ -468,15 +474,16 @@ let IfritChessGame_R = {
             let fen2 = IfritChessGame_R.chessBoard_8x8_O.set_fen_from_8x8(IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O);
             IfritChessGame_R.checkbox_O.set_input_set_fen(fen2);
 
-            text_engine.value = " max depth:" + IfritChessGame_R.stateGame_O.depth_max + " nodes:" + IfritChessGame_R.stateGame_O.nodes +
-                " score:" + IfritChessGame_R.stateGame_O.score + "\n " + IfritChessGame_R.stateGame_O.pv_line_str;
+            IfritChessGame_R.checkbox_O.set_text_engine(
+                " max depth:" + IfritChessGame_R.stateGame_O.depth_max + " nodes:" + IfritChessGame_R.stateGame_O.nodes +
+                " score:" + IfritChessGame_R.stateGame_O.score + "\n " + IfritChessGame_R.stateGame_O.pv_line_str);
 
             if (IfritChessGame_R.chessEngine_0x88_O.chess_board_0x88_O.side_to_move == 0) {
-                text_chess_game.value += IfritChessGame_R.stateGame_O.pv_line_str.slice(11, 18);
+                IfritChessGame_R.checkbox_O.add_text_chess_game(IfritChessGame_R.stateGame_O.pv_line_str.slice(11, 18));
             } else {
                 IfritChessGame_R.stateGame_O.nomber_move = IfritChessGame_R.stateGame_O.nomber_move + 1;
-                text_chess_game.value += IfritChessGame_R.stateGame_O.nomber_move + "." +
-                    IfritChessGame_R.stateGame_O.pv_line_str.slice(11, 18);
+                IfritChessGame_R.checkbox_O.add_text_chess_game(IfritChessGame_R.stateGame_O.nomber_move + "." +
+                    IfritChessGame_R.stateGame_O.pv_line_str.slice(11, 18));
             }
 
             IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O, IfritChessGame_R.stateGame_O.is_white);
@@ -496,11 +503,13 @@ let IfritChessGame_R = {
         IfritChessGame_R.chessEngine_0x88_O.position(IfritChessGame_R.chessBoard_8x8_O);
         IfritChessGame_R.draw_O.draw_chess_board_8x8(IfritChessGame_R.chessBoard_8x8_O, IfritChessGame_R.stateGame_O.is_white);
 
-        text_engine.value = " max depth " + IfritChessGame_R.stateGame_O.depth_max +
-            " nodes " + IfritChessGame_R.stateGame_O.nodes + " score " + IfritChessGame_R.stateGame_O.score;
-        text_engine.value += "\n Позиция задана из fen. Сами следите за его корректностью. Новая игра";
+        IfritChessGame_R.checkbox_O.set_text_engine(
+            " max depth " + IfritChessGame_R.stateGame_O.depth_max +
+            " nodes " + IfritChessGame_R.stateGame_O.nodes + " score " + IfritChessGame_R.stateGame_O.score);
+
+        IfritChessGame_R.checkbox_O.set_text_engine("\n Позиция задана из fen. Сами следите за его корректностью. Новая игра");
 
     },
 };
 
-export{IfritChessGame_R};
+export { IfritChessGame_R };
