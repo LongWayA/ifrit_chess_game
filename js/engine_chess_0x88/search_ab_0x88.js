@@ -6,13 +6,13 @@
  * last modified 11.10m.2025, 24.10m.2025
 */
 
-import { Move_list_0x88_С } from "./move_list_0x88.js";
-import { Make_move_0x88_C} from "./make_move_0x88.js";
-import { Unmake_move_0x88_C } from "./unmake_move_0x88.js";
+import { Move_list_0x88_С } from "./move_generator/move_list_0x88.js";
+import { Make_move_0x88_C} from "./move_generator/make_move_0x88.js";
+import { Unmake_move_0x88_C } from "./move_generator/unmake_move_0x88.js";
 import { PV_line_0x88_C } from "./pv_line_0x88.js";
-import { Undo_0x88_C } from "./undo_0x88.js";
+import { Undo_0x88_C } from "./move_generator/undo_0x88.js";
 import { Evaluate_0x88_C} from "./evaluate_0x88.js";
-import { Chess_board_0x88_C } from "./chess_board_0x88.js";
+import { Chess_board_0x88_C } from "./move_generator/chess_board_0x88.js";
 import { Quiescence_search_0x88_C } from "./quiescence_search_0x88.js";
 import { Hash_table_0x88_C } from "./hash_table_0x88.js";
 

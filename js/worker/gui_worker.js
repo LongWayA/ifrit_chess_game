@@ -34,14 +34,14 @@ let GuiWorker_R = {
                   let fen = message.slice(13, end);
                   GuiWorker_R.checkbox_O.set_input_set_fen(fen);
                   //console.log('g fen from engine : ' + fen);
-                  GuiWorker_R.IfritChessGame_O.chessBoard_8x8_O.set_8x8_from_fen(fen, GuiWorker_R.IfritChessGame_O.chessEngine_0x88_O.chess_board_0x88_O);
+                  GuiWorker_R.IfritChessGame_O.gui_chess_O.chessBoard_8x8_O.set_8x8_from_fen(fen, GuiWorker_R.IfritChessGame_O.chessEngine_0x88_O.chess_board_0x88_O);
             }
 
             if (message.includes("score ")) {
                   let end = message.length;
                   let score_s = message.slice(6, end);
                   //console.log('Gg score ' + score_s);
-                  GuiWorker_R.IfritChessGame_O.stateGame_O.score = Number(score_s);
+                  GuiWorker_R.IfritChessGame_O.gui_chess_O.score = Number(score_s);
                   //console.log('g score ' + this.score);            
             }
 
@@ -49,35 +49,36 @@ let GuiWorker_R = {
                   let end = message.length;
                   let node_s = message.slice(5, end);
                   //console.log('g node ' + node_s);
-                  GuiWorker_R.IfritChessGame_O.stateGame_O.nodes = Number(node_s);
+                  GuiWorker_R.IfritChessGame_O.gui_chess_O.nodes = Number(node_s);
                   //console.log('g node ' + this.nodes);           
             }
 
             if (message.includes("PV line: ")) {
-                  GuiWorker_R.IfritChessGame_O.stateGame_O.pv_line_str = message;
+                  GuiWorker_R.IfritChessGame_O.gui_chess_O.pv_line_str = message;
 
             }
 
             if (message.includes("go")) {
                   //console.log('g go');
                   // рисуем доску                 
-                  GuiWorker_R.IfritChessGame_O.draw_O.draw_chess_board_8x8(GuiWorker_R.IfritChessGame_O.chessBoard_8x8_O, GuiWorker_R.IfritChessGame_O.stateGame_O.is_white);
+                  GuiWorker_R.IfritChessGame_O.gui_chess_O.draw_O.draw_chess_board_8x8(GuiWorker_R.IfritChessGame_O.gui_chess_O.chessBoard_8x8_O, 
+                        GuiWorker_R.IfritChessGame_O.gui_chess_O.is_white);
 
 
                   GuiWorker_R.IfritChessGame_O.checkbox_O.set_text_engine(
-                        " max depth:" + GuiWorker_R.IfritChessGame_O.stateGame_O.depth_max + " nodes:" +
-                        GuiWorker_R.IfritChessGame_O.stateGame_O.nodes + " score:" + GuiWorker_R.IfritChessGame_O.stateGame_O.score +
-                        "\n " + GuiWorker_R.IfritChessGame_O.stateGame_O.pv_line_str);
+                        " max depth:" + GuiWorker_R.IfritChessGame_O.gui_chess_O.depth_max + " nodes:" +
+                        GuiWorker_R.IfritChessGame_O.gui_chess_O.nodes + " score:" + GuiWorker_R.IfritChessGame_O.gui_chess_O.score +
+                        "\n " + GuiWorker_R.IfritChessGame_O.gui_chess_O.pv_line_str);
 
-                  if (GuiWorker_R.IfritChessGame_O.chessBoard_8x8_O.side_to_move != StateGame_C.WHITE) {
+                  if (GuiWorker_R.IfritChessGame_O.gui_chess_O.chessBoard_8x8_O.side_to_move != StateGame_C.WHITE) {
 
-                        GuiWorker_R.IfritChessGame_O.stateGame_O.nomber_move = GuiWorker_R.IfritChessGame_O.stateGame_O.nomber_move + 1;
+                        GuiWorker_R.IfritChessGame_O.gui_chess_O.nomber_move = GuiWorker_R.IfritChessGame_O.gui_chess_O.nomber_move + 1;
 
-                        GuiWorker_R.IfritChessGame_O.checkbox_O.add_text_chess_game(GuiWorker_R.IfritChessGame_O.stateGame_O.nomber_move + "." +
-                              GuiWorker_R.IfritChessGame_O.stateGame_O.pv_line_str.slice(11, 18));
+                        GuiWorker_R.IfritChessGame_O.checkbox_O.add_text_chess_game(GuiWorker_R.IfritChessGame_O.gui_chess_O.nomber_move + "." +
+                              GuiWorker_R.IfritChessGame_O.gui_chess_O.pv_line_str.slice(11, 18));
                   } else {
 
-                        GuiWorker_R.IfritChessGame_O.checkbox_O.add_text_chess_game(GuiWorker_R.IfritChessGame_O.stateGame_O.pv_line_str.slice(11, 18));
+                        GuiWorker_R.IfritChessGame_O.checkbox_O.add_text_chess_game(GuiWorker_R.IfritChessGame_O.gui_chess_O.pv_line_str.slice(11, 18));
                   }
 
                   GuiWorker_R.IfritChessGame_O.stop_click = 0;
@@ -86,24 +87,24 @@ let GuiWorker_R = {
       },
 
       test_message(not_go) {
-            GuiWorker_R.IfritChessGame_O.draw_O.draw_chess_board_8x8(GuiWorker_R.IfritChessGame_O.chessBoard_8x8_O,
-                  GuiWorker_R.IfritChessGame_O.stateGame_O.is_white);
+            GuiWorker_R.IfritChessGame_O.gui_chess_O.draw_O.draw_chess_board_8x8(GuiWorker_R.IfritChessGame_O.gui_chess_O.chessBoard_8x8_O,
+                  GuiWorker_R.IfritChessGame_O.gui_chess_O.is_white);
 
             GuiWorker_R.IfritChessGame_O.checkbox_O.set_text_engine(" Ифрит думает.");
 
             // message_gui_to_engine    
-            let fen = GuiWorker_R.IfritChessGame_O.chessBoard_8x8_O.set_fen_from_8x8(
+            let fen = GuiWorker_R.IfritChessGame_O.gui_chess_O.chessBoard_8x8_O.set_fen_from_8x8(
                   GuiWorker_R.IfritChessGame_O.chessEngine_0x88_O.chess_board_0x88_O);
             let message = "position fen " + fen;
             worker_egine_0x88.postMessage(message);
-            message = "go depth " + GuiWorker_R.IfritChessGame_O.stateGame_O.depth_max;
+            message = "go depth " + GuiWorker_R.IfritChessGame_O.gui_chess_O.depth_max;
             worker_egine_0x88.postMessage(message);
 
-            if (GuiWorker_R.IfritChessGame_O.chessBoard_8x8_O.side_to_move != StateGame_C.WHITE) {
-                  // GuiWorker_R.IfritChessGame_O.stateGame_O.nomber_move = GuiWorker_R.IfritChessGame_O.stateGame_O.nomber_move + 1;
+            if (GuiWorker_R.IfritChessGame_O.gui_chess_O.chessBoard_8x8_O.side_to_move != StateGame_C.WHITE) {
+                  // GuiWorker_R.IfritChessGame_O.gui_chess_O.nomber_move = GuiWorker_R.IfritChessGame_O.gui_chess_O.nomber_move + 1;
                   if (not_go == 1) {
-                        GuiWorker_R.IfritChessGame_O.stateGame_O.nomber_move = GuiWorker_R.IfritChessGame_O.stateGame_O.nomber_move + 1;
-                        GuiWorker_R.IfritChessGame_O.checkbox_O.add_text_chess_game(GuiWorker_R.IfritChessGame_O.stateGame_O.nomber_move + "." +
+                        GuiWorker_R.IfritChessGame_O.gui_chess_O.nomber_move = GuiWorker_R.IfritChessGame_O.gui_chess_O.nomber_move + 1;
+                        GuiWorker_R.IfritChessGame_O.checkbox_O.add_text_chess_game(GuiWorker_R.IfritChessGame_O.gui_chess_O.nomber_move + "." +
                               GuiWorker_R.IfritChessGame_O.chessEngine_0x88_O.move_list_gui_0x88_O.move_to_string(
                                     GuiWorker_R.IfritChessGame_O.chessEngine_0x88_O.i_move,
                                     GuiWorker_R.IfritChessGame_O.chessEngine_0x88_O.chess_board_0x88_O_gui));

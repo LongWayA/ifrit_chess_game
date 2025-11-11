@@ -6,7 +6,7 @@
  * last modified 09.11m.2025
 */
 
-import { StateGame_C } from "../gui_chess/state_game.js";
+import { Gui_chess_C } from "../gui_chess/gui_chess.js";
 
 /**
  * НАЗНАЧЕНИЕ
@@ -48,23 +48,23 @@ class Checkbox_C {
 
       checkbox_is_black_game_checked() {
             if (checkbox_is_black_game.checked) {
-                  this.IfritChessGame_O.stateGame_O.is_white = StateGame_C.BLACK;
+                  this.IfritChessGame_O.gui_chess_O.is_white = Gui_chess_C.BLACK;
             } else {
-                  this.IfritChessGame_O.stateGame_O.is_white = StateGame_C.WHITE;
+                  this.IfritChessGame_O.gui_chess_O.is_white = Gui_chess_C.WHITE;
             }
-            this.IfritChessGame_O.draw_O.draw_chess_board_8x8(this.IfritChessGame_O.chessBoard_8x8_O,
-                  this.IfritChessGame_O.stateGame_O.is_white);
+            this.IfritChessGame_O.gui_chess_O.draw_O.draw_chess_board_8x8(this.IfritChessGame_O.gui_chess_O.chessBoard_8x8_O,
+                  this.IfritChessGame_O.gui_chess_O.is_white);
       }
 
       input_max_depth_checked() {
             if (isNaN(parseInt(input_max_depth.value))) {
-                  this.IfritChessGame_O.stateGame_O.depth_max = 1;
-                  input_max_depth.value = this.IfritChessGame_O.stateGame_O.depth_max;
+                  this.IfritChessGame_O.gui_chess_O.depth_max = 1;
+                  input_max_depth.value = this.IfritChessGame_O.gui_chess_O.depth_max;
             } else {
-                  this.IfritChessGame_O.stateGame_O.depth_max = parseInt(input_max_depth.value);
-                  if (this.IfritChessGame_O.stateGame_O.depth_max <= 0) this.IfritChessGame_O.stateGame_O.depth_max = 1;
-                  if (this.IfritChessGame_O.stateGame_O.depth_max > 10) this.IfritChessGame_O.stateGame_O.depth_max = 10;
-                  input_max_depth.value = this.IfritChessGame_O.stateGame_O.depth_max;//
+                  this.IfritChessGame_O.gui_chess_O.depth_max = parseInt(input_max_depth.value);
+                  if (this.IfritChessGame_O.gui_chess_O.depth_max <= 0) this.IfritChessGame_O.gui_chess_O.depth_max = 1;
+                  if (this.IfritChessGame_O.gui_chess_O.depth_max > 10) this.IfritChessGame_O.gui_chess_O.depth_max = 10;
+                  input_max_depth.value = this.IfritChessGame_O.gui_chess_O.depth_max;//
             }
       }
 

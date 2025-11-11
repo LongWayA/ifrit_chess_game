@@ -6,13 +6,13 @@
  * last modified 27.09m.2025
 */
 
-import { Move_gen_1_captures_0x88_С} from "./move_gen_1_captures_0x88.js";
-import { Move_gen_2_quiet_0x88_С } from "./move_gen_2_quiet_0x88.js";
+import { Move_gen_1_captures_0x88_С} from "./move_generator/move_gen_1_captures_0x88.js";
+import { Move_gen_2_quiet_0x88_С } from "./move_generator/move_gen_2_quiet_0x88.js";
 import { Search_start_0x88_C } from "./search_start_0x88.js";
-import { Chess_board_0x88_C } from "./chess_board_0x88.js";
-import { Move_list_0x88_С } from "./move_list_0x88.js";
+import { Chess_board_0x88_C } from "./move_generator/chess_board_0x88.js";
+import { Move_list_0x88_С } from "./move_generator/move_list_0x88.js";
 import { PV_line_0x88_C } from "./pv_line_0x88.js";
-import { Undo_0x88_C } from "./undo_0x88.js";
+import { Undo_0x88_C } from "./move_generator/undo_0x88.js";
 import { Html5Canvas_C } from "../gui_chess/html5_canvas/html5_canvas.js";
 
 /**

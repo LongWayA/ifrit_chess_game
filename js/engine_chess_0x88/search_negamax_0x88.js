@@ -11,10 +11,10 @@
 
 */
 
-import { Make_move_0x88_C} from "./make_move_0x88.js";
-import { Unmake_move_0x88_C } from "./unmake_move_0x88.js";
+import { Make_move_0x88_C} from "./move_generator/make_move_0x88.js";
+import { Unmake_move_0x88_C } from "./move_generator/unmake_move_0x88.js";
 import { Evaluate_0x88_C} from "./evaluate_0x88.js";
-import { Chess_board_0x88_C } from "./chess_board_0x88.js";
+import { Chess_board_0x88_C } from "./move_generator/chess_board_0x88.js";
 
 class Search_negamax_0x88_C {
 
