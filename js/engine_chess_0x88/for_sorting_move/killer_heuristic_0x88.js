@@ -6,7 +6,7 @@
  * last modified 04.11m.2025
 */
 
-import { Move_list_0x88_С } from "./move_generator/move_list_0x88.js";
+import { Move_list_0x88_С } from "../move_generator/move_list_0x88.js";
 
 /**
 * НАЗНАЧЕНИЕ

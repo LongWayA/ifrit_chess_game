@@ -37,7 +37,7 @@ class Gui_chess_C {
       // test = 4 iterative deepening
       // test = 5 message_to_engine(message) работа с воркером
       static TEST_GEN_MOOVE = 1;
-      static TEST_NEGAMAX = 2;
+      static TEST_MINMAX = 2;
       static TEST_AB = 3;
       static TEST_ID = 4;
       static TEST_MESSAGE = 5;

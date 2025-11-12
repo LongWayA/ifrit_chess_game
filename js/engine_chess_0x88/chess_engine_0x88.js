@@ -89,9 +89,9 @@ class ChessEngine_0x88_С {
 
   // запуск полного перебора minmax
   // тут можно проверить корректность игрового движка с помощью perf_t. как правильно он генерирует позиции.
-  test_go_depth_nm(depth_max) {
+  test_go_depth_minmax(depth_max) {
      //console.log("ChessEngine_0x88_С->test_go_depth_nm --------");
-    let info_return_search = this.search_start_0x88_O.test_start_search_nm(this.pv_line_0x88_O, 
+    let info_return_search = this.search_start_0x88_O.test_start_search_minmax(this.pv_line_0x88_O, 
       this.chess_board_0x88_O, this.move_gen_1_captures_0x88_O, this.move_gen_2_quiet_0x88_O, depth_max);
 
     return info_return_search;

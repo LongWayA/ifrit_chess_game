@@ -6,13 +6,13 @@
  * last modified 11.10m.2025, 24.10m.2025
 */
 
-import { Make_move_0x88_C} from "./move_generator/make_move_0x88.js";
+import { Make_move_0x88_C } from "./move_generator/make_move_0x88.js";
 import { Unmake_move_0x88_C } from "./move_generator/unmake_move_0x88.js";
-import { Evaluate_0x88_C} from "./evaluate_0x88.js";
-import { Hash_table_0x88_C } from "./hash_table_0x88.js";
-import { killer_heuristic_0x88_O} from "./killer_heuristic_0x88.js";
-import { History_heuristic_0x88_C } from "./history_heuristic_0x88.js";
-import { Search_negamax_0x88_C} from "./search_negamax_0x88.js";
+import { Evaluate_0x88_C } from "./evaluate_0x88.js";
+import { Hash_table_0x88_C } from "./for_sorting_move/hash_table_0x88.js";
+import { killer_heuristic_0x88_O } from "./for_sorting_move/killer_heuristic_0x88.js";
+import { History_heuristic_0x88_C } from "./for_sorting_move/history_heuristic_0x88.js";
+import { Search_minmax_0x88_C } from "./search_minmax_0x88.js";
 import { Search_ab_0x88_C } from "./search_ab_0x88.js";
 
 import { Chess_board_0x88_C } from "./move_generator/chess_board_0x88.js";
@@ -38,7 +38,7 @@ class Search_start_0x88_C {
   killer_heuristic_0x88_O = new killer_heuristic_0x88_O();
   history_heuristic_0x88_O = new History_heuristic_0x88_C();
 
-  search_negamax_0x88_O = new Search_negamax_0x88_C();//TEST_NEGAMAX
+  search_minmax_0x88_O = new Search_minmax_0x88_C();//TEST_NEGAMAX
   search_ab_0x88_O = new Search_ab_0x88_C();
 
   chess_board_0x88_O_save_test = new Chess_board_0x88_C();
@@ -102,8 +102,8 @@ class Search_start_0x88_C {
     move_gen_1_captures_0x88_O.generated_pseudo_legal_moves(chess_board_0x88_O, move_list_0x88_O);
     move_gen_2_quiet_0x88_O.generated_pseudo_legal_moves(chess_board_0x88_O, move_list_0x88_O);
     // первый раз сортируем по типу хода.
-   // console.log("Search_0x88_C->начало сравнения ------------- ");
-   // test_save_move_list_0x88_O.save_list_from(move_list_0x88_O);
+    // console.log("Search_0x88_C->начало сравнения ------------- ");
+    // test_save_move_list_0x88_O.save_list_from(move_list_0x88_O);
     move_list_0x88_O.sorting_list();
     //this.history_heuristic_0x88_O.clear_history();
     //move_list_0x88_O.sorting_list_history_heuristic(this.history_heuristic_0x88_O);
@@ -231,10 +231,10 @@ class Search_start_0x88_C {
     return this.info_return_search;
   }
 
-/////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////
 
-  // negamax
-  test_start_search_nm(pv_line_0x88_O, chess_board_0x88_O, move_gen_1_captures_0x88_O,
+  // minmax
+  test_start_search_minmax(pv_line_0x88_O, chess_board_0x88_O, move_gen_1_captures_0x88_O,
     move_gen_2_quiet_0x88_O, depth_max) {
     let depth = 0;
 
@@ -242,9 +242,9 @@ class Search_start_0x88_C {
     //console.log("=========================================================================");
     //console.log("Search_0x88_C->start_search =============================================");
     // negamax
-    this.search_negamax_0x88_O.node = 0;
+    this.search_minmax_0x88_O.node = 0;
 
-    let score = this.search_negamax_0x88_O.searching_negamax(pv_line_0x88_O, chess_board_0x88_O,
+    let score = this.search_minmax_0x88_O.searching_minmax(pv_line_0x88_O, chess_board_0x88_O,
       move_gen_1_captures_0x88_O, move_gen_2_quiet_0x88_O, depth, depth_max);
 
     if (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.BLACK) score = -1 * score;
@@ -255,8 +255,8 @@ class Search_start_0x88_C {
     this.info_return_search.score = score;
     this.info_return_search.pv_line = pv_line_0x88_O;
     this.info_return_search.pv_line_str = pv_line_0x88_O.pv_line_to_string(chess_board_0x88_O, this.move_list_0x88_O);
-    this.info_return_search.node_count = this.search_negamax_0x88_O.node;
-    this.info_return_search.chess_board_0x88_O_move = this.search_negamax_0x88_O.chess_board_0x88_O_move;
+    this.info_return_search.node_count = this.search_minmax_0x88_O.node;
+    this.info_return_search.chess_board_0x88_O_move = this.search_minmax_0x88_O.chess_board_0x88_O_move;
 
     //  this.search_minmax_0x88_O.chess_board_0x88_O_move.test_print_0x88();
     //  this.search_minmax_0x88_O.chess_board_0x88_O_move.test_print_0x88_color();
@@ -265,7 +265,7 @@ class Search_start_0x88_C {
     //this.info_return_search.pv_line.test_print_pv_line(chess_board_0x88_O);
     //pv_line_0x88_O.test_print_pv_line(chess_board_0x88_O);
 
-    console.log("Search_0x88_C->this.search_negamax_0x88_O.node" + this.search_negamax_0x88_O.node);
+    console.log("Search_0x88_C->this.search_negamax_0x88_O.node" + this.search_minmax_0x88_O.node);
 
     return this.info_return_search;
   }
@@ -280,14 +280,17 @@ class Search_start_0x88_C {
     this.search_ab_0x88_O.node = 0;
     let isPV_node = 1;
 
+    console.log("Search_0x88_C->test_start_search_ab");
+
     // копируем доску чтобы когда у движка не будет ходов он не откатывался к предыдущей.
     this.search_ab_0x88_O.chess_board_0x88_O_move.save_chess_board_0x88(chess_board_0x88_O);
 
     this.search_ab_0x88_O.node = 0;
 
     let score = this.search_ab_0x88_O.searching_alpha_beta_id(alpha, beta, pv_line_0x88_O, chess_board_0x88_O,
-          move_gen_1_captures_0x88_O, move_gen_2_quiet_0x88_O, (depth + 1), depth_max,
-          isPV_node, this.hash_table_0x88_O, this.killer_heuristic_0x88_O, this.history_heuristic_0x88_O);
+      move_gen_1_captures_0x88_O, move_gen_2_quiet_0x88_O, depth, depth_max,
+      isPV_node, this.hash_table_0x88_O, this.killer_heuristic_0x88_O, this.history_heuristic_0x88_O);
+
 
     // let score = this.search_ab_0x88_O.searching_alpha_beta_test(alpha, beta, pv_line_0x88_O, chess_board_0x88_O,//
     //   move_gen_1_captures_0x88_O, move_gen_2_quiet_0x88_O, depth, depth_max);
@@ -309,7 +312,7 @@ class Search_start_0x88_C {
   }
 
   /////////////////////////////////
-  
+
 }
 
-export{Search_start_0x88_C};
+export { Search_start_0x88_C };

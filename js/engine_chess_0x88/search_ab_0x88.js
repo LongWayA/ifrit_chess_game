@@ -14,7 +14,7 @@ import { Undo_0x88_C } from "./move_generator/undo_0x88.js";
 import { Evaluate_0x88_C} from "./evaluate_0x88.js";
 import { Chess_board_0x88_C } from "./move_generator/chess_board_0x88.js";
 import { Quiescence_search_0x88_C } from "./quiescence_search_0x88.js";
-import { Hash_table_0x88_C } from "./hash_table_0x88.js";
+import { Hash_table_0x88_C } from "./for_sorting_move/hash_table_0x88.js";
 
 
 
@@ -226,7 +226,7 @@ class Search_ab_0x88_C {
 
           if (score > found_score) {
             found_score = score;
-            //if (depth == 0) this.chess_board_0x88_O_move.save_chess_board_0x88(chess_board_0x88_O);
+            if (depth == 0) this.chess_board_0x88_O_move.save_chess_board_0x88(chess_board_0x88_O);
             if (score > alpha) {
               alpha = score; //
               hash_table_0x88_O.add_position(Hash_table_0x88_C.ALPHA_UPDATE, move_list_0x88_O.type_move[move_i],
@@ -239,7 +239,6 @@ class Search_ab_0x88_C {
                 best_node_line_0x88_O.score_move[depth] = score;
                 is_update_pv_line = 1;
               }
-              //if (depth == 0) this.chess_board_0x88_O_move.save_chess_board_0x88(chess_board_0x88_O);
             }
           }
 
@@ -262,7 +261,7 @@ class Search_ab_0x88_C {
 
           if (score < found_score) {
             found_score = score;
-            //if (depth == 0) this.chess_board_0x88_O_move.save_chess_board_0x88(chess_board_0x88_O);
+            if (depth == 0) this.chess_board_0x88_O_move.save_chess_board_0x88(chess_board_0x88_O);
             if (score < beta) {
               beta = score; //
               hash_table_0x88_O.add_position(Hash_table_0x88_C.BETA_UPDATE, move_list_0x88_O.type_move[move_i],
