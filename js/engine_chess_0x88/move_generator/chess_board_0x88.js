@@ -33,6 +33,29 @@
  * И обратно:
  * x_07 = s_0x88 & 7;
  * y_07 = s_0x88 >> 4; // s_0x88 / 16
+ * 
+ * у нас два массива размером 128, т.е. от 0 до 127
+ * один с именами фигур закодированных цифрами: 
+ * 0- нет фигуры, 1- пешка, 2-конь, 3-слон, 4-ладья, 5-ферзь, 6-король.
+ * и другой с цветом фигур: 0- черная фигура, 1-белая фигура.
+ * 
+ * и плюс еще вспомогательная информация:
+ * 
+ * цвет хода 0 - черные 1 - белые
+ * разрешение взятия на проходе 1/0
+ * координата битого поля
+ * рокировка белых в длинную сторону   1/0
+ * рокировка белых в короткую сторону  1/0
+ * рокировка черных в длинную сторону  1/0
+ * рокировка черных в короткую сторону 1/0
+ * оценка позиции
+ * количество ходов без взятий или движений пешки. нужно для правила 50 ходов
+ * количество полных ходов приведших к данной позиции. увеличиваем только на ходе белых
+ * 
+ * на мой взгляд это максимально наглядно.
+ * не прибавить не убавить.
+ * 
+ * ходы без взятий и полные ходы пока что без внимания.
 */
 
 class Chess_board_0x88_C {
@@ -133,7 +156,7 @@ class Chess_board_0x88_C {
         return y07;
     }
 
-    // рисуем доску на консоле браузера (для тестирования)
+    // выводим дополнительную информацию по позиции на консоль браузера (для тестирования)
     test_print_any_0x88() {
         console.log("test_print_any_0x88 ****************");
         console.log("side_to_move " + this.side_to_move);
@@ -148,7 +171,7 @@ class Chess_board_0x88_C {
     }
 
 
-    // рисуем доску на консоле браузера (для тестирования)
+    // печатаем имена фигур на позиции в консоле браузера (для тестирования)
     test_print_0x88() {
         console.log("test_print_0x88 ****************");
         let l = 0;// 
@@ -171,7 +194,7 @@ class Chess_board_0x88_C {
         console.log("**************** test_print_0x88");
     }
 
-    // рисуем доску на консоле браузера (для тестирования)
+    // печатаем цвета фигур на позиции в консоле браузера (для тестирования)
     test_print_0x88_color() {
         console.log("test_print_0x88_color ****************");
         let l = 0;// только один раз должен сработать перевод строки
@@ -190,6 +213,7 @@ class Chess_board_0x88_C {
         console.log("**************** test_print_0x88_color");
     }
 
+     // выводим позицию в одну линию на консоль браузера
     test_print_0x88_line() {
         console.log("test_print_0x88_line ****************");
         let line = "";//
@@ -200,7 +224,7 @@ class Chess_board_0x88_C {
         console.log("**************** test_print_0x88_line");
     }
 
-    //
+    // проверяем совпадение двух позиций. нужно для тестирования
     test_compare_chess_board_0x88(chess_board_0x88_O) {
 
         let is_test_ok = 1;
@@ -266,7 +290,7 @@ class Chess_board_0x88_C {
     }
 
 
-    //
+    // записываем одну позицию в другую (копируем массив и вспомгательную информацию)
     save_chess_board_0x88(chess_board_0x88_O) {
         //console.log("Make_move_0x88_C->do_undo_moves");
         for (let i = 0; i < 128; i++) {
@@ -299,6 +323,7 @@ class Chess_board_0x88_C {
         let i = -1;
 
         this.iniStartPositionForWhite();
+
         for (let y = 0; y < 8; y++) {
             for (let x = 0; x < 8; x++) {
                 i = this.x07_y07_to_0x88(x, y);
@@ -326,7 +351,7 @@ class Chess_board_0x88_C {
 
     // https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
     // "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-    // SET BOARD инициируем позицию из фена
+    // инициируем позицию из фена
     set_0x88_from_fen(fen) {
         //console.log('ChessBoard_0x88_C->set_0x88_from_fen');
 
@@ -395,7 +420,7 @@ class Chess_board_0x88_C {
                     } else {
                         y07_en_passant = 8 - Number(char);
                         this.en_passant_yes = 1;
-                        // сразу для доски 0x88 потому что для 8х8 информация все равно не используется
+                        // 
                         this.en_passant_target_square = this.x07_y07_to_0x88(x07_en_passant, y07_en_passant);
                         //console.log('x07_en_passant ' + x07_en_passant);
                         //console.log('y07_en_passant ' + y07_en_passant);
@@ -432,7 +457,9 @@ class Chess_board_0x88_C {
     }
 
 
-    //
+    // по букве из фена ставим фигуру на позицию. 
+    // если вместо буквы цифра то перводим ее в количество пустых клеток 
+    // так сделано потому что запись фена вида /1p6/8/
     char_fen_to_board(char, x, y) {
 
         let delta_x = 1;
@@ -502,7 +529,7 @@ class Chess_board_0x88_C {
 
 
     // "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-    // SET FEN инициируем фен из позиции    
+    // пишем строку фен по позиции    
     set_fen_from_0x88() {//
         //console.log('Chess_board_0x88_C->set_fen_from_8x8************************');
         let fen = "";
@@ -511,7 +538,7 @@ class Chess_board_0x88_C {
         //i = chess_board_0x88_O.x07_y07_to_0x88(x, y);
         for (let y = 0; y < 8; y++) {
             for (let x = 0; x < 8; x++) {
-
+                // перводим координаты х,у в координату одномерного массива
                 z = this.x07_y07_to_0x88(x, y);
 
                 if (this.sq_piece_0x88[z] != Chess_board_0x88_C.PIECE_NO) {
@@ -534,6 +561,7 @@ class Chess_board_0x88_C {
             if (y != 7) fen = fen + "/";
         }
         fen = fen + " ";
+        // цвет хода
         if (this.side_to_move == Chess_board_0x88_C.WHITE) {
             fen = fen + "w";
         } else {
@@ -541,29 +569,34 @@ class Chess_board_0x88_C {
         }
         fen = fen + " ";
         let c = 0;
+        // разрешения на рокировки. в данном случае короткая для белых
         if (this.castling_K == 1) {
             c = 1;
             fen = fen + "K";
         }
+        //длинная для белых
         if (this.castling_Q == 1) {
             c = 1;
             fen = fen + "Q";
         }
+        // короткая для черных
         if (this.castling_k == 1) {
             c = 1;
             fen = fen + "k";
         }
+        // длинная для черных
         if (this.castling_q == 1) {
             c = 1;
             fen = fen + "q";
         }
+        // случай когда рокировк одна или нет разрешенных
         if (c == 1) {
             fen = fen + " ";
         } else {
             fen = fen + "-";
             fen = fen + " ";
         }
-
+        // взятие на проходе. пишем вида a3
         let yy = 8 - this.s_0x88_to_y07(this.en_passant_target_square);
         if (this.en_passant_yes == 1) {
 
@@ -578,7 +611,7 @@ class Chess_board_0x88_C {
 
     }
 
-    //
+    // первод имени фигуры в виде цифры в букву для фена
     fen_piece_to_char(z) {
         let char = "";
         // KING
@@ -645,7 +678,7 @@ class Chess_board_0x88_C {
         return char;
     }
 
-
+    // ищем короля заданного цвета. нужно для обнаружения шаха
     searching_king(piece_color) {
         for (let i = 0; i < 128; i++) {
             if ((i & 136) == 0) {// 136 0x88
@@ -660,7 +693,7 @@ class Chess_board_0x88_C {
         return -1;
     }
 
-    //
+    // стартовая позиция
     iniStartPositionForWhite() {
 
         /*
@@ -715,7 +748,7 @@ class Chess_board_0x88_C {
         this.score = -1;
     }
 
-    //
+    // нулевая позиция. нужна когда мы раставляем фигуры по фену
     iniPositionFor_0() {
 
         // раставляем фигуры

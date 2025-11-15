@@ -35,6 +35,12 @@ class ChessBoard_8x8_C {
         "a", "b", "c", "d", "e", "f", "g", "h"
     ];
 
+    static X_START = 15;
+    static Y_START = 5;
+
+    static SQUARES_WIDTH = 50;
+    static SQUARES_HEIGHT = 50;
+
 
     squares_color_8x8 = null;// цвет клеток
     sq_piece_8x8 = null;// фигуры
@@ -42,7 +48,7 @@ class ChessBoard_8x8_C {
 
     // ВСПОМОГАТЕЛЬНАЯ ИНФОРМАЦИЯ
     // цвет хода 0 - черные 1 - белые
-    side_to_move = 1;
+    side_to_move = ChessBoard_8x8_C.WHITE;
 
     // разрешение взятия на проходе 1/0
     en_passant_yes = -1;
@@ -93,18 +99,18 @@ class ChessBoard_8x8_C {
         ];
     }
 
-    iniM(x_start, y_start, squares_width, squares_height) {
+    iniM() {
 
-        this.x_start = x_start;
-        this.y_start = y_start;
-        this.squares_width = squares_width;
-        this.squares_height = squares_height;
+        this.x_start = ChessBoard_8x8_C.X_START;
+        this.y_start = ChessBoard_8x8_C.Y_START;
+        this.squares_width = ChessBoard_8x8_C.SQUARES_WIDTH;
+        this.squares_height = ChessBoard_8x8_C.SQUARES_HEIGHT;
 
         this.iniStartPositionForWhite();
 
         //this.iniStartPositionInvert();
         // цвет хода 0 - черные 1 - белые
-        this.side_to_move = 1;
+        this.side_to_move = ChessBoard_8x8_C.WHITE;
         // разрешение взятия на проходе 1/0
         this.en_passant_yes = 0;
         // координата битого поля
