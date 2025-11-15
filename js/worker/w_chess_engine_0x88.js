@@ -34,7 +34,7 @@ class W_ChessEngine_0x88_С {
       fen = message.slice(13, end);
       //console.log('e fen from gui : ' + fen);
 
-      w_chessEngine_0x88_O.chessEngine_0x88_O.search_start_0x88_O.chess_board_0x88_O.set_0x88_from_fen(fen);
+      w_chessEngine_0x88_O.chessEngine_0x88_O.chess_board_0x88_O_start.set_0x88_from_fen(fen);
       
      //console.log("e-> ini chess_board_0x88_O");
      //w_chessEngine_0x88_O.chessEngine_0x88_O.chess_board_0x88_O.test_print_0x88();
@@ -55,7 +55,7 @@ class W_ChessEngine_0x88_С {
      //info_return_e.chess_board_0x88_O_move.test_print_0x88_color();
      //info_return_e.chess_board_0x88_O_move.test_print_any_0x88();
 
-      fen = info_return_e.chess_board_0x88_O_move.set_fen_from_0x88();
+      fen = info_return_e.chess_board_0x88_O_end.set_fen_from_0x88();
       //console.log('e fen to gui : ' + fen); 
       postMessage("position fen " + fen);
       postMessage("score " + info_return_e.score);

@@ -17,7 +17,7 @@
 class ChessBoard_8x8_C {
 
     html5Sprites_O = null;// при инициализации переприсваеваем.
-    static NAME = "ChessBoard_C";
+    static NAME = "ChessBoard_8x8_C";
 
     static BLACK = 0;
     static WHITE = 1;
@@ -35,9 +35,11 @@ class ChessBoard_8x8_C {
         "a", "b", "c", "d", "e", "f", "g", "h"
     ];
 
+    // сдвиг доски от нулевой т.е. верхней левой точки
     static X_START = 15;
     static Y_START = 5;
 
+    // размер клетки доски на экране
     static SQUARES_WIDTH = 50;
     static SQUARES_HEIGHT = 50;
 

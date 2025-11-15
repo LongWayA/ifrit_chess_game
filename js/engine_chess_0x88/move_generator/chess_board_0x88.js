@@ -77,7 +77,7 @@ class Chess_board_0x88_C {
         "PIECE_NO", "PAWN", "KNIGHT", "BISHOP", "ROOK", "QUEEN", "KING"
     ];
 
-    // letter coordinate
+    // нужно для взятия на проходе при перевода позиции в фен
     static LET_COOR = [
         "a", "b", "c", "d", "e", "f", "g", "h"
     ];

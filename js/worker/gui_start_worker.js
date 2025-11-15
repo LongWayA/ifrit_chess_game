@@ -35,7 +35,7 @@ let GuiStartWorker_R = {
                   GuiStartWorker_R.checkbox_O.set_input_set_fen(fen);
                   //console.log('g fen from engine : ' + fen);
                   GuiStartWorker_R.IfritChessGame_O.gui_chess_O.chessBoard_8x8_O.set_8x8_from_fen(fen, 
-                        GuiStartWorker_R.IfritChessGame_O.chessEngine_0x88_O.search_start_0x88_O.chess_board_0x88_O);
+                        GuiStartWorker_R.IfritChessGame_O.chessEngine_0x88_O.chess_board_0x88_O_start);
             }
 
             if (message.includes("score ")) {
@@ -56,6 +56,7 @@ let GuiStartWorker_R = {
 
             if (message.includes("PV line: ")) {
                   GuiStartWorker_R.IfritChessGame_O.gui_chess_O.pv_line_str = message;
+                  GuiStartWorker_R.IfritChessGame_O.checkbox_O.add_text_engine("\n" + message);
 
             }
 
@@ -96,7 +97,7 @@ let GuiStartWorker_R = {
 
             // message_gui_to_engine    
             let fen = GuiStartWorker_R.IfritChessGame_O.gui_chess_O.chessBoard_8x8_O.set_fen_from_8x8(
-                  GuiStartWorker_R.IfritChessGame_O.chessEngine_0x88_O.search_start_0x88_O.chess_board_0x88_O);
+                  GuiStartWorker_R.IfritChessGame_O.chessEngine_0x88_O.chess_board_0x88_O_start);
             let message = "position fen " + fen;
             worker_egine_0x88.postMessage(message);
             message = "go depth " + GuiStartWorker_R.IfritChessGame_O.gui_chess_O.depth_max;
@@ -107,21 +108,20 @@ let GuiStartWorker_R = {
                   if (not_go == 1) {
                         GuiStartWorker_R.IfritChessGame_O.gui_chess_O.nomber_move = GuiStartWorker_R.IfritChessGame_O.gui_chess_O.nomber_move + 1;
                         GuiStartWorker_R.IfritChessGame_O.checkbox_O.add_text_chess_game(GuiStartWorker_R.IfritChessGame_O.gui_chess_O.nomber_move + "." +
-                              GuiStartWorker_R.IfritChessGame_O.chessEngine_0x88_O.search_start_0x88_O.move_list_gui_0x88_O.move_to_string(
+                              GuiStartWorker_R.IfritChessGame_O.chessEngine_0x88_O.move_list_0x88_O_gui.move_to_string(
                                     GuiStartWorker_R.IfritChessGame_O.chessEngine_0x88_O.i_move,
-                                    GuiStartWorker_R.IfritChessGame_O.chessEngine_0x88_O.search_start_0x88_O.chess_board_0x88_O_gui));
+                                    GuiStartWorker_R.IfritChessGame_O.chessEngine_0x88_O.chess_board_0x88_O_gui));
                   }
 
             } else {
                   if (not_go == 1) {
                         GuiStartWorker_R.IfritChessGame_O.checkbox_O.add_text_chess_game(
-                              GuiStartWorker_R.IfritChessGame_O.chessEngine_0x88_O.search_start_0x88_O.move_list_gui_0x88_O.move_to_string(
+                              GuiStartWorker_R.IfritChessGame_O.chessEngine_0x88_O.move_list_0x88_O_gui.move_to_string(
                                     GuiStartWorker_R.IfritChessGame_O.chessEngine_0x88_O.i_move,
-                                    GuiStartWorker_R.IfritChessGame_O.chessEngine_0x88_O.search_start_0x88_O.chess_board_0x88_O_gui));
+                                    GuiStartWorker_R.IfritChessGame_O.chessEngine_0x88_O.chess_board_0x88_O_gui));
                   }
 
             }
-            GuiStartWorker_R.IfritChessGame_O.stop_click_2 = 1;
 
       }
 
