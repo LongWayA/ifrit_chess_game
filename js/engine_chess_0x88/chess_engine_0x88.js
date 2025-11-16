@@ -33,7 +33,9 @@ class ChessEngine_0x88_С {
 
   static NAME = "ChessEngine_0x88";
 
-  // для всех
+  worker_chessEngine_0x88_O = null;
+
+  // для 
   chess_board_0x88_O_start = new Chess_board_0x88_C();
 
   chess_board_0x88_O_test = new Chess_board_0x88_C();
@@ -56,9 +58,26 @@ class ChessEngine_0x88_С {
 
   }
 
-  iniM() {
-    this.search_start_0x88_O.iniM();
+  iniM(worker_chessEngine_0x88_O) {
+
+    this.worker_chessEngine_0x88_O = worker_chessEngine_0x88_O;
+
+    this.search_start_0x88_O.iniM(this);
     this.uci_O.iniM();
+  }
+
+  message_worker_chessEngine_to_engine(message) {
+    
+  }
+
+  // сообщение поиска движку
+  message_search_start_to_engine(info_return_search) {
+     let message = info_return_search.pv_line.pv_line_to_string(this.chess_board_0x88_O_test,
+      this.move_list_0x88_O_test);
+
+      console.log("Search_0x88_C->pv_line_str " + message + " depth_search " + info_return_search.depth_search);
+
+    this.worker_chessEngine_0x88_O.message_chessEngine_0x88_to_worker_chessEngine_0x88_O(message);
   }
 
   //////////////////////
@@ -157,7 +176,7 @@ class ChessEngine_0x88_С {
     // обсчитываем всевозможные ходы и заполняем специальный список move_list_gui_0x88_O
     this.move_list_0x88_O_gui.clear_list();
     this.search_start_0x88_O.move_gen_1_captures_0x88_O.generated_pseudo_legal_moves_one_piece_for_gui(from,
-      this.chess_board_0x88_O_gui,this.move_list_0x88_O_gui);
+      this.chess_board_0x88_O_gui, this.move_list_0x88_O_gui);
 
     this.search_start_0x88_O.move_gen_2_quiet_0x88_O.generated_pseudo_legal_moves_one_piece_for_gui(from,
       this.chess_board_0x88_O_gui, this.move_list_0x88_O_gui);
@@ -186,10 +205,10 @@ class ChessEngine_0x88_С {
     this.move_list_0x88_O_gui.clear_list();
 
     this.search_start_0x88_O.move_gen_1_captures_0x88_O.generated_pseudo_legal_moves_one_piece_for_gui(from,
-      this.chess_board_0x88_O_gui,this.move_list_0x88_O_gui);
+      this.chess_board_0x88_O_gui, this.move_list_0x88_O_gui);
 
     this.search_start_0x88_O.move_gen_2_quiet_0x88_O.generated_pseudo_legal_moves_one_piece_for_gui(from,
-      this.chess_board_0x88_O_gui,this.move_list_0x88_O_gui);
+      this.chess_board_0x88_O_gui, this.move_list_0x88_O_gui);
 
     draw_O.draw_rect_move(this.move_list_0x88_O_gui, this.chess_board_0x88_O_gui,
       chessBoard_8x8_O, Html5Canvas_C.BLUE, is_white);

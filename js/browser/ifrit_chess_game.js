@@ -107,11 +107,20 @@ let IfritChessGame_R = {
         IfritChessGame_R.checkbox_O.set_input_max_depth_value(IfritChessGame_R.gui_chess_O.depth_max);
 
         //console.log('IfritChessGame_R->iniM');       
-        IfritChessGame_R.chessEngine_0x88_O.iniM();
+        IfritChessGame_R.chessEngine_0x88_O.iniM(IfritChessGame_R);
         IfritChessGame_R.mouse_O.iniM(IfritChessGame_R.gui_chess_O.draw_O.html5Canvas_O.idCanvas, IfritChessGame_R);
         IfritChessGame_R.checkbox_O.iniM(IfritChessGame_R);
- 
+
     },
+
+    message_to_gui(message) {
+
+    },
+
+    message_to_engine(message) {
+
+    },
+
 
     startGame() {
         //console.log('IfritChessGame_R->startGame');

@@ -14,6 +14,14 @@ import { Gui_chess_C } from "../gui_chess/gui_chess.js";
  *  
 */
 
+const worker_egine_0x88 = new Worker('js/worker/worker_chess_engine_0x88.js', {type: "module"});
+
+worker_egine_0x88.onmessage = function (event) {
+      //console.log('Сообщение от движка : ', event.data);
+      GuiStartWorker_R.message_egnine_to_gui(event.data);
+};
+
+//
 let GuiStartWorker_R = {
 
       NAME: "GuiStartWorker_R",
@@ -129,10 +137,3 @@ let GuiStartWorker_R = {
 };
 
 export{GuiStartWorker_R};
-
-const worker_egine_0x88 = new Worker('js/worker/w_chess_engine_0x88.js', {type: "module"});
-
-worker_egine_0x88.onmessage = function (event) {
-      //console.log('Сообщение от движка : ', event.data);
-      GuiStartWorker_R.message_egnine_to_gui(event.data);
-};

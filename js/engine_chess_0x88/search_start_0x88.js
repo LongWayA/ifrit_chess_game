@@ -1,7 +1,7 @@
 /** 
  * @copyright Copyright (c) 2025, AnBr75 and/or its affiliates. All rights reserved.
  * @author AnBr75
- * @name search_0x88.js
+ * @name search_start_0x88.js
  * @version created 11.10m.2025 
  * last modified 11.10m.2025, 24.10m.2025
 */
@@ -29,13 +29,38 @@ import { Search_ab_0x88_C } from "./search_ab_0x88.js";
 
 /**
 * НАЗНАЧЕНИЕ
-
+* Поиск начинается с присланой позиции chess_board_0x88_O_start
+* и максимальной глубины depth_max_2
+* конечно можно было бы уже на этом уровне принимать фен, но пока что
+* решил переводить из фена уровнем выше что бы и там что то делать и
+* не перегружать этот уровень. но на самом деле это не принципиально
+*
+* Во время поиска идет циклическое погружение и на каждой просчитанной глубине
+* возвращается заполненный объект info_return_search
+* в нем я тоже решил обойтись минимумом. 
+* Для тестов и ясности есть начальная позиция chess_board_0x88_O_start
+* Конечно есть финальная позиция chess_board_0x88_O_end
+* Так что поиск начинается со стартовой и заканчивается
+* финальной позицией.
+* Конечно есть лучшая оценка найденная во время поиска score
+* Конечно же выводим лучший вариант pv_line
+* его вид еще не окончательный. надо будет еще обдумать.
+* Дальше вывод количество рассмотреных узлов. 
+* Надо подумать включать в них быстрый поиск node_count
+* или может быть вывести два - с ним и без него 
+* И конечно же глубина поиска. depth_search
+* После просмотра на заданной глубине мы выводим объект info_return_search
+*
+* Думаю этот интерфейс останется надолго. Добавление эвристик и даже замена генератора
+* на него влиять не должны
+*
 */
 
 
 
 class Search_start_0x88_C {
 
+  chessEngine_0x88_O = null;
 
   move_gen_1_captures_0x88_O = new Move_gen_1_captures_0x88_С();
   move_gen_2_quiet_0x88_O = new Move_gen_2_quiet_0x88_С();
@@ -57,23 +82,30 @@ class Search_start_0x88_C {
   static BETA_VALUE = 30000;
 
   info_return_search = {
-    chess_board_0x88_O_end: null,
-    score: 0,
-    pv_line: null,
-    node_count: 0,
-    pv_line_str: null
+    chess_board_0x88_O_start: null,//
+    chess_board_0x88_O_end: null,//
+    score: 0,//
+    pv_line: null,//
+    node_count: 0,//
+    depth_search: 0//
   };
-
-  node = 0;
 
   constructor() {
 
   }
 
-  iniM() {
+  iniM(chessEngine_0x88_O) {
+    this.chessEngine_0x88_O = chessEngine_0x88_O;
+
     this.hash_table_0x88_O.iniM();
     this.history_heuristic_0x88_O.iniM();
   }
+
+
+  message_engine_to_search_start(message) {
+       
+  }
+
 
   // 
   searching_iterative_deepening(chess_board_0x88_O_start, depth_max_2) {
@@ -100,12 +132,13 @@ class Search_start_0x88_C {
     move_list_0x88_O.iniM();
 
     //this.hash_table_0x88_O.iniM();
-    this.node = 0;
+    let node = 0;
 
     chess_board_0x88_O.save_chess_board_0x88(chess_board_0x88_O_start);
 
     // копируем доску чтобы когда у движка не будет ходов он не откатывался к предыдущей.
     chess_board_0x88_O_end.save_chess_board_0x88(chess_board_0x88_O);
+
 
     this.move_gen_1_captures_0x88_O.generated_pseudo_legal_moves(chess_board_0x88_O, move_list_0x88_O);
     this.move_gen_2_quiet_0x88_O.generated_pseudo_legal_moves(chess_board_0x88_O, move_list_0x88_O);
@@ -152,7 +185,7 @@ class Search_start_0x88_C {
           this.move_gen_1_captures_0x88_O, this.move_gen_2_quiet_0x88_O, (depth + 1), depth_max,
           isPV_node, this.hash_table_0x88_O, this.killer_heuristic_0x88_O, this.history_heuristic_0x88_O);
 
-        this.node = this.node + this.search_ab_0x88_O.node + 1;
+        node = node + this.search_ab_0x88_O.node + 1;
 
         move_list_0x88_O.score_move[move_i] = score;
 
@@ -190,13 +223,15 @@ class Search_start_0x88_C {
 
       pv_line_0x88_O.save_list(best_node_pv_line_0x88_O);
 
+      this.info_return_search.chess_board_0x88_O_start = chess_board_0x88_O_start;
       this.info_return_search.chess_board_0x88_O_end = chess_board_0x88_O_end;
       this.info_return_search.score = best_score;
       this.info_return_search.pv_line = pv_line_0x88_O;
-      this.info_return_search.node_count = this.node;
-      this.info_return_search.pv_line_str = pv_line_0x88_O.pv_line_to_string(chess_board_0x88_O, move_list_0x88_O);
-      console.log("Search_0x88_C->pv_line_str " + this.info_return_search.pv_line_str + " depth_max " + depth_max);
-      postMessage(this.info_return_search.pv_line_str); 
+      this.info_return_search.node_count = node;
+      this.info_return_search.depth_search = depth_max;
+ 
+      this.chessEngine_0x88_O.message_search_start_to_engine(this.info_return_search); 
+      
       console.log("Search_0x88_C->z " + this.hash_table_0x88_O.z);
       console.log("Search_0x88_C->z_add " + this.hash_table_0x88_O.z_add);
       console.log("Search_0x88_C->no_colz " + this.hash_table_0x88_O.no_colz);
