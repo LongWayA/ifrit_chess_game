@@ -234,7 +234,7 @@ class Search_ab_0x88_C {
               if (isPV == 1) {
                 best_node_line_0x88_O.save_list(pv_line_0x88_O);
                 best_node_line_0x88_O.type_variant[depth] = "ab_W";
-                best_node_line_0x88_O.score_move[depth] = score;
+                //best_node_line_0x88_O.score_depth_max = score;
                 is_update_pv_line = 1;
               }
             }
@@ -269,7 +269,7 @@ class Search_ab_0x88_C {
               if (isPV == 1) {
                 best_node_line_0x88_O.save_list(pv_line_0x88_O);
                 best_node_line_0x88_O.type_variant[depth] = "ab_B";
-                best_node_line_0x88_O.score_move[depth] = score;
+                //best_node_line_0x88_O.score_depth_max = score;
                 is_update_pv_line = 1;
               }
             }

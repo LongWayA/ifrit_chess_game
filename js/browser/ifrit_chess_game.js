@@ -95,15 +95,15 @@ let IfritChessGame_R = {
         // TEST_MESSAGE работа с воркером
 
         //IfritChessGame_R.gui_chess_O.test = Gui_chess_C.TEST_GEN_MOOVE;//
-        IfritChessGame_R.gui_chess_O.test = Gui_chess_C.TEST_MINMAX;//        
+        //IfritChessGame_R.gui_chess_O.test = Gui_chess_C.TEST_MINMAX;//        
         //IfritChessGame_R.gui_chess_O.test = Gui_chess_C.TEST_AB;//
 
         //IfritChessGame_R.gui_chess_O.test = Gui_chess_C.TEST_ID;//
 
-        //IfritChessGame_R.gui_chess_O.test = Gui_chess_C.TEST_MESSAGE;//       
+        IfritChessGame_R.gui_chess_O.test = Gui_chess_C.TEST_MESSAGE;//       
 
         // задаем глубину перебора во время игры или обсчета тестовых позиций на количество узлов
-        IfritChessGame_R.gui_chess_O.depth_max = 1;
+        IfritChessGame_R.gui_chess_O.depth_max = 4;
         IfritChessGame_R.checkbox_O.set_input_max_depth_value(IfritChessGame_R.gui_chess_O.depth_max);
 
         //console.log('IfritChessGame_R->iniM');       
@@ -280,7 +280,7 @@ let IfritChessGame_R = {
             //console.log("ChessBoard_8x8_C->click(mouseDown) кликнули по другой клетке");
             //console.log("ChessBoard_8x8_C->click(mouseDown) после пройденной проверки на легальность хода из списка");
 
-            let is_moove_legal = IfritChessGame_R.chessEngine_0x88_O.move_is_found(
+            let is_moove_legal = IfritChessGame_R.chessEngine_0x88_O.move_is_legal(
                 IfritChessGame_R.gui_chess_O.click_save_on_squares_x,
                 IfritChessGame_R.gui_chess_O.click_save_on_squares_y,
                 IfritChessGame_R.gui_chess_O.click_on_squares_x,

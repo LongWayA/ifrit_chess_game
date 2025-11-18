@@ -6,7 +6,6 @@
  * last modified 17.11m.2025
 */
 
-import { Chess_board_0x88_C } from "./chess_board_0x88.js";
 
 /**
 * НАЗНАЧЕНИЕ
@@ -19,7 +18,7 @@ class Move_list_root_0x88_С {
 
     static LENGTH_LIST = 256;//
 
-    score_move = new Array(Move_list_0x88_С.LENGTH_LIST).fill(-1);
+    score_move = new Array(Move_list_root_0x88_С.LENGTH_LIST).fill(-1);
 
     number_move = 0;
 
@@ -35,10 +34,9 @@ class Move_list_root_0x88_С {
 
     // SORTING
 
-    sorting_list_top_max_score() {
+    sorting_list_top_max_score(move_list_0x88_O) {
 
         let save_type_move;
-        let save_piece_color;
         let save_score_move;
 
         let save_from;
@@ -46,39 +44,37 @@ class Move_list_root_0x88_С {
 
         //console.log("Move_list_0x88_С-> SORTING -----------------------------------");
         // выводим в начало списка ходы с максимальной оценкой. нужно белым
-        for (let i = 0; i < this.number_move; i++) {
-            for (let j = i + 1; j < this.number_move; j++) {// перебираем оставшийся список
+        for (let i = 0; i < move_list_0x88_O.number_move; i++) {
+            for (let j = i + 1; j < move_list_0x88_O.number_move; j++) {// перебираем оставшийся список
                 // если на позиции есть взятая фигура
                 if (this.score_move[i] < this.score_move[j]) {
                     // сохраняем позицию на которую будем писать
-                    save_type_move = this.type_move[i];
-                    save_piece_color = this.piece_color[i];
                     save_score_move = this.score_move[i];
-                    save_from = this.from[i];
-                    save_to = this.to[i];
+
+                    save_type_move = move_list_0x88_O.type_move[i];
+                    save_from = move_list_0x88_O.from[i];
+                    save_to = move_list_0x88_O.to[i];
 
                     // пишем на позицию
-                    this.type_move[i] = this.type_move[j];
-                    this.piece_color[i] = this.piece_color[j];
                     this.score_move[i] = this.score_move[j];
-                    this.from[i] = this.from[j];
-                    this.to[i] = this.to[j];
+
+                    move_list_0x88_O.type_move[i] = move_list_0x88_O.type_move[j];
+                    move_list_0x88_O.from[i] = move_list_0x88_O.from[j];
+                    move_list_0x88_O.to[i] = move_list_0x88_O.to[j];
 
                     // сюда пишем начальную позицию. т.о. две позиции меняются местами
-                    this.type_move[j] = save_type_move;
-                    this.piece_color[j] = save_piece_color;
                     this.score_move[j] = save_score_move;
-                    this.from[j] = save_from;
-                    this.to[j] = save_to;
+
+                    move_list_0x88_O.type_move[j] = save_type_move;
+                    move_list_0x88_O.from[j] = save_from;
+                    move_list_0x88_O.to[j] = save_to;
                 }
             }
         }
     }
 
-    sorting_list_top_min_score() {
-
+    sorting_list_top_min_score(move_list_0x88_O) {
         let save_type_move;
-        let save_piece_color;
         let save_score_move;
 
         let save_from;
@@ -86,45 +82,44 @@ class Move_list_root_0x88_С {
 
         //console.log("Move_list_0x88_С-> SORTING -----------------------------------");
         // выводим в начало списка ходы с максимальной оценкой. нужно белым
-        for (let i = 0; i < this.number_move; i++) {
-            for (let j = i + 1; j < this.number_move; j++) {// перебираем оставшийся список
+        for (let i = 0; i < move_list_0x88_O.number_move; i++) {
+            for (let j = i + 1; j < move_list_0x88_O.number_move; j++) {// перебираем оставшийся список
                 // если на позиции есть взятая фигура
                 if (this.score_move[i] > this.score_move[j]) {
                     // сохраняем позицию на которую будем писать
-                    save_type_move = this.type_move[i];
-                    save_piece_color = this.piece_color[i];
                     save_score_move = this.score_move[i];
-                    save_from = this.from[i];
-                    save_to = this.to[i];
+
+                    save_type_move = move_list_0x88_O.type_move[i];
+                    save_from = move_list_0x88_O.from[i];
+                    save_to = move_list_0x88_O.to[i];
 
                     // пишем на позицию
-                    this.type_move[i] = this.type_move[j];
-                    this.piece_color[i] = this.piece_color[j];
                     this.score_move[i] = this.score_move[j];
-                    this.from[i] = this.from[j];
-                    this.to[i] = this.to[j];
+
+                    move_list_0x88_O.type_move[i] = move_list_0x88_O.type_move[j];
+                    move_list_0x88_O.from[i] = move_list_0x88_O.from[j];
+                    move_list_0x88_O.to[i] = move_list_0x88_O.to[j];
 
                     // сюда пишем начальную позицию. т.о. две позиции меняются местами
-                    this.type_move[j] = save_type_move;
-                    this.piece_color[j] = save_piece_color;
                     this.score_move[j] = save_score_move;
-                    this.from[j] = save_from;
-                    this.to[j] = save_to;
+
+                    move_list_0x88_O.type_move[j] = save_type_move;
+                    move_list_0x88_O.from[j] = save_from;
+                    move_list_0x88_O.to[j] = save_to;
                 }
             }
         }
-
     }
 
     // 
-    add_move(score_move) {
+    add_score(score_move) {
         //console.log('Move_list_0x88_С->add_move');
         this.score_move[this.number_move] = score_move;
         this.number_move = this.number_move + 1;
     }
 
     clear_list() {
-        for (let i = 0; i < Move_list_0x88_С.LENGTH_LIST; i++) {
+        for (let i = 0; i < Move_list_root_0x88_С.LENGTH_LIST; i++) {
             this.score_move[i] = -1;
         }
         this.number_captures_move = 0;
@@ -132,4 +127,4 @@ class Move_list_root_0x88_С {
     }
 }
 
-export{Move_list_root_0x88_С};
+export { Move_list_root_0x88_С };
