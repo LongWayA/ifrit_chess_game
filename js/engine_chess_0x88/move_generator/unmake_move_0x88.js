@@ -342,14 +342,14 @@ class Unmake_move_0x88_C {
     // стираем цвет фигуры на новом месте 
     chess_board_0x88_O.sq_piece_color_0x88[move_list_0x88_O.to[move_i]] = Chess_board_0x88_C.BLACK;// 0
 
-    // if (move_list_0x88_O.piece_color[move_i] != chess_board_0x88_O.sq_piece_color_0x88[move_list_0x88_O.from[move_i]]) {
+    // if (move_list_0x88_O.piece_color != chess_board_0x88_O.sq_piece_color_0x88[move_list_0x88_O.from[move_i]]) {
     //   console.log("ЦВЕТА НЕ СОВПАДАЮТ!----------------------------------");
-    //   console.log("piece_color " + move_list_0x88_O.piece_color[move_i]);
+    //   console.log("piece_color " + move_list_0x88_O.piece_color);
     //   console.log("sq_piece_color " + chess_board_0x88_O.sq_piece_color_0x88[move_list_0x88_O.from[move_i]]);
     //   console.log("sq_piece " + chess_board_0x88_O.sq_piece_0x88[move_list_0x88_O.from[move_i]]);
     // }
 
-    if (move_list_0x88_O.piece_color[move_i] == 1) {
+    if (move_list_0x88_O.piece_color == 1) {
 
       // перемещаем ладью. ее ход не прописан в списке ходов
       // записываем имя фигуры на старом месте
@@ -403,7 +403,7 @@ class Unmake_move_0x88_C {
     // стираем цвет фигуры на новом месте 
     chess_board_0x88_O.sq_piece_color_0x88[move_list_0x88_O.to[move_i]] = Chess_board_0x88_C.BLACK;// 0
 
-    if (move_list_0x88_O.piece_color[move_i] == 1) {
+    if (move_list_0x88_O.piece_color == 1) {
 
       // перемещаем ладью. ее ход не прописан в списке ходов
       // записываем имя фигуры на старом месте
@@ -459,7 +459,7 @@ class Unmake_move_0x88_C {
     // стираем цвет фигуры на новом месте 
     chess_board_0x88_O.sq_piece_color_0x88[move_list_0x88_O.to[move_i]] = Chess_board_0x88_C.BLACK;//
 
-    if (move_list_0x88_O.piece_color[move_i] == 1) {
+    if (move_list_0x88_O.piece_color == 1) {
       // востанавливаем имя битой на проходе пешки
       chess_board_0x88_O.sq_piece_0x88[move_list_0x88_O.to[move_i] + 16] = Chess_board_0x88_C.PAWN;//
       // востанавливаем цвет битой на проходе пешки 

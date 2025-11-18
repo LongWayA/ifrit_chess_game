@@ -79,9 +79,7 @@ class Quiescence_search_0x88_C {
 
       score = this.quiescence_search(alpha, beta, chess_board_0x88_O, move_gen_1_captures_0x88_O, (depth + 1));
 
-      //move_list_0x88_O.score_move[move_i] = score;
-
-      if (move_list_0x88_O.piece_color[move_i] == Chess_board_0x88_C.WHITE) {
+      if (move_list_0x88_O.piece_color == Chess_board_0x88_C.WHITE) {
         if (score >= beta) {
           this.unmake_move_0x88_O.undo_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O);
           return score;

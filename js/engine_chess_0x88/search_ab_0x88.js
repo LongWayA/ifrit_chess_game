@@ -196,7 +196,7 @@ class Search_ab_0x88_C {
             , killer_heuristic_0x88_O, history_heuristic_0x88_O);
         } else {
 
-          if (move_list_0x88_O.piece_color[move_i] == Chess_board_0x88_C.WHITE) {
+          if (move_list_0x88_O.piece_color == Chess_board_0x88_C.WHITE) {
             isPV_node = 0;
             score = this.searching_alpha_beta_id(alpha, (alpha + 1), pv_line_0x88_O, chess_board_0x88_O, move_gen_1_captures_0x88_O,
               move_gen_2_quiet_0x88_O, (depth + 1), depth_max, isPV_node, hash_table_0x88_O,
@@ -220,9 +220,7 @@ class Search_ab_0x88_C {
         // score = this.searching_alpha_beta_id(alpha, beta, pv_line_0x88_O, chess_board_0x88_O, move_gen_1_captures_0x88_O,
         //   move_gen_2_quiet_0x88_O, (depth + 1), depth_max, isPV_node, hash_table_0x88_O);
 
-        move_list_0x88_O.score_move[move_i] = score;
-
-        if (move_list_0x88_O.piece_color[move_i] == Chess_board_0x88_C.WHITE) {
+        if (move_list_0x88_O.piece_color == Chess_board_0x88_C.WHITE) {
 
           if (score > found_score) {
             found_score = score;
@@ -231,7 +229,7 @@ class Search_ab_0x88_C {
               alpha = score; //
               hash_table_0x88_O.add_position(Hash_table_0x88_C.ALPHA_UPDATE, move_list_0x88_O.type_move[move_i],
               move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], score, depth, depth_max, chess_board_0x88_O);
-              // history_heuristic_0x88_O.history_good_save(move_list_0x88_O.piece_color[move_i],
+              // history_heuristic_0x88_O.history_good_save(move_list_0x88_O.piece_color,
               //   move_list_0x88_O.type_move[move_i], move_list_0x88_O.to[move_i], depth, depth_max);
               if (isPV == 1) {
                 best_node_line_0x88_O.save_list(pv_line_0x88_O);
@@ -246,7 +244,7 @@ class Search_ab_0x88_C {
             // восстановили доску
             this.unmake_move_0x88_O.undo_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O);
 
-            history_heuristic_0x88_O.history_good_save(move_list_0x88_O.piece_color[move_i],
+            history_heuristic_0x88_O.history_good_save(move_list_0x88_O.piece_color,
               move_list_0x88_O.type_move[move_i], move_list_0x88_O.to[move_i], depth, depth_max);
 
             killer_heuristic_0x88_O.add_move(move_list_0x88_O.type_move[move_i], move_list_0x88_O.from[move_i],
@@ -266,7 +264,7 @@ class Search_ab_0x88_C {
               beta = score; //
               hash_table_0x88_O.add_position(Hash_table_0x88_C.BETA_UPDATE, move_list_0x88_O.type_move[move_i],
               move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], score, depth, depth_max, chess_board_0x88_O);              
-              // history_heuristic_0x88_O.history_good_save(move_list_0x88_O.piece_color[move_i],
+              // history_heuristic_0x88_O.history_good_save(move_list_0x88_O.piece_color,
               //   move_list_0x88_O.type_move[move_i], move_list_0x88_O.to[move_i], depth, depth_max);
               if (isPV == 1) {
                 best_node_line_0x88_O.save_list(pv_line_0x88_O);
@@ -281,7 +279,7 @@ class Search_ab_0x88_C {
             // восстановили доску
             this.unmake_move_0x88_O.undo_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O);
 
-            history_heuristic_0x88_O.history_good_save(move_list_0x88_O.piece_color[move_i],
+            history_heuristic_0x88_O.history_good_save(move_list_0x88_O.piece_color,
               move_list_0x88_O.type_move[move_i], move_list_0x88_O.to[move_i], depth, depth_max);
 
             killer_heuristic_0x88_O.add_move(move_list_0x88_O.type_move[move_i], move_list_0x88_O.from[move_i],

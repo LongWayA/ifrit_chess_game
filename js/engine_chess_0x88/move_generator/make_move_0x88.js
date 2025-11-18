@@ -214,14 +214,14 @@ class Make_move_0x88_C {
         this.make_simple_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O);
         // двойное продвижение пешки открывает возможность взятия на проходе
         chess_board_0x88_O.en_passant_yes = 1;
-        if (move_list_0x88_O.piece_color[move_i] == 1) {
+        if (move_list_0x88_O.piece_color == 1) {
           // координата битого поля
           chess_board_0x88_O.en_passant_target_square = move_list_0x88_O.from[move_i] - 16;
         } else {
           chess_board_0x88_O.en_passant_target_square = move_list_0x88_O.from[move_i] + 16;
         }
         //console.log("PAWN_DOUBLE_PUSH");
-        //console.log("Make_move_0x88_C->make_en_passant_move_0x88-> piece_color " + move_list_0x88_O.piece_color[move_i]);
+        //console.log("Make_move_0x88_C->make_en_passant_move_0x88-> piece_color " + move_list_0x88_O.piece_color);
         //console.log("Make_move_0x88_C->make_en_passant_move_0x88-> chess_board_0x88_O.en_passant_target_square "
         //  + chess_board_0x88_O.en_passant_target_square);        
         break;
@@ -338,7 +338,7 @@ class Make_move_0x88_C {
 
     // если ход не отменили выше тогда остается проверить не под шахом ли наш король
     if (is_moove_legal == 1) {
-      let piece_color_king = move_list_0x88_O.piece_color[move_i];
+      let piece_color_king = move_list_0x88_O.piece_color;
       let from_king = chess_board_0x88_O.searching_king(piece_color_king);
       //console.log("from_king " + from_king);
       //console.log("piece_color_king " + piece_color_king);      ;
@@ -520,7 +520,7 @@ class Make_move_0x88_C {
       chess_board_0x88_O.side_to_move = 1 - chess_board_0x88_O.side_to_move;
 
 
-      if (move_list_0x88_O.piece_color[move_i] == 1) {
+      if (move_list_0x88_O.piece_color == 1) {
 
         // перемещаем ладью. ее ход не прописан в списке ходов
         // записываем имя фигуры на новом месте
@@ -609,7 +609,7 @@ class Make_move_0x88_C {
       // цвет хода 0 - черные 1 - белые
       chess_board_0x88_O.side_to_move = 1 - chess_board_0x88_O.side_to_move;
 
-      if (move_list_0x88_O.piece_color[move_i] == 1) {
+      if (move_list_0x88_O.piece_color == 1) {
 
         // перемещаем ладью. ее ход не прописан в списке ходов
         // записываем имя фигуры на новом месте
@@ -652,7 +652,7 @@ class Make_move_0x88_C {
         chess_board_0x88_O.castling_q = 0;
         // рокировка черных в короткую сторону 1/0
         chess_board_0x88_O.castling_k = 0;
-      }// if (move_list_0x88_O.piece_color[move_i] == 1) {
+      }// if (move_list_0x88_O.piece_color == 1) {
     } // if (is_moove_legal == 1) {
 
     return is_moove_legal;
@@ -678,9 +678,9 @@ class Make_move_0x88_C {
 
     // цвет хода 0 - черные 1 - белые
     chess_board_0x88_O.side_to_move = 1 - chess_board_0x88_O.side_to_move;
-    //console.log("Make_move_0x88_C->make_en_passant_move_0x88-> piece_color " + move_list_0x88_O.piece_color[move_i]);
+    //console.log("Make_move_0x88_C->make_en_passant_move_0x88-> piece_color " + move_list_0x88_O.piece_color);
     //console.log("Make_move_0x88_C->make_en_passant_move_0x88-> move_list_0x88_O.to[move_i] " + move_list_0x88_O.to[move_i]);
-    if (move_list_0x88_O.piece_color[move_i] == 1) {
+    if (move_list_0x88_O.piece_color == 1) {
       // стираем имя битой на проходе пешки
       chess_board_0x88_O.sq_piece_0x88[move_list_0x88_O.to[move_i] + 16] = Chess_board_0x88_C.PIECE_NO;// 0
       // стираем цвет битой на проходе пешки 

@@ -105,7 +105,7 @@ class ChessEngine_0x88_С {
   // тут можно проверить корректность игрового движка с помощью perf_t. как правильно он генерирует позиции.
   test_go_depth_minmax(depth_max) {
     //console.log("ChessEngine_0x88_С->test_go_depth_nm --------");
-    let info_return_search = this.search_start_0x88_O.test_start_search_minmax(depth_max);
+    let info_return_search = this.search_start_0x88_O.test_start_search_minmax(this.chess_board_0x88_O_start, depth_max);
 
     return info_return_search;
   }
@@ -156,7 +156,7 @@ class ChessEngine_0x88_С {
       this.chess_board_0x88_O_gui,
       this.move_list_0x88_O_gui);
 
-    let ret = this.move_list_0x88_O_gui.move_is_legal(from, to);
+    let ret = this.move_list_0x88_O_gui.move_is_found(from, to);
 
     return ret;
   }

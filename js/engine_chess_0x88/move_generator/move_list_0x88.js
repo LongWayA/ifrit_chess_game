@@ -17,12 +17,17 @@ class Move_list_0x88_С {
 
     static NAME = "Move_list_0x88_С";
 
+    // расписал все возможные типы ходов. всего получилось 60 типов ходов
+    // теперь каждый тип хода имеет свой обработчик
+
+
     static MOVE_NO = 0;// нет хода
 
     // абсолютный приоритет. пешка берет да еще превращается в фигуру
     // превращение в ферзь
+    // взятие пешкой фигуры и превращение в фигуру
     static CAPTURES_PAWN_QUEEN_PROMO_QUEEN = 1;//
-    static CAPTURES_PAWN_ROOK_PROMO_QUEEN = 2;//
+    static CAPTURES_PAWN_ROOK_PROMO_QUEEN = 2;// пешка берет ладью и превращается в ферзь
     static CAPTURES_PAWN_BISHOP_PROMO_QUEEN = 3;//
     static CAPTURES_PAWN_KNIGHT_PROMO_QUEEN = 4;//
     // превращение в ладью
@@ -48,7 +53,7 @@ class Move_list_0x88_С {
     static MOVE_PAWN_PROMO_KNIGHT = 20;//
 
     // взятая фигура дороже чем та, что берет
-    static CAPTURES_PAWN_QUEEN = 21;//
+    static CAPTURES_PAWN_QUEEN = 21;// пешка берет ферзь
     static CAPTURES_PAWN_ROOK = 22;//
     static CAPTURES_PAWN_BISHOP = 23;//
     static CAPTURES_PAWN_KNIGHT = 24;//
@@ -99,8 +104,9 @@ class Move_list_0x88_С {
     static MOVE_KING_CASTLE = 59;// короткая рокировка
     static MOVE_KING_QUEEN_CASTLE = 60;// длинная рокировка
 
-    static LENGTH_LIST = 256;//
+    static LENGTH_LIST = 256;// максимально возможная длина списка ходов
 
+    // тут по номеру типа хода можно получить его название
     static TYPE_MOVE_NAME = [
         "MOVE_NO",
         "CAPTURES_PAWN_QUEEN_PROMO_QUEEN",
@@ -165,13 +171,25 @@ class Move_list_0x88_С {
         "MOVE_KING_QUEEN_CASTLE",
     ];
 
+    // тип хода. выше видно как он задан. это изюминка данного генератора. 
+    // в типе хода записана фигура которая берет, которую берут, в которую превращаются 
+    // и которую берут с превращением. так что имя взятой фигуры отдельно не нужно.
+    // вообще тут все возможные типы ходов.
     type_move = new Array(Move_list_0x88_С.LENGTH_LIST).fill(Move_list_0x88_С.MOVE_NO);
-    piece_color = new Array(Move_list_0x88_С.LENGTH_LIST).fill(-1);
-    from = new Array(Move_list_0x88_С.LENGTH_LIST).fill(-1);
-    to = new Array(Move_list_0x88_С.LENGTH_LIST).fill(-1);
-    score_move = new Array(Move_list_0x88_С.LENGTH_LIST).fill(-1);
 
+    // откуда ходит фигура
+    from = new Array(Move_list_0x88_С.LENGTH_LIST).fill(-1);
+
+    // куда ходит фигура
+    to = new Array(Move_list_0x88_С.LENGTH_LIST).fill(-1);
+
+    // цвет ходяшей фигуры. 
+    piece_color = -1;
+
+    // количество взятий
     number_captures_move = 0;
+
+    // количество всех ходов
     number_move = 0;
 
     constructor() {
@@ -179,40 +197,73 @@ class Move_list_0x88_С {
     }
 
     iniM() {
+        this.piece_color = -1;
         this.number_captures_move = 0;
         this.number_move = 0;
     }
 
+   // очищаем список ходов
+   clear_list() {
+        for (let i = 0; i < Move_list_0x88_С.LENGTH_LIST; i++) {
+            this.type_move[i] = -1;
+            this.from[i] = -1;
+            this.to[i] = -1;
+        }
+        this.piece_color = -1;
+        this.number_captures_move = 0;
+        this.number_move = 0;
+    }
+
+    // добавляем ход в список 
+    // количество ходов увеличиваем на один
+    add_move(type_move, from, to) {
+        //console.log('Move_list_0x88_С->add_move');
+        this.type_move[this.number_move] = type_move;
+        this.from[this.number_move] = from;
+        this.to[this.number_move] = to;
+
+        this.number_move = this.number_move + 1;
+    }
+
+    // присвоить списку цвет фигуры он же цвет ходящей стороны
+    set_color(piece_color) {
+        this.piece_color = piece_color;
+    }
+
+    // присвоить количество взятий в списке
+    set_number_captures_move(number_captures_move) {
+        this.number_captures_move = number_captures_move;
+    }
 
 
     // SORTING
 
-    // ставим ход на первую позицию. это для хеш-ходов
+    // это для хеш-ходов
+    // ставим ход найденный по type_move(искать так быстрее всего) 
+    // и подтвержденный по from, to ход на первую позицию. индекс 0 
+    // подтверждение нужно потому что допустим два коня ходят на одинаковую клетку 
+    // или один конь ходит на разные клетки и непонятно какой из ходов имелся в виду, 
+    // а просто откуда и куда для случаев превращения недостаточно
+    // остальные сдвигаем вниз 
     set_move_in_0(type_move, from, to) {
 
         let save_type_move;
-        let save_piece_color;
-        let save_score_move;
-
         let save_from = -1;
         let save_to;
 
-        let s_m;
-
+        let s_m;// save move - индекс найденного и записанного хода
 
         if (this.from[0] == from) return -1;
 
         //console.log("Move_list_0x88_С-> UP -----------------------------------");
         // 1 ищем ход в списке
-        for (s_m = 0; s_m < this.number_move; s_m++) {// перебираем оставшийся список
+        for (s_m = 0; s_m < this.number_move; s_m++) {//
             if ((this.type_move[s_m] == type_move) && (this.from[s_m] == from) && (this.to[s_m] == to)) {
                 // ход нашли и записали
                 save_type_move = this.type_move[s_m];
-                save_piece_color = this.piece_color[s_m];
-                save_score_move = this.score_move[s_m];
                 save_from = this.from[s_m];
                 save_to = this.to[s_m];
-                break;
+                break;// нашли ход. идем дальше
             }
         }
         // console.log("Move_list_0x88_С-> UP 2 start " + start);
@@ -226,8 +277,6 @@ class Move_list_0x88_С {
             // если на позиции есть взятая фигура
             // пишем на позицию
             this.type_move[i] = this.type_move[i - 1];
-            this.piece_color[i] = this.piece_color[i - 1];
-            this.score_move[i] = this.score_move[i - 1];
             this.from[i] = this.from[i - 1];
             this.to[i] = this.to[i - 1];
 
@@ -235,20 +284,18 @@ class Move_list_0x88_С {
 
         // сюда пишем начальную позицию. т.о. две позиции меняются местами
         this.type_move[start] = save_type_move;
-        this.piece_color[start] = save_piece_color;
-        this.score_move[start] = save_score_move;
         this.from[start] = save_from;
         this.to[start] = save_to;
-
     }//
 
-
-
+    // это для сортировке по истории
+    // сортируем все не взятия по оценке присвоенной в массиве истории. 
+    // чем больше оценка тем выше ход но не выше всех взятий, даже плохих 
+    // потому что так быстрее и движуху смотрим в первую очередь.
+    // что такое эвристика истории смотреть в файле с этой эвристикой.
     sorting_list_history_heuristic(history_heuristic_0x88_O) {
 
         let save_type_move;
-        let save_piece_color;
-        let save_score_move;
 
         let save_from;
         let save_to;
@@ -256,32 +303,26 @@ class Move_list_0x88_С {
         let start = this.number_captures_move;
 
         //console.log("Move_list_0x88_С-> SORTING -----------------------------------");
-        // выводим в начало списка ходы с максимальной оценкой. нужно белым
+        // выводим в начало списка тихих ходов ходы с максимальной оценкой по истории. 
+        // т.е. отсортирванные тихие ходы идут после взятий
         for (let i = start; i < this.number_move; i++) {
-            for (let j = i + 1; j < this.number_move; j++) {// перебираем оставшийся список
+            for (let j = i + 1; j < this.number_move; j++) {//
                 // 
 
-                if (history_heuristic_0x88_O.history[this.piece_color[i]][this.type_move[i]][this.to[i]] <
-                    history_heuristic_0x88_O.history[this.piece_color[j]][this.type_move[j]][this.to[j]]) {
+                if (history_heuristic_0x88_O.history[this.piece_color][this.type_move[i]][this.to[i]] <
+                    history_heuristic_0x88_O.history[this.piece_color][this.type_move[j]][this.to[j]]) {
                     // сохраняем позицию на которую будем писать
                     save_type_move = this.type_move[i];
-                    save_piece_color = this.piece_color[i];
-                    save_score_move = this.score_move[i];
                     save_from = this.from[i];
                     save_to = this.to[i];
 
                     // пишем на позицию
                     this.type_move[i] = this.type_move[j];
-                    this.piece_color[i] = this.piece_color[j];
-                    this.score_move[i] = this.score_move[j];
-                    //this.score_move[i] = history_heuristic_0x88_O.history[this.piece_color[j]][this.type_move[j]][this.to[j]];
                     this.from[i] = this.from[j];
                     this.to[i] = this.to[j];
 
                     // сюда пишем начальную позицию. т.о. две позиции меняются местами
                     this.type_move[j] = save_type_move;
-                    this.piece_color[j] = save_piece_color;
-                    this.score_move[j] = save_score_move;
                     this.from[j] = save_from;
                     this.to[j] = save_to;
                 }
@@ -289,39 +330,43 @@ class Move_list_0x88_С {
         }
     }
 
+    // сортировка по типу хода. 
+    // взятия с превращением самые первые 
+    // дальше просто превращения
+    // дальше хорошие взятия (т.е.взятая фигура дороже чем та, что берет)
+    // дальше нейтральные взятия (т.е.взятая фигура равнозначна той, что берет)
+    // дальше плохие взятия (т.е.взятая фигура дешевле чем та, что берет)
+    // дальше взятия королем
+    // дальше взятия пешек   
+    // дальше простые ходы фигур 
+    // дальше простые ходы пешек
+    // и самые последние рокировки 
+    // взятия раньше других ходов для удобства поиска и сортировки тихих ходов
     sorting_list() {
 
         let save_type_move;
-        let save_piece_color;
-        let save_score_move;
 
         let save_from;
         let save_to;
 
         //console.log("Move_list_0x88_С-> SORTING -----------------------------------");
-        // выводим в начало списка отсортированные взятия. так что самая слабая берущая фигура в самом начале
+        // 
         for (let i = 0; i < this.number_move; i++) {
-            for (let j = i + 1; j < this.number_move; j++) {// перебираем оставшийся список
-                // если на позиции есть взятая фигура
+            for (let j = i + 1; j < this.number_move; j++) {//
+                // 
                 if (this.type_move[i] >= this.type_move[j]) {
                     // сохраняем позицию на которую будем писать
                     save_type_move = this.type_move[i];
-                    save_piece_color = this.piece_color[i];
-                    save_score_move = this.score_move[i];
                     save_from = this.from[i];
                     save_to = this.to[i];
 
                     // пишем на позицию
                     this.type_move[i] = this.type_move[j];
-                    this.piece_color[i] = this.piece_color[j];
-                    this.score_move[i] = this.score_move[j];
                     this.from[i] = this.from[j];
                     this.to[i] = this.to[j];
 
                     // сюда пишем начальную позицию. т.о. две позиции меняются местами
                     this.type_move[j] = save_type_move;
-                    this.piece_color[j] = save_piece_color;
-                    this.score_move[j] = save_score_move;
                     this.from[j] = save_from;
                     this.to[j] = save_to;
                 }
@@ -329,12 +374,12 @@ class Move_list_0x88_С {
         }
     }
 
-    // ставим сразу после взятий. это для киллеров
+    // это для киллеров. 
+    // находм ход по from, to
+    // и ставим сразу после взятий. 
     set_move_after_the_captures(from, to) {
 
         let save_type_move;
-        let save_piece_color;
-        let save_score_move;
 
         let save_from = -1;
         let save_to;
@@ -343,16 +388,14 @@ class Move_list_0x88_С {
         let start = this.number_captures_move;
 
 
-        if (this.from[start] == from) return -1;
+        if (this.from[start] == from) return -1;// ход и так на первом месте(после всех взятий)
 
         //console.log("Move_list_0x88_С-> UP -----------------------------------");
         // 1 ищем ход в списке
-        for (s_m = start; s_m < this.number_move; s_m++) {// перебираем оставшийся список
+        for (s_m = start; s_m < this.number_move; s_m++) {// 
             if ((this.from[s_m] == from) && (this.to[s_m] == to)) {
                 // ход нашли и записали
                 save_type_move = this.type_move[s_m];
-                save_piece_color = this.piece_color[s_m];
-                save_score_move = this.score_move[s_m];
                 save_from = this.from[s_m];
                 save_to = this.to[s_m];
                 break;
@@ -369,8 +412,6 @@ class Move_list_0x88_С {
             // если на позиции есть взятая фигура
             // пишем на позицию
             this.type_move[i] = this.type_move[i - 1];
-            this.piece_color[i] = this.piece_color[i - 1];
-            this.score_move[i] = this.score_move[i - 1];
             this.from[i] = this.from[i - 1];
             this.to[i] = this.to[i - 1];
 
@@ -378,97 +419,16 @@ class Move_list_0x88_С {
 
         // сюда пишем начальную позицию. т.о. две позиции меняются местами
         this.type_move[start] = save_type_move;
-        this.piece_color[start] = save_piece_color;
-        this.score_move[start] = save_score_move;
         this.from[start] = save_from;
         this.to[start] = save_to;
 
     }//
 
-    sorting_list_top_max_score() {
-
-        let save_type_move;
-        let save_piece_color;
-        let save_score_move;
-
-        let save_from;
-        let save_to;
-
-        //console.log("Move_list_0x88_С-> SORTING -----------------------------------");
-        // выводим в начало списка ходы с максимальной оценкой. нужно белым
-        for (let i = 0; i < this.number_move; i++) {
-            for (let j = i + 1; j < this.number_move; j++) {// перебираем оставшийся список
-                // если на позиции есть взятая фигура
-                if (this.score_move[i] < this.score_move[j]) {
-                    // сохраняем позицию на которую будем писать
-                    save_type_move = this.type_move[i];
-                    save_piece_color = this.piece_color[i];
-                    save_score_move = this.score_move[i];
-                    save_from = this.from[i];
-                    save_to = this.to[i];
-
-                    // пишем на позицию
-                    this.type_move[i] = this.type_move[j];
-                    this.piece_color[i] = this.piece_color[j];
-                    this.score_move[i] = this.score_move[j];
-                    this.from[i] = this.from[j];
-                    this.to[i] = this.to[j];
-
-                    // сюда пишем начальную позицию. т.о. две позиции меняются местами
-                    this.type_move[j] = save_type_move;
-                    this.piece_color[j] = save_piece_color;
-                    this.score_move[j] = save_score_move;
-                    this.from[j] = save_from;
-                    this.to[j] = save_to;
-                }
-            }
-        }
-    }
-
-    sorting_list_top_min_score() {
-
-        let save_type_move;
-        let save_piece_color;
-        let save_score_move;
-
-        let save_from;
-        let save_to;
-
-        //console.log("Move_list_0x88_С-> SORTING -----------------------------------");
-        // выводим в начало списка ходы с максимальной оценкой. нужно белым
-        for (let i = 0; i < this.number_move; i++) {
-            for (let j = i + 1; j < this.number_move; j++) {// перебираем оставшийся список
-                // если на позиции есть взятая фигура
-                if (this.score_move[i] > this.score_move[j]) {
-                    // сохраняем позицию на которую будем писать
-                    save_type_move = this.type_move[i];
-                    save_piece_color = this.piece_color[i];
-                    save_score_move = this.score_move[i];
-                    save_from = this.from[i];
-                    save_to = this.to[i];
-
-                    // пишем на позицию
-                    this.type_move[i] = this.type_move[j];
-                    this.piece_color[i] = this.piece_color[j];
-                    this.score_move[i] = this.score_move[j];
-                    this.from[i] = this.from[j];
-                    this.to[i] = this.to[j];
-
-                    // сюда пишем начальную позицию. т.о. две позиции меняются местами
-                    this.type_move[j] = save_type_move;
-                    this.piece_color[j] = save_piece_color;
-                    this.score_move[j] = save_score_move;
-                    this.from[j] = save_from;
-                    this.to[j] = save_to;
-                }
-            }
-        }
-
-    }
-
-///////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////
     // TEST
 
+    // сравнение двух списков ходов. 
+    // если есть отличия то печатем в консоль предупреждение
     test_compare_list_from(move_list_0x88_O) {
 
         let number_move_equal = 0;
@@ -478,8 +438,6 @@ class Move_list_0x88_С {
             for (let j = 0; j < this.number_move; j++) {
                 if (
                     (this.type_move[i] == move_list_0x88_O.type_move[j]) &&
-                    (this.piece_color[i] == move_list_0x88_O.piece_color[j]) &&
-                    (this.score_move[i] == move_list_0x88_O.score_move[j]) &&
                     (this.from[i] == move_list_0x88_O.from[j]) &&
                     (this.to[i] == move_list_0x88_O.to[j])
                 ) {
@@ -493,8 +451,12 @@ class Move_list_0x88_С {
                 }
             }
         }
-        this.number_captures_move = move_list_0x88_O.number_captures_move;
-        this.number_move = move_list_0x88_O.number_move;
+
+
+        if (this.piece_color != move_list_0x88_O.piece_color) {
+            console.log('Move_list_0x88_С->this.piece_color ' + this.piece_color +
+                " move_list_0x88_O.piece_color " + move_list_0x88_O.piece_color);
+        }
 
         //console.log('Move_list_0x88_С-> test_compare_list_from');
         if (this.number_captures_move != move_list_0x88_O.number_captures_move) {
@@ -514,12 +476,10 @@ class Move_list_0x88_С {
         }
     }
 
+    // печатаем в консоль ход из списка под заданным номером
     test_print_i_move_list(i, chess_board_0x88_O) {
         console.log("test_print_i_move_list ********");
         console.log("type_move[" + i + "] = " + this.type_move[i] + " nm = " + Move_list_0x88_С.TYPE_MOVE_NAME[this.type_move[i]]);
-        console.log("piece_color[" + i + "] = " + this.piece_color[i]);
-        console.log("score_move[" + i + "] = " + this.score_move[i]);
-
         console.log("from[" + i + "] = " + this.from[i]);
         console.log("to[" + i + "] = " + this.to[i]);
 
@@ -528,18 +488,19 @@ class Move_list_0x88_С {
             Chess_board_0x88_C.LET_COOR[chess_board_0x88_O.s_0x88_to_x07(this.to[i])] + "" +
             (8 - chess_board_0x88_O.s_0x88_to_y07(this.to[i])));
 
+        console.log("piece_color = " + this.piece_color);
+        console.log("number_captures_move = " + this.number_captures_move);
+        console.log("number_move = " + this.number_move);
+
         console.log("---- ");
         console.log("*********** test_print_i_move_list");
     }
 
-
+    // печатаем в консоль весь список ходов
     test_print_list(chess_board_0x88_O) {
         console.log("test_print_list ********");
         for (let i = 0; i < this.number_move; i++) {
             console.log("type_move[" + i + "] = " + this.type_move[i] + " nm = " + Move_list_0x88_С.TYPE_MOVE_NAME[this.type_move[i]]);
-            console.log("piece_color[" + i + "] = " + this.piece_color[i]);
-            console.log("score_move[" + i + "] = " + this.score_move[i]);
-
             console.log("from[" + i + "] = " + this.from[i]);
             console.log("to[" + i + "] = " + this.to[i]);
 
@@ -550,68 +511,53 @@ class Move_list_0x88_С {
 
             console.log("---- ");
         }
+
+        console.log("piece_color = " + this.piece_color);
         console.log("number_captures_move = " + this.number_captures_move);
         console.log("number_move = " + this.number_move);
         console.log("*********** test_print_list");
     }
 
-//////////////////////////////////////////////////
+    //////////////////////////////////////////////////
 
+    // копируем в наш список список из параметров функции 
+    // т.е. тот что задан в скобках тот и копируем
     save_list_from(move_list_0x88_O) {
         for (let i = 0; i < move_list_0x88_O.number_move; i++) {
             this.type_move[i] = move_list_0x88_O.type_move[i];
-            this.piece_color[i] = move_list_0x88_O.piece_color[i];
-            this.score_move[i] = move_list_0x88_O.score_move[i];
             this.from[i] = move_list_0x88_O.from[i];
             this.to[i] = move_list_0x88_O.to[i];
         }
+
+        this.piece_color = move_list_0x88_O.piece_color;
         this.number_captures_move = move_list_0x88_O.number_captures_move;
         this.number_move = move_list_0x88_O.number_move;
 
     }
-    // 
-    add_move(type_move, piece_color, score_move, from, to) {
-        //console.log('Move_list_0x88_С->add_move');
-        this.type_move[this.number_move] = type_move;
-        this.piece_color[this.number_move] = piece_color;
-        this.from[this.number_move] = from;
-        this.to[this.number_move] = to;
-        this.score_move[this.number_move] = score_move;
 
-        this.number_move = this.number_move + 1;
-    }
+    // если ход from, to 
+    // нашли в списке ходов 
+    // в случае превращений это первое попавшееся
+    move_is_found(from, to) {
 
-
-    clear_list() {
-        for (let i = 0; i < Move_list_0x88_С.LENGTH_LIST; i++) {
-            this.type_move[i] = -1;
-            this.piece_color[i] = -1;
-            this.score_move[i] = -1;
-            this.from[i] = -1;
-            this.to[i] = -1;
-        }
-        this.number_captures_move = 0;
-        this.number_move = 0;
-    }
-
-    move_is_legal(from, to) {
-
-        let ret = false;
+        let found = false;
 
         for (let i = 0; i < this.number_move; i++) {
             if ((this.from[i] == from) && (this.to[i] == to)) {
-                ret = true;
-                return ret;
+                found = true;
+                return found;
             }
         }
 
         //console.log("Move_list_det_0x88_С-> from " + from + " to " + to);
         //console.log("Move_list_det_0x88_С-> ret " + ret);
 
-        return ret;
+        return found;
     }
 
-
+    // находим и возвращем порядковый номер хода 
+    // по ходу from, to 
+    // в случае преващений вернет первое попавшееся превращение
     return_i_move(from, to) {
 
         let i_move = -1;
@@ -629,6 +575,10 @@ class Move_list_0x88_С {
         return i_move;
     }
 
+    // возвращем ход из списка на заданной позиции 
+    // в виде строки вида Qe2-e4 
+    // для превращений сам не знаю что выведет 
+    // и взятия не отмечаются
     move_to_string(i_move, chess_board_0x88_O) {
 
         let move_str = "" + this.type_move_to_name_piese(this.type_move[i_move]) + "" +
@@ -643,9 +593,15 @@ class Move_list_0x88_С {
 
 
 
-
-    // возвращаем название хода превращения пешки со взятием по взятой фигуре
-    // например CAPTURES_PAWN_QUEEN_PROMO_QUEEN -> QUEEN; CAPTURES_PAWN_ROOK_PROMO_QUEEN -> QUEEN
+    // это нужно для работы генератора взятий. это очень важная функция и конечно полностью проверена
+    // возвращаем название хода превращения пешки со взятием по взятой фигуре 
+    // т.е. пешка берет коня Chess_board_0x88_C.KNIGHT тогда будет множестов превращений со взятием коня, 
+    // это 
+    // PROMO_QUEEN = Move_list_0x88_С.CAPTURES_PAWN_KNIGHT_PROMO_QUEEN;
+    // PROMO_ROOK = Move_list_0x88_С.CAPTURES_PAWN_KNIGHT_PROMO_ROOK;
+    // PROMO_BISHOP = Move_list_0x88_С.CAPTURES_PAWN_KNIGHT_PROMO_BISHOP;
+    // PROMO_KNIGHT = Move_list_0x88_С.CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT;
+    // 
     return_type_captures_pawn_promo(piece_name_captures) {
 
         //console.log("Move_list_0x88_С->return_type_captures_pawn_promo piece_name_captures " + piece_name_captures);
@@ -686,6 +642,7 @@ class Move_list_0x88_С {
         return out;
     }
 
+    // очень важная функция. используется в генераторе взятий и тихих ходов.
     // возвращем тип хода взятия по ходящей фигуре и по взятой фигуре
     // например KING, QUEEN -> CAPTURES_KING_QUEEN
     return_type_simple_move(piece_name, piece_name_captures) {
@@ -745,6 +702,7 @@ class Move_list_0x88_С {
 
     }
 
+    // используем в генераторе взятий для детектора шахов. незаменимая, в данный момент, функция
     // возвращем имя взятой фигуры по типу хода
     // например CAPTURES_KING_QUEEN -> QUEEN   
     return_piece_name_captures_from_type_move(type_move) {
@@ -798,6 +756,8 @@ class Move_list_0x88_С {
         if (type_move == Move_list_0x88_С.CAPTURES_PAWN_PAWN) return Chess_board_0x88_C.PAWN;
     }
 
+
+    // используем для строкового представления фигуры в ходах
     type_move_to_name_piese(type_move) {
         if (type_move == Move_list_0x88_С.MOVE_NO) return "NO";
         if (type_move == Move_list_0x88_С.CAPTURES_PAWN_QUEEN_PROMO_QUEEN) return "P";
@@ -927,4 +887,4 @@ class Move_list_0x88_С {
     }
 }
 
-export{Move_list_0x88_С};
+export { Move_list_0x88_С };

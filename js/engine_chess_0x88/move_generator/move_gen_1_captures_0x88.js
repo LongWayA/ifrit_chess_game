@@ -81,37 +81,34 @@ class Move_gen_1_captures_0x88_С {
     // генерируем всевозможные ходы, но не учитываем шахи и вскрытые шахи.
     generated_pseudo_legal_moves(chess_board_0x88_O, move_list_0x88_O) {
         //console.log('->generated_pseudo_legal_moves');
-        // здесь определил чтобы в цикле не определять
-        let piece_color = -1;
-        let piece_name = -1;
-        let side_to_move = -1;
         move_list_0x88_O.clear_list();
+        move_list_0x88_O.piece_color = chess_board_0x88_O.side_to_move;
         for (let from = 0; from < 128; from++) {
-            this.generated_pseudo_legal_moves_one_piece(piece_name, piece_color, side_to_move, from, chess_board_0x88_O, move_list_0x88_O);
+            this.generated_pseudo_legal_moves_one_piece(from, chess_board_0x88_O, move_list_0x88_O);
         }
         move_list_0x88_O.number_captures_move = move_list_0x88_O.number_move;
-
     }
 
     //  считаем ходы одной фигуры из конкретной позиции
     generated_pseudo_legal_moves_one_piece_for_gui(from, chess_board_0x88_O, move_list_0x88_O) {
         //console.log('->generated_pseudo_legal_moves');
-        let piece_color = -1;
-        let piece_name = -1;
-        let side_to_move = -1;
         move_list_0x88_O.clear_list();
-        this.generated_pseudo_legal_moves_one_piece(piece_name, piece_color, side_to_move, from, chess_board_0x88_O, move_list_0x88_O);
+        move_list_0x88_O.piece_color = chess_board_0x88_O.side_to_move;
+        this.generated_pseudo_legal_moves_one_piece(from, chess_board_0x88_O, move_list_0x88_O);
     }
 
 
     //  считаем ходы одной фигуры из конкретной позиции
-    generated_pseudo_legal_moves_one_piece(piece_name, piece_color, side_to_move, from, chess_board_0x88_O, move_list_0x88_O) {
+    generated_pseudo_legal_moves_one_piece(from, chess_board_0x88_O, move_list_0x88_O) {
+
+        let piece_name = -1;
+        let piece_color = -1;
+        let side_to_move = chess_board_0x88_O.side_to_move;
 
         // если мы не вышли за пределы доски
         if ((from & 136) == 0) {// 136 0x88
             piece_name = chess_board_0x88_O.sq_piece_0x88[from];
             piece_color = chess_board_0x88_O.sq_piece_color_0x88[from];
-            side_to_move = chess_board_0x88_O.side_to_move;
 
             // если фигура иммеет цвет ходящей стороны
             if (piece_color == side_to_move) {
@@ -150,13 +147,12 @@ class Move_gen_1_captures_0x88_С {
         let piece_to = chess_board_0x88_O.sq_piece_0x88[to];
         let piece_color_to = chess_board_0x88_O.sq_piece_color_0x88[to];
         let type_move;
-        let score_move = -1;
 
         if (piece_to == 0) {// проверяем клетку куда ходим. Если там нет фигур то можно ходить
             return 0;// можно продолжать луч
         } else if (piece_color != piece_color_to) {// мы уже знаем что тут есть фигура и если цвет отличен, то это взятие  
             type_move = move_list_0x88_O.return_type_simple_move(piece_name, piece_to);
-            move_list_0x88_O.add_move(type_move, piece_color, score_move, from, to);
+            move_list_0x88_O.add_move(type_move, from, to);
             return 1;// луч прерываем на вражеской фигуре включительно
         } else {//на свою фигуру не прыгаем. хода нет. 
             return 1;// луч прерываем на своей фигуре не включительно
@@ -315,7 +311,6 @@ class Move_gen_1_captures_0x88_С {
         let piece_to = -1;
         let capture_piece = -1;
         let type_move = -1;
-        let score_move = -1;
 
         if ((to_left & 136) == 0) {// 136 0x88
             piece_to = chess_board_0x88_O.sq_piece_0x88[to_left];
@@ -323,10 +318,10 @@ class Move_gen_1_captures_0x88_С {
             if ((piece_to != 0) && (piece_color != piece_color_to)) {// 
                 capture_piece = chess_board_0x88_O.sq_piece_0x88[to_left];//
                 type_move = move_list_0x88_O.return_type_simple_move(Chess_board_0x88_C.PAWN, capture_piece);
-                move_list_0x88_O.add_move(type_move, piece_color, score_move, from, to_left);
+                move_list_0x88_O.add_move(type_move, from, to_left);
             } else if ((chess_board_0x88_O.en_passant_yes == 1) && (chess_board_0x88_O.en_passant_target_square == to_left)) {
                 type_move = Move_list_0x88_С.EP_CAPTURES;
-                move_list_0x88_O.add_move(type_move, piece_color, score_move, from, to_left);
+                move_list_0x88_O.add_move(type_move, from, to_left);
             }
         }
         if ((to_right & 136) == 0) {// 136 0x88    
@@ -335,10 +330,10 @@ class Move_gen_1_captures_0x88_С {
             if ((piece_to != 0) && (piece_color != piece_color_to)) {// 
                 capture_piece = chess_board_0x88_O.sq_piece_0x88[to_right];
                 type_move = move_list_0x88_O.return_type_simple_move(Chess_board_0x88_C.PAWN, capture_piece);
-                move_list_0x88_O.add_move(type_move, piece_color, score_move, from, to_right);
+                move_list_0x88_O.add_move(type_move, from, to_right);
             } else if ((chess_board_0x88_O.en_passant_yes == 1) && (chess_board_0x88_O.en_passant_target_square == to_right)) {
                 type_move = Move_list_0x88_С.EP_CAPTURES;
-                move_list_0x88_O.add_move(type_move, piece_color, score_move, from, to_right);
+                move_list_0x88_O.add_move(type_move, from, to_right);
             }
         }
 
@@ -349,7 +344,6 @@ class Move_gen_1_captures_0x88_С {
         let piece_to = -1;
         let capture_piece = -1;
         let type_move = -1;
-        let score_move = -1;
 
         // взятие пешкой влево с превращением
         if ((to_left & 136) == 0) {// 136 0x88                
@@ -360,13 +354,13 @@ class Move_gen_1_captures_0x88_С {
                 let out = move_list_0x88_O.return_type_captures_pawn_promo(capture_piece);
 
                 type_move = out.PROMO_QUEEN;
-                move_list_0x88_O.add_move(type_move, piece_color, score_move, from, to_left);
+                move_list_0x88_O.add_move(type_move, from, to_left);
                 type_move = out.PROMO_ROOK;
-                move_list_0x88_O.add_move(type_move, piece_color, score_move, from, to_left);
+                move_list_0x88_O.add_move(type_move, from, to_left);
                 type_move = out.PROMO_BISHOP;
-                move_list_0x88_O.add_move(type_move, piece_color, score_move, from, to_left);
+                move_list_0x88_O.add_move(type_move, from, to_left);
                 type_move = out.PROMO_KNIGHT;
-                move_list_0x88_O.add_move(type_move, piece_color, score_move, from, to_left);
+                move_list_0x88_O.add_move(type_move, from, to_left);
 
             }
         }
@@ -379,13 +373,13 @@ class Move_gen_1_captures_0x88_С {
                 let out = move_list_0x88_O.return_type_captures_pawn_promo(capture_piece);
 
                 type_move = out.PROMO_QUEEN;
-                move_list_0x88_O.add_move(type_move, piece_color, score_move, from, to_right);
+                move_list_0x88_O.add_move(type_move, from, to_right);
                 type_move = out.PROMO_ROOK;
-                move_list_0x88_O.add_move(type_move, piece_color, score_move, from, to_right);
+                move_list_0x88_O.add_move(type_move, from, to_right);
                 type_move = out.PROMO_BISHOP;
-                move_list_0x88_O.add_move(type_move, piece_color, score_move, from, to_right);
+                move_list_0x88_O.add_move(type_move, from, to_right);
                 type_move = out.PROMO_KNIGHT;
-                move_list_0x88_O.add_move(type_move, piece_color, score_move, from, to_right);
+                move_list_0x88_O.add_move(type_move, from, to_right);
             }
         }
     }
@@ -474,4 +468,4 @@ class Move_gen_1_captures_0x88_С {
     }
 }
 
-export{Move_gen_1_captures_0x88_С};
+export { Move_gen_1_captures_0x88_С };

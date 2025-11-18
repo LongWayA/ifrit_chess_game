@@ -58,8 +58,7 @@ class Game_line_0x88_C {
   add_move(move_i, move_list_0x88_O, depth) {
     //console.log('Move_list_0x88_С->add_move');
     this.type_move[depth] = move_list_0x88_O.type_move[move_i];
-    this.piece_color[depth] = move_list_0x88_O.piece_color[move_i];
-    this.score_move[depth] = move_list_0x88_O.score_move[move_i];
+    this.piece_color[depth] = move_list_0x88_O.piece_color;
     this.from[depth] = move_list_0x88_O.from[move_i];
     this.to[depth] = move_list_0x88_O.to[move_i];
 

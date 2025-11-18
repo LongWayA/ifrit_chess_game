@@ -69,6 +69,7 @@ class Search_minmax_0x88_C {
       move_gen_1_captures_0x88_O.generated_pseudo_legal_moves(chess_board_0x88_O, move_list_0x88_O);
       move_gen_2_quiet_0x88_O.generated_pseudo_legal_moves(chess_board_0x88_O, move_list_0x88_O);
       //move_list_0x88_O.sorting_list(); 
+      //move_list_0x88_O.test_print_list(chess_board_0x88_O);
 
       for (let move_i = 0; move_i < move_list_0x88_O.number_move; move_i++) {
 
@@ -91,9 +92,7 @@ class Search_minmax_0x88_C {
         score = this.searching_minmax(pv_line_0x88_O, chess_board_0x88_O,
           move_gen_1_captures_0x88_O, move_gen_2_quiet_0x88_O, (depth + 1), depth_max);
 
-        move_list_0x88_O.score_move[move_i] = score;
-
-        if (move_list_0x88_O.piece_color[move_i] == Chess_board_0x88_C.WHITE) {
+        if (move_list_0x88_O.piece_color == Chess_board_0x88_C.WHITE) {
 
           if (score > found_score) {
             found_score = score;
