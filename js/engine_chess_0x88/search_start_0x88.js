@@ -271,7 +271,7 @@ class Search_start_0x88_C {
       this.move_gen_1_captures_0x88_O, this.move_gen_2_quiet_0x88_O, depth, depth_max);
 
     chess_board_0x88_O_save_test.test_compare_chess_board_0x88(chess_board_0x88_O);
-    chess_board_0x88_O_end.save_chess_board_0x88(chess_board_0x88_O);
+    chess_board_0x88_O_end.save_chess_board_0x88(this.search_minmax_0x88_O.chess_board_0x88_O_end);
     //chess_board_0x88_O_end.save_chess_board_0x88(this.search_minmax_0x88_O.chess_board_0x88_O_move);
 
       this.info_return_search.chess_board_0x88_O_start = chess_board_0x88_O_start;

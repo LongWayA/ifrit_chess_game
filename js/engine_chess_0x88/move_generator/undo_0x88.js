@@ -49,8 +49,9 @@ class Undo_0x88_C {
   iniM() {
   }
 
+  // сохраняем значения из доски
   set_undo(chess_board_0x88_O) {
-      // цвет хода 0 - черные 1 - белые
+    // цвет хода 0 - черные 1 - белые
     this.side_to_move = chess_board_0x88_O.side_to_move;
     // разрешение взятия на проходе 1/0
     this.en_passant_yes = chess_board_0x88_O.en_passant_yes;
@@ -68,6 +69,7 @@ class Undo_0x88_C {
     this.score = chess_board_0x88_O.score;
   }
 
+  // возвращаем доске записанные значения
   get_undo(chess_board_0x88_O) {
 
     // цвет хода 0 - черные 1 - белые
@@ -86,8 +88,7 @@ class Undo_0x88_C {
     chess_board_0x88_O.castling_k = this.castling_k;
     // оценка позиции
     chess_board_0x88_O.score = this.score;
-
   }
 }
 
-export{Undo_0x88_C};
+export { Undo_0x88_C };

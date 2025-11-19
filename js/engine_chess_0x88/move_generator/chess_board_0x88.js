@@ -213,7 +213,7 @@ class Chess_board_0x88_C {
         console.log("**************** test_print_0x88_color");
     }
 
-     // выводим позицию в одну линию на консоль браузера
+    // выводим позицию в одну линию на консоль браузера
     test_print_0x88_line() {
         console.log("test_print_0x88_line ****************");
         let line = "";//
@@ -794,4 +794,4 @@ class Chess_board_0x88_C {
     }
 }
 
-export{Chess_board_0x88_C};
+export { Chess_board_0x88_C };

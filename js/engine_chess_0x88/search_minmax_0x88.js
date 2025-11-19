@@ -31,7 +31,7 @@ class Search_minmax_0x88_C {
 
   node = 0;
 
-  chess_board_0x88_O_move = new Chess_board_0x88_C();
+  chess_board_0x88_O_end = new Chess_board_0x88_C();
 
   constructor() {
   }
@@ -99,7 +99,7 @@ class Search_minmax_0x88_C {
             best_node_line_0x88_O.save_list(pv_line_0x88_O);
             best_node_line_0x88_O.type_variant[depth] = "mm_M";
 
-            if (depth == 0) this.chess_board_0x88_O_move.save_chess_board_0x88(chess_board_0x88_O);
+            if (depth == 0) this.chess_board_0x88_O_end.save_chess_board_0x88(chess_board_0x88_O);
             //console.log("Search_0x88_C->score > max_score depth " + depth + " found_score " + found_score);
           }//if (score > found_score) {
 
@@ -110,7 +110,7 @@ class Search_minmax_0x88_C {
             best_node_line_0x88_O.save_list(pv_line_0x88_O);
             best_node_line_0x88_O.type_variant[depth] = "mm_B";
 
-            if (depth == 0) this.chess_board_0x88_O_move.save_chess_board_0x88(chess_board_0x88_O);
+            if (depth == 0) this.chess_board_0x88_O_end.save_chess_board_0x88(chess_board_0x88_O);
             //console.log("Search_0x88_C->score > max_score depth " + depth + " found_score " + found_score);
           }//if (score > found_score) {
 

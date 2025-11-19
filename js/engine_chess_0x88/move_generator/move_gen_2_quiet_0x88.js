@@ -81,24 +81,25 @@ class Move_gen_2_quiet_0x88_С {
     // генерируем всевозможные ходы, но не учитываем шахи и вскрытые шахи.
     generated_pseudo_legal_moves(chess_board_0x88_O, move_list_0x88_O) {
         //console.log('Move_gen_2_quiet_0x88_С->generated_pseudo_legal_moves');
+        let side_to_move = chess_board_0x88_O.side_to_move;
         for (let from = 0; from < 128; from++) {
-            this.generated_pseudo_legal_moves_one_piece(from, chess_board_0x88_O, move_list_0x88_O);
+            this.generated_pseudo_legal_moves_one_piece(from, side_to_move, chess_board_0x88_O, move_list_0x88_O);
         }
     }
 
     //  считаем ходы одной фигуры из конкретной позиции
     generated_pseudo_legal_moves_one_piece_for_gui(from, chess_board_0x88_O, move_list_0x88_O) {
         //console.log('Move_gen_2_quiet_0x88_С->generated_pseudo_legal_moves');
-        this.generated_pseudo_legal_moves_one_piece(from, chess_board_0x88_O, move_list_0x88_O);
+        let side_to_move = chess_board_0x88_O.side_to_move;
+        this.generated_pseudo_legal_moves_one_piece(from, side_to_move, chess_board_0x88_O, move_list_0x88_O);
     }
 
 
     //  считаем ходы одной фигуры из конкретной позиции
-    generated_pseudo_legal_moves_one_piece(from, chess_board_0x88_O, move_list_0x88_O) {
+    generated_pseudo_legal_moves_one_piece(from, side_to_move, chess_board_0x88_O, move_list_0x88_O) {
 
         let piece_name = -1;
         let piece_color = -1;
-        let side_to_move = chess_board_0x88_O.side_to_move;
 
         // если мы не вышли за пределы доски
         if ((from & 136) == 0) {// 136 0x88
@@ -111,7 +112,6 @@ class Move_gen_2_quiet_0x88_С {
                 // смотрим фигуру на доске
                 switch (piece_name) {
                     case Chess_board_0x88_C.KING:// KING
-                        move_list_0x88_O.king_from = from;
                         this.generated_quiet_moves_king(piece_color, from, chess_board_0x88_O, move_list_0x88_O);
                         this.generated_moves_castle_king(piece_color, from, chess_board_0x88_O, move_list_0x88_O);
                         break;
@@ -139,7 +139,7 @@ class Move_gen_2_quiet_0x88_С {
         }
     }
 
-    // могут быть простые ходы, а могут быть взятия
+    // смотрим и если находим простые ходы то добавляем в список ходов
     add_quiet_move(piece_name, piece_color, from, to, chess_board_0x88_O, move_list_0x88_O) {
         let piece_to = chess_board_0x88_O.sq_piece_0x88[to];
         let piece_color_to = chess_board_0x88_O.sq_piece_color_0x88[to];
@@ -156,6 +156,7 @@ class Move_gen_2_quiet_0x88_С {
         }
     }
 
+    // простые ходы короля (т.е. не взятия и не рокировки)
     generated_quiet_moves_king(piece_color, from, chess_board_0x88_O, move_list_0x88_O) {
         //console.log("king " + piece + " c " + piece_color + " f " + from);
         //console.log("king");
@@ -173,6 +174,7 @@ class Move_gen_2_quiet_0x88_С {
         }
     }
 
+    // простые ходы ферзя (т.е. не взятия)
     generated_quiet_moves_queen(piece_color, from, chess_board_0x88_O, move_list_0x88_O) {
         //console.log("queen " + piece + " c " + piece_color + " f " + from);
         //console.log("queen");
@@ -198,6 +200,7 @@ class Move_gen_2_quiet_0x88_С {
         }
     }
 
+    // простые ходы ладьи
     generated_quiet_moves_rook(piece_color, from, chess_board_0x88_O, move_list_0x88_O) {
         //console.log("rook " + piece + " c " + piece_color + " f " + from);
         //console.log("rook");
@@ -222,6 +225,7 @@ class Move_gen_2_quiet_0x88_С {
         }
     }
 
+    // простые ходы слона
     generated_quiet_moves_bishop(piece_color, from, chess_board_0x88_O, move_list_0x88_O) {
         //console.log("bishop " + piece + " c " + piece_color + " f " + from);
         //console.log("bishop");
@@ -247,6 +251,7 @@ class Move_gen_2_quiet_0x88_С {
 
     }
 
+    // простые ходы коня
     generated_quiet_moves_knight(piece_color, from, chess_board_0x88_O, move_list_0x88_O) {
         //console.log("knight " + piece + " c " + piece_color + " f " + from);
         //console.log("knight");
@@ -265,14 +270,13 @@ class Move_gen_2_quiet_0x88_С {
         }
     }
 
-
+    // рокировки короля. черного, белого, длинные, короткие
     generated_moves_castle_king(piece_color, from, chess_board_0x88_O, move_list_0x88_O) {
         let to = -1;
         let piece_to_1 = -1;
         let piece_to_2 = -1;
         let piece_to_3 = -1;
         let type_move = -1;
-        let score_move = -1;
 
         if (from == Move_gen_2_quiet_0x88_С.E1) {// король стоит на стартовой позиции
             if (piece_color == 1) {// король белый
@@ -324,6 +328,7 @@ class Move_gen_2_quiet_0x88_С {
         }
     }
 
+    // простые ходы пешек белых и черных
     generated_quiet_moves_pawn(piece_color, from, chess_board_0x88_O, move_list_0x88_O) {
         //console.log("pawn " + piece + " c " + piece_color + " f " + from);
         //console.log("pawn");
@@ -339,7 +344,7 @@ class Move_gen_2_quiet_0x88_С {
     }
 
 
-    //
+    // простые ходы белых пешек
     generated_quiet_moves_pawn_white(from, chess_board_0x88_O, move_list_0x88_O) {
 
         if (Math.floor(from / 16) == 6) {// белая пешка на стартовой позиции(2-ая линия). можно ходить на две клетки
@@ -355,7 +360,7 @@ class Move_gen_2_quiet_0x88_С {
 
     }
 
-    //
+    // простые ходы черных пешек
     generated_quiet_moves_pawn_black(from, chess_board_0x88_O, move_list_0x88_O) {
 
         if (Math.floor(from / 16) == 1) {// белые пешки на стартовой позиции. можно ходить на две клетки
@@ -363,7 +368,7 @@ class Move_gen_2_quiet_0x88_С {
                 chess_board_0x88_O, move_list_0x88_O);
         }
         if (Math.floor(from / 16) == 6) {// 136 0x88
-            this.generated_quiet_moves_pawn_promo(from,(from + 16),
+            this.generated_quiet_moves_pawn_promo(from, (from + 16),
                 chess_board_0x88_O, move_list_0x88_O);
         } else {
             this.generated_moves_pawn_one(from, (from + 16), chess_board_0x88_O, move_list_0x88_O);
@@ -397,6 +402,7 @@ class Move_gen_2_quiet_0x88_С {
         }
     }
 
+    // ходы пешки с превращением
     generated_quiet_moves_pawn_promo(from, to_center, chess_board_0x88_O, move_list_0x88_O) {
         let piece_to = -1;
         let type_move = -1;
@@ -416,4 +422,4 @@ class Move_gen_2_quiet_0x88_С {
     }
 }
 
-export{Move_gen_2_quiet_0x88_С};
+export { Move_gen_2_quiet_0x88_С };

@@ -8,11 +8,12 @@
 
 import { Chess_board_0x88_C } from "./chess_board_0x88.js";
 import { Move_list_0x88_С } from "./move_list_0x88.js";
-import { Move_gen_1_captures_0x88_С} from "./move_gen_1_captures_0x88.js";
+import { Move_gen_1_captures_0x88_С } from "./move_gen_1_captures_0x88.js";
 
 /**
 * НАЗНАЧЕНИЕ
-
+ как нибудь надо добавить отслеживание короля
+ чтобы не искать его после каждого хода
 */
 
 class Make_move_0x88_C {
@@ -28,11 +29,12 @@ class Make_move_0x88_C {
 
   }
 
+  // делаем ход под номером move_i из списка move_list_0x88_O на доске chess_board_0x88_O
   do_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O, move_gen_1_captures_0x88_O) {
     //console.log("Make_move_0x88_C->do_moves  move_i " + move_i);
-    let is_moove_legal = 1;
-    let type_move = move_list_0x88_O.type_move[move_i];
-    undo_0x88_O.set_undo(chess_board_0x88_O);
+    let is_moove_legal = 1;// по умолчанию ход считаем легальным.
+    let type_move = move_list_0x88_O.type_move[move_i];// тип хода
+    undo_0x88_O.set_undo(chess_board_0x88_O);// заполняем вспогательную структуру для возврата хода
 
     // смотрим 
     switch (type_move) {
@@ -40,7 +42,8 @@ class Make_move_0x88_C {
       case Move_list_0x88_С.MOVE_NO:
         break;
       // взятие на проходе обнуляю вообще везде, кроме регистрации при двойном ходе пешки. как по другому пока не знаю
-      ////////////////////////////////////////////////
+
+      ///////////////////////////////////////////////////////      
       // простые ходы
       // MOVE
       // ходит король. обнуляем связанные с ним рокировки
@@ -182,6 +185,8 @@ class Make_move_0x88_C {
         break;
 
       // еще один особый случай. ладью берет король. отменяем рокировки и для ладьи и для короля. 
+      // хотя если король добежал до вражеской ладьи то наверное у него уже нет рокировок но вдруг 
+      // ладья сама пришла к королю тогда это у нее уже нет рокировок. как все запутано :))
       case Move_list_0x88_С.CAPTURES_KING_ROOK:
         this.make_simple_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O);
         // обнуляем взятие на проходе. 
@@ -336,9 +341,13 @@ class Make_move_0x88_C {
       // console.log("default");
     }
 
-    // если ход не отменили выше тогда остается проверить не под шахом ли наш король
+    // если легальность хода не обнулили выше тогда остается проверить не под шахом ли наш король 
+    // легальность отменяется если рокировки не прошли т.к. поля или король под боем
     if (is_moove_legal == 1) {
       let piece_color_king = move_list_0x88_O.piece_color;
+
+      // поиск короля после каждого хода это что то сильно неправильное. надо будет прописать положение короля
+      //  и его отслеживание. но это как нибудь потом. сейчас и других вопросов хватает (19.11м.25)
       let from_king = chess_board_0x88_O.searching_king(piece_color_king);
       //console.log("from_king " + from_king);
       //console.log("piece_color_king " + piece_color_king);      ;
@@ -373,7 +382,7 @@ class Make_move_0x88_C {
     chess_board_0x88_O.side_to_move = 1 - chess_board_0x88_O.side_to_move;
   }
 
-  //
+  // если берется ладья на исходном месте то отменяем флаг возможности связанной с ней рокировки
   stop_king_castle_captures_rook_0x88(move_i, chess_board_0x88_O, move_list_0x88_O) {
 
     if (chess_board_0x88_O.castling_K == 1) {
@@ -409,7 +418,7 @@ class Make_move_0x88_C {
     }
   }
 
-  //
+  // отмена флага возможности рокировок из за хода ладьи
   stop_king_castle_move_rook_0x88(move_i, chess_board_0x88_O, move_list_0x88_O) {
 
     if (chess_board_0x88_O.castling_K == 1) {
@@ -445,7 +454,7 @@ class Make_move_0x88_C {
     }
   }
 
-  //
+  // отмена флагов возможности рокировок из за хода короля
   stop_king_castle_move_king_0x88(move_i, chess_board_0x88_O, move_list_0x88_O) {
 
     if (chess_board_0x88_O.castling_K == 1) {
@@ -481,7 +490,7 @@ class Make_move_0x88_C {
     }
   }
 
-  // 
+  // короткая рокировка
   make_king_castle_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O, move_gen_1_captures_0x88_O) {
 
     let is_moove_legal = 1;
@@ -570,7 +579,7 @@ class Make_move_0x88_C {
 
   }
 
-  //
+  // длинная рокировка
   make_king_queen_castle_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O, move_gen_1_captures_0x88_O) {
 
     let is_moove_legal = 1;
@@ -659,7 +668,7 @@ class Make_move_0x88_C {
   }
 
   // остались пешки
-  //  
+  //  взятие на проходе
   make_en_passant_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O) {
 
     // записываем имя фигуры на новом месте
@@ -693,7 +702,7 @@ class Make_move_0x88_C {
     chess_board_0x88_O.en_passant_yes = 0;
   }
 
-  //
+  // ход пешки с превращением
   make_promo_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O, promo_piece) {
 
     // записываем имя фигуры на новом месте
@@ -715,4 +724,4 @@ class Make_move_0x88_C {
   }
 }
 
-export{Make_move_0x88_C};
+export { Make_move_0x88_C };

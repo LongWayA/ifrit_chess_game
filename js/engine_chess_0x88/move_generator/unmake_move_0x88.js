@@ -1,14 +1,14 @@
 /** 
  * @copyright Copyright (c) 2025, AnBr75 and/or its affiliates. All rights reserved.
  * @author AnBr75
- * @name make_move_0x88.js
+ * @name unmake_move_0x88.js
  * @version created 24.10m.2025 
  * last modified 24.10m.2025
 */
 
 import { Chess_board_0x88_C } from "./chess_board_0x88.js";
 import { Move_list_0x88_С } from "./move_list_0x88.js";
-import { Move_gen_1_captures_0x88_С} from "./move_gen_1_captures_0x88.js";
+import { Move_gen_1_captures_0x88_С } from "./move_gen_1_captures_0x88.js";
 
 /**
 * НАЗНАЧЕНИЕ
@@ -28,6 +28,7 @@ class Unmake_move_0x88_C {
 
   }
 
+  // возврат хода
   undo_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O) {
     //console.log("Make_move_0x88_C->do_moves  move_i " + move_i);
     let type_move = move_list_0x88_O.type_move[move_i];
@@ -228,7 +229,7 @@ class Unmake_move_0x88_C {
         break;
       case Move_list_0x88_С.CAPTURES_PAWN_KNIGHT_PROMO_QUEEN:
         this.unmake_promo_captures_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O, Chess_board_0x88_C.KNIGHT);
-        break;  
+        break;
       case Move_list_0x88_С.CAPTURES_PAWN_ROOK_PROMO_QUEEN:
         this.unmake_promo_captures_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O, Chess_board_0x88_C.ROOK);
         break;
@@ -242,7 +243,7 @@ class Unmake_move_0x88_C {
         break;
       case Move_list_0x88_С.CAPTURES_PAWN_KNIGHT_PROMO_ROOK:
         this.unmake_promo_captures_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O, Chess_board_0x88_C.KNIGHT);
-        break;       
+        break;
       case Move_list_0x88_С.CAPTURES_PAWN_ROOK_PROMO_ROOK:
         this.unmake_promo_captures_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O, Chess_board_0x88_C.ROOK);
         break;
@@ -256,7 +257,7 @@ class Unmake_move_0x88_C {
         break;
       case Move_list_0x88_С.CAPTURES_PAWN_KNIGHT_PROMO_BISHOP:
         this.unmake_promo_captures_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O, Chess_board_0x88_C.KNIGHT);
-        break;         
+        break;
       case Move_list_0x88_С.CAPTURES_PAWN_ROOK_PROMO_BISHOP:
         this.unmake_promo_captures_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O, Chess_board_0x88_C.ROOK);
         break;
@@ -270,7 +271,7 @@ class Unmake_move_0x88_C {
         break;
       case Move_list_0x88_С.CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT:
         this.unmake_promo_captures_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O, Chess_board_0x88_C.KNIGHT);
-        break;        
+        break;
       case Move_list_0x88_С.CAPTURES_PAWN_ROOK_PROMO_KNIGHT:
         this.unmake_promo_captures_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O, Chess_board_0x88_C.ROOK);
         break;
@@ -323,9 +324,9 @@ class Unmake_move_0x88_C {
   // возврат короткой рокировки
   unmake_king_castle_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O) {
 
- //   move_list_0x88_O.test_print_i_move_list(move_i, chess_board_0x88_O);
- //   console.log("sq_piece from " + chess_board_0x88_O.sq_piece_0x88[move_list_0x88_O.from[move_i]]);
- //   console.log("sq_piece to " + chess_board_0x88_O.sq_piece_0x88[move_list_0x88_O.to[move_i]]);
+    //   move_list_0x88_O.test_print_i_move_list(move_i, chess_board_0x88_O);
+    //   console.log("sq_piece from " + chess_board_0x88_O.sq_piece_0x88[move_list_0x88_O.from[move_i]]);
+    //   console.log("sq_piece to " + chess_board_0x88_O.sq_piece_0x88[move_list_0x88_O.to[move_i]]);
 
     // перемещаем назад короля. его ход прописан в списке ходов
     // записываем имя фигуры на старом месте
@@ -493,7 +494,7 @@ class Unmake_move_0x88_C {
   unmake_promo_captures_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O, captures_piece) {
 
     // записываем имя фигуры на старом месте
-    chess_board_0x88_O.sq_piece_0x88[move_list_0x88_O.from[move_i]] =  Chess_board_0x88_C.PAWN;
+    chess_board_0x88_O.sq_piece_0x88[move_list_0x88_O.from[move_i]] = Chess_board_0x88_C.PAWN;
 
     // записываем цвет фигуры на старом месте 
     chess_board_0x88_O.sq_piece_color_0x88[move_list_0x88_O.from[move_i]] =
@@ -508,4 +509,4 @@ class Unmake_move_0x88_C {
   }
 }
 
-export{Unmake_move_0x88_C};
+export { Unmake_move_0x88_C };

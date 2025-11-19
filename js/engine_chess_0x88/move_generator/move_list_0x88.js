@@ -202,8 +202,8 @@ class Move_list_0x88_С {
         this.number_move = 0;
     }
 
-   // очищаем список ходов
-   clear_list() {
+    // очищаем список ходов
+    clear_list() {
         for (let i = 0; i < Move_list_0x88_С.LENGTH_LIST; i++) {
             this.type_move[i] = -1;
             this.from[i] = -1;
