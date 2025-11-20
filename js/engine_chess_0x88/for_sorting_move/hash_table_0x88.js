@@ -305,7 +305,7 @@ class Hash_table_0x88_C {
         // бежим по шахматной доске
         for (let sq = 0; sq < 64; sq++) {
 
-            sq_0x88 = Chess_board_0x88_C.SQUARE_64[sq];
+            sq_0x88 = Chess_board_0x88_C.SQUARE_64_to_128[sq];
             piece = chess_board_0x88_O.sq_piece_0x88[sq_0x88];
 
             if (piece != 0) {

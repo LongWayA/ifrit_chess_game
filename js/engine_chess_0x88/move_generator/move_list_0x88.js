@@ -197,6 +197,7 @@ class Move_list_0x88_С {
     }
 
     iniM() {
+        this.clear_list();
         this.piece_color = -1;
         this.number_captures_move = 0;
         this.number_move = 0;
@@ -288,7 +289,7 @@ class Move_list_0x88_С {
         this.to[start] = save_to;
     }//
 
-    // это для сортировке по истории
+    // это для сортировки по истории
     // сортируем все не взятия по оценке присвоенной в массиве истории. 
     // чем больше оценка тем выше ход но не выше всех взятий, даже плохих 
     // потому что так быстрее и движуху смотрим в первую очередь.
@@ -308,9 +309,10 @@ class Move_list_0x88_С {
         for (let i = start; i < this.number_move; i++) {
             for (let j = i + 1; j < this.number_move; j++) {//
                 // 
-
-                if (history_heuristic_0x88_O.history[this.piece_color][this.type_move[i]][this.to[i]] <
-                    history_heuristic_0x88_O.history[this.piece_color][this.type_move[j]][this.to[j]]) {
+                if (history_heuristic_0x88_O.history[this.piece_color][ Chess_board_0x88_C.SQUARE_128_to_64[ this.from[i] ] ]
+                    [ Chess_board_0x88_C.SQUARE_128_to_64[ this.to[i] ] ] <
+                    history_heuristic_0x88_O.history[this.piece_color][ Chess_board_0x88_C.SQUARE_128_to_64[ this.from[j] ] ]
+                    [ Chess_board_0x88_C.SQUARE_128_to_64[ this.to[j] ] ]) {
                     // сохраняем позицию на которую будем писать
                     save_type_move = this.type_move[i];
                     save_from = this.from[i];

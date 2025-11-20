@@ -6,10 +6,13 @@
  * last modified 04.11m.2025
 */
 
-import { Move_list_0x88_С } from "../move_generator/move_list_0x88.js";
-
 /**
 * НАЗНАЧЕНИЕ
+  ход не должен быть взятием. для взятий своя, более эффективная сортировка.
+  записываем ходы вызвавшие бетта отсечку за белых и альфа за черных
+  работаем с ходами на одной глубине поэтому цвет запоминать не надо
+  т.е. записываем два хода вызвавшие отсечки и ставим их после взятий.
+  так как хода только два писать что то еще кроме отсечки не стоит.
 
 */
 
@@ -21,6 +24,7 @@ class killer_heuristic_0x88_O {
 
   killer_moves_from_1 = new Array(killer_heuristic_0x88_O.MAX_DEPTH).fill(-1);
   killer_moves_to_1 = new Array(killer_heuristic_0x88_O.MAX_DEPTH).fill(-1);
+
   killer_moves_from_2 = new Array(killer_heuristic_0x88_O.MAX_DEPTH).fill(-1);
   killer_moves_to_2 = new Array(killer_heuristic_0x88_O.MAX_DEPTH).fill(-1);
 
@@ -34,6 +38,7 @@ class killer_heuristic_0x88_O {
 
   }
 
+  // очищаем список
   clear_list() {
     for (let i = 0; i < killer_heuristic_0x88_O.MAX_DEPTH; i++) {
       this.killer_moves_from_1[i] = -1;
@@ -44,20 +49,21 @@ class killer_heuristic_0x88_O {
     this.depth_max = 0;
   }
 
-  // 
-  add_move(type_move, from, to, depth) {
+  // записываем не взятия вызвавшие отсечку 
+  add_move(from, to, depth) {
 
-    if (type_move > Move_list_0x88_С.CAPTURES_KING_PAWN) {// ход не взятие
       //console.log('killer_heuristic_0x88_O->add_move depth ' + depth +" type_move " + type_move);
-      if (this.killer_moves_from_1[depth] != from) {
+      if (this.killer_moves_from_1[depth] != from) {// если такой ход еще не записан
+        // записанный до этого ход перезаписываем на второй ход
         this.killer_moves_from_2[depth] = this.killer_moves_from_1[depth];
-         this.killer_moves_to_2[depth] = this.killer_moves_to_1[depth];       
+        this.killer_moves_to_2[depth] = this.killer_moves_to_1[depth];
+        // записываем ход      
         this.killer_moves_from_1[depth] = from;
         this.killer_moves_to_1[depth] = to;
       }
+       // увеличиваем количество записанных по глубине позиций
       if (depth > this.depth_max) this.depth_max = depth;
-    }
   }
 }
 
-export{killer_heuristic_0x88_O};
+export { killer_heuristic_0x88_O };

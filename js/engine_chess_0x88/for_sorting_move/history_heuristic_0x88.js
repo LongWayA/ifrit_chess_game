@@ -10,7 +10,15 @@ import { Chess_board_0x88_C } from "../move_generator/chess_board_0x88.js";
 
 /**
 * НАЗНАЧЕНИЕ
+ Мне кажется, что это дальнейшее обобщение killer heuristic
 
+ Заполняем массив history[color][from][to]
+ количество ячеек 2 * 64 * 64 = 8_192
+ значениями вида (depth_max - depth) * (depth_max - depth)
+ таким образом, что если ход вызвал отсечку по альфе или бете то 
+ history[color][from][to] = history[color][from][to] + (depth_max - depth) * (depth_max - depth);
+ Максимальное значение сейчас 100_000. если оно превышено то все значения делим на 2.
+ Взятия мы не пишем.
 */
 
 class History_heuristic_0x88_C {
@@ -19,9 +27,8 @@ class History_heuristic_0x88_C {
 
   // тут все на 1 больше последней позиции потому что есть 0
   static MAX_COLOR = 2;
-  static MAX_TYPE_MOVE = 61;
   static MAX_COORDINATE = 64;
-  static MAX_HISTORY = 100000;
+  static MAX_HISTORY = 100_000;
 
   history = new Array(History_heuristic_0x88_C.MAX_COLOR);  // [фигура][поле куда фигура ходит]
 
@@ -29,59 +36,72 @@ class History_heuristic_0x88_C {
 
   }
 
+  // создаем трехмерный массив color, from, to
   iniM() {
     for (let color = 0; color < History_heuristic_0x88_C.MAX_COLOR; color++) {
-      this.history[color] = new Array(History_heuristic_0x88_C.MAX_TYPE_MOVE);
-      for (let type_move = 1; type_move < History_heuristic_0x88_C.MAX_TYPE_MOVE; type_move++) {
-        this.history[color][type_move] = new Array(History_heuristic_0x88_C.MAX_COORDINATE);
+      this.history[color] = new Array(History_heuristic_0x88_C.MAX_COORDINATE);
+      for (let from = 0; from < History_heuristic_0x88_C.MAX_COORDINATE; from++) {
+        this.history[color][from] = new Array(History_heuristic_0x88_C.MAX_COORDINATE);
       }
     }
   }
 
+  // очищаем историю
   clear_history() {
     //let g = 0;
     for (let color = 0; color < History_heuristic_0x88_C.MAX_COLOR; color++) {
-      for (let type_move = 1; type_move < History_heuristic_0x88_C.MAX_TYPE_MOVE; type_move++) {
-        for (let sq = 1; sq < History_heuristic_0x88_C.MAX_COORDINATE; sq++) {
+      for (let from = 0; from < History_heuristic_0x88_C.MAX_COORDINATE; from++) {
+        for (let to = 0; to < History_heuristic_0x88_C.MAX_COORDINATE; to++) {
           //g = g + 1;
-          this.history[color][type_move][Chess_board_0x88_C.SQUARE_64[sq]] = -1;//-1 g
+          this.history[color][from][to] = -1;//-1 g
         }
       }
     }
   }
 
-  history_good_save(color, type_move, to, depth, depth_max) {
+  // записываем хороший ход
+  history_good_save(color, from_128, to_128, depth, depth_max) {
 
     let delta_depth = depth_max - depth;
 
-    this.history[color][type_move][Chess_board_0x88_C.SQUARE_64[to]] = 
-    this.history[color][type_move][Chess_board_0x88_C.SQUARE_64[to]] + delta_depth * delta_depth;
+    // преобразование Chess_board_0x88_C.SQUARE_128_to_64[] переводит 128-клеточную доску в 64-клеточную 
+    // так как нам в масиве не нужны 64 дополнительные неиспользуемые в данном случае клетки. 
+    // напомню что 128 клеточная доска нужна что бы в одну операцию (SquareIndex & 0x88 == 0 - мы еще на доске) 
+    // оперделять выход за пределы доски
 
-    if (this.history[color][type_move][Chess_board_0x88_C.SQUARE_64[to]] > History_heuristic_0x88_C.MAX_HISTORY) {
+    this.history[color][Chess_board_0x88_C.SQUARE_128_to_64[from_128]][Chess_board_0x88_C.SQUARE_128_to_64[to_128]] =
+      this.history[color][Chess_board_0x88_C.SQUARE_128_to_64[from_128]][Chess_board_0x88_C.SQUARE_128_to_64[to_128]] +
+      delta_depth * delta_depth;
+
+    // если запись в ячейку истории превысила лемит все делим на два  
+    if (this.history[color][Chess_board_0x88_C.SQUARE_128_to_64[from_128]][Chess_board_0x88_C.SQUARE_128_to_64[to_128]] >
+      History_heuristic_0x88_C.MAX_HISTORY) {
       for (let color = 0; color < History_heuristic_0x88_C.MAX_COLOR; color++) {
-        for (let type_move = 1; type_move < History_heuristic_0x88_C.MAX_TYPE_MOVE; type_move++) {
-          for (let sq = 1; sq < History_heuristic_0x88_C.MAX_COORDINATE; sq++) {
-            this.history[color][type_move][Chess_board_0x88_C.SQUARE_64[sq]] = 
-            this.history[color][type_move][Chess_board_0x88_C.SQUARE_64[sq]]/2;
+        for (let from = 0; from < History_heuristic_0x88_C.MAX_COORDINATE; from++) {
+          for (let to = 0; to < History_heuristic_0x88_C.MAX_COORDINATE; to++) {
+            this.history[color][from][to] = this.history[color][from][to] / 2;
           }
         }
       }
     }
   }
 
-  history_bad_save(color, type_move, to, depth, depth_max) {
+  // записываем плохой ход. я его не использую. сделал подобно старому ифриту. зачем нужен уже не помню 
+  history_bad_save(color, from_128, to_128, depth, depth_max) {
 
     let delta_depth = depth_max - depth;
 
-    this.history[color][type_move][Chess_board_0x88_C.SQUARE_64[to]] = 
-    this.history[color][type_move][Chess_board_0x88_C.SQUARE_64[to]] - delta_depth * delta_depth;
+    this.history[color][Chess_board_0x88_C.SQUARE_128_to_64[from_128]][Chess_board_0x88_C.SQUARE_128_to_64[to_128]] =
+      this.history[color][Chess_board_0x88_C.SQUARE_128_to_64[from_128]][Chess_board_0x88_C.SQUARE_128_to_64[to_128]] +
+      delta_depth * delta_depth;
 
-    if (this.history[color][type_move][Chess_board_0x88_C.SQUARE_64[to]] < -1 * History_heuristic_0x88_C.MAX_HISTORY) {
+    // если запись в ячейку истории превысила лемит все делим на два  
+    if (this.history[color][Chess_board_0x88_C.SQUARE_128_to_64[from_128]][Chess_board_0x88_C.SQUARE_128_to_64[to_128]] >
+      History_heuristic_0x88_C.MAX_HISTORY) {
       for (let color = 0; color < History_heuristic_0x88_C.MAX_COLOR; color++) {
-        for (let type_move = 1; type_move < History_heuristic_0x88_C.MAX_TYPE_MOVE; type_move++) {
-          for (let sq = 1; sq < History_heuristic_0x88_C.MAX_COORDINATE; sq++) {
-            this.history[color][type_move][Chess_board_0x88_C.SQUARE_64[sq]] = 
-            this.history[color][type_move][Chess_board_0x88_C.SQUARE_64[sq]]/2;
+        for (let from = 0; from < History_heuristic_0x88_C.MAX_COORDINATE; from++) {
+          for (let to = 0; to < History_heuristic_0x88_C.MAX_COORDINATE; to++) {
+            this.history[color][from][to] = this.history[color][from][to] / 2;
           }
         }
       }
@@ -89,4 +109,4 @@ class History_heuristic_0x88_C {
   }
 }
 
-export{History_heuristic_0x88_C};
+export { History_heuristic_0x88_C };
