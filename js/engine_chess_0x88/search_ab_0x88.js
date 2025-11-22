@@ -95,26 +95,6 @@ class Search_ab_0x88_C {
     // ищем позицию в хеш таблице
     let is_save_position = hash_table_0x88_O.is_save_position(chess_board_0x88_O, depth, depth_max);
 
-    // отсечение по альфа бете из хеша ====================================================
-    //      if (isPV != -1) {// не главный вариант
-    if (is_save_position.ws != -1) {
-      //console.log("Search_0x88_C-> is_save_position_tm " + is_save_position_tm);
-      if ((is_save_position.ws == Hash_table_0x88_C.ALPHA_CUT) && (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.BLACK)) {
-        if (hash_table_0x88_O.sk <= alpha) {
-          //console.log("Search_0x88_C-> отсеклись по альфе hash_table_score " + hash_table_score);
-          return hash_table_0x88_O.sk // оценка записанного хода
-        }
-      }
-      if ((is_save_position.ws == Hash_table_0x88_C.BETA_CUT) && (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.WHITE)) {
-        if (hash_table_0x88_O.sk >= beta) {
-          //console.log("Search_0x88_C-> отсеклись по бете hash_table_score " + hash_table_score);
-          return hash_table_0x88_O.sk
-        }
-      }
-    }
-    //     }
-    //==================================================== отсечение по альфа бете из хеша
-
     if (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.WHITE) {
       found_score = -Search_ab_0x88_C.BEST_VALUE_MOD;// максимальная оценка позиции
     } else {
@@ -162,11 +142,14 @@ class Search_ab_0x88_C {
     //==================================================== используем киллеры
 
     // используем хеш таблицу ====================================================
-    if ((is_save_position.ws == Hash_table_0x88_C.ALPHA_UPDATE) && (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.WHITE)) {
+    // просто выходить по оценке не буду. слишком много коллизий
+    if ((is_save_position.tn == Hash_table_0x88_C.ALPHA_CUT) && (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.BLACK)) {
       move_list_0x88_O.set_move_in_0(is_save_position.tm, is_save_position.from, is_save_position.to);
-    }
-
-    if ((is_save_position.ws == Hash_table_0x88_C.BETA_UPDATE) && (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.BLACK)) {
+    } else if ((is_save_position.tn == Hash_table_0x88_C.BETA_CUT) && (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.WHITE)) {
+      move_list_0x88_O.set_move_in_0(is_save_position.tm, is_save_position.from, is_save_position.to);
+    } else if ((is_save_position.tn == Hash_table_0x88_C.ALPHA_UPDATE) && (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.WHITE)) {
+      move_list_0x88_O.set_move_in_0(is_save_position.tm, is_save_position.from, is_save_position.to);
+    } else if ((is_save_position.tn == Hash_table_0x88_C.BETA_UPDATE) && (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.BLACK)) {
       move_list_0x88_O.set_move_in_0(is_save_position.tm, is_save_position.from, is_save_position.to);
     }
     //==================================================== используем хеш таблицу
@@ -232,8 +215,9 @@ class Search_ab_0x88_C {
             alpha = score; //
 
             // записываем ход в хеш
+
             hash_table_0x88_O.add_position(Hash_table_0x88_C.ALPHA_UPDATE, move_list_0x88_O.type_move[move_i],
-              move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], score, depth, depth_max, chess_board_0x88_O);
+              move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], depth, depth_max, chess_board_0x88_O);
 
             if (isPV == 1) {
               best_node_line_0x88_O.save_list(pv_line_0x88_O);
@@ -260,7 +244,7 @@ class Search_ab_0x88_C {
 
           // записываем ход в хеш
           hash_table_0x88_O.add_position(Hash_table_0x88_C.BETA_CUT, move_list_0x88_O.type_move[move_i],
-            move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], score, depth, depth_max, chess_board_0x88_O);
+            move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], depth, depth_max, chess_board_0x88_O);
 
           return score;   // 
         }//
@@ -275,7 +259,7 @@ class Search_ab_0x88_C {
 
             // записываем ход в хеш
             hash_table_0x88_O.add_position(Hash_table_0x88_C.BETA_UPDATE, move_list_0x88_O.type_move[move_i],
-              move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], score, depth, depth_max, chess_board_0x88_O);
+              move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], depth, depth_max, chess_board_0x88_O);
 
             if (isPV == 1) {
               best_node_line_0x88_O.save_list(pv_line_0x88_O);
@@ -302,7 +286,7 @@ class Search_ab_0x88_C {
 
           // записываем ход в хеш            
           hash_table_0x88_O.add_position(Hash_table_0x88_C.ALPHA_CUT, move_list_0x88_O.type_move[move_i],
-            move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], score, depth, depth_max, chess_board_0x88_O);
+            move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], depth, depth_max, chess_board_0x88_O);
           return score;   //
         }//
 

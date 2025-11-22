@@ -284,9 +284,9 @@ class Move_list_0x88_С {
         }
 
         // сюда пишем начальную позицию. т.о. две позиции меняются местами
-        this.type_move[start] = save_type_move;
-        this.from[start] = save_from;
-        this.to[start] = save_to;
+        this.type_move[s_m] = save_type_move;
+        this.from[s_m] = save_from;
+        this.to[s_m] = save_to;
     }//
 
     // это для сортировки по истории

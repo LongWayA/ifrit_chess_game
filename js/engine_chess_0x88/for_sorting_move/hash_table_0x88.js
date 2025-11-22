@@ -10,21 +10,94 @@ import { Chess_board_0x88_C } from "../move_generator/chess_board_0x88.js";
 
 /**
 * НАЗНАЧЕНИЕ
-https://www.chessprogramming.org/Zobrist_Hashing
- В 32-битном хеше коллизия может возникнуть, если вычислить sqrt(2^32) == 2^16, 
- то есть около 65 тысяч позиций. В 64-битном хеше коллизия может возникнуть примерно 
- через 2^32, то есть около 4 миллиардов позиций.
+ начало цитаты
+   https://www.chessprogramming.org/Zobrist_Hashing
+   В 32-битном хеше коллизия может возникнуть, если вычислить sqrt(2^32) == 2^16, 
+   то есть около 65 тысяч позиций. В 64-битном хеше коллизия может возникнуть примерно 
+   через 2^32, то есть около 4 миллиардов позиций.
+ конец цитаты
+
+ Выше сказанное это теория. У меня же получилось, что примерно каждая десятая 
+ позиция неправильная. Почему так?
+ Дело в том, что помимо 32 битного ключа размером ~2 миллиарда есть еще индекс получаемый
+ из ключа размером с хеш таблицу. А это в лучшем случае порядка миллионов.
+ Т.о. мы сотни миллионов расмотренных позиций пытаемся вписать, в лучшем случае, в несколько миллионов.
+
+ И так у нас есть 32 битный ключ который мы вписываем в размер таблицы через индекс получаемый из ключа путем
+ index_key_32_board = key_32_board & (Hash_table_0x88_C.MAX_TABLE_LENTH - 1);//
+ Размер таблицы обязательно должен быть вида 2 в степени n минус 1. т.е. 2**n-1
+ тогда он имеет вид 0001111111 и операцией битого "и" т.е. &  мы отрезаем лишние старшие биты
+ что то вида 10100...1011101 & 0000...11111 = 0000...11101.
+
+ Размер ячейки таблицы имеет очень большое значение, поэтому пришлось все упаковать в одно число.
+ Сейчас элемент массива выглядит следующим образом:
+ key_32[i] - 32 битный ключ
+ move[i]   - упакованный ход
+ test_fen[i] - фен представление позиции. жрет дико много места (в массиве на милион это около гигабайта памяти)
+ поэтому вклчаю только для тестирования
+
+ В число move упаковываем:
+    move = move | type_nodes; (0..5) тип записываемого узла. это либо улучшение альфы или беты или отсечка по альфе или бете
+    move = move << 7; - число сдвигаем на 7 бит влево чтобы освободить место для следующей позииции которая занимает
+                        не больше 7 бит
+
+    move = move | type_move; (0..60) тип хода. тут все понятно, а если нет смотрите описание списка и генератора ходов
+    move = move << 7;
+
+    from_64 = Chess_board_0x88_C.SQUARE_128_to_64[from_128] - в списке ходы пишутся для 128 клеточной доски. 
+                                                              мы же используем 64 для экономии
+    move = move | from_64; (0..63)- откуда ходит фигура
+    move = move << 7;
+
+    to_64 = Chess_board_0x88_C.SQUARE_128_to_64[to_128]
+    move = move | to_64; (0..63)- куда ходит фигура
+    move = move << 7;
+
+    move = move | delta_depth; 
+    тут у нас delta_depth = max_depth - depth 
+    Почему именно так а не просто depth?
+    Мы перезаписываем узлы рассмотренные на большую или такую же глубину. 
+    Так что нам нужна не просто глубина, а дельта.
+ 
+    Распаковываем обратно:
+
+        delta_depth = move & 127 - тут 127 имеет вид 00..1111111 - самая доступная потому что при
+                                   перезаписи узла нас интересует на какой глубину он был просчитан
+
+        move = move >> 7; сдвигаем направо для следующей порции
+        to_64 = move & 127;
+        to_128 = Chess_board_0x88_C.SQUARE_64_to_128[to_64]
+
+        move = move >> 7; сдвигаем направо для следующей порции
+        from_64 = move & 127
+        from_128 = Chess_board_0x88_C.SQUARE_64_to_128[from_64];
+
+        move = move >> 7; сдвигаем направо для следующей порции
+        type_move = move & 127;
+
+        move = move >> 7; сдвигаем направо для следующей порции
+        type_nodes = move & 127;
+
+        В начале записывал оценку позиции и использовал для отсечения по альфе бете, однако
+        из за такого большого количества коллизий оставил только сортировку ходов,
+        а для этого оценка не нужна.
+
+    Записываем ходы приведшие к улучшению альфы беты или к отсечке по альфе бете
+    и если позиция одинаковая то этот ход из таблицы находим в списке и ставим на первое место.
+    Т.о. коллизии нам не вредят, если позиция не та, то этот ход просто не приведет к ускорению или 
+    мы его вообще не найдем в списке.
 */
 
 class Hash_table_0x88_C {
 
     static NAME = "Hash_table_0x88_C";
     //8 388 480
-    // static MAX_TABLE_LENTH = 1_048_576;
+    //static MAX_TABLE_LENTH = 1_048_576;
     //static MAX_TABLE_LENTH = 2_097_152;//2_097_152; 4_194_304; 8_388_608; 16_777_216
     //static MAX_TABLE_LENTH = 16_777_216;//
 
-    static MAX_TABLE_LENTH = 16_384;//1_024 2_048 4_096 8_192 16_384 32_768 65_536
+    //static MAX_TABLE_LENTH = 16_384;//1_024 2_048 4_096 8_192 16_384 32_768 65_536
+    static MAX_TABLE_LENTH = 65_536;
 
     static ALPHA_CUT = 1;
     static BETA_CUT = 2;
@@ -34,35 +107,43 @@ class Hash_table_0x88_C {
 
     static BEST_UPDATE = 5;
 
+    out = { tn: -1, tm: -1, from: -1, to: -1, dd: -1 };
 
-    hi_random_piece_color_name_sq = new Array(2);// трехмерный массив ключей положения разных 
-    lo_random_piece_color_name_sq = new Array(2);// трехмерный массив ключей положения разных 
-    // положений фигур на разных полях 2*6*64 = 768
+    // 32 битный ключ позиции
+    key_32 = new Array(Hash_table_0x88_C.MAX_TABLE_LENTH);
 
-    // два ключа по 32 байт
-    hi_key = new Array(Hash_table_0x88_C.MAX_TABLE_LENTH); // 
-    lo_key = new Array(Hash_table_0x88_C.MAX_TABLE_LENTH); // 
+    // упакованная информация tn, tm, from, to, dd 
+    // используется в сортировке ходов. ход выводится на первое место
+    move = new Array(Hash_table_0x88_C.MAX_TABLE_LENTH);
 
-    // записываем что это за ход - отсечка по альфе-бете или улучшение альфы-беты 
-    // или ход улучшающий локальный максимум или минимум(для черных)
-    //  откуда и куда ходит фигура однозначно определяют ход.
-    why_save = new Array(Hash_table_0x88_C.MAX_TABLE_LENTH); // тип хода в записанной позиции    
-    type_move = new Array(Hash_table_0x88_C.MAX_TABLE_LENTH); // тип хода в записанной позиции
-    from = new Array(Hash_table_0x88_C.MAX_TABLE_LENTH); //
-    to = new Array(Hash_table_0x88_C.MAX_TABLE_LENTH); //      
+    // оценку позиции не буду использовать при отсечках по альфе и бете  
+    // пока что слишком много коллизий. только сортировка, а для нее нужен только ход. 
 
-    score = new Array(Hash_table_0x88_C.MAX_TABLE_LENTH); // оценка записанной позиции  
+    // test_fen_board ----------------------------------------------------------------------------------
+    // тестовый фен позиции. смотрим насколько адекватный получается ключ позиции
+    //   test_fen = new Array(Hash_table_0x88_C.MAX_TABLE_LENTH); // тип хода в записанной позиции
 
-    delta_depth = new Array(Hash_table_0x88_C.MAX_TABLE_LENTH);// дельта просчитанной глубины max_depth - depth
+    //
+    max_lenth = Hash_table_0x88_C.MAX_TABLE_LENTH - 1;
 
-    fen = new Array(Hash_table_0x88_C.MAX_TABLE_LENTH); // тип хода в записанной позиции
+    // трехмерный массив ключей положения разных 
+    key_array_32 = new Array(2);// положений фигур на разных полях 2 * 7 * 64 = 896
 
-    max_lenth = 0;
+    add_position_p = 0;// зашли чтобы попытаться добавить позицию
 
-    colz = 0;
-    no_colz = 0;
-    z = 0;
-    z_add = 0;
+    add_position_key_32_true = 0;// ключ при добавлении позиции уже есть
+
+    add_position_new = 0;// добавили позицию по новой
+    add_position_rew = 0;// добавили позицию перезаписав старую   
+
+    is_save_position_p = 0;
+
+    is_save_key_32_true = 0;// зашли по индексу но ключ не совпал
+    is_save_key_32_false = 0;// зашли по индексу и ключ совпал
+
+    collision_fen = 0;// зашли по индексу но фен не совпал
+    no_collision_fen = 0;// зашли по индексу и фен совпал
+
 
     constructor() {
 
@@ -71,201 +152,265 @@ class Hash_table_0x88_C {
     iniM() {
         // инициализируем трехмерный массив 2*7*64 = 896 ячеек
         for (let color = 0; color < 2; color++) {
-            this.hi_random_piece_color_name_sq[color] = new Array(7);
-            this.lo_random_piece_color_name_sq[color] = new Array(7);
-            for (let name = 1; name < 7; name++) {
-                this.hi_random_piece_color_name_sq[color][name] = new Array(64);
-                this.lo_random_piece_color_name_sq[color][name] = new Array(64);
+            this.key_array_32[color] = new Array(7);
+
+            for (let name = 0; name < 7; name++) {
+                this.key_array_32[color][name] = new Array(64);
             }
         }
 
         this.clear_hash();
         this.ini_random_piece_color_name_sq();
+        this.max_lenth = Hash_table_0x88_C.MAX_TABLE_LENTH - 1;
 
-        this.colz = 0;
-        this.no_colz = 0;
-        this.z = 0;
-        this.z_add = 0;
+        this.out.tn = -1;
+        this.out.tm = -1;
+        this.out.from = -1;
+        this.out.to = -1;
+        this.out.dd = -1;
+
+        // test
+        this.add_position_p = 0;// зашли чтобы попытаться добавить позицию
+        this.add_position_key_32_true = 0;// ключ при добавлении позиции уже есть
+        this.add_position_new = 0;// добавили позицию по новой
+        this.add_position_rew = 0;// добавили позицию перезаписав старую  
+        this.is_save_position_p = 0;
+        this.is_save_key_32_true = 0;// зашли по индексу но ключ не совпал
+        this.is_save_key_32_false = 0;// зашли по индексу и ключ совпал
+        this.collision_fen = 0;// зашли по индексу но фен не совпал
+        this.no_collision_fen = 0;// зашли по индексу и фен совпал
+
+
     }
 
     clear_hash() {
         for (let i = 0; i < Hash_table_0x88_C.MAX_TABLE_LENTH; i++) {
 
-            this.hi_key[i] = -1; // 
-            this.lo_key[i] = -1; //
-            this.why_save[i] = -1; //             
-            this.type_move[i] = -1; //
-            this.from[i] = -1; //
-            this.to[i] = -1; //      
-            this.score[i] = -1; //
-            this.delta_depth[i] = -1;// 
-            this.fen[i] = ""; // тип хода в записанной позиции
+            this.key_32[i] = -1; // 
+            this.move[i] = -1; // 
+
+            // test_fen_board ----------------------------------------------------------------------------------
+            // this.test_fen[i] = ""; //  
         }
-        this.max_lenth = 0;
+        //this.max_lenth = 0;
     }
 
-
+    // сколько позиций записано
     test_uses_hash() {
 
-        let us = 0;
-        let not_us = 0;
+        let save_position = 0;
+        let not_save_position = 0;
 
         for (let i = 0; i < Hash_table_0x88_C.MAX_TABLE_LENTH; i++) {
 
-            //if (this.why_save[i] != -1) {
-            if (this.type_move[i] != -1) {                
-                us = us + 1;
+            if (this.key_32[i] != -1) {
+                save_position = save_position + 1;
             } else {
-                not_us = not_us + 1;
+                not_save_position = not_save_position + 1;
             }
         }
 
-        console.log("Hash_table_0x88_C -> us " + us + " not_us " + not_us);
+        console.log("Hash_table_0x88_C -> save_position " + save_position +
+            " not_save_position " + not_save_position);
+    }
+
+    // запаковываем тип узла, тип хода, откуда ходит, куда ходит, рассмотренная глубина
+    packing_to_move(index_key_32_board, type_nodes, type_move, from_128, to_128, delta_depth) {
+
+        this.move[index_key_32_board] = 0; // 
+        //
+        this.move[index_key_32_board] = this.move[index_key_32_board] | type_nodes;
+        this.move[index_key_32_board] = this.move[index_key_32_board] << 7;
+        //
+        this.move[index_key_32_board] = this.move[index_key_32_board] | type_move;
+        this.move[index_key_32_board] = this.move[index_key_32_board] << 7;
+
+        //
+        let from_64 = Chess_board_0x88_C.SQUARE_128_to_64[from_128];
+        this.move[index_key_32_board] = this.move[index_key_32_board] | from_64;
+        this.move[index_key_32_board] = this.move[index_key_32_board] << 7;
+
+        //
+        let to_64 = Chess_board_0x88_C.SQUARE_128_to_64[to_128];
+        this.move[index_key_32_board] = this.move[index_key_32_board] | to_64;
+        this.move[index_key_32_board] = this.move[index_key_32_board] << 7;
+
+        //
+        this.move[index_key_32_board] = this.move[index_key_32_board] | delta_depth;
+    }
+
+    // распаковываем ход
+    unpacking_from_move(index_key_32_board) {
+
+        let delta_depth = this.move[index_key_32_board] & 127; //
+
+        this.move[index_key_32_board] = this.move[index_key_32_board] >> 7;
+        let to_64 = this.move[index_key_32_board] & 127;
+        let to_128 = Chess_board_0x88_C.SQUARE_64_to_128[to_64];
+
+        this.move[index_key_32_board] = this.move[index_key_32_board] >> 7;
+        let from_64 = this.move[index_key_32_board] & 127;
+        let from_128 = Chess_board_0x88_C.SQUARE_64_to_128[from_64];
+
+        this.move[index_key_32_board] = this.move[index_key_32_board] >> 7;
+        let type_move = this.move[index_key_32_board] & 127;
+
+        this.move[index_key_32_board] = this.move[index_key_32_board] >> 7;
+        let type_nodes = this.move[index_key_32_board] & 127;
+
+        this.out.tn = type_nodes;
+        this.out.tm = type_move;
+
+        this.out.from = from_128;
+        this.out.to = to_128;
+
+        this.out.dd = delta_depth;
+
+    }
+ 
+    // для проверки что после цикла запаковки - распаковки параметры не изменились
+    test(index_key_32_board, type_nodes, type_move, from_128, to_128, delta_depth_board) {
+
+        console.log("Hash_table_0x88_C ->START");
+
+        console.log("  packing type_nodes " + type_nodes + " type_move " + type_move +
+            " from_128 " + from_128 + " to_128 " + to_128 +
+            " delta_depth " + delta_depth_board);
+
+        this.packing_to_move(index_key_32_board, type_nodes, type_move, from_128, to_128, delta_depth_board);
+        this.unpacking_from_move(index_key_32_board);
+
+        console.log("unpacking type_nodes " + this.out.tn + " type_move " + this.out.tm +
+            " from_128 " + this.out.from + " to_128 " + this.out.to +
+            " delta_depth " + this.out.dd);
 
     }
 
+    // добавляем ход в таблицу
+    add_position(type_nodes, type_move, from_128, to_128, depth, max_depth, chess_board_0x88_O) {
 
-    is_save_position(chess_board_0x88_O, depth, max_depth) {
+        this.add_position_p = this.add_position_p + 1;// зашли чтобы попытаться добавить позицию
 
-        this.z = this.z + 1;
+        // генерируем ключ текущей позиции.
+        let key_32_board = this.set_key_from_board_0x88(chess_board_0x88_O);
+        //console.log("Hash_table_0x88_C -> key_32_board " + key_32_board);
 
-        // это у нас данные текущей позиции.
-        let hi_key_board = this.set_key_from_board_0x88(chess_board_0x88_O).hi;
-        let lo_key_board = this.set_key_from_board_0x88(chess_board_0x88_O).lo;
-        let fen_board = chess_board_0x88_O.set_fen_from_0x88();
+        // определяем по ключу индекс для доступа к таблице
+        let index_key_32_board = key_32_board & (Hash_table_0x88_C.MAX_TABLE_LENTH - 1);//
+        //console.log("Hash_table_0x88_C -> index_key_32_board " + index_key_32_board);  
+        //console.log("Hash_table_0x88_C -> Hash_table_0x88_C.MAX_TABLE_LENTH - 1 " + (Hash_table_0x88_C.MAX_TABLE_LENTH - 1).toString(2));              
 
-        // переводим ключ в индекс доступа хеш таблицы. MAX_TABLE_LENTH должен быть вида 2 в степени н
-        // чтобы обрезать лишенне (001111)
-        //let hi_key = hi_key_board_0x88 & Hash_table_0x88_C.MAX_TABLE_LENTH;
-        let index_hi_key_board = hi_key_board % Hash_table_0x88_C.MAX_TABLE_LENTH;
-        //let hi_key = hi_key_board_0x88;        
-        //Math.floor();
+        //let delta_depth_board = max_depth - depth;
+        //this.test(index_key_32_board, type_nodes, type_move, from_128, to_128, delta_depth_board);
 
-        if (index_hi_key_board > Hash_table_0x88_C.MAX_TABLE_LENTH) {
-            // console.log("Hash_table_0x88_C -> при чтении превышен максимальный размер хеш таблицы ");
-            // console.log("Hash_table_0x88_C -> hi_key " + hi_key);
-            return 0;
+        /////////////////////////////////////////////////// 
+        // ключ совпал значит мы видимо эту позицию когда то смотрели      
+        if (key_32_board == this.key_32[index_key_32_board]) {
+
+            this.add_position_key_32_true = this.add_position_key_32_true + 1;// ключ при добавлении позиции уже есть
+
+            // распаковываем move выделяя delta_depth_move
+            let delta_depth_move = this.move[index_key_32_board] & 127; //
+
+            let delta_depth_board = max_depth - depth;
+
+            // место уже было записано. надо проверить глубину записи
+            if (delta_depth_move <= delta_depth_board) {
+
+                this.add_position_rew = this.add_position_rew + 1;// добавили позицию перезаписав старую
+
+                // запаковываем move
+                this.packing_to_move(index_key_32_board, type_nodes, type_move, from_128, to_128, delta_depth_board);
+
+                // test_fen_board ----------------------------------------------------------------------------------                
+                //               this.test_fen[index_key_32_board] = chess_board_0x88_O.set_fen_from_0x88();
+
+            }
+        } else {
+
+            this.add_position_new = this.add_position_new + 1;// добавили позицию по новой
+
+            this.key_32[index_key_32_board] = key_32_board;
+
+            let delta_depth_board = max_depth - depth;
+
+            // запаковываем move
+            this.packing_to_move(index_key_32_board, type_nodes, type_move, from_128, to_128, delta_depth_board);
+
+            // test_fen_board ----------------------------------------------------------------------------------            
+            //            this.test_fen[index_key_32_board] = chess_board_0x88_O.set_fen_from_0x88();
         }
 
+    }
+
+    // смотрим есть ли у нас в таблице такая позиция и если есть извлекаем ход
+    is_save_position(chess_board_0x88_O, depth, max_depth) {
+
+        // всего было обращений в запись
+        this.is_save_position_p = this.is_save_position_p + 1;
+
+        // генерируем ключ текущей позиции.
+        let key_32_board = this.set_key_from_board_0x88(chess_board_0x88_O);
+
+        // определяем по ключу индекс для доступа к таблице
+        let index_key_32_board = key_32_board & (Hash_table_0x88_C.MAX_TABLE_LENTH - 1);//&
+
+        let delta_depth_board = max_depth - depth;
+
+        // test_fen_board ----------------------------------------------------------------------------------
+        //        let test_fen_board = chess_board_0x88_O.set_fen_from_0x88();
+
+        let key_32_table = this.key_32[index_key_32_board];
+
         // если ключ совпал
-        let hi_key_from_table = this.hi_key[index_hi_key_board];
-        let lo_key_from_table = this.lo_key[index_hi_key_board];
-        if ((hi_key_from_table == hi_key_board) && (lo_key_from_table == lo_key_board)) {
-            // если тип хода не пустой
-            let why_save_from_table = this.why_save[index_hi_key_board];
-            if (why_save_from_table != -1) {
+        if (key_32_board == key_32_table) {
+
+            // зашли по индексу и ключ совпал
+            this.is_save_key_32_true = this.is_save_key_32_true + 1;
+
+            // распаковываем move выделяя delta_depth_move
+            let delta_depth_move = this.move[index_key_32_board] & 127; //
+
+            // если дельта глубины не пустая
+            if (delta_depth_move != -1) {
+                // test_fen_board ----------------------------------------------------------------------------------                
+                //let test_fen = this.test_fen[index_key_32_board];
+
                 // проверяем что глубина поиска позиции из таблицы больше или равна
-                let delta_depth_from_table = this.delta_depth[index_hi_key_board];
-                if (delta_depth_from_table <= (max_depth - depth)) {
-                    let fen_from_table = this.fen[index_hi_key_board];
-                    if (fen_from_table === fen_board) {
-                        // console.log("Hash_table_0x88_C-> НЕТ КОЛЛИЗИИ=================");
-                        // console.log("Hash_table_0x88_C-> fen_from_table" + fen_from_table);
-                        // console.log("Hash_table_0x88_C-> fen_board     " + fen_board);
-                        let type_move_from_table = this.type_move[index_hi_key_board];
-                        let from_from_table = this.from[index_hi_key_board];
-                        let to_from_table = this.to[index_hi_key_board];
-                        let score_from_table = this.score[index_hi_key_board];
+                if (delta_depth_move <= delta_depth_board) {
 
-                        this.no_colz = this.no_colz + 1;
-                        return {
-                            ws: why_save_from_table, tm: type_move_from_table, sk: score_from_table,
-                            from: from_from_table, to: to_from_table
-                        };
+                    // if (test_fen === test_fen_board) {
+                    //     this.no_collision_fen = this.no_collision_fen + 1;// зашли по индексу и фен совпал
+                    // } else {//if (fen === fen_test) {
+                    //     this.collision_fen = this.collision_fen + 1;// зашли по индексу но фен не совпал
+                    // }//if (fen === fen_test) {
 
-                    } else {//if (fen === fen_test) {
-                        // console.log("Hash_table_0x88_C-> КОЛЛИЗИЯ--------------------");
-                        // console.log("Hash_table_0x88_C-> fen      " + fen);
-                        // console.log("Hash_table_0x88_C-> fen_test " + fen_test);
-                        this.colz = this.colz + 1;
-                        // коллизия. ключи совпали, однако, фен запись показала что доски разные
-                        return { ws: -1, tm: -1, sk: -1, from: -1, to: -1 };
-                    }//if (fen === fen_test) {
+                    //распаковываем
+                    this.unpacking_from_move(index_key_32_board);
+                    return this.out;
 
                 } else {//if (delta_depth <= (max_depth - depth)) {
                     // не прошло по глубине
-                    return { ws: -1, tm: -1, sk: -1, from: -1, to: -1 };
+                    return this.out;
                 }//if (delta_depth <= (max_depth - depth)) {
 
             }//if (type_move != -1) {
         } else {//if (lo_key === lo_key_board_0x88) {
+            // зашли по индексу но ключ не совпал
+            this.is_save_key_32_false = this.is_save_key_32_false + 1;
+
             // такой позиции нет
-            return { ws: -1, tm: -1, sk: -1, from: -1, to: -1 };
+            return this.out;
         }//if (lo_key === lo_key_board_0x88) {
     }
 
-
-    add_position(why_save, type_move, from, to, score, depth, max_depth, chess_board_0x88_O) {
-
-        this.z_add = this.z_add + 1;
-
-        // это у нас данные текущей позиции.
-        let hi_key_board = this.set_key_from_board_0x88(chess_board_0x88_O).hi;
-        let lo_key_board = this.set_key_from_board_0x88(chess_board_0x88_O).lo;
-
-        let index_hi_key_board = hi_key_board % Hash_table_0x88_C.MAX_TABLE_LENTH;
-
-
-        if (index_hi_key_board > Hash_table_0x88_C.MAX_TABLE_LENTH) {
-            // console.log("Hash_table_0x88_C -> при чтении превышен максимальный размер хеш таблицы ");
-            // console.log("Hash_table_0x88_C -> hi_key " + hi_key);
-            return 0;
-        }
-
-        // если размер ключа больше используемого размера таблицы то увеличиваем размер таблицы.    
-        if (index_hi_key_board > this.max_lenth) {
-
-            let max_lenth_2;
-            // новый используемый размер таблицы должен быть степенью 2
-            for (max_lenth_2 = 2; max_lenth_2 < index_hi_key_board; max_lenth_2 = max_lenth_2 * 2);
-
-            // если новый используемый размер больше максимального то присваеваем макс.
-            if (max_lenth_2 > Hash_table_0x88_C.MAX_TABLE_LENTH) {
-                //  console.log("Hash_table_0x88_C -> достигнут предел расширения массива ");
-                //  console.log("Hash_table_0x88_C -> hi_key " + hi_key);
-                this.hash_table_max_lenth = Hash_table_0x88_C.MAX_TABLE_LENTH;
-            } else {
-
-                this.max_lenth = max_lenth_2;
-            }
-        }
-
-        if ((hi_key_board == this.hi_key[index_hi_key_board]) &&
-            (lo_key_board == this.lo_key[index_hi_key_board])) {
-            // место уже было записано. надо проверить глубину записи
-            if (this.delta_depth[index_hi_key_board] <= (max_depth - depth)) {
-
-                this.why_save[index_hi_key_board] = why_save;
-                this.type_move[index_hi_key_board] = type_move;
-                this.from[index_hi_key_board] = from;
-                this.to[index_hi_key_board] = to;
-                this.score[index_hi_key_board] = score;
-                this.delta_depth[index_hi_key_board] = max_depth - depth;
-                this.fen[index_hi_key_board] = chess_board_0x88_O.set_fen_from_0x88();
-            }
-        } else {
-            this.hi_key[index_hi_key_board] = hi_key_board;
-            this.lo_key[index_hi_key_board] = lo_key_board;
-
-            this.why_save[index_hi_key_board] = why_save;
-            this.type_move[index_hi_key_board] = type_move;
-            this.from[index_hi_key_board] = from;
-            this.from[index_hi_key_board] = to;
-            this.score[index_hi_key_board] = score;
-            this.delta_depth[index_hi_key_board] = max_depth - depth;
-            this.fen[index_hi_key_board] = chess_board_0x88_O.set_fen_from_0x88();
-        }
-
-    }
-    /////////////////////////////////////////////////////////////////////////////
-
-
     //////////////////////////////////////////////////////////////////////////////
+
     // здесь каждому положению каждой фигуры каждого цвета присваивается число 
     // на данный момент это просто color * name * sq, сейчас числа от 1 до 768
     ini_random_piece_color_name_sq() {
 
-        let hi_lo = new Uint32Array(2);
+        let uint_a_32 = new Uint32Array(1);
 
         // заполняем трехмерный массив 2*6*64 = 768 состояний.
         for (let color = 0; color < 2; color++) {
@@ -281,26 +426,23 @@ class Hash_table_0x88_C {
                     //let hi = Math.floor(Math.random() * 65536);//65536   1302
                     //let lo = Math.floor(Math.random() * 65536);//65536   1302
 
-                    self.crypto.getRandomValues(hi_lo);                   
+                    self.crypto.getRandomValues(uint_a_32);
                     //window.crypto.getRandomValues(hi_lo);
-                    let hi = hi_lo[0];//
-                    let lo = hi_lo[1];//
+                    let uint32 = uint_a_32[0];//
 
-
-                    this.hi_random_piece_color_name_sq[color][name][sq] = hi * (color + 1) * name * (sq + 1);
-                    this.lo_random_piece_color_name_sq[color][name][sq] = lo * (color + 1) * name * (sq + 1);
+                    this.key_array_32[color][name][sq] = uint32;
                 }
             }
         }
     }
 
+    // по позиции генерируем ключ
     set_key_from_board_0x88(chess_board_0x88_O) {
 
         let sq_0x88;
         let piece;
         let piece_color;
-        let hi_key_board_0x88 = 0;
-        let lo_key_board_0x88 = 0;
+        let key_32_board_0x88 = 0;
 
         // бежим по шахматной доске
         for (let sq = 0; sq < 64; sq++) {
@@ -311,71 +453,40 @@ class Hash_table_0x88_C {
             if (piece != 0) {
                 piece_color = chess_board_0x88_O.sq_piece_color_0x88[sq_0x88];
 
-                hi_key_board_0x88 = hi_key_board_0x88 ^ this.hi_random_piece_color_name_sq[piece_color][piece][sq];
-                lo_key_board_0x88 = lo_key_board_0x88 ^ this.lo_random_piece_color_name_sq[piece_color][piece][sq];
-
+                key_32_board_0x88 = key_32_board_0x88 ^ this.key_array_32[piece_color][piece][sq];
             }
         }
 
         if (chess_board_0x88_O.side_to_move == 1) {
-            hi_key_board_0x88 = hi_key_board_0x88 ^ this.hi_random_piece_color_name_sq[1][6][10];
-            lo_key_board_0x88 = lo_key_board_0x88 ^ this.lo_random_piece_color_name_sq[1][6][10];
+            key_32_board_0x88 = key_32_board_0x88 ^ this.key_array_32[1][6][10];
         }
 
         if (chess_board_0x88_O.en_passant_yes == 1) {
-            hi_key_board_0x88 = hi_key_board_0x88 ^ this.hi_random_piece_color_name_sq[1][5][20];
-            lo_key_board_0x88 = lo_key_board_0x88 ^ this.lo_random_piece_color_name_sq[1][5][20];
+            key_32_board_0x88 = key_32_board_0x88 ^ this.key_array_32[1][5][20];
         }
 
         if (chess_board_0x88_O.castling_Q == 1) {
-            hi_key_board_0x88 = hi_key_board_0x88 ^ this.hi_random_piece_color_name_sq[1][4][30];
-            lo_key_board_0x88 = lo_key_board_0x88 ^ this.lo_random_piece_color_name_sq[1][4][30];
+            key_32_board_0x88 = key_32_board_0x88 ^ this.key_array_32[1][4][30];
         }
 
         if (chess_board_0x88_O.castling_K == 1) {
-            hi_key_board_0x88 = hi_key_board_0x88 ^ this.hi_random_piece_color_name_sq[1][4][40];
-            lo_key_board_0x88 = lo_key_board_0x88 ^ this.lo_random_piece_color_name_sq[1][4][40];
+            key_32_board_0x88 = key_32_board_0x88 ^ this.key_array_32[1][4][40];
         }
 
         if (chess_board_0x88_O.castling_q == 1) {
-            hi_key_board_0x88 = hi_key_board_0x88 ^ this.hi_random_piece_color_name_sq[0][4][30];
-            lo_key_board_0x88 = lo_key_board_0x88 ^ this.lo_random_piece_color_name_sq[0][4][30];
+            key_32_board_0x88 = key_32_board_0x88 ^ this.key_array_32[0][4][30];
         }
 
         if (chess_board_0x88_O.castling_k == 1) {
-            hi_key_board_0x88 = hi_key_board_0x88 ^ this.hi_random_piece_color_name_sq[0][4][40];
-            lo_key_board_0x88 = lo_key_board_0x88 ^ this.lo_random_piece_color_name_sq[0][4][40];
+            key_32_board_0x88 = key_32_board_0x88 ^ this.key_array_32[0][4][40];
         }
-        // if (hi_key_board_0x88 > Hash_table_0x88_C.MAX_TABLE_LENTH) {
+        // if (key_32_board_0x88 > Hash_table_0x88_C.MAX_TABLE_LENTH) {
         //     console.log("Hash_table_0x88_C -> при генерации превышен размер ключа позиции ");
-        //     console.log("Hash_table_0x88_C -> hi_key_board_0x88 " + hi_key_board_0x88);
+        //     console.log("Hash_table_0x88_C -> key_32_board_0x88 " + key_32_board_0x88);
         // }
 
-        return { hi: hi_key_board_0x88, lo: lo_key_board_0x88 };
+        return key_32_board_0x88;
     }
 }
 
-export{Hash_table_0x88_C};
-
-/*
-где то скопировал. не помню где
-var zobrist = new Uint32Array(13 * 2 * 64 * 2) // pieces * colors * fields * 64/32
-for (var i=0; i<zobrist.length; i++)
-    zobrist[i] = Math.random() * 4294967296;
-
-var table = new Uint32Array(3 * tablesize);
-
-function hash(hi, lo, piece, color, field) {
-    hi ^= zobrist[piece * 128 + color * 64 + field];
-    lo ^= zobrist[piece * 128 + color * 64 + field + 1];
-
-    var i = lo % tablesize;
-    if (table[i] == hi && table[i+1] == lo) {
-        // collision
-    } else {
-        table[i] = hi; table[i+1] = lo;
-        // do what you want with table[i+2]
-    }
-}
-
-*/
+export { Hash_table_0x88_C };
