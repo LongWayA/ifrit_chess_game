@@ -12,8 +12,10 @@ import { Move_gen_1_captures_0x88_С } from "./move_gen_1_captures_0x88.js";
 
 /**
 * НАЗНАЧЕНИЕ
-
+ Отменяем сделанный ход.
 */
+//+
+// тут все прозрачно. идей пока нет
 
 class Unmake_move_0x88_C {
 

@@ -39,6 +39,18 @@ class Evaluate_0x88_C {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   ];
 
+  center_queen_0x88 = [
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 1, 2, 2, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 1, 2, 3, 3, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 1, 2, 3, 3, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 1, 2, 2, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  ];
+
+
   white_king_0x88 = [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -111,7 +123,7 @@ class Evaluate_0x88_C {
             if (index_piece == Chess_board_0x88_C.KING) {
               score = score + this.white_king_0x88[sq];
             } else if (index_piece == Chess_board_0x88_C.QUEEN) {
-
+              score = score + this.center_queen_0x88[sq];
             } else if (index_piece == Chess_board_0x88_C.ROOK) {
 
             } else if (index_piece == Chess_board_0x88_C.BISHOP) {
@@ -126,7 +138,7 @@ class Evaluate_0x88_C {
             if (index_piece == Chess_board_0x88_C.KING) {
               score = score - this.black_king_0x88[sq];
             } else if (index_piece == Chess_board_0x88_C.QUEEN) {
-
+              score = score - this.center_queen_0x88[sq];
             } else if (index_piece == Chess_board_0x88_C.ROOK) {
 
             } else if (index_piece == Chess_board_0x88_C.BISHOP) {
@@ -153,12 +165,12 @@ class Evaluate_0x88_C {
     // потому что сходили белые и к ним оценка вернется умноженная на минус один, а это плюс 
     // белые оценивают абсолютную оценку потому что белые фигуры в плюс.
     //if (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.BLACK) score = -1 * score;
-    chess_board_0x88_O.score = score;   
+    chess_board_0x88_O.score = score;
     return score;
   }//score_position(chess_board_0x88_O) {
 }
 
-export{Evaluate_0x88_C};
+export { Evaluate_0x88_C };
 
 /*
 score = materialWeight * (numWhitePieces - numBlackPieces) * who2move 

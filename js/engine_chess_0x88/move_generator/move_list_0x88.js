@@ -10,8 +10,19 @@ import { Chess_board_0x88_C } from "./chess_board_0x88.js";
 
 /**
 * НАЗНАЧЕНИЕ
-
+ Список содержит псевдолегальные ходы, т.е. есть ходы под шах, открывающие шах
+ и рокировки через битые поля.
+ Ход содержит:
+  type_move[i] - тип хода. всего 60 разных типов ходов
+  from[i] - откуда ходит фигура на 128 клеточном поле
+  to[i] - куда ходит фигура на 128 клеточном поле
+  piece_color - цвет ходяшей фигуры: 0 - черная, 1 - белая.
+  number_captures_move - количество взятий
+  number_move - количество всех записаных ходов
+  LENGTH_LIST = 256 - максимально возможная длина списка ходов.
 */
+//+
+// тут все прозрачно. идей пока нет
 
 class Move_list_0x88_С {
 
@@ -309,10 +320,10 @@ class Move_list_0x88_С {
         for (let i = start; i < this.number_move; i++) {
             for (let j = i + 1; j < this.number_move; j++) {//
                 // 
-                if (history_heuristic_0x88_O.history[this.piece_color][ Chess_board_0x88_C.SQUARE_128_to_64[ this.from[i] ] ]
-                    [ Chess_board_0x88_C.SQUARE_128_to_64[ this.to[i] ] ] <
-                    history_heuristic_0x88_O.history[this.piece_color][ Chess_board_0x88_C.SQUARE_128_to_64[ this.from[j] ] ]
-                    [ Chess_board_0x88_C.SQUARE_128_to_64[ this.to[j] ] ]) {
+                if (history_heuristic_0x88_O.history[this.piece_color][Chess_board_0x88_C.SQUARE_128_to_64[this.from[i]]]
+                [Chess_board_0x88_C.SQUARE_128_to_64[this.to[i]]] <
+                    history_heuristic_0x88_O.history[this.piece_color][Chess_board_0x88_C.SQUARE_128_to_64[this.from[j]]]
+                    [Chess_board_0x88_C.SQUARE_128_to_64[this.to[j]]]) {
                     // сохраняем позицию на которую будем писать
                     save_type_move = this.type_move[i];
                     save_from = this.from[i];

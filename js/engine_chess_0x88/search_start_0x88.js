@@ -18,7 +18,7 @@ import { Unmake_move_0x88_C } from "./move_generator/unmake_move_0x88.js";
 import { Undo_0x88_C } from "./move_generator/undo_0x88.js";
 
 import { Evaluate_0x88_C } from "./evaluate_0x88.js";
-import { Hash_table_0x88_C } from "./for_sorting_move/hash_table_0x88.js";
+import { Transposition_table_0x88_C } from "./for_sorting_move/transposition_table_0x88.js";
 import { killer_heuristic_0x88_O } from "./for_sorting_move/killer_heuristic_0x88.js";
 import { History_heuristic_0x88_C } from "./for_sorting_move/history_heuristic_0x88.js";
 import { Search_minmax_0x88_C } from "./search_minmax_0x88.js";
@@ -70,7 +70,7 @@ class Search_start_0x88_C {
   unmake_move_0x88_O = new Unmake_move_0x88_C();
 
   evaluate_0x88_O = new Evaluate_0x88_C();
-  hash_table_0x88_O = new Hash_table_0x88_C();
+  hash_table_0x88_O = new Transposition_table_0x88_C();
   killer_heuristic_0x88_O = new killer_heuristic_0x88_O();
   history_heuristic_0x88_O = new History_heuristic_0x88_C();
 

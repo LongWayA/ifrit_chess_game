@@ -20,6 +20,8 @@ import { Chess_board_0x88_C } from "../move_generator/chess_board_0x88.js";
  Максимальное значение сейчас 100_000. если оно превышено то все значения делим на 2.
  Взятия мы не пишем.
 */
+//+
+// тут все прозрачно. идей пока нет
 
 class History_heuristic_0x88_C {
 
@@ -85,7 +87,11 @@ class History_heuristic_0x88_C {
       }
     }
   }
+}
 
+export { History_heuristic_0x88_C };
+
+/*
   // записываем плохой ход. я его не использую. сделал подобно старому ифриту. зачем нужен уже не помню 
   history_bad_save(color, from_128, to_128, depth, depth_max) {
 
@@ -107,6 +113,4 @@ class History_heuristic_0x88_C {
       }
     }
   }
-}
-
-export { History_heuristic_0x88_C };
+*/

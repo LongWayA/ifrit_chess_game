@@ -14,26 +14,16 @@ import { Undo_0x88_C } from "./move_generator/undo_0x88.js";
 import { Evaluate_0x88_C } from "./evaluate_0x88.js";
 import { Chess_board_0x88_C } from "./move_generator/chess_board_0x88.js";
 import { Quiescence_search_0x88_C } from "./quiescence_search_0x88.js";
-import { Hash_table_0x88_C } from "./for_sorting_move/hash_table_0x88.js";
+import { Transposition_table_0x88_C } from "./for_sorting_move/transposition_table_0x88.js";
 
 
 
 /**
 * НАЗНАЧЕНИЕ
-  что выгоднее в chess engine alpha beta fail soft или alpha beta fail_hard ?
-  ответ от  Google AI:
-  В современных шахматных движках, которые активно используют PVS и таблицы перестановок, 
-  fail-soft является стандартом де-факто, так как он обеспечивает 
-  более быструю и точную работу алгоритма.
-  ----------------------
-  
-  ответ от  Google AI:
-  Примерная оценка: В реальных тестах, при хорошем упорядочивании ходов, 
-  PVS может потребовать примерно на 10% меньше вычислений (или узлов для поиска), 
-  чем стандартный альфа-бета алгоритм. В некоторых случаях сообщалось о 
-  сокращении общего числа узлов и времени примерно на 33%.
+ 
 
 */
+//-
 
 class Search_ab_0x88_C {
 
@@ -57,7 +47,7 @@ class Search_ab_0x88_C {
   }
 
   iniM() {
-    //for tactical and quiet moves
+    
   }
 
   // searching_alpha_beta_fail_soft
@@ -142,14 +132,14 @@ class Search_ab_0x88_C {
     //==================================================== используем киллеры
 
     // используем хеш таблицу ====================================================
-    // просто выходить по оценке не буду. слишком много коллизий
-    if ((is_save_position.tn == Hash_table_0x88_C.ALPHA_CUT) && (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.BLACK)) {
+    // просто выходить по оценке не буду. слишком много коллизий(1 на 10 позиций)
+    if ((is_save_position.tn == Transposition_table_0x88_C.ALPHA_CUT) && (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.BLACK)) {
       move_list_0x88_O.set_move_in_0(is_save_position.tm, is_save_position.from, is_save_position.to);
-    } else if ((is_save_position.tn == Hash_table_0x88_C.BETA_CUT) && (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.WHITE)) {
+    } else if ((is_save_position.tn == Transposition_table_0x88_C.BETA_CUT) && (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.WHITE)) {
       move_list_0x88_O.set_move_in_0(is_save_position.tm, is_save_position.from, is_save_position.to);
-    } else if ((is_save_position.tn == Hash_table_0x88_C.ALPHA_UPDATE) && (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.WHITE)) {
+    } else if ((is_save_position.tn == Transposition_table_0x88_C.ALPHA_UPDATE) && (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.WHITE)) {
       move_list_0x88_O.set_move_in_0(is_save_position.tm, is_save_position.from, is_save_position.to);
-    } else if ((is_save_position.tn == Hash_table_0x88_C.BETA_UPDATE) && (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.BLACK)) {
+    } else if ((is_save_position.tn == Transposition_table_0x88_C.BETA_UPDATE) && (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.BLACK)) {
       move_list_0x88_O.set_move_in_0(is_save_position.tm, is_save_position.from, is_save_position.to);
     }
     //==================================================== используем хеш таблицу
@@ -207,7 +197,7 @@ class Search_ab_0x88_C {
       }
 
       if (move_list_0x88_O.piece_color == Chess_board_0x88_C.WHITE) {
-
+        // alpha < value < beta => exact value
         if (score > found_score) {
           found_score = score;
           //if (depth == 0) this.chess_board_0x88_O_move.save_chess_board_0x88(chess_board_0x88_O);
@@ -216,7 +206,7 @@ class Search_ab_0x88_C {
 
             // записываем ход в хеш
 
-            hash_table_0x88_O.add_position(Hash_table_0x88_C.ALPHA_UPDATE, move_list_0x88_O.type_move[move_i],
+            hash_table_0x88_O.add_position(Transposition_table_0x88_C.ALPHA_UPDATE, move_list_0x88_O.type_move[move_i],
               move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], depth, depth_max, chess_board_0x88_O);
 
             if (isPV == 1) {
@@ -227,6 +217,7 @@ class Search_ab_0x88_C {
           }
         }
 
+        // lower bound
         if (score >= beta) {
           // восстановили доску
           this.unmake_move_0x88_O.undo_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O);
@@ -243,7 +234,7 @@ class Search_ab_0x88_C {
           }
 
           // записываем ход в хеш
-          hash_table_0x88_O.add_position(Hash_table_0x88_C.BETA_CUT, move_list_0x88_O.type_move[move_i],
+          hash_table_0x88_O.add_position(Transposition_table_0x88_C.BETA_CUT, move_list_0x88_O.type_move[move_i],
             move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], depth, depth_max, chess_board_0x88_O);
 
           return score;   // 
@@ -253,12 +244,12 @@ class Search_ab_0x88_C {
 
         if (score < found_score) {
           found_score = score;
-          if (depth == 0) this.chess_board_0x88_O_move.save_chess_board_0x88(chess_board_0x88_O);
+//          if (depth == 0) this.chess_board_0x88_O_move.save_chess_board_0x88(chess_board_0x88_O);
           if (score < beta) {
             beta = score; //
 
             // записываем ход в хеш
-            hash_table_0x88_O.add_position(Hash_table_0x88_C.BETA_UPDATE, move_list_0x88_O.type_move[move_i],
+            hash_table_0x88_O.add_position(Transposition_table_0x88_C.BETA_UPDATE, move_list_0x88_O.type_move[move_i],
               move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], depth, depth_max, chess_board_0x88_O);
 
             if (isPV == 1) {
@@ -269,6 +260,7 @@ class Search_ab_0x88_C {
           }
         }
 
+        // upper bound
         if (score <= alpha) {
           // восстановили доску
           this.unmake_move_0x88_O.undo_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O);
@@ -285,7 +277,7 @@ class Search_ab_0x88_C {
           }
 
           // записываем ход в хеш            
-          hash_table_0x88_O.add_position(Hash_table_0x88_C.ALPHA_CUT, move_list_0x88_O.type_move[move_i],
+          hash_table_0x88_O.add_position(Transposition_table_0x88_C.ALPHA_CUT, move_list_0x88_O.type_move[move_i],
             move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], depth, depth_max, chess_board_0x88_O);
           return score;   //
         }//
@@ -342,6 +334,8 @@ class Search_ab_0x88_C {
 }
 
 export { Search_ab_0x88_C };
+
+//for tactical and quiet moves
 
 /*
   // searching_alpha_beta_fail_hard
@@ -436,4 +430,16 @@ int alphaBeta( int alpha, int beta, int depthleft ) {
    return alpha;
 }
 
+ что выгоднее в chess engine alpha beta fail soft или alpha beta fail_hard ?
+  ответ от  Google AI:
+  В современных шахматных движках, которые активно используют PVS и таблицы перестановок, 
+  fail-soft является стандартом де-факто, так как он обеспечивает 
+  более быструю и точную работу алгоритма.
+  ----------------------
+  
+  ответ от  Google AI:
+  Примерная оценка: В реальных тестах, при хорошем упорядочивании ходов, 
+  PVS может потребовать примерно на 10% меньше вычислений (или узлов для поиска), 
+  чем стандартный альфа-бета алгоритм. В некоторых случаях сообщалось о 
+  сокращении общего числа узлов и времени примерно на 33%.
 */
