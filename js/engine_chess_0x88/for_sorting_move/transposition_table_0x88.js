@@ -17,11 +17,16 @@ import { Chess_board_0x88_C } from "../move_generator/chess_board_0x88.js";
    через 2^32, то есть около 4 миллиардов позиций.
  конец цитаты
 
- Выше сказанное это теория. У меня же получилось, что примерно каждая десятая 
- позиция неправильная. Почему так?
- Дело в том, что помимо 32 битного ключа размером ~2 миллиарда есть еще индекс получаемый
+ Выше сказанное это теория. У меня же получилось, что примерно каждая 1 из 50 
+ позиций неправильная. Почему так?
+ Наверное дело в том, что помимо 32 битного ключа размером ~2 миллиарда есть еще индекс получаемый
  из ключа размером с хеш таблицу. А это в лучшем случае порядка миллионов.
  Т.о. мы сотни миллионов расмотренных позиций пытаемся вписать, в лучшем случае, в несколько миллионов.
+
+ Еще потестировал и понял что дело именно в ключе. Когда заходим по индексу а ключ не попадает это 1 из 2.
+ Смотрел когда в таблице было 65_536 ячеек.
+ А когда 1 из 50 это именно что ключ совпал а записанный фен говорит что под одним ключом разные позиции.
+ Может конечно это с феном что то не то. Проверил. С феном все ок.
 
  И так у нас есть 32 битный ключ который мы вписываем в размер таблицы через индекс получаемый из ключа путем
  index_key_32_board = key_32_board & (Transposition_table_0x88_C.MAX_TABLE_LENTH - 1);//
@@ -79,7 +84,7 @@ import { Chess_board_0x88_C } from "../move_generator/chess_board_0x88.js";
         type_nodes = move & 127;
 
         В начале записывал оценку позиции и использовал для отсечения по альфе бете, однако
-        из за такого большого количества коллизий(1 из 10) оставил только сортировку ходов,
+        из за такого большого количества коллизий(1 из 50) оставил только сортировку ходов,
         а для этого оценка не нужна.
 
     Записываем ходы приведшие к улучшению альфы беты или к отсечке по альфе бете
@@ -124,7 +129,7 @@ class Transposition_table_0x88_C {
 
     // test_fen_board ----------------------------------------------------------------------------------
     // тестовый фен позиции. смотрим насколько адекватный получается ключ позиции
-    //   test_fen = new Array(Transposition_table_0x88_C.MAX_TABLE_LENTH); // тип хода в записанной позиции
+       test_fen = new Array(Transposition_table_0x88_C.MAX_TABLE_LENTH); // тип хода в записанной позиции
 
     //
     max_lenth = Transposition_table_0x88_C.MAX_TABLE_LENTH - 1;
@@ -193,7 +198,7 @@ class Transposition_table_0x88_C {
             this.move[i] = -1; // 
 
             // test_fen_board ----------------------------------------------------------------------------------
-            // this.test_fen[i] = ""; //  
+             this.test_fen[i] = ""; //  
         }
         //this.max_lenth = 0;
     }
@@ -326,7 +331,7 @@ class Transposition_table_0x88_C {
                 this.packing_to_move(index_key_32_board, type_nodes, type_move, from_128, to_128, delta_depth_board);
 
                 // test_fen_board ----------------------------------------------------------------------------------                
-                //               this.test_fen[index_key_32_board] = chess_board_0x88_O.set_fen_from_0x88();
+                this.test_fen[index_key_32_board] = chess_board_0x88_O.set_fen_from_0x88();
 
             }
         } else {
@@ -341,7 +346,7 @@ class Transposition_table_0x88_C {
             this.packing_to_move(index_key_32_board, type_nodes, type_move, from_128, to_128, delta_depth_board);
 
             // test_fen_board ----------------------------------------------------------------------------------            
-            //            this.test_fen[index_key_32_board] = chess_board_0x88_O.set_fen_from_0x88();
+            this.test_fen[index_key_32_board] = chess_board_0x88_O.set_fen_from_0x88();
         }
 
     }
@@ -361,7 +366,7 @@ class Transposition_table_0x88_C {
         let delta_depth_board = max_depth - depth;
 
         // test_fen_board ----------------------------------------------------------------------------------
-        //        let test_fen_board = chess_board_0x88_O.set_fen_from_0x88();
+        let test_fen_board = chess_board_0x88_O.set_fen_from_0x88();
 
         let key_32_table = this.key_32[index_key_32_board];
 
@@ -377,16 +382,16 @@ class Transposition_table_0x88_C {
             // если дельта глубины не пустая
             if (delta_depth_move != -1) {
                 // test_fen_board ----------------------------------------------------------------------------------                
-                //let test_fen = this.test_fen[index_key_32_board];
+                let test_fen = this.test_fen[index_key_32_board];
 
                 // проверяем что глубина поиска позиции из таблицы больше или равна
                 if (delta_depth_move <= delta_depth_board) {
 
-                    // if (test_fen === test_fen_board) {
-                    //     this.no_collision_fen = this.no_collision_fen + 1;// зашли по индексу и фен совпал
-                    // } else {//if (fen === fen_test) {
-                    //     this.collision_fen = this.collision_fen + 1;// зашли по индексу но фен не совпал
-                    // }//if (fen === fen_test) {
+                    if (test_fen === test_fen_board) {
+                        this.no_collision_fen = this.no_collision_fen + 1;// зашли по индексу и фен совпал
+                    } else {//if (fen === fen_test) {
+                        this.collision_fen = this.collision_fen + 1;// зашли по индексу но фен не совпал
+                    }//if (fen === fen_test) {
 
                     //распаковываем
                     this.unpacking_from_move(index_key_32_board);

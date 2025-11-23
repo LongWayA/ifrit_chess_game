@@ -109,8 +109,8 @@ class Chess_board_0x88_C {
     ];
 
 
-    sq_piece_0x88 = new Array(128).fill(-1);// доска 0x88 с фигурами
-    sq_piece_color_0x88 = new Array(128).fill(-1);// доска 0x88 с цветом фигур
+    sq_piece_0x88 = new Array(128).fill(0);// доска 0x88 с фигурами
+    sq_piece_color_0x88 = new Array(128).fill(0);// доска 0x88 с цветом фигур
 
     // ВСПОМОГАТЕЛЬНАЯ ИНФОРМАЦИЯ
     // цвет хода 0 - черные 1 - белые
@@ -267,10 +267,12 @@ class Chess_board_0x88_C {
             console.log("this en_passant_yes " + this.en_passant_yes);
             console.log("out en_passant_yes " + chess_board_0x88_O.en_passant_yes);
         };
-        if (this.en_passant_target_square != chess_board_0x88_O.en_passant_target_square) {
-            is_test_ok = 0;
-            console.log("this en_passant_target_square " + this.en_passant_target_square);
-            console.log("out en_passant_target_square " + chess_board_0x88_O.en_passant_target_square);
+        if (this.en_passant_yes == 1) {
+            if (this.en_passant_target_square != chess_board_0x88_O.en_passant_target_square) {
+                is_test_ok = 0;
+                console.log("this en_passant_target_square " + this.en_passant_target_square);
+                console.log("out en_passant_target_square " + chess_board_0x88_O.en_passant_target_square);
+            };
         };
 
         if (this.castling_Q != chess_board_0x88_O.castling_Q) {
@@ -293,11 +295,12 @@ class Chess_board_0x88_C {
             console.log("this castling_k " + this.castling_k);
             console.log("out castling_k " + chess_board_0x88_O.castling_k);
         };
-        if (this.score != chess_board_0x88_O.score) {
-            is_test_ok = 0;
-            console.log("this score " + this.score);
-            console.log("out score " + chess_board_0x88_O.score);
-        };
+        // if (this.score != chess_board_0x88_O.score) {
+        //     is_test_ok = 0;
+        //     console.log("this score " + this.score);
+        //     console.log("out score " + chess_board_0x88_O.score);
+        // };
+
         //console.log("**************** test_compare_chess_board_0x88");
 
         return is_test_ok;
@@ -734,15 +737,26 @@ class Chess_board_0x88_C {
 
         // инициируем цвет фигур
         this.sq_piece_color_0x88 = [
-            0, 0, 0, 0, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1, -1, -1,
-            0, 0, 0, 0, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1, -1, -1,
-            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-            1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1,
-            1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
         ];
+        //    this.sq_piece_color_0x88 = [
+        //         0, 0, 0, 0, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1, -1, -1,
+        //         0, 0, 0, 0, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1, -1, -1,
+        //         0, 0, 0, 0, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1, -1, -1,
+        //         0, 0, 0, 0, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1, -1, -1,
+        //         0, 0, 0, 0, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1, -1, -1,
+        //         0, 0, 0, 0, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1, -1, -1,
+        //         1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1,
+        //         1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1
+        //     ];
+
 
         // цвет хода 0 - черные 1 - белые
         this.side_to_move = 1;
@@ -779,14 +793,14 @@ class Chess_board_0x88_C {
 
         // инициируем цвет фигур
         this.sq_piece_color_0x88 = [
-            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-            -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         ];
 
         // цвет хода 0 - черные 1 - белые

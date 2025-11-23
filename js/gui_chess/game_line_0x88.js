@@ -43,7 +43,7 @@ class Game_line_0x88_C {
     for (let i = 0; i < Game_line_0x88_C.MAX_LENTH; i++) {
       this.type_move[i] = -1;
       this.piece_name[i] = -1;      
-      this.piece_color[i] = -1;
+      this.piece_color[i] = 0;
       this.capture_piece[i] = -1;      
       this.score_move[i] = -1;
       this.from[i] = -1;

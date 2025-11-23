@@ -42,7 +42,7 @@ class PV_line_0x88_C {
   clear_list() {
     for (let i = 0; i < PV_line_0x88_C.MAX_DEPTH; i++) {
       this.type_move[i] = -1;
-      this.piece_color[i] = -1;
+      this.piece_color[i] = 0;
       this.from[i] = -1;
       this.to[i] = -1;
       this.type_variant[i] = -1;
