@@ -163,7 +163,7 @@ class Transposition_table_0x88_C {
         }
 
         this.clear_hash();
-        this.ini_random_piece_color_name_sq();
+        this.ini_random_key_array_32();
         this.max_lenth = Transposition_table_0x88_C.MAX_TABLE_LENTH - 1;
 
         this.out.tn = -1;
@@ -409,9 +409,8 @@ class Transposition_table_0x88_C {
 
     //////////////////////////////////////////////////////////////////////////////
 
-    // здесь каждому положению каждой фигуры каждого цвета присваивается число 
-    // на данный момент это просто color * name * sq, сейчас числа от 1 до 768
-    ini_random_piece_color_name_sq() {
+    // здесь каждому положению каждой фигуры каждого цвета присваивается случайное число 
+    ini_random_key_array_32() {
 
         let uint_a_32 = new Uint32Array(1);
 
@@ -423,9 +422,7 @@ class Transposition_table_0x88_C {
                     // Максимальное беззнаковое 16-битное число равно 65 535
                     // Math.floor преобразует число к целому так же как | 0      
                     // Math.random() диапазон от [0,1), причем 0 включается а 1 нет.
-                    // 
-                    // ключ 5 111 808 если делить на 10, чило 51 118 080 для 16 разрядного
-                    //  ключа после умнож. на цвет поле и фигуру
+ 
                     //let hi = Math.floor(Math.random() * 65536);//65536   1302
                     //let lo = Math.floor(Math.random() * 65536);//65536   1302
 

@@ -52,7 +52,7 @@ class Search_ab_0x88_C {
 
   // searching_alpha_beta_fail_soft
   searching_alpha_beta_id(alpha, beta, pv_line_0x88_O, chess_board_0x88_O, move_gen_1_captures_0x88_O,
-    move_gen_2_quiet_0x88_O, depth, depth_max, isPV, hash_table_0x88_O, killer_heuristic_0x88_O, history_heuristic_0x88_O) {
+    move_gen_2_quiet_0x88_O, depth, depth_max, isPV, transposition_table_0x88_O, killer_heuristic_0x88_O, history_heuristic_0x88_O) {
 
     let undo_0x88_O = new Undo_0x88_C();
     let best_node_line_0x88_O = new PV_line_0x88_C();
@@ -68,7 +68,7 @@ class Search_ab_0x88_C {
     is_update_pv_line = 0;
 
     if (depth >= depth_max) {
-      //found_score = this.evaluate_0x88_O.score_position(chess_board_0x88_O, hash_table_0x88_O);
+      //found_score = this.evaluate_0x88_O.score_position(chess_board_0x88_O, transposition_table_0x88_O);
       this.node = this.node + 1;
 
       this.quiescence_search_0x88_O.node = 0;
@@ -83,7 +83,7 @@ class Search_ab_0x88_C {
     }
 
     // ищем позицию в хеш таблице
-    let is_save_position = hash_table_0x88_O.is_save_position(chess_board_0x88_O, depth, depth_max);
+    let is_save_position = transposition_table_0x88_O.is_save_position(chess_board_0x88_O, depth, depth_max);
 
     if (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.WHITE) {
       found_score = -Search_ab_0x88_C.BEST_VALUE_MOD;// максимальная оценка позиции
@@ -171,19 +171,19 @@ class Search_ab_0x88_C {
       if ((move_i == 0) && (isPV == 1)) {
         isPV_node = 1;
         score = this.searching_alpha_beta_id(alpha, beta, pv_line_0x88_O, chess_board_0x88_O, move_gen_1_captures_0x88_O,
-          move_gen_2_quiet_0x88_O, (depth + 1), depth_max, isPV_node, hash_table_0x88_O
+          move_gen_2_quiet_0x88_O, (depth + 1), depth_max, isPV_node, transposition_table_0x88_O
           , killer_heuristic_0x88_O, history_heuristic_0x88_O);
       } else {
 
         if (move_list_0x88_O.piece_color == Chess_board_0x88_C.WHITE) {
           isPV_node = 0;
           score = this.searching_alpha_beta_id(alpha, (alpha + 1), pv_line_0x88_O, chess_board_0x88_O, move_gen_1_captures_0x88_O,
-            move_gen_2_quiet_0x88_O, (depth + 1), depth_max, isPV_node, hash_table_0x88_O,
+            move_gen_2_quiet_0x88_O, (depth + 1), depth_max, isPV_node, transposition_table_0x88_O,
             killer_heuristic_0x88_O, history_heuristic_0x88_O);
         } else {
           isPV_node = 0;
           score = this.searching_alpha_beta_id((beta - 1), beta, pv_line_0x88_O, chess_board_0x88_O, move_gen_1_captures_0x88_O,
-            move_gen_2_quiet_0x88_O, (depth + 1), depth_max, isPV_node, hash_table_0x88_O,
+            move_gen_2_quiet_0x88_O, (depth + 1), depth_max, isPV_node, transposition_table_0x88_O,
             killer_heuristic_0x88_O, history_heuristic_0x88_O);
         }
 
@@ -191,7 +191,7 @@ class Search_ab_0x88_C {
           isPV_node = 1;
           //console.log("Search_0x88_C->depth " + depth + " пересчет ");
           score = this.searching_alpha_beta_id(alpha, beta, pv_line_0x88_O, chess_board_0x88_O, move_gen_1_captures_0x88_O,
-            move_gen_2_quiet_0x88_O, (depth + 1), depth_max, isPV_node, hash_table_0x88_O,
+            move_gen_2_quiet_0x88_O, (depth + 1), depth_max, isPV_node, transposition_table_0x88_O,
             killer_heuristic_0x88_O, history_heuristic_0x88_O);
         }
       }
@@ -206,7 +206,7 @@ class Search_ab_0x88_C {
 
             // записываем ход в хеш
 
-            hash_table_0x88_O.add_position(Transposition_table_0x88_C.ALPHA_UPDATE, move_list_0x88_O.type_move[move_i],
+            transposition_table_0x88_O.add_position(Transposition_table_0x88_C.ALPHA_UPDATE, move_list_0x88_O.type_move[move_i],
               move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], depth, depth_max, chess_board_0x88_O);
 
             if (isPV == 1) {
@@ -234,7 +234,7 @@ class Search_ab_0x88_C {
           }
 
           // записываем ход в хеш
-          hash_table_0x88_O.add_position(Transposition_table_0x88_C.BETA_CUT, move_list_0x88_O.type_move[move_i],
+          transposition_table_0x88_O.add_position(Transposition_table_0x88_C.BETA_CUT, move_list_0x88_O.type_move[move_i],
             move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], depth, depth_max, chess_board_0x88_O);
 
           return score;   // 
@@ -249,7 +249,7 @@ class Search_ab_0x88_C {
             beta = score; //
 
             // записываем ход в хеш
-            hash_table_0x88_O.add_position(Transposition_table_0x88_C.BETA_UPDATE, move_list_0x88_O.type_move[move_i],
+            transposition_table_0x88_O.add_position(Transposition_table_0x88_C.BETA_UPDATE, move_list_0x88_O.type_move[move_i],
               move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], depth, depth_max, chess_board_0x88_O);
 
             if (isPV == 1) {
@@ -277,7 +277,7 @@ class Search_ab_0x88_C {
           }
 
           // записываем ход в хеш            
-          hash_table_0x88_O.add_position(Transposition_table_0x88_C.ALPHA_CUT, move_list_0x88_O.type_move[move_i],
+          transposition_table_0x88_O.add_position(Transposition_table_0x88_C.ALPHA_CUT, move_list_0x88_O.type_move[move_i],
             move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], depth, depth_max, chess_board_0x88_O);
           return score;   //
         }//
