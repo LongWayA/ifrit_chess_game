@@ -170,15 +170,12 @@ class Search_start_0x88_C {
         is_moove_legal = this.make_move_0x88_O.do_moves(move_i, chess_board_0x88_O, move_list_0x88_O,
           undo_0x88_O, this.move_gen_1_captures_0x88_O);
 
-        if (is_moove_legal == 0) {
-          // особый случай. нелегальные рокировки не генерируются
-          if ((move_list_0x88_O.type_move[move_i] != Move_list_0x88_С.MOVE_KING_CASTLE) &&
-            (move_list_0x88_O.type_move[move_i] != Move_list_0x88_С.MOVE_KING_QUEEN_CASTLE)) {
-
-            this.unmake_move_0x88_O.undo_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O);
-          }//if ((move_list_0x88_O.type_move[move_i] != Move_list_0x88_С.MOVE_KING_CASTLE) &&
+        if (is_moove_legal == 0) { // король под шахом. отменяем ход и пропускаем этот цикл
+          this.unmake_move_0x88_O.undo_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O);
           continue;
-        }//if (is_moove_legal == 0) {
+        } else if (is_moove_legal == 2) {// нелегальные рокировки не генерируются. просто пропускаем ход
+          continue;
+        }
 
         this.search_ab_0x88_O.node = 0;
         pv_line_0x88_O.add_move(move_i, move_list_0x88_O, depth);
@@ -236,15 +233,18 @@ class Search_start_0x88_C {
       this.chessEngine_0x88_O.message_search_start_to_engine(this.info_return_search);
 
       console.log("Search_0x88_C->ADD");
+      console.log("Search_0x88_C->key_32_equal " + this.transposition_table_0x88_O.key_32_equal);
+      console.log("Search_0x88_C->key_32_not_equal " + this.transposition_table_0x88_O.key_32_not_equal);
       console.log("Search_0x88_C->node " + node);
       console.log("Search_0x88_C->add_position " + this.transposition_table_0x88_O.add_position_p);
       console.log("Search_0x88_C->add_position_key_32_true " + this.transposition_table_0x88_O.add_position_key_32_true);
       console.log("Search_0x88_C->add_position_new " + this.transposition_table_0x88_O.add_position_new);
       console.log("Search_0x88_C->add_position_rew " + this.transposition_table_0x88_O.add_position_rew);
-      console.log("Search_0x88_C->IS");      
+      console.log("Search_0x88_C->IS");
       console.log("Search_0x88_C->is_save_position " + this.transposition_table_0x88_O.is_save_position_p);
       console.log("Search_0x88_C->is_save_key_32_true " + this.transposition_table_0x88_O.is_save_key_32_true);
       console.log("Search_0x88_C->is_save_key_32_false " + this.transposition_table_0x88_O.is_save_key_32_false);
+      console.log("Search_0x88_C->is_save_delta_depth_ok " + this.transposition_table_0x88_O.is_save_delta_depth_ok);
       console.log("Search_0x88_C->collision_fen " + this.transposition_table_0x88_O.collision_fen);
       console.log("Search_0x88_C->no_collision_fen " + this.transposition_table_0x88_O.no_collision_fen);
 

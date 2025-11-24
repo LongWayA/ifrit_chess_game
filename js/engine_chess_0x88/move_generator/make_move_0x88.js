@@ -14,6 +14,11 @@ import { Move_gen_1_captures_0x88_С } from "./move_gen_1_captures_0x88.js";
 * НАЗНАЧЕНИЕ
  как нибудь надо добавить отслеживание короля
  чтобы не искать его после каждого хода
+
+если в результате хода король под шахом то is_moove_legal = 0  
+если сделать рокировку не смогли из за битых полей то is_moove_legal = 2
+если ход прошел то is_moove_legal = 1
+
 */
 //+
 // тут все прозрачно. идей пока нет
@@ -359,7 +364,11 @@ class Make_move_0x88_C {
         is_moove_legal = 0;
       }
     }
-
+    // есть три случая: 
+    // 1 - ход легальный. мы сделали ход и король не под шахом 
+    // 2 - ход не легальный мы не сделали рокировку из за битых полей 
+    // 0 - ход не легальный. мы сделали ход а король оказался или остался под шахом
+      
     return is_moove_legal;
   }
 
@@ -499,17 +508,17 @@ class Make_move_0x88_C {
 
     let piece_color_sq = chess_board_0x88_O.sq_piece_color_0x88[move_list_0x88_O.from[move_i]];
 
+    // проверяем не под шахом ли поля
     if (piece_color_sq == 1) {
-      if (move_gen_1_captures_0x88_O.check_detected(Move_gen_1_captures_0x88_С.E1, piece_color_sq, chess_board_0x88_O) != 0) is_moove_legal = 0;
-      if (move_gen_1_captures_0x88_O.check_detected(Move_gen_1_captures_0x88_С.F1, piece_color_sq, chess_board_0x88_O) != 0) is_moove_legal = 0;
-      if (move_gen_1_captures_0x88_O.check_detected(Move_gen_1_captures_0x88_С.G1, piece_color_sq, chess_board_0x88_O) != 0) is_moove_legal = 0;
+      if (move_gen_1_captures_0x88_O.check_detected(Move_gen_1_captures_0x88_С.E1, piece_color_sq, chess_board_0x88_O) != 0) is_moove_legal = 2;
+      if (move_gen_1_captures_0x88_O.check_detected(Move_gen_1_captures_0x88_С.F1, piece_color_sq, chess_board_0x88_O) != 0) is_moove_legal = 2;
+      if (move_gen_1_captures_0x88_O.check_detected(Move_gen_1_captures_0x88_С.G1, piece_color_sq, chess_board_0x88_O) != 0) is_moove_legal = 2;
     } else {
-      if (move_gen_1_captures_0x88_O.check_detected(Move_gen_1_captures_0x88_С.E8, piece_color_sq, chess_board_0x88_O) != 0) is_moove_legal = 0;
-      if (move_gen_1_captures_0x88_O.check_detected(Move_gen_1_captures_0x88_С.F8, piece_color_sq, chess_board_0x88_O) != 0) is_moove_legal = 0;
-      if (move_gen_1_captures_0x88_O.check_detected(Move_gen_1_captures_0x88_С.G8, piece_color_sq, chess_board_0x88_O) != 0) is_moove_legal = 0;
+      if (move_gen_1_captures_0x88_O.check_detected(Move_gen_1_captures_0x88_С.E8, piece_color_sq, chess_board_0x88_O) != 0) is_moove_legal = 2;
+      if (move_gen_1_captures_0x88_O.check_detected(Move_gen_1_captures_0x88_С.F8, piece_color_sq, chess_board_0x88_O) != 0) is_moove_legal = 2;
+      if (move_gen_1_captures_0x88_O.check_detected(Move_gen_1_captures_0x88_С.G8, piece_color_sq, chess_board_0x88_O) != 0) is_moove_legal = 2;
     }
 
-    // проверяем не под шахом ли поля
     if (is_moove_legal == 1) {
 
       // перемещаем короля. его ход прописан в списке ходов
@@ -589,13 +598,13 @@ class Make_move_0x88_C {
     let piece_color_sq = chess_board_0x88_O.sq_piece_color_0x88[move_list_0x88_O.from[move_i]];
 
     if (piece_color_sq == 1) {
-      if (move_gen_1_captures_0x88_O.check_detected(Move_gen_1_captures_0x88_С.E1, piece_color_sq, chess_board_0x88_O) != 0) is_moove_legal = 0;
-      if (move_gen_1_captures_0x88_O.check_detected(Move_gen_1_captures_0x88_С.D1, piece_color_sq, chess_board_0x88_O) != 0) is_moove_legal = 0;
-      if (move_gen_1_captures_0x88_O.check_detected(Move_gen_1_captures_0x88_С.C1, piece_color_sq, chess_board_0x88_O) != 0) is_moove_legal = 0;
+      if (move_gen_1_captures_0x88_O.check_detected(Move_gen_1_captures_0x88_С.E1, piece_color_sq, chess_board_0x88_O) != 0) is_moove_legal = 2;
+      if (move_gen_1_captures_0x88_O.check_detected(Move_gen_1_captures_0x88_С.D1, piece_color_sq, chess_board_0x88_O) != 0) is_moove_legal = 2;
+      if (move_gen_1_captures_0x88_O.check_detected(Move_gen_1_captures_0x88_С.C1, piece_color_sq, chess_board_0x88_O) != 0) is_moove_legal = 2;
     } else {
-      if (move_gen_1_captures_0x88_O.check_detected(Move_gen_1_captures_0x88_С.E8, piece_color_sq, chess_board_0x88_O) != 0) is_moove_legal = 0;
-      if (move_gen_1_captures_0x88_O.check_detected(Move_gen_1_captures_0x88_С.D8, piece_color_sq, chess_board_0x88_O) != 0) is_moove_legal = 0;
-      if (move_gen_1_captures_0x88_O.check_detected(Move_gen_1_captures_0x88_С.C8, piece_color_sq, chess_board_0x88_O) != 0) is_moove_legal = 0;
+      if (move_gen_1_captures_0x88_O.check_detected(Move_gen_1_captures_0x88_С.E8, piece_color_sq, chess_board_0x88_O) != 0) is_moove_legal = 2;
+      if (move_gen_1_captures_0x88_O.check_detected(Move_gen_1_captures_0x88_С.D8, piece_color_sq, chess_board_0x88_O) != 0) is_moove_legal = 2;
+      if (move_gen_1_captures_0x88_O.check_detected(Move_gen_1_captures_0x88_С.C8, piece_color_sq, chess_board_0x88_O) != 0) is_moove_legal = 2;
     }//if (piece_color_sq == 1) {
 
     // проверяем не под шахом ли поля

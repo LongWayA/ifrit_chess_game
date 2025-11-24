@@ -75,16 +75,12 @@ class Search_minmax_0x88_C {
 
         is_moove_legal = this.make_move_0x88_O.do_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O, move_gen_1_captures_0x88_O,);
 
-        if (is_moove_legal == 0) {
-          // особый случай. нелегальные рокировки не генерируются
-          if ((move_list_0x88_O.type_move[move_i] != Move_list_0x88_С.MOVE_KING_CASTLE) &&
-            (move_list_0x88_O.type_move[move_i] != Move_list_0x88_С.MOVE_KING_QUEEN_CASTLE)) {
-
-            this.unmake_move_0x88_O.undo_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O);
-
-          }//if ((move_list_0x88_O.type_move[move_i] != Move_list_0x88_С.MOVE_KING_CASTLE) &&
+        if (is_moove_legal == 0) { // король под шахом. отменяем ход и пропускаем этот цикл
+          this.unmake_move_0x88_O.undo_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O);
           continue;
-        }//if (is_moove_legal == 0) {
+        } else if (is_moove_legal == 2) {// нелегальные рокировки не генерируются. просто пропускаем ход
+          continue;
+        }
 
         pv_line_0x88_O.add_move(move_i, move_list_0x88_O, depth);
         pv_line_0x88_O.type_variant[depth] = "nm";
