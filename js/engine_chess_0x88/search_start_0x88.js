@@ -232,24 +232,24 @@ class Search_start_0x88_C {
 
       this.chessEngine_0x88_O.message_search_start_to_engine(this.info_return_search);
 
-      console.log("Search_0x88_C->ADD");
-      console.log("Search_0x88_C->key_32_equal " + this.transposition_table_0x88_O.key_32_equal);
-      console.log("Search_0x88_C->key_32_not_equal " + this.transposition_table_0x88_O.key_32_not_equal);
-      console.log("Search_0x88_C->node " + node);
-      console.log("Search_0x88_C->add_position " + this.transposition_table_0x88_O.add_position_p);
-      console.log("Search_0x88_C->add_position_key_32_true " + this.transposition_table_0x88_O.add_position_key_32_true);
-      console.log("Search_0x88_C->add_position_new " + this.transposition_table_0x88_O.add_position_new);
-      console.log("Search_0x88_C->add_position_rew " + this.transposition_table_0x88_O.add_position_rew);
-      console.log("Search_0x88_C->IS");
-      console.log("Search_0x88_C->is_save_position " + this.transposition_table_0x88_O.is_save_position_p);
-      console.log("Search_0x88_C->is_save_key_32_true " + this.transposition_table_0x88_O.is_save_key_32_true);
-      console.log("Search_0x88_C->is_save_key_32_false " + this.transposition_table_0x88_O.is_save_key_32_false);
-      console.log("Search_0x88_C->is_save_delta_depth_ok " + this.transposition_table_0x88_O.is_save_delta_depth_ok);
-      console.log("Search_0x88_C->collision_fen " + this.transposition_table_0x88_O.collision_fen);
-      console.log("Search_0x88_C->no_collision_fen " + this.transposition_table_0x88_O.no_collision_fen);
+      //console.log("Search_0x88_C->ADD");
+      //console.log("Search_0x88_C->key_64_equal " + this.transposition_table_0x88_O.key_64_equal);
+      //console.log("Search_0x88_C->key_64_not_equal " + this.transposition_table_0x88_O.key_64_not_equal);
+      //console.log("Search_0x88_C->node " + node);
+      //console.log("Search_0x88_C->add_position " + this.transposition_table_0x88_O.add_position_p);
+      //console.log("Search_0x88_C->add_position_key_64_true " + this.transposition_table_0x88_O.add_position_key_64_true);
+      //console.log("Search_0x88_C->add_position_new " + this.transposition_table_0x88_O.add_position_new);
+      //console.log("Search_0x88_C->add_position_rew " + this.transposition_table_0x88_O.add_position_rew);
+      //console.log("Search_0x88_C->IS");
+      //console.log("Search_0x88_C->is_save_position " + this.transposition_table_0x88_O.is_save_position_p);
+      //console.log("Search_0x88_C->is_save_key_64_true " + this.transposition_table_0x88_O.is_save_key_64_true);
+      //console.log("Search_0x88_C->is_save_key_64_false " + this.transposition_table_0x88_O.is_save_key_64_false);
+      //console.log("Search_0x88_C->is_save_delta_depth_ok " + this.transposition_table_0x88_O.is_save_delta_depth_ok);
+      //console.log("Search_0x88_C->collision_fen " + this.transposition_table_0x88_O.collision_fen);
+      //console.log("Search_0x88_C->no_collision_fen " + this.transposition_table_0x88_O.no_collision_fen);
 
 
-      this.transposition_table_0x88_O.test_uses_hash();
+      //this.transposition_table_0x88_O.test_uses_hash();
 
     }// for (let depth_max = 1; depth_max < depth_max_2; depth_max++) {
 
