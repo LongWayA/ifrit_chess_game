@@ -43,6 +43,8 @@ class Make_move_0x88_C {
     let type_move = move_list_0x88_O.type_move[move_i];// тип хода
     undo_0x88_O.set_undo(chess_board_0x88_O);// заполняем вспогательную структуру для возврата хода
 
+    //console.log("Make_move_0x88_C king_from_white[" + move_i + "] = " + chess_board_0x88_O.king_from_white);
+    //console.log("Make_move_0x88_C king_from_white[" + move_i + "] = " + chess_board_0x88_O.king_from_white);
     // смотрим 
     switch (type_move) {
 
@@ -55,6 +57,15 @@ class Make_move_0x88_C {
       // MOVE
       // ходит король. обнуляем связанные с ним рокировки
       case Move_list_0x88_С.MOVE_KING:
+
+        if (move_list_0x88_O.piece_color == 1) {
+          chess_board_0x88_O.king_from_white = move_list_0x88_O.to[move_i];
+          //console.log("Make_move_0x88_C king_from_white[" + move_i + "] = " + chess_board_0x88_O.king_from_white);
+        } else {
+          chess_board_0x88_O.king_from_black = move_list_0x88_O.to[move_i];
+          //console.log("Make_move_0x88_C king_from_white[" + move_i + "] = " + chess_board_0x88_O.king_from_white);
+        }
+
         // делаем простой ход. он одинаковый для всех фигур
         this.make_simple_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O);
         // обнуляем взятие на проходе. 
@@ -98,6 +109,13 @@ class Make_move_0x88_C {
       case Move_list_0x88_С.CAPTURES_KING_KNIGHT:
       //break;
       case Move_list_0x88_С.CAPTURES_KING_PAWN:
+
+        if (move_list_0x88_O.piece_color == 1) {
+          chess_board_0x88_O.king_from_white = move_list_0x88_O.to[move_i];
+        } else {
+          chess_board_0x88_O.king_from_black = move_list_0x88_O.to[move_i];
+        }
+
         this.make_simple_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O);
         // обнуляем взятие на проходе. 
         chess_board_0x88_O.en_passant_yes = 0;
@@ -195,6 +213,13 @@ class Make_move_0x88_C {
       // хотя если король добежал до вражеской ладьи то наверное у него уже нет рокировок но вдруг 
       // ладья сама пришла к королю тогда это у нее уже нет рокировок. как все запутано :))
       case Move_list_0x88_С.CAPTURES_KING_ROOK:
+
+        if (move_list_0x88_O.piece_color == 1) {
+          chess_board_0x88_O.king_from_white = move_list_0x88_O.to[move_i];
+        } else {
+          chess_board_0x88_O.king_from_black = move_list_0x88_O.to[move_i];
+        }
+
         this.make_simple_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O);
         // обнуляем взятие на проходе. 
         chess_board_0x88_O.en_passant_yes = 0;
@@ -207,16 +232,36 @@ class Make_move_0x88_C {
       // специальный ходы рокировки. отмена рокировки прописана внутри функций
       // MOVE_KING_CASTLE
       case Move_list_0x88_С.MOVE_KING_CASTLE:
+
         is_moove_legal = this.make_king_castle_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O, move_gen_1_captures_0x88_O);
         // разрешение взятия на проходе 1/0
         chess_board_0x88_O.en_passant_yes = 0;
+
+        if (is_moove_legal != 2) {
+          if (move_list_0x88_O.piece_color == 1) {
+            chess_board_0x88_O.king_from_white = move_list_0x88_O.to[move_i];
+          } else {
+            chess_board_0x88_O.king_from_black = move_list_0x88_O.to[move_i];
+          }
+        }
+
         break;
 
       // MOVE_KING_QUEEN_CASTLE   
       case Move_list_0x88_С.MOVE_KING_QUEEN_CASTLE:
+
         is_moove_legal = this.make_king_queen_castle_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O, move_gen_1_captures_0x88_O);
         // разрешение взятия на проходе 1/0
         chess_board_0x88_O.en_passant_yes = 0;
+
+        if (is_moove_legal != 2) {
+          if (move_list_0x88_O.piece_color == 1) {
+            chess_board_0x88_O.king_from_white = move_list_0x88_O.to[move_i];
+          } else {
+            chess_board_0x88_O.king_from_black = move_list_0x88_O.to[move_i];
+          }
+        }
+
         break;
 
       //////////////////////////////////////////////
@@ -351,14 +396,32 @@ class Make_move_0x88_C {
     // если легальность хода не обнулили выше тогда остается проверить не под шахом ли наш король 
     // легальность отменяется если рокировки не прошли т.к. поля или король под боем
     if (is_moove_legal == 1) {
+
+      let from_king = 0;
+
       let piece_color_king = move_list_0x88_O.piece_color;
+
+      if (move_list_0x88_O.piece_color == 1) {
+        from_king = chess_board_0x88_O.king_from_white;
+      } else {
+        from_king = chess_board_0x88_O.king_from_black;
+      }
+
 
       // поиск короля после каждого хода это что то сильно неправильное. надо будет прописать положение короля
       //  и его отслеживание. но это как нибудь потом. сейчас и других вопросов хватает (19.11м.25)
-      let from_king = chess_board_0x88_O.searching_king(piece_color_king);
+      //let from_king2 = chess_board_0x88_O.searching_king(piece_color_king);
       //console.log("from_king " + from_king);
       //console.log("piece_color_king " + piece_color_king);      ;
       //console.log("check_detected " + move_gen_1_captures_0x88_O.check_detected(from_king, piece_color_king, chess_board_0x88_O));
+
+      // if (from_king != from_king2) {
+      //   console.log("Make_move_0x88_C NO KING! ");
+      //   console.log("from_king " + from_king);
+      //   console.log("from_king2 " + from_king2);
+      //   chess_board_0x88_O.test_print_0x88();
+      // }
+
 
       if (move_gen_1_captures_0x88_O.check_detected(from_king, piece_color_king, chess_board_0x88_O) != 0) {
         is_moove_legal = 0;
@@ -368,7 +431,7 @@ class Make_move_0x88_C {
     // 1 - ход легальный. мы сделали ход и король не под шахом 
     // 2 - ход не легальный мы не сделали рокировку из за битых полей 
     // 0 - ход не легальный. мы сделали ход а король оказался или остался под шахом
-      
+
     return is_moove_legal;
   }
 

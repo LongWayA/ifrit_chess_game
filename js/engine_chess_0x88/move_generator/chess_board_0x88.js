@@ -112,6 +112,11 @@ class Chess_board_0x88_C {
     sq_piece_0x88 = new Array(128).fill(0);// доска 0x88 с фигурами
     sq_piece_color_0x88 = new Array(128).fill(0);// доска 0x88 с цветом фигур
 
+    king_from_white = 0;
+    king_from_black = 0;
+
+
+
     // ВСПОМОГАТЕЛЬНАЯ ИНФОРМАЦИЯ
     // цвет хода 0 - черные 1 - белые
     side_to_move = 0;
@@ -315,6 +320,9 @@ class Chess_board_0x88_C {
             this.sq_piece_color_0x88[i] = chess_board_0x88_O.sq_piece_color_0x88[i];
         }
 
+        this.king_from_white = chess_board_0x88_O.king_from_white;
+        this.king_from_black = chess_board_0x88_O.king_from_black;
+
         // цвет хода 0 - черные 1 - белые
         this.side_to_move = chess_board_0x88_O.side_to_move;
         // разрешение взятия на проходе 1/0
@@ -346,6 +354,17 @@ class Chess_board_0x88_C {
                 i = this.x07_y07_to_0x88(x, y);
                 this.sq_piece_0x88[i] = chessBoard_8x8_O.sq_piece_8x8[y][x];
                 this.sq_piece_color_0x88[i] = chessBoard_8x8_O.sq_piece_color_8x8[y][x];
+
+                if (this.sq_piece_0x88[i] == Chess_board_0x88_C.KING) {
+                    if (this.sq_piece_color_0x88[i] == Chess_board_0x88_C.WHITE) {
+                        this.king_from_white = i;
+                        //console.log("ini_0x88_from_8x8 king_from_white[" + i + "] = " + this.king_from_white);
+                    } else {
+                        this.king_from_black = i;
+                        //console.log("ini_0x88_from_8x8 king_from_black[" + i + "] = " + this.king_from_black);
+                    }
+                }
+
             }
         }
         // цвет хода 0 - черные 1 - белые
@@ -457,7 +476,8 @@ class Chess_board_0x88_C {
                 }
             }
         }
-
+        //console.log("ChessBoard_0x88_C set_0x88_from_fen king_from_white = " + this.king_from_white);
+        //console.log("ChessBoard_0x88_C set_0x88_from_fen king_from_white = " + this.king_from_white);
     }
 
     // переводим букву в координату
@@ -488,6 +508,7 @@ class Chess_board_0x88_C {
             case "k":// король
                 this.sq_piece_0x88[z_0x88] = Chess_board_0x88_C.KING;
                 this.sq_piece_color_0x88[z_0x88] = Chess_board_0x88_C.BLACK;
+                this.king_from_black = z_0x88;
                 break;
             case "q":// ферзь
                 this.sq_piece_0x88[z_0x88] = Chess_board_0x88_C.QUEEN;
@@ -514,6 +535,7 @@ class Chess_board_0x88_C {
             case "K":// король
                 this.sq_piece_0x88[z_0x88] = Chess_board_0x88_C.KING;
                 this.sq_piece_color_0x88[z_0x88] = Chess_board_0x88_C.WHITE;
+                this.king_from_white = z_0x88;
                 break;
             case "Q":// ферзь
                 this.sq_piece_0x88[z_0x88] = Chess_board_0x88_C.QUEEN;
@@ -746,6 +768,10 @@ class Chess_board_0x88_C {
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
         ];
+
+        this.king_from_black = 4;
+        this.king_from_white = 116;
+
         //    this.sq_piece_color_0x88 = [
         //         0, 0, 0, 0, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1, -1, -1,
         //         0, 0, 0, 0, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1, -1, -1,
