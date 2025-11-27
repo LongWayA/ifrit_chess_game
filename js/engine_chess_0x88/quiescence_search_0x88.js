@@ -36,7 +36,7 @@ class Quiescence_search_0x88_C {
   }
 
   //quiescence_search(alpha, beta, pv_line_0x88_O, chess_board_0x88_O, move_gen_1_captures_0x88_O, depth) {
-  quiescence_search(alpha, beta, chess_board_0x88_O, move_gen_1_captures_0x88_O, depth) {
+  quiescence_search(alpha, beta, chess_board_0x88_O, move_gen_1_captures_0x88_O, depth, transposition_table_0x88_O) {
     let undo_0x88_O = new Undo_0x88_C();
     let score = 0;// текущая оценка позиции
     let best_value;// максимальная оценка позиции
@@ -66,18 +66,17 @@ class Quiescence_search_0x88_C {
 
     for (let move_i = 0; move_i < move_list_0x88_O.number_move; move_i++) {
 
-      is_moove_legal = this.make_move_0x88_O.do_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O, move_gen_1_captures_0x88_O);
+      is_moove_legal = this.make_move_0x88_O.do_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O, 
+        move_gen_1_captures_0x88_O, transposition_table_0x88_O);
 
-      if (is_moove_legal == 0) {
-        // особый случай. нелегальные рокировки не генерируются
-        if ((move_list_0x88_O.type_move[move_i] != Move_list_0x88_С.MOVE_KING_CASTLE) &&
-          (move_list_0x88_O.type_move[move_i] != Move_list_0x88_С.MOVE_KING_QUEEN_CASTLE)) {
+        if (is_moove_legal == 0) { // король под шахом. отменяем ход и пропускаем этот цикл
           this.unmake_move_0x88_O.undo_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O);
+          continue;
+        } else if (is_moove_legal == 2) {// нелегальные рокировки не генерируются. просто пропускаем ход
+          continue;
         }
-        continue;
-      }
 
-      score = this.quiescence_search(alpha, beta, chess_board_0x88_O, move_gen_1_captures_0x88_O, (depth + 1));
+      score = this.quiescence_search(alpha, beta, chess_board_0x88_O, move_gen_1_captures_0x88_O, (depth + 1), transposition_table_0x88_O);
 
       if (move_list_0x88_O.piece_color == Chess_board_0x88_C.WHITE) {
         if (score >= beta) {

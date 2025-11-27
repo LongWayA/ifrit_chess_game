@@ -201,7 +201,7 @@ class Transposition_table_0x88_C {
     clear_hash() {
         for (let i = 0; i < Transposition_table_0x88_C.MAX_TABLE_LENTH; i++) {
 
-            this.key_64[i] = -1; //            
+            this.key_64[i] = -1n; //            
             this.move[i] = -1; // 
 
             // test_fen_board ----------------------------------------------------------------------------------
@@ -307,7 +307,8 @@ class Transposition_table_0x88_C {
         //this.add_position_p = this.add_position_p + 1;// зашли чтобы попытаться добавить позицию
 
         // генерируем ключ текущей позиции.
-        let key_64_board = this.set_key_from_board_0x88(chess_board_0x88_O);
+        //let key_64_board = this.set_key_from_board_0x88(chess_board_0x88_O);
+        let key_64_board = chess_board_0x88_O.key_64;        
         //console.log("Transposition_table_0x88_C -> key_64_board " + key_64_board);
 
         // определяем по ключу индекс для доступа к таблице
@@ -366,7 +367,16 @@ class Transposition_table_0x88_C {
         //this.is_save_position_p = this.is_save_position_p + 1;
 
         // генерируем ключ текущей позиции.
-        let key_64_board = this.set_key_from_board_0x88(chess_board_0x88_O);
+        //let key_64_board = this.set_key_from_board_0x88(chess_board_0x88_O);
+        let key_64_board = chess_board_0x88_O.key_64; 
+        // let key_64_board2 = this.set_key_from_board_0x88(chess_board_0x88_O);               
+
+        // if (key_64_board != key_64_board2) {
+        //     console.log("Transposition_table_0x88_C -> NOT key_64 !");
+        //     console.log("Transposition_table_0x88_C -> chess_board_0x88_O.key_64 " + chess_board_0x88_O.key_64);
+        //     console.log("Transposition_table_0x88_C -> key_64_board " + key_64_board);
+        //     chess_board_0x88_O.test_print_0x88();
+        // }
 
         // определяем по ключу индекс для доступа к таблице
         let index_key_64_board = key_64_board & BigInt(Transposition_table_0x88_C.MAX_TABLE_LENTH - 1);//&
@@ -387,26 +397,26 @@ class Transposition_table_0x88_C {
             // проверяем что глубина поиска позиции из таблицы больше или равна
             //if (delta_depth_move >= delta_depth_board) {
 
-                // прошли тест по глубине поиска
-                //this.is_save_delta_depth_ok = this.is_save_delta_depth_ok + 1;
+            // прошли тест по глубине поиска
+            //this.is_save_delta_depth_ok = this.is_save_delta_depth_ok + 1;
 
-                // test_fen_board ----------------------------------------------------------------------------------   
-                // let test_fen_board = chess_board_0x88_O.set_fen_from_0x88();
-                // let test_fen = this.test_fen[index_key_64_board];
+            // test_fen_board ----------------------------------------------------------------------------------   
+            // let test_fen_board = chess_board_0x88_O.set_fen_from_0x88();
+            // let test_fen = this.test_fen[index_key_64_board];
 
-                // if (test_fen === test_fen_board) {
-                //     this.no_collision_fen = this.no_collision_fen + 1;// зашли по индексу и фен совпал
-                // } else {//if (fen === fen_test) {
-                //     this.collision_fen = this.collision_fen + 1;// зашли по индексу но фен не совпал
-                // }//if (fen === fen_test) {
+            // if (test_fen === test_fen_board) {
+            //     this.no_collision_fen = this.no_collision_fen + 1;// зашли по индексу и фен совпал
+            // } else {//if (fen === fen_test) {
+            //     this.collision_fen = this.collision_fen + 1;// зашли по индексу но фен не совпал
+            // }//if (fen === fen_test) {
 
-                //распаковываем
-                this.unpacking_from_move(index_key_64_board);
-                return this.out;
+            //распаковываем
+            this.unpacking_from_move(index_key_64_board);
+            return this.out;
 
             //} else {//if (delta_depth <= (max_depth - depth)) {
-                // не прошло по глубине
-              //  return this.out;
+            // не прошло по глубине
+            //  return this.out;
             //}//if (delta_depth <= (max_depth - depth)) {
 
         } else {//if (lo_key === lo_key_board_0x88) {
@@ -418,11 +428,115 @@ class Transposition_table_0x88_C {
         }//if (lo_key === lo_key_board_0x88) {
     }
 
+    // простой ход и взятия. принципиальный момент обработка фигуры которую берем.
+    key_update_do_move_0x88(from128, to128, piece_from, piece_to, piece_color, chess_board_0x88_O) {
+
+        let from64 = Chess_board_0x88_C.SQUARE_128_to_64[from128];
+        let to64 = Chess_board_0x88_C.SQUARE_128_to_64[to128];
+
+
+        chess_board_0x88_O.key_64 = chess_board_0x88_O.key_64 ^ this.key_array_64[piece_color][piece_from][from64];
+        chess_board_0x88_O.key_64 = chess_board_0x88_O.key_64 ^ this.key_array_64[piece_color][piece_from][to64];
+
+        // если есть фигура которую берем ее надо убрать из хеш ключа
+        if (piece_to != 0) {
+            chess_board_0x88_O.key_64 = chess_board_0x88_O.key_64 ^ this.key_array_64[1 - piece_color][piece_to][to64];
+        }
+
+        // side_to_move
+        chess_board_0x88_O.key_64 = chess_board_0x88_O.key_64 ^ this.key_array_64[1][6][10];
+    }
+
+    // взятие на проходе
+    key_update_ep_move_0x88(from128, to128, ep128, piece_to, piece_color, chess_board_0x88_O) {
+
+        let from64 = Chess_board_0x88_C.SQUARE_128_to_64[from128];
+        let to64 = Chess_board_0x88_C.SQUARE_128_to_64[to128];
+        let ep64 = Chess_board_0x88_C.SQUARE_128_to_64[ep128];
+
+        chess_board_0x88_O.key_64 = chess_board_0x88_O.key_64 ^ this.key_array_64[piece_color][piece_to][from64];
+        chess_board_0x88_O.key_64 = chess_board_0x88_O.key_64 ^ this.key_array_64[piece_color][piece_to][to64];
+        chess_board_0x88_O.key_64 = chess_board_0x88_O.key_64 ^ this.key_array_64[1-piece_color][piece_to][ep64];
+
+        // side_to_move
+        chess_board_0x88_O.key_64 = chess_board_0x88_O.key_64 ^ this.key_array_64[1][6][10];
+    }
+
+    // превращение и превращение с взятием. принципиальный момент обработка фигуры которую берем.
+    key_update_promo_move_0x88(from128, to128, piece_promo, piece_to, piece_color, chess_board_0x88_O) {
+
+        let from64 = Chess_board_0x88_C.SQUARE_128_to_64[from128];
+        let to64 = Chess_board_0x88_C.SQUARE_128_to_64[to128];
+
+
+        chess_board_0x88_O.key_64 = chess_board_0x88_O.key_64 ^ this.key_array_64[piece_color][Chess_board_0x88_C.PAWN][from64];
+        chess_board_0x88_O.key_64 = chess_board_0x88_O.key_64 ^ this.key_array_64[piece_color][piece_promo][to64];
+
+        // если есть фигура которую берем ее надо убрать из хеш ключа
+        if (piece_to != 0) {
+            chess_board_0x88_O.key_64 = chess_board_0x88_O.key_64 ^ this.key_array_64[1-piece_color][piece_to][to64];
+        }
+
+        // side_to_move
+        chess_board_0x88_O.key_64 = chess_board_0x88_O.key_64 ^ this.key_array_64[1][6][10];
+    }
+
+    // рокировки
+    key_update_castle_move_0x88(from128, to128, r_from128, r_to128, piece_color, chess_board_0x88_O) {
+
+        let from64 = Chess_board_0x88_C.SQUARE_128_to_64[from128];
+        let to64 = Chess_board_0x88_C.SQUARE_128_to_64[to128];
+        let r_from64 = Chess_board_0x88_C.SQUARE_128_to_64[r_from128];
+        let r_to64 = Chess_board_0x88_C.SQUARE_128_to_64[r_to128];
+
+        chess_board_0x88_O.key_64 = chess_board_0x88_O.key_64 ^ this.key_array_64[piece_color][Chess_board_0x88_C.KING][from64];
+        chess_board_0x88_O.key_64 = chess_board_0x88_O.key_64 ^ this.key_array_64[piece_color][Chess_board_0x88_C.KING][to64];
+
+        chess_board_0x88_O.key_64 = chess_board_0x88_O.key_64 ^ this.key_array_64[piece_color][Chess_board_0x88_C.ROOK][r_from64];
+        chess_board_0x88_O.key_64 = chess_board_0x88_O.key_64 ^ this.key_array_64[piece_color][Chess_board_0x88_C.ROOK][r_to64];
+
+        // side_to_move
+        chess_board_0x88_O.key_64 = chess_board_0x88_O.key_64 ^ this.key_array_64[1][6][10];
+    }
+
+
+    // это переключение флага взятия на проходе
+    key_update_ep_0x88(chess_board_0x88_O) {
+        chess_board_0x88_O.key_64 = chess_board_0x88_O.key_64 ^ this.key_array_64[1][5][20];
+    }
+
+    // это переключени поля взятия на проходе
+    key_update_ep2_0x88(chess_board_0x88_O) {
+        chess_board_0x88_O.key_64 = chess_board_0x88_O.key_64 ^
+            BigInt(chess_board_0x88_O.en_passant_target_square) ^ this.key_array_64[1][5][25];
+    }
+
+    // обрабатываем флаги возможности рокировок
+    key_update_QqKk_0x88(Q, q, K, k, chess_board_0x88_O) {
+
+        if (Q == 1) {
+            chess_board_0x88_O.key_64 = chess_board_0x88_O.key_64 ^ this.key_array_64[1][4][30];
+        }
+
+        if (K == 1) {
+            chess_board_0x88_O.key_64 = chess_board_0x88_O.key_64 ^ this.key_array_64[1][4][40];
+        }
+
+        if (q == 1) {
+            chess_board_0x88_O.key_64 = chess_board_0x88_O.key_64 ^ this.key_array_64[0][4][30];
+        }
+
+        if (k == 1) {
+            chess_board_0x88_O.key_64 = chess_board_0x88_O.key_64 ^ this.key_array_64[0][4][40];
+        }
+    }
+
+
     //////////////////////////////////////////////////////////////////////////////
 
     // здесь каждому положению каждой фигуры каждого цвета присваивается случайное число 
     ini_random_key_array_64() {
-        console.log("Transposition_table_0x88_C -> ini_random_key_array_32");
+        //console.log("Transposition_table_0x88_C -> ini_random_key_array_32");
         let uint_a_64 = new BigUint64Array(1);
         let uint64 = 0n;
 
@@ -494,43 +608,35 @@ class Transposition_table_0x88_C {
             if (piece != 0) {
                 piece_color = chess_board_0x88_O.sq_piece_color_0x88[sq_0x88];
 
-                key_64 = key_64 ^ this.key_array_64[piece_color][piece][sq];  
-                //key_64 = key_64 + this.key_array_64[piece_color][piece][sq];
+                key_64 = key_64 ^ this.key_array_64[piece_color][piece][sq];
             }
         }
 
         if (chess_board_0x88_O.side_to_move == 1) {
             key_64 = key_64 ^ this.key_array_64[1][6][10];
-            //key_64 = key_64 + this.key_array_64[1][6][10];
         }
 
         if (chess_board_0x88_O.en_passant_yes == 1) {
             key_64 = key_64 ^ this.key_array_64[1][5][20];
-            //key_64 = key_64 + this.key_array_64[1][5][20];
         }
 
-        key_64 = key_64 ^ BigInt(chess_board_0x88_O.en_passant_target_square) ^ this.key_array_64[1][5][20];
-        //key_64 = key_64 + BigInt(chess_board_0x88_O.en_passant_target_square) + this.key_array_64[1][5][20];            
+         key_64 = key_64 ^ BigInt(chess_board_0x88_O.en_passant_target_square) ^ this.key_array_64[1][5][25];           
 
 
         if (chess_board_0x88_O.castling_Q == 1) {
-            key_64 = key_64 ^ this.key_array_64[1][4][30]; 
-            //key_64 = key_64 + this.key_array_64[1][4][30];
+            key_64 = key_64 ^ this.key_array_64[1][4][30];
         }
 
         if (chess_board_0x88_O.castling_K == 1) {
-            key_64 = key_64 ^ this.key_array_64[1][4][40]; 
-            //key_64 = key_64 + this.key_array_64[1][4][40];
+            key_64 = key_64 ^ this.key_array_64[1][4][40];
         }
 
         if (chess_board_0x88_O.castling_q == 1) {
-            key_64 = key_64 ^ this.key_array_64[0][4][30];   
-            //key_64 = key_64 + this.key_array_64[0][4][30];
+            key_64 = key_64 ^ this.key_array_64[0][4][30];
         }
 
         if (chess_board_0x88_O.castling_k == 1) {
             key_64 = key_64 ^ this.key_array_64[0][4][40];
-            //key_64 = key_64 + this.key_array_64[0][4][40];
         }
 
         return key_64;

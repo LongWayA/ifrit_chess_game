@@ -17,6 +17,9 @@ import { Html5Canvas_C } from "../gui_chess/html5_canvas/html5_canvas.js";
 // uci
 import { Uci_C } from "../uci/uci.js";
 
+import { Transposition_table_0x88_C } from "./for_sorting_move/transposition_table_0x88.js";
+
+
 /**
 * НАЗНАЧЕНИЕ
 что должен уметь делать движок?
@@ -49,6 +52,8 @@ class ChessEngine_0x88_С {
   chess_board_0x88_O_save_gui = new Chess_board_0x88_C();
   move_list_0x88_O_gui = new Move_list_0x88_С();
 
+  transposition_table_0x88_O = new Transposition_table_0x88_C();
+
   //---------
 
   score = 0;
@@ -64,6 +69,7 @@ class ChessEngine_0x88_С {
 
     this.search_start_0x88_O.iniM(this);
     this.uci_O.iniM();
+    this.transposition_table_0x88_O.iniM();
   }
 
   message_worker_chessEngine_to_engine(message) {
@@ -191,7 +197,7 @@ class ChessEngine_0x88_С {
     //console.log("ChessBoard_8x8_C->click(mouseDown) СДЕЛАЕМ ХОД ДЛЯ ПРОВЕРКИ ЛЕГАЛЬНОСТИ from " + from + " to "+ to);
     let is_moove_legal = this.search_start_0x88_O.make_move_0x88_O.do_moves(move_i,
       this.chess_board_0x88_O_gui, this.move_list_0x88_O_gui,
-      undo_0x88_O, this.search_start_0x88_O.move_gen_1_captures_0x88_O);
+      undo_0x88_O, this.search_start_0x88_O.move_gen_1_captures_0x88_O, this.transposition_table_0x88_O);
 
     return is_moove_legal;
 

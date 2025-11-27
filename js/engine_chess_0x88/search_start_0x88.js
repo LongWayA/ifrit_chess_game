@@ -137,6 +137,8 @@ class Search_start_0x88_C {
     //this.transposition_table_0x88_O.iniM();
     let node = 0;
 
+    chess_board_0x88_O_start.key_64 = this.transposition_table_0x88_O.set_key_from_board_0x88(chess_board_0x88_O_start);
+
     chess_board_0x88_O.save_chess_board_0x88(chess_board_0x88_O_start);
 
     // копируем доску чтобы когда у движка не будет ходов он не откатывался к предыдущей.
@@ -168,7 +170,7 @@ class Search_start_0x88_C {
       for (let move_i = 0; move_i < move_list_0x88_O.number_move; move_i++) {
 
         is_moove_legal = this.make_move_0x88_O.do_moves(move_i, chess_board_0x88_O, move_list_0x88_O,
-          undo_0x88_O, this.move_gen_1_captures_0x88_O);
+          undo_0x88_O, this.move_gen_1_captures_0x88_O, this.transposition_table_0x88_O);
 
         if (is_moove_legal == 0) { // король под шахом. отменяем ход и пропускаем этот цикл
           this.unmake_move_0x88_O.undo_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O);
@@ -268,6 +270,9 @@ class Search_start_0x88_C {
 
     let pv_line_0x88_O = new PV_line_0x88_C();
 
+    chess_board_0x88_O_start.key_64 = this.transposition_table_0x88_O.set_key_from_board_0x88(chess_board_0x88_O_start);
+
+
     chess_board_0x88_O.save_chess_board_0x88(chess_board_0x88_O_start);
     chess_board_0x88_O_save_test.save_chess_board_0x88(chess_board_0x88_O);
 
@@ -279,7 +284,7 @@ class Search_start_0x88_C {
     this.search_minmax_0x88_O.node = 0;
 
     let best_score = this.search_minmax_0x88_O.searching_minmax(pv_line_0x88_O, chess_board_0x88_O,
-      this.move_gen_1_captures_0x88_O, this.move_gen_2_quiet_0x88_O, depth, depth_max);
+      this.move_gen_1_captures_0x88_O, this.move_gen_2_quiet_0x88_O, depth, depth_max, this.transposition_table_0x88_O);
 
     //console.log("=========================================================================");
     //console.log("Search_0x88_C->start_search 22222 =============================================");

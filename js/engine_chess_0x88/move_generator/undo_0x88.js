@@ -44,10 +44,11 @@ class Undo_0x88_C {
   name_capture_piece = 0;
   color_capture_piece = 0;
 
-  king_from_white = -1;  
+  king_from_white = -1;
   king_from_black = -1;
-       
 
+  // 64 битный ключ позиции   
+  key_64 = 0n;
 
   constructor() {
 
@@ -75,6 +76,9 @@ class Undo_0x88_C {
     // оценка позиции
     this.score = chess_board_0x88_O.score;
 
+    // 64 битный ключ позиции   
+    this.key_64 = chess_board_0x88_O.key_64;
+
     this.king_from_white = chess_board_0x88_O.king_from_white;
     this.king_from_black = chess_board_0x88_O.king_from_black;
 
@@ -99,6 +103,9 @@ class Undo_0x88_C {
     chess_board_0x88_O.castling_k = this.castling_k;
     // оценка позиции
     chess_board_0x88_O.score = this.score;
+
+    // 64 битный ключ позиции   
+    chess_board_0x88_O.key_64 = this.key_64;
 
     chess_board_0x88_O.king_from_white = this.king_from_white;
     chess_board_0x88_O.king_from_black = this.king_from_black;

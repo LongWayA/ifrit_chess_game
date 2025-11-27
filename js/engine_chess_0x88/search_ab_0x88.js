@@ -71,9 +71,10 @@ class Search_ab_0x88_C {
       //found_score = this.evaluate_0x88_O.score_position(chess_board_0x88_O, transposition_table_0x88_O);
       this.node = this.node + 1;
 
-      this.quiescence_search_0x88_O.node = 0;
+      //this.quiescence_search_0x88_O.node = 0;
       found_score = this.quiescence_search_0x88_O.quiescence_search(alpha, beta, chess_board_0x88_O,
-        move_gen_1_captures_0x88_O, depth);
+        move_gen_1_captures_0x88_O, depth, transposition_table_0x88_O);
+
       //this.node = this.node + this.quiescence_search_0x88_O.node;
 
       pv_line_0x88_O.score_depth_max = found_score;
@@ -150,7 +151,8 @@ class Search_ab_0x88_C {
     for (let move_i = 0; move_i < move_list_0x88_O.number_move; move_i++) {
 
       //console.log("Search_0x88_C->2 ");
-      is_moove_legal = this.make_move_0x88_O.do_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O, move_gen_1_captures_0x88_O);
+      is_moove_legal = this.make_move_0x88_O.do_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O, 
+        move_gen_1_captures_0x88_O, transposition_table_0x88_O);
 
       if (is_moove_legal == 0) { // король под шахом. отменяем ход и пропускаем этот цикл
         this.unmake_move_0x88_O.undo_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O);

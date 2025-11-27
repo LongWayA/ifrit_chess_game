@@ -150,6 +150,10 @@ class Chess_board_0x88_C {
     // It starts at 1 and is incremented after Black's move.(from wikipedia)   
     fullmove_number = -1;
 
+    // 64 битный ключ позиции   
+    key_64 = 0n;
+
+
     constructor() {
     }
 
@@ -339,6 +343,9 @@ class Chess_board_0x88_C {
         this.castling_k = chess_board_0x88_O.castling_k;
         // оценка позиции
         this.score = chess_board_0x88_O.score;
+
+        this.key_64 = chess_board_0x88_O.key_64;
+
     }
 
 
@@ -383,6 +390,7 @@ class Chess_board_0x88_C {
         this.castling_k = chessBoard_8x8_O.castling_k;
 
         this.score = chessBoard_8x8_O.score;
+
     }
 
     // https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
@@ -475,7 +483,7 @@ class Chess_board_0x88_C {
                     //this.fullmove_number = Number(char);
                 }
             }
-        }
+        }     
         //console.log("ChessBoard_0x88_C set_0x88_from_fen king_from_white = " + this.king_from_white);
         //console.log("ChessBoard_0x88_C set_0x88_from_fen king_from_white = " + this.king_from_white);
     }
