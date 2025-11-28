@@ -97,15 +97,15 @@ class Transposition_table_0x88_C {
     //static MAX_TABLE_LENTH = 16_384;//1_024 2_048 4_096 8_192 16_384 32_768 65_536
     static MAX_TABLE_LENTH = 65_536;
 
-    static ALPHA_CUT = 1;
-    static BETA_CUT = 2;
+    static MAX_SCORE_UPDATE = 1;
 
-    static ALPHA_UPDATE = 3;
-    static BETA_UPDATE = 4;
+    static ALPHA_UPDATE = 2;
+    static BETA_UPDATE = 3;
 
-    static BEST_UPDATE = 5;
+    static ALPHA_CUT = 4;
+    static BETA_CUT = 5;
 
-    out = { tn: -1, tm: -1, from: -1, to: -1, dd: -1 };
+    out = { tn: -1, tm: -1, sc: -1, from: -1, to: -1, dd: -1 };
 
     // 64 битный ключ позиции   
     key_64 = new Array(Transposition_table_0x88_C.MAX_TABLE_LENTH);
@@ -119,6 +119,8 @@ class Transposition_table_0x88_C {
     //  сейчас уже не актуально. коллизий в худшем случае 1 на миллион. 
     // сейчас 64 битный ключ плюс убрал ошибку.
     // было много коллизий потому что не учитывал поле взятия на проходе.
+
+    score = new Array(Transposition_table_0x88_C.MAX_TABLE_LENTH);
 
     // test_fen_board ----------------------------------------------------------------------------------
     // тестовый фен позиции. смотрим насколько адекватный получается ключ позиции
@@ -155,6 +157,15 @@ class Transposition_table_0x88_C {
 
     }
 
+    clear_out() {
+        this.out.tn = -1;
+        this.out.tm = -1;
+        this.out.sc = -1;
+        this.out.from = -1;
+        this.out.to = -1;
+        this.out.dd = -1;
+    }
+
     iniM() {
 
         //console.log("Transposition_table_0x88_C -> iniM");
@@ -176,11 +187,7 @@ class Transposition_table_0x88_C {
         this.ini_random_key_array_64();
         this.max_lenth = Transposition_table_0x88_C.MAX_TABLE_LENTH - 1;
 
-        this.out.tn = -1;
-        this.out.tm = -1;
-        this.out.from = -1;
-        this.out.to = -1;
-        this.out.dd = -1;
+        this.clear_out();
 
         // test
 
@@ -203,6 +210,7 @@ class Transposition_table_0x88_C {
 
             this.key_64[i] = -1n; //            
             this.move[i] = -1; // 
+            this.score[i] = -1; // 
 
             // test_fen_board ----------------------------------------------------------------------------------
             //this.test_fen[i] = ""; //  
@@ -302,13 +310,13 @@ class Transposition_table_0x88_C {
     }
 
     // добавляем ход в таблицу
-    add_position(type_nodes, type_move, from_128, to_128, depth, max_depth, chess_board_0x88_O) {
+    add_position(type_nodes, type_move, score, from_128, to_128, depth, max_depth, chess_board_0x88_O) {
 
         //this.add_position_p = this.add_position_p + 1;// зашли чтобы попытаться добавить позицию
 
         // генерируем ключ текущей позиции.
         //let key_64_board = this.set_key_from_board_0x88(chess_board_0x88_O);
-        let key_64_board = chess_board_0x88_O.key_64;        
+        let key_64_board = chess_board_0x88_O.key_64;
         //console.log("Transposition_table_0x88_C -> key_64_board " + key_64_board);
 
         // определяем по ключу индекс для доступа к таблице
@@ -338,6 +346,8 @@ class Transposition_table_0x88_C {
                 // запаковываем move
                 this.packing_to_move(index_key_64_board, type_nodes, type_move, from_128, to_128, delta_depth_board);
 
+                this.score[index_key_64_board] = score;
+
                 // test_fen_board ----------------------------------------------------------------------------------                
                 //this.test_fen[index_key_64_board] = chess_board_0x88_O.set_fen_from_0x88();
 
@@ -346,13 +356,14 @@ class Transposition_table_0x88_C {
 
             //this.add_position_new = this.add_position_new + 1;// добавили позицию по новой
 
-            //this.key_32[index_key_64_board] = key_64_board;
             this.key_64[index_key_64_board] = key_64_board;
 
             let delta_depth_board = max_depth - depth;
 
             // запаковываем move
             this.packing_to_move(index_key_64_board, type_nodes, type_move, from_128, to_128, delta_depth_board);
+
+            this.score[index_key_64_board] = score;
 
             // test_fen_board ----------------------------------------------------------------------------------            
             //this.test_fen[index_key_64_board] = chess_board_0x88_O.set_fen_from_0x88();
@@ -368,7 +379,7 @@ class Transposition_table_0x88_C {
 
         // генерируем ключ текущей позиции.
         //let key_64_board = this.set_key_from_board_0x88(chess_board_0x88_O);
-        let key_64_board = chess_board_0x88_O.key_64; 
+        let key_64_board = chess_board_0x88_O.key_64;
         // let key_64_board2 = this.set_key_from_board_0x88(chess_board_0x88_O);               
 
         // if (key_64_board != key_64_board2) {
@@ -390,40 +401,63 @@ class Transposition_table_0x88_C {
             // зашли по индексу и ключ совпал
             //this.is_save_key_64_true = this.is_save_key_64_true + 1;
 
-            //let delta_depth_board = max_depth - depth;
+            let delta_depth_board = max_depth - depth;
             // распаковываем move выделяя delta_depth_move
-            //let delta_depth_move = this.move[index_key_64_board] & 127; //
+            let delta_depth_move = this.move[index_key_64_board] & 127; //
 
             // проверяем что глубина поиска позиции из таблицы больше или равна
-            //if (delta_depth_move >= delta_depth_board) {
+            if (delta_depth_move >= delta_depth_board) {
 
-            // прошли тест по глубине поиска
-            //this.is_save_delta_depth_ok = this.is_save_delta_depth_ok + 1;
+                // прошли тест по глубине поиска
+                //this.is_save_delta_depth_ok = this.is_save_delta_depth_ok + 1;
 
-            // test_fen_board ----------------------------------------------------------------------------------   
-            // let test_fen_board = chess_board_0x88_O.set_fen_from_0x88();
-            // let test_fen = this.test_fen[index_key_64_board];
+                // // test_fen_board ----------------------------------------------------------------------------------   
+                // let test_fen_board = chess_board_0x88_O.set_fen_from_0x88();
+                // let test_fen = this.test_fen[index_key_64_board];
 
-            // if (test_fen === test_fen_board) {
-            //     this.no_collision_fen = this.no_collision_fen + 1;// зашли по индексу и фен совпал
-            // } else {//if (fen === fen_test) {
-            //     this.collision_fen = this.collision_fen + 1;// зашли по индексу но фен не совпал
-            // }//if (fen === fen_test) {
+                // if (test_fen === test_fen_board) {
+                //     this.no_collision_fen = this.no_collision_fen + 1;// зашли по индексу и фен совпал
+                // } else {//if (fen === fen_test) {
+                //     this.collision_fen = this.collision_fen + 1;// зашли по индексу но фен не совпал
+                // }//if (fen === fen_test) {
 
-            //распаковываем
-            this.unpacking_from_move(index_key_64_board);
-            return this.out;
+                //распаковываем
+                this.unpacking_from_move(index_key_64_board);
 
-            //} else {//if (delta_depth <= (max_depth - depth)) {
-            // не прошло по глубине
-            //  return this.out;
-            //}//if (delta_depth <= (max_depth - depth)) {
+                this.out.sc = this.score[index_key_64_board];
+
+                return this.out;
+
+            } else {//if (delta_depth <= (max_depth - depth)) {
+
+                //распаковываем
+                this.unpacking_from_move(index_key_64_board);
+
+                if ((this.out.tn == Transposition_table_0x88_C.ALPHA_UPDATE) || (this.out.tn == Transposition_table_0x88_C.BETA_UPDATE)) {
+
+                    // // test_fen_board ----------------------------------------------------------------------------------   
+                    // let test_fen_board = chess_board_0x88_O.set_fen_from_0x88();
+                    // let test_fen = this.test_fen[index_key_64_board];
+
+                    // if (test_fen === test_fen_board) {
+                    //     this.no_collision_fen = this.no_collision_fen + 1;// зашли по индексу и фен совпал
+                    // } else {//if (fen === fen_test) {
+                    //     this.collision_fen = this.collision_fen + 1;// зашли по индексу но фен не совпал
+                    // }//if (fen === fen_test) {
+
+                    this.out.sc = this.score[index_key_64_board];
+                } else {
+                    this.clear_out();
+                }
+
+                return this.out;
+            }//if (delta_depth <= (max_depth - depth)) {
 
         } else {//if (lo_key === lo_key_board_0x88) {
             // зашли по индексу но ключ не совпал
             //this.is_save_key_64_false = this.is_save_key_64_false + 1;
-
             // такой позиции нет
+            this.clear_out();
             return this.out;
         }//if (lo_key === lo_key_board_0x88) {
     }
@@ -456,7 +490,7 @@ class Transposition_table_0x88_C {
 
         chess_board_0x88_O.key_64 = chess_board_0x88_O.key_64 ^ this.key_array_64[piece_color][piece_to][from64];
         chess_board_0x88_O.key_64 = chess_board_0x88_O.key_64 ^ this.key_array_64[piece_color][piece_to][to64];
-        chess_board_0x88_O.key_64 = chess_board_0x88_O.key_64 ^ this.key_array_64[1-piece_color][piece_to][ep64];
+        chess_board_0x88_O.key_64 = chess_board_0x88_O.key_64 ^ this.key_array_64[1 - piece_color][piece_to][ep64];
 
         // side_to_move
         chess_board_0x88_O.key_64 = chess_board_0x88_O.key_64 ^ this.key_array_64[1][6][10];
@@ -474,7 +508,7 @@ class Transposition_table_0x88_C {
 
         // если есть фигура которую берем ее надо убрать из хеш ключа
         if (piece_to != 0) {
-            chess_board_0x88_O.key_64 = chess_board_0x88_O.key_64 ^ this.key_array_64[1-piece_color][piece_to][to64];
+            chess_board_0x88_O.key_64 = chess_board_0x88_O.key_64 ^ this.key_array_64[1 - piece_color][piece_to][to64];
         }
 
         // side_to_move
@@ -620,7 +654,7 @@ class Transposition_table_0x88_C {
             key_64 = key_64 ^ this.key_array_64[1][5][20];
         }
 
-         key_64 = key_64 ^ BigInt(chess_board_0x88_O.en_passant_target_square) ^ this.key_array_64[1][5][25];           
+        key_64 = key_64 ^ BigInt(chess_board_0x88_O.en_passant_target_square) ^ this.key_array_64[1][5][25];
 
 
         if (chess_board_0x88_O.castling_Q == 1) {

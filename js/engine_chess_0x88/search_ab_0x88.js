@@ -41,7 +41,6 @@ class Search_ab_0x88_C {
   chess_board_0x88_O_move = new Chess_board_0x88_C();
   quiescence_search_0x88_O = new Quiescence_search_0x88_C();
 
-
   constructor() {
 
   }
@@ -61,11 +60,10 @@ class Search_ab_0x88_C {
     let score = 0;// текущая оценка позиции
     let found_score;// максимальная оценка позиции
     //let found_score_test;// максимальная оценка позиции    
-    let is_update_pv_line;// максимальная оценка позиции    
+    let is_update_pv_line = 0;// максимальная оценка позиции    
     let number_moove_legal = 0;
     let isPV_node = 0;
-
-    is_update_pv_line = 0;
+    let tt_type_node = 0;
 
     if (depth >= depth_max) {
       //found_score = this.evaluate_0x88_O.score_position(chess_board_0x88_O, transposition_table_0x88_O);
@@ -85,6 +83,24 @@ class Search_ab_0x88_C {
 
     // ищем позицию в хеш таблице
     let is_save_position = transposition_table_0x88_O.is_save_position(chess_board_0x88_O, depth, depth_max);
+
+    // используем хеш таблицу ====================================================
+    if ((is_save_position.tn == Transposition_table_0x88_C.ALPHA_CUT) && (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.BLACK)) {
+      if (is_save_position.sc <= alpha) {
+        return is_save_position.sc;
+      }
+    }
+
+    if ((is_save_position.tn == Transposition_table_0x88_C.BETA_CUT) && (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.WHITE)) {
+      if (is_save_position.sc >= beta) {
+        return is_save_position.sc;
+      }
+    }
+
+    if ((is_save_position.tn == Transposition_table_0x88_C.MAX_SCORE_UPDATE) && (isPV == 0)) {
+      return is_save_position.sc;
+    }
+    //==================================================== используем хеш таблицу
 
     if (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.WHITE) {
       found_score = -Search_ab_0x88_C.BEST_VALUE_MOD;// максимальная оценка позиции
@@ -134,11 +150,7 @@ class Search_ab_0x88_C {
 
     // используем хеш таблицу ====================================================
     // просто выходить по оценке не буду. слишком много коллизий(1 на 10 позиций)
-    if ((is_save_position.tn == Transposition_table_0x88_C.ALPHA_CUT) && (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.BLACK)) {
-      move_list_0x88_O.set_move_in_0(is_save_position.tm, is_save_position.from, is_save_position.to);
-    } else if ((is_save_position.tn == Transposition_table_0x88_C.BETA_CUT) && (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.WHITE)) {
-      move_list_0x88_O.set_move_in_0(is_save_position.tm, is_save_position.from, is_save_position.to);
-    } else if ((is_save_position.tn == Transposition_table_0x88_C.ALPHA_UPDATE) && (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.WHITE)) {
+    if ((is_save_position.tn == Transposition_table_0x88_C.ALPHA_UPDATE) && (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.WHITE)) {
       move_list_0x88_O.set_move_in_0(is_save_position.tm, is_save_position.from, is_save_position.to);
     } else if ((is_save_position.tn == Transposition_table_0x88_C.BETA_UPDATE) && (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.BLACK)) {
       move_list_0x88_O.set_move_in_0(is_save_position.tm, is_save_position.from, is_save_position.to);
@@ -151,7 +163,7 @@ class Search_ab_0x88_C {
     for (let move_i = 0; move_i < move_list_0x88_O.number_move; move_i++) {
 
       //console.log("Search_0x88_C->2 ");
-      is_moove_legal = this.make_move_0x88_O.do_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O, 
+      is_moove_legal = this.make_move_0x88_O.do_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O,
         move_gen_1_captures_0x88_O, transposition_table_0x88_O);
 
       if (is_moove_legal == 0) { // король под шахом. отменяем ход и пропускаем этот цикл
@@ -198,14 +210,12 @@ class Search_ab_0x88_C {
         // alpha < value < beta => exact value
         if (score > found_score) {
           found_score = score;
+          tt_type_node = Transposition_table_0x88_C.MAX_SCORE_UPDATE;
+
           //if (depth == 0) this.chess_board_0x88_O_move.save_chess_board_0x88(chess_board_0x88_O);
           if (score > alpha) {
             alpha = score; //
-
-            // записываем ход в хеш
-
-            transposition_table_0x88_O.add_position(Transposition_table_0x88_C.ALPHA_UPDATE, move_list_0x88_O.type_move[move_i],
-              move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], depth, depth_max, chess_board_0x88_O);
+            tt_type_node = Transposition_table_0x88_C.ALPHA_UPDATE;
 
             if (isPV == 1) {
               best_node_line_0x88_O.save_list(pv_line_0x88_O);
@@ -213,6 +223,11 @@ class Search_ab_0x88_C {
               is_update_pv_line = 1;
             }
           }
+
+          // записываем ход в хеш
+          transposition_table_0x88_O.add_position(tt_type_node, move_list_0x88_O.type_move[move_i],
+            score, move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], depth, depth_max, chess_board_0x88_O);
+
         }
 
         // lower bound
@@ -233,7 +248,7 @@ class Search_ab_0x88_C {
 
           // записываем ход в хеш
           transposition_table_0x88_O.add_position(Transposition_table_0x88_C.BETA_CUT, move_list_0x88_O.type_move[move_i],
-            move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], depth, depth_max, chess_board_0x88_O);
+            score, move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], depth, depth_max, chess_board_0x88_O);
 
           return score;   // 
         }//
@@ -242,13 +257,12 @@ class Search_ab_0x88_C {
 
         if (score < found_score) {
           found_score = score;
-          //          if (depth == 0) this.chess_board_0x88_O_move.save_chess_board_0x88(chess_board_0x88_O);
+          tt_type_node = Transposition_table_0x88_C.MAX_SCORE_UPDATE;
+
+          // if (depth == 0) this.chess_board_0x88_O_move.save_chess_board_0x88(chess_board_0x88_O);
           if (score < beta) {
             beta = score; //
-
-            // записываем ход в хеш
-            transposition_table_0x88_O.add_position(Transposition_table_0x88_C.BETA_UPDATE, move_list_0x88_O.type_move[move_i],
-              move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], depth, depth_max, chess_board_0x88_O);
+            tt_type_node = Transposition_table_0x88_C.BETA_UPDATE;
 
             if (isPV == 1) {
               best_node_line_0x88_O.save_list(pv_line_0x88_O);
@@ -256,6 +270,9 @@ class Search_ab_0x88_C {
               is_update_pv_line = 1;
             }
           }
+          // записываем ход в хеш
+          transposition_table_0x88_O.add_position(tt_type_node, move_list_0x88_O.type_move[move_i],
+            score, move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], depth, depth_max, chess_board_0x88_O);
         }
 
         // upper bound
@@ -276,7 +293,7 @@ class Search_ab_0x88_C {
 
           // записываем ход в хеш            
           transposition_table_0x88_O.add_position(Transposition_table_0x88_C.ALPHA_CUT, move_list_0x88_O.type_move[move_i],
-            move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], depth, depth_max, chess_board_0x88_O);
+            score, move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], depth, depth_max, chess_board_0x88_O);
           return score;   //
         }//
 
