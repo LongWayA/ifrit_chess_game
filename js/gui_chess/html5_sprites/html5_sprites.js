@@ -6,7 +6,7 @@
  * last modified 27.09m.2025
 */
 
-import { Html5SpritesChessPieces_C } from "./html5_sprites_chess_pieces.js";
+import { Html5SpritesChessPieces_C } from "./html5_sprites_chess_pieces.js?v=2911m25";
 
 /**
 * НАЗНАЧЕНИЕ

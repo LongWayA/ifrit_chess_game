@@ -6,8 +6,8 @@
  * last modified 27.10m.2025
 */
 
-import { Chess_board_0x88_C } from "./chess_board_0x88.js";
-import { Move_list_0x88_С } from "./move_list_0x88.js";
+import { Chess_board_0x88_C } from "./chess_board_0x88.js?v=2911m25";
+import { Move_list_0x88_С } from "./move_list_0x88.js?v=2911m25";
 
 /**
 * НАЗНАЧЕНИЕ

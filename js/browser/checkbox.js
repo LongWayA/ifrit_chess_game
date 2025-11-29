@@ -6,7 +6,7 @@
  * last modified 09.11m.2025
 */
 
-import { Gui_chess_C } from "../gui_chess/gui_chess.js";
+import { Gui_chess_C } from "../gui_chess/gui_chess.js?v=2911m25";
 
 /**
  * НАЗНАЧЕНИЕ

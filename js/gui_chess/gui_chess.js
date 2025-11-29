@@ -6,12 +6,12 @@
  * last modified 31.10m.2025
 */
 
-import { GuiStartWorker_R } from "../worker/gui_start_worker.js";
-import { ChessBoard_8x8_C } from "./chess_board_8x8.js";
-import { Game_line_0x88_C } from "./game_line_0x88.js";
-import { Draw_С } from "../gui_chess/draw.js";
+import { GuiStartWorker_R } from "../worker/gui_start_worker.js?v=2911m25";
+import { ChessBoard_8x8_C } from "./chess_board_8x8.js?v=2911m25";
+import { Game_line_0x88_C } from "./game_line_0x88.js?v=2911m25";
+import { Draw_С } from "../gui_chess/draw.js?v=2911m25";
 // uci
-import { Uci_C } from "../uci/uci.js";
+import { Uci_C } from "../uci/uci.js?v=2911m25";
 
 /**
  * НАЗНАЧЕНИЕ

@@ -6,23 +6,23 @@
  * last modified 11.10m.2025, 24.10m.2025
 */
 
-import { Chess_board_0x88_C } from "./move_generator/chess_board_0x88.js";
-import { Move_list_0x88_С } from "./move_generator/move_list_0x88.js";
-import { Move_list_root_0x88_С } from "./move_generator/move_list_root_0x88.js";
-import { PV_line_0x88_C } from "./pv_line_0x88.js";
+import { Chess_board_0x88_C } from "./move_generator/chess_board_0x88.js?v=2911m25";
+import { Move_list_0x88_С } from "./move_generator/move_list_0x88.js?v=2911m25";
+import { Move_list_root_0x88_С } from "./move_generator/move_list_root_0x88.js?v=2911m25";
+import { PV_line_0x88_C } from "./pv_line_0x88.js?v=2911m25";
 
-import { Move_gen_1_captures_0x88_С } from "./move_generator/move_gen_1_captures_0x88.js";
-import { Move_gen_2_quiet_0x88_С } from "./move_generator/move_gen_2_quiet_0x88.js";
-import { Make_move_0x88_C } from "./move_generator/make_move_0x88.js";
-import { Unmake_move_0x88_C } from "./move_generator/unmake_move_0x88.js";
-import { Undo_0x88_C } from "./move_generator/undo_0x88.js";
+import { Move_gen_1_captures_0x88_С } from "./move_generator/move_gen_1_captures_0x88.js?v=2911m25";
+import { Move_gen_2_quiet_0x88_С } from "./move_generator/move_gen_2_quiet_0x88.js?v=2911m25";
+import { Make_move_0x88_C } from "./move_generator/make_move_0x88.js?v=2911m25";
+import { Unmake_move_0x88_C } from "./move_generator/unmake_move_0x88.js?v=2911m25";
+import { Undo_0x88_C } from "./move_generator/undo_0x88.js?v=2911m25";
 
-import { Evaluate_0x88_C } from "./evaluate_0x88.js";
-import { Transposition_table_0x88_C } from "./for_sorting_move/transposition_table_0x88.js";
-import { killer_heuristic_0x88_O } from "./for_sorting_move/killer_heuristic_0x88.js";
-import { History_heuristic_0x88_C } from "./for_sorting_move/history_heuristic_0x88.js";
-import { Search_minmax_0x88_C } from "./search_minmax_0x88.js";
-import { Search_ab_0x88_C } from "./search_ab_0x88.js";
+import { Evaluate_0x88_C } from "./evaluate_0x88.js?v=2911m25";
+import { Transposition_table_0x88_C } from "./for_sorting_move/transposition_table_0x88.js?v=2911m25";
+import { killer_heuristic_0x88_O } from "./for_sorting_move/killer_heuristic_0x88.js?v=2911m25";
+import { History_heuristic_0x88_C } from "./for_sorting_move/history_heuristic_0x88.js?v=2911m25";
+import { Search_minmax_0x88_C } from "./search_minmax_0x88.js?v=2911m25";
+import { Search_ab_0x88_C } from "./search_ab_0x88.js?v=2911m25";
 
 
 

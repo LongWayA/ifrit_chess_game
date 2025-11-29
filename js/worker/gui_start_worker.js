@@ -6,7 +6,7 @@
  * last modified 31.10m.2025
 */
 
-import { Gui_chess_C } from "../gui_chess/gui_chess.js";
+import { Gui_chess_C } from "../gui_chess/gui_chess.js?v=2911m25";
 
 /**
  * НАЗНАЧЕНИЕ
@@ -14,7 +14,7 @@ import { Gui_chess_C } from "../gui_chess/gui_chess.js";
  *  
 */
 
-const worker_egine_0x88 = new Worker('js/worker/worker_chess_engine_0x88.js', {type: "module"});
+const worker_egine_0x88 = new Worker('js/worker/worker_chess_engine_0x88.js?v=2911m25', {type: "module"});
 
 worker_egine_0x88.onmessage = function (event) {
       //console.log('Сообщение от движка : ', event.data);

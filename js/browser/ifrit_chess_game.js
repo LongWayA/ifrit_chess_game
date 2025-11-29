@@ -12,20 +12,20 @@
 */
 
 // browser
-import { Mouse_R } from "./mouse.js";
-import { checkbox_R } from "./checkbox.js";
+import { Mouse_R } from "./mouse.js?v=2911m25";
+import { checkbox_R } from "./checkbox.js?v=2911m25";
 
 // gui_chess
-import { Gui_chess_C } from "../gui_chess/gui_chess.js";
+import { Gui_chess_C } from "../gui_chess/gui_chess.js?v=2911m25";
 
 // engine_chess_0x88
-import { ChessEngine_0x88_С } from "../engine_chess_0x88/chess_engine_0x88.js";
+import { ChessEngine_0x88_С } from "../engine_chess_0x88/chess_engine_0x88.js?v=2911m25";
 
 // web
-import { get_text_requests } from "../web/counter.js";
+import { get_text_requests } from "../web/counter.js?v=2911m25";
 
 //---
-import { Html5Canvas_C } from "../gui_chess/html5_canvas/html5_canvas.js";
+import { Html5Canvas_C } from "../gui_chess/html5_canvas/html5_canvas.js?v=2911m25";
 
 
 
