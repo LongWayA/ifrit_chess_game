@@ -6,7 +6,7 @@
  * last modified 09.11m.2025
 */
 
-import { Gui_chess_C } from "../gui_chess/gui_chess.js?v=2911m25";
+import { Gui_chess_C } from "../gui_chess/gui_chess.js";
 
 /**
  * НАЗНАЧЕНИЕ
@@ -63,7 +63,7 @@ class Checkbox_C {
             } else {
                   this.IfritChessGame_O.gui_chess_O.depth_max = parseInt(input_max_depth.value);
                   if (this.IfritChessGame_O.gui_chess_O.depth_max <= 0) this.IfritChessGame_O.gui_chess_O.depth_max = 1;
-                  if (this.IfritChessGame_O.gui_chess_O.depth_max > 10) this.IfritChessGame_O.gui_chess_O.depth_max = 10;
+                  if (this.IfritChessGame_O.gui_chess_O.depth_max > 12) this.IfritChessGame_O.gui_chess_O.depth_max = 12;
                   input_max_depth.value = this.IfritChessGame_O.gui_chess_O.depth_max;//
             }
       }

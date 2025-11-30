@@ -6,18 +6,18 @@
  * last modified 27.09m.2025
 */
 
-import { Chess_board_0x88_C } from "./move_generator/chess_board_0x88.js?v=2911m25";
-import { Move_list_0x88_С } from "./move_generator/move_list_0x88.js?v=2911m25";
+import { Chess_board_0x88_C } from "./move_generator/chess_board_0x88.js";
+import { Move_list_0x88_С } from "./move_generator/move_list_0x88.js";
 
-import { Search_start_0x88_C } from "./search_start_0x88.js?v=2911m25";
+import { Search_start_0x88_C } from "./search_start_0x88.js";
 
-import { Undo_0x88_C } from "./move_generator/undo_0x88.js?v=2911m25";
+import { Undo_0x88_C } from "./move_generator/undo_0x88.js";
 
-import { Html5Canvas_C } from "../gui_chess/html5_canvas/html5_canvas.js?v=2911m25";
+import { Html5Canvas_C } from "../gui_chess/html5_canvas/html5_canvas.js";
 // uci
-import { Uci_C } from "../uci/uci.js?v=2911m25";
+import { Uci_C } from "../uci/uci.js";
 
-import { Transposition_table_0x88_C } from "./for_sorting_move/transposition_table_0x88.js?v=2911m25";
+import { Transposition_table_0x88_C } from "./for_sorting_move/transposition_table_0x88.js";
 
 
 /**

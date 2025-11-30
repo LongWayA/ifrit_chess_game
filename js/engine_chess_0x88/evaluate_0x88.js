@@ -6,7 +6,7 @@
  * last modified 12.10m.2025
 */
 
-import { Chess_board_0x88_C } from "./move_generator/chess_board_0x88.js?v=2911m25";
+import { Chess_board_0x88_C } from "./move_generator/chess_board_0x88.js";
 
 /**
 * НАЗНАЧЕНИЕ
@@ -26,6 +26,14 @@ class Evaluate_0x88_C {
    5 - ферзь 
    6 - король
   */
+
+  static PAWN_SCORE = 100;  // пешка 
+  static KNIGHT_SCORE = 400;  // конь
+  static BISHOP_SCORE = 400;  // слон
+  static ROOK_SCORE = 600;  // ладья
+  static QUEEN_SCORE = 1200; // ферзь
+  static KING_SCORE = 10000;// король
+
   static PIECE_SCORE = [0, 100, 400, 400, 600, 1200, 10000];
 
   center_0x88 = [
@@ -151,23 +159,12 @@ class Evaluate_0x88_C {
           }//if (color_piece == 1) {// белая фигура
         }//if (index_piece != 0) {
 
-        // if (color_piece == 1) {// белая фигура
-        //   score = score + score_piece;
-        //   if (index_piece != 0) score = score + this.center_0x88[sq];
-        // } else {// черная фигура
-        //   score = score - score_piece;
-        //   if (index_piece != 0) score = score - this.center_0x88[sq];
-        // }
       }// if ((sq & 136) == 0) {// 136 0x88
     }//for (let sq = 0; sq < 128; sq++) {
 
     // тестируем запись в фен
     //this.test_fen(chess_board_0x88_O);
 
-    // совершенно точно, что если ход черных тогда умножаем на минус один 
-    // потому что сходили белые и к ним оценка вернется умноженная на минус один, а это плюс 
-    // белые оценивают абсолютную оценку потому что белые фигуры в плюс.
-    //if (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.BLACK) score = -1 * score;
     chess_board_0x88_O.score = score;
 
     return score;
@@ -183,10 +180,10 @@ class Evaluate_0x88_C {
     chess_board_0x88_O_save.save_chess_board_0x88(chess_board_0x88_O);
 
     // // загнали позицию в фен
-     let fen_save_1 = chess_board_0x88_O.set_fen_from_0x88();
+    let fen_save_1 = chess_board_0x88_O.set_fen_from_0x88();
 
     // // возвращаем позицию из фена
-     chess_board_0x88_O.set_0x88_from_fen(fen_save_1);
+    chess_board_0x88_O.set_0x88_from_fen(fen_save_1);
 
     // загнали позицию в фен повторно
     let fen_save_2 = chess_board_0x88_O.set_fen_from_0x88();
@@ -221,20 +218,15 @@ class Evaluate_0x88_C {
     // chess_board_0x88_O.test_print_0x88_color();
 
     // сравниваем записанную доску и ту что получилась из фена. если что то не так будет вывод на консоль
- //   console.log("Evaluate_0x88_C ?????????????????????????");
+    //   console.log("Evaluate_0x88_C ?????????????????????????");
     chess_board_0x88_O_save.test_compare_chess_board_0x88(chess_board_0x88_O);
 
- //   console.log("Evaluate_0x88_C 1 =" + fen_save_1);
+    //   console.log("Evaluate_0x88_C 1 =" + fen_save_1);
     //chess_board_0x88_O_save.test_print_any_0x88();  
     //chess_board_0x88_O.test_print_any_0x88();      
-//    console.log("Evaluate_0x88_C 5 =" + fen_save_5);
+    //    console.log("Evaluate_0x88_C 5 =" + fen_save_5);
   }
 
 }
 
 export { Evaluate_0x88_C };
-
-/*
-score = materialWeight * (numWhitePieces - numBlackPieces) * who2move 
-where who2move = 1 for white, and who2move = -1 for black.
-*/

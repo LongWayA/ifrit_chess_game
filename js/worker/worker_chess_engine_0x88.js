@@ -6,7 +6,7 @@
  * last modified 25.10m.2025
 */
 
-import { ChessEngine_0x88_С } from "../engine_chess_0x88/chess_engine_0x88.js?v=2911m25";
+import { ChessEngine_0x88_С } from "../engine_chess_0x88/chess_engine_0x88.js";
 /**
 * НАЗНАЧЕНИЕ
 

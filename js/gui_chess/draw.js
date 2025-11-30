@@ -11,8 +11,8 @@
 
 */
 
-import { Html5Canvas_C } from "./html5_canvas/html5_canvas.js?v=2911m25";
-import { Html5Sprites_C } from "./html5_sprites/html5_sprites.js?v=2911m25";
+import { Html5Canvas_C } from "./html5_canvas/html5_canvas.js";
+import { Html5Sprites_C } from "./html5_sprites/html5_sprites.js";
 
 class Draw_С {
 

@@ -14,21 +14,21 @@
 </head>
 
 <body>
-    <!--block 1 ***************************-->
+    <!--block 1 ***************************<img src="resource/images/creatures/cr_10.png" >-->
     <div class="block_1">
-        <h2 class="w"> <img src="resource/images/creatures/cr_1.png" alt="g" title="Игра в разработке">
-            Ifrit Chess Game [in development]
-            <img src="resource/images/creatures/cr_1.png" alt="g">
-        </h2>
-
-        <!-- дата в виде  The dateTime is specified in the following form "YYYY-MM-DDThh:mm:ss" 
-        where: YYYY indicates the year. MM indicates the month. DD indicates the day.-->
-        <h4 class="w"> Last update <time datetime="2025-11-29">29.11m.25 </time><br>
-
-            Посещений: <input type="text" name="t_requests" id="text_requests" value="requests"
-                style="background-color: rgb(215, 215, 223)">
-        </h4>
-        <a href="https://alphagameset.ru/"> На главную</a><br>
+        <h1 class="c1">
+            *Ifrit Chess Game [in development]
+            <b class="c2">
+                <!-- дата в виде  The dateTime is specified in the following form "YYYY-MM-DDThh:mm:ss" 
+                where: YYYY indicates the year. MM indicates the month. DD indicates the day.-->
+                *Last update <time datetime="2025-11-30">30.11m.25 </time>
+                *Site visits: <input type="text" name="t_requests" id="text_requests" value="requests"
+                    style="background-color: rgb(215, 215, 223)">*<br>
+            </b>
+            <b class="c3">
+                <a href="https://alphagameset.ru/"> *My games page*</a><br>
+            </b>
+        </h1>
     </div>
     <!-- *************************** block 1-->
 
@@ -46,7 +46,7 @@
         <input type="button" id="buttonFen" value="Fen Game" onclick="window.fenGameButton()" />
         <input type="checkbox" id="is_black_game" name="is_black_game"> Играть за черных <br>
         Макcимальная глубина перебора:
-        <input type="number" id="max_depth" name="max_depth" min="1" max="9" step="1" value="4" style="width: 40px"><br>
+        <input type="number" id="max_depth" name="max_depth" min="1" max="11" step="1" value="6" style="width: 40px"><br>
         fen: <input type="text" id="set_fen" name="set_fen"
             value="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" style="width: 400px" />
     </div>
@@ -71,7 +71,7 @@
     <!-- worker_chess_engine_0x88/w_chess_engine_0x88.js отдельный поток -->
 
     <script type="module">
-        import { IfritChessGame_R } from "./js/browser/ifrit_chess_game.js?v=2911m25";
+        import { IfritChessGame_R } from "./js/browser/ifrit_chess_game.js";
 
         IfritChessGame_R.iniM();
 
@@ -85,7 +85,7 @@
 
         window.fenGameButton = function () {
             IfritChessGame_R.fenGameButton();
-        }        
+        }
 
 
         window.onload = function () {

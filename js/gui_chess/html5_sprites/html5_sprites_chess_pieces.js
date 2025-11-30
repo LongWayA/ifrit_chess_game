@@ -6,8 +6,8 @@
  * last modified 26.09m.2025
 */
 
-import { Square_С } from "./html5_square_c.js?v=2911m25";
-import { PathesBrowser_R } from "../../browser/pathes_browser.js?v=2911m25";
+import { Square_С } from "./html5_square_c.js";
+import { PathesBrowser_R } from "../../browser/pathes_browser.js";
 
 /**
 * НАЗНАЧЕНИЕ

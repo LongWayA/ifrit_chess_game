@@ -12,20 +12,20 @@
 */
 
 // browser
-import { Mouse_R } from "./mouse.js?v=2911m25";
-import { checkbox_R } from "./checkbox.js?v=2911m25";
+import { Mouse_R } from "./mouse.js";
+import { checkbox_R } from "./checkbox.js";
 
 // gui_chess
-import { Gui_chess_C } from "../gui_chess/gui_chess.js?v=2911m25";
+import { Gui_chess_C } from "../gui_chess/gui_chess.js";
 
 // engine_chess_0x88
-import { ChessEngine_0x88_С } from "../engine_chess_0x88/chess_engine_0x88.js?v=2911m25";
+import { ChessEngine_0x88_С } from "../engine_chess_0x88/chess_engine_0x88.js";
 
 // web
-import { get_text_requests } from "../web/counter.js?v=2911m25";
+import { get_text_requests } from "../web/counter.js";
 
 //---
-import { Html5Canvas_C } from "../gui_chess/html5_canvas/html5_canvas.js?v=2911m25";
+import { Html5Canvas_C } from "../gui_chess/html5_canvas/html5_canvas.js";
 
 
 
@@ -105,7 +105,7 @@ let IfritChessGame_R = {
         IfritChessGame_R.gui_chess_O.test = Gui_chess_C.TEST_MESSAGE;//       
 
         // задаем глубину перебора во время игры или обсчета тестовых позиций на количество узлов
-        IfritChessGame_R.gui_chess_O.depth_max = 4;
+        IfritChessGame_R.gui_chess_O.depth_max = 6;
         IfritChessGame_R.checkbox_O.set_input_max_depth_value(IfritChessGame_R.gui_chess_O.depth_max);
 
         //console.log('IfritChessGame_R->iniM');       

@@ -6,7 +6,6 @@
  * last modified 27.09m.2025
 */
 
-//import { Chess_board_0x88_C } from "../engine_chess_0x88/chess_board_0x88";
 
 /**
  * НАЗНАЧЕНИЕ

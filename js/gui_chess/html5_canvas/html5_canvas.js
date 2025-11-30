@@ -15,9 +15,9 @@
 *  Из Википедии https://ru.wikipedia.org/wiki/Canvas_(HTML)
 */
 
-import { Html5CanvasText_C } from "./html5_canvas_text.js?v=2911m25";
-import { Html5CanvasPrimitive_C } from "./html5_canvas_primitive.js?v=2911m25";
-import { Html5CanvasImage_C } from "./html5_canvas_image.js?v=2911m25";
+import { Html5CanvasText_C } from "./html5_canvas_text.js";
+import { Html5CanvasPrimitive_C } from "./html5_canvas_primitive.js";
+import { Html5CanvasImage_C } from "./html5_canvas_image.js";
 
 class Html5Canvas_C {
     html5CanvasText_R = new Html5CanvasText_C();

@@ -6,6 +6,8 @@
  * last modified 08.11m.2025
 */
 
+import { Chess_board_0x88_C } from "../engine_chess_0x88/move_generator/chess_board_0x88.js";
+
 /**
 * НАЗНАЧЕНИЕ
 
