@@ -1,0 +1,95 @@
+
+full
+max depth:5 nodes:4 865 609 kN/s:227 score:15
+time_delta 21 408 ms
+
+ab
+max depth:5 nodes:20 981 kN/s:189 score:15
+time_delta 111
+
+tt
+max depth:5 nodes:18 566 kN/s:169 score:15
+time_delta 
+
+kh
+max depth:5 nodes:13 505 kN/s:180 score:15
+time_delta 
+
+hh
+max depth:5 nodes:20 981 kN/s:175 score:15
+time_delta 
+
+pvs
+max depth:5 nodes:16 113 kN/s:127 score:15
+time_delta 
+
+pvs+tt
+max depth:5 nodes:14 718 kN/s:113 score:15
+time_delta 
+
+pvs+kh
+max depth:5 nodes:12 912 kN/s:130 score:15
+time_delta 99
+
+pvs+hh
+max depth:5 nodes:16 113 kN/s:125 score:15
+time_delta 129
+
+pvs+tt+kh
+max depth:5 nodes:10 702 kN/s:119 score:15
+time_delta 90
+
+pvs+tt+kh+hh
+max depth:5 nodes:10 709 kN/s:118 score:15
+time_delta 91
+
+..+raz
+max depth:5 nodes:10 576 kN/s:118 score:15
+time_delta 90
+
+..+lmr
+max depth:5 nodes:3 412 kN/s:103 score:10
+time_delta 33
+
+..+raz+lmr
+max depth:5 nodes:3 303 kN/s:100 score:10
+time_delta 33
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

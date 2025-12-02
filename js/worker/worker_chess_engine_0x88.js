@@ -72,6 +72,7 @@ class Worker_ChessEngine_0x88_С {
       postMessage("position fen " + fen);
       postMessage("score " + info_return_e.score);
       postMessage("node " + info_return_e.node_count);
+      postMessage("nps " + info_return_e.nodes_per_second);      
       postMessage(this.PV_line_str_save);
       postMessage("go");
     }

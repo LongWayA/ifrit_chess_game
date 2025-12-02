@@ -23,6 +23,7 @@ import { killer_heuristic_0x88_O } from "./for_sorting_move/killer_heuristic_0x8
 import { History_heuristic_0x88_C } from "./for_sorting_move/history_heuristic_0x88.js";
 import { Search_minmax_0x88_C } from "./search_minmax_0x88.js";
 import { Search_ab_0x88_C } from "./search_ab_0x88.js";
+import { Timer_C } from "../browser/timer.js";
 
 
 
@@ -77,6 +78,8 @@ class Search_start_0x88_C {
   search_minmax_0x88_O = new Search_minmax_0x88_C();//TEST_NEGAMAX
   search_ab_0x88_O = new Search_ab_0x88_C();
 
+  timer_O = new Timer_C();
+
   static NAME = "Search_start_0x88_C";
 
   static ALPHA_VALUE = -30000;
@@ -88,6 +91,7 @@ class Search_start_0x88_C {
     score: 0,//
     pv_line: null,//
     node_count: 0,//
+    nodes_per_second: 0,//
     depth_search: 0//
   };
 
@@ -131,6 +135,10 @@ class Search_start_0x88_C {
     //console.log("Search_0x88_C->depth " + depth);
     let is_moove_legal = -1;
 
+    let time_start = 0;
+    let time_end = 0;
+    let time_delta = 0;
+
     move_list_0x88_O.iniM();
     move_list_root_0x88_O.iniM();
 
@@ -154,6 +162,10 @@ class Search_start_0x88_C {
 
     // увеличение по максимальной глубине
     for (let depth_max = 1; depth_max <= depth_max_2; depth_max++) {
+
+      node = 0;
+
+      time_start = this.timer_O.getCurrentTimeMs();
 
       if (chess_board_0x88_O.side_to_move == 1) {
         best_score = -Search_ab_0x88_C.BEST_VALUE_MOD;// максимальная оценка позиции
@@ -187,7 +199,7 @@ class Search_start_0x88_C {
           this.move_gen_1_captures_0x88_O, this.move_gen_2_quiet_0x88_O, (depth + 1), depth_max,
           isPV_node, this.transposition_table_0x88_O, this.killer_heuristic_0x88_O, this.history_heuristic_0x88_O);
 
-        node = node + this.search_ab_0x88_O.node + 1;
+        node = node + this.search_ab_0x88_O.node;
 
         move_list_root_0x88_O.add_score[move_i] = score;
 
@@ -225,11 +237,21 @@ class Search_start_0x88_C {
 
       pv_line_0x88_O.save_list(best_node_pv_line_0x88_O);
 
+      time_end = this.timer_O.getCurrentTimeMs();
+      time_delta = (time_end - time_start) / 1;
+
+      // console.log("Search_0x88_C->time_start " + time_start);
+      // console.log("Search_0x88_C->time_end " + time_end);
+      console.log("Search_0x88_C->time_delta " + time_delta);
+      console.log("Search_0x88_C->node " + node);
+      console.log("Search_0x88_C->kN/s = node / time_delta " + Math.round(node / time_delta));
+
       this.info_return_search.chess_board_0x88_O_start = chess_board_0x88_O_start;
       this.info_return_search.chess_board_0x88_O_end = chess_board_0x88_O_end;
       this.info_return_search.score = best_score;
       this.info_return_search.pv_line = pv_line_0x88_O;
       this.info_return_search.node_count = node;
+      this.info_return_search.nodes_per_second = Math.round(node / time_delta);
       this.info_return_search.depth_search = depth_max;
 
       this.chessEngine_0x88_O.message_search_start_to_engine(this.info_return_search);
