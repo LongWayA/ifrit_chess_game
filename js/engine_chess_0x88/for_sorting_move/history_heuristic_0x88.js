@@ -61,6 +61,19 @@ class History_heuristic_0x88_C {
     }
   }
 
+  // 
+  ini_test_history() {// 64
+    for (let color = 0; color < History_heuristic_0x88_C.MAX_COLOR; color++) {
+      for (let from = 0; from < History_heuristic_0x88_C.MAX_COORDINATE; from++) {
+        for (let to = 0; to < History_heuristic_0x88_C.MAX_COORDINATE; to++) {
+
+          this.history[color][from][to] = 100 * from + to;//
+        }
+      }
+    }
+  }
+
+
   // записываем хороший ход
   history_good_save(color, from_128, to_128, depth, depth_max) {
 

@@ -160,6 +160,26 @@ class Search_start_0x88_C {
 
     console.log("Search_0x88_C->начало поиска searching_alpha_beta_id ");
 
+    // test+++++++++++++++++++++++++++
+    //console.log("test 1");
+    //move_list_0x88_O.test_print_list(chess_board_0x88_O);
+
+    //move_list_0x88_O.sorting_list();
+
+    // test sorting history
+    //this.history_heuristic_0x88_O.ini_test_history();
+    //move_list_0x88_O.sorting_list_history_heuristic(this.history_heuristic_0x88_O);
+
+    // test sorting killer    
+    //move_list_0x88_O.set_move_after_the_captures(51, 35);
+
+    // test sorting tt
+    //move_list_0x88_O.set_tt_move_in_0(51, 35);
+    //move_list_0x88_O.set_tt_move_in_0(113, 82);
+
+    //console.log("test 2");
+    //move_list_0x88_O.test_print_list(chess_board_0x88_O);
+
     // увеличение по максимальной глубине
     for (let depth_max = 1; depth_max <= depth_max_2; depth_max++) {
 
@@ -245,6 +265,21 @@ class Search_start_0x88_C {
       console.log("Search_0x88_C->time_delta " + time_delta);
       console.log("Search_0x88_C->node " + node);
       console.log("Search_0x88_C->kN/s = node / time_delta " + Math.round(node / time_delta));
+
+      console.log("Search_0x88_C->SAVE----------------------------- ");
+      console.log("Search_0x88_C->save_alpha_up " + this.search_ab_0x88_O.test_sorting.save_alpha_up);
+      console.log("Search_0x88_C->save_alpha_cut " + this.search_ab_0x88_O.test_sorting.save_alpha_cut);
+      console.log("Search_0x88_C->save_beta_up " + this.search_ab_0x88_O.test_sorting.save_beta_up);
+      console.log("Search_0x88_C->save_beta_cut " + this.search_ab_0x88_O.test_sorting.save_beta_cut);
+      console.log("Search_0x88_C->save_score_up " + this.search_ab_0x88_O.test_sorting.save_score_up);      
+
+      console.log("Search_0x88_C->USE----------------------------- ");      
+      console.log("Search_0x88_C->use_alpha_up " + this.search_ab_0x88_O.test_sorting.use_alpha_up);
+      console.log("Search_0x88_C->use_alpha_cut " + this.search_ab_0x88_O.test_sorting.use_alpha_cut);
+      console.log("Search_0x88_C->use_beta_up " + this.search_ab_0x88_O.test_sorting.use_beta_up);
+      console.log("Search_0x88_C->use_beta_cut " + this.search_ab_0x88_O.test_sorting.use_beta_cut);
+      console.log("Search_0x88_C->use_score " + this.search_ab_0x88_O.test_sorting.use_score);     
+ 
 
       this.info_return_search.chess_board_0x88_O_start = chess_board_0x88_O_start;
       this.info_return_search.chess_board_0x88_O_end = chess_board_0x88_O_end;

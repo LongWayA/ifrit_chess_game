@@ -403,7 +403,7 @@ class Transposition_table_0x88_C {
 
             let delta_depth_board = max_depth - depth;
             // распаковываем move выделяя delta_depth_move
-            let delta_depth_move = this.move[index_key_64_board] & 127; //
+            let delta_depth_move = this.move[index_key_64_board] & 127; //            
 
             // проверяем что глубина поиска позиции из таблицы больше или равна
             if (delta_depth_move >= delta_depth_board) {
@@ -426,12 +426,16 @@ class Transposition_table_0x88_C {
 
                 this.out.sc = this.score[index_key_64_board];
 
+                //console.log("!!!! Transposition_table_0x88_C -> this.out.tn " + this.out.tn);            
+
                 return this.out;
 
             } else {//if (delta_depth <= (max_depth - depth)) {
 
                 //распаковываем
                 this.unpacking_from_move(index_key_64_board);
+
+                //console.log("----Transposition_table_0x88_C -> this.out.tn " + this.out.tn);
 
                 if ((this.out.tn == Transposition_table_0x88_C.ALPHA_UPDATE) || (this.out.tn == Transposition_table_0x88_C.BETA_UPDATE)) {
 
@@ -445,7 +449,8 @@ class Transposition_table_0x88_C {
                     //     this.collision_fen = this.collision_fen + 1;// зашли по индексу но фен не совпал
                     // }//if (fen === fen_test) {
 
-                    this.out.sc = this.score[index_key_64_board];
+                //console.log("AB----Transposition_table_0x88_C -> this.out.tn " + this.out.tn);
+
                 } else {
                     this.clear_out();
                 }

@@ -257,7 +257,7 @@ class Move_list_0x88_С {
     // или один конь ходит на разные клетки и непонятно какой из ходов имелся в виду, 
     // а просто откуда и куда для случаев превращения недостаточно
     // остальные сдвигаем вниз 
-    set_move_in_0(type_move, from, to) {
+    set_tt_move_in_0(from, to) {
 
         let save_type_move;
         let save_from = -1;
@@ -270,7 +270,7 @@ class Move_list_0x88_С {
         //console.log("Move_list_0x88_С-> UP -----------------------------------");
         // 1 ищем ход в списке
         for (s_m = 0; s_m < this.number_move; s_m++) {//
-            if ((this.type_move[s_m] == type_move) && (this.from[s_m] == from) && (this.to[s_m] == to)) {
+            if ((this.from[s_m] == from) && (this.to[s_m] == to)) {
                 // ход нашли и записали
                 save_type_move = this.type_move[s_m];
                 save_from = this.from[s_m];
@@ -278,11 +278,11 @@ class Move_list_0x88_С {
                 break;// нашли ход. идем дальше
             }
         }
-        // console.log("Move_list_0x88_С-> UP 2 start " + start);
-        //console.log("Move_list_0x88_С-> UP 2 s_m " + s_m);
 
         // ход не нашли
         if (save_from == -1) return -1;
+
+        //console.log("Move_list_0x88_С-> UP 2 s_m " + s_m);        
 
         // 2 сдвигаем позиции выше найденной вниз
         for (let i = s_m; i > 0; i--) {
@@ -295,9 +295,9 @@ class Move_list_0x88_С {
         }
 
         // сюда пишем начальную позицию. т.о. две позиции меняются местами
-        this.type_move[s_m] = save_type_move;
-        this.from[s_m] = save_from;
-        this.to[s_m] = save_to;
+        this.type_move[0] = save_type_move;
+        this.from[0] = save_from;
+        this.to[0] = save_to;
     }//
 
     // это для сортировки по истории
