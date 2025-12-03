@@ -52,7 +52,7 @@ class Search_ab_0x88_C {
   is_history_heuristic_use = 1;
 
   // pruning
-  is_razoring_use = 1;
+  is_razoring_use = 0;
   is_lmr_use = 0;
   is_futility_pruning_use = 0;// not working
   ///////////////////////////////////////
@@ -253,13 +253,13 @@ class Search_ab_0x88_C {
     // используем хеш таблицу ====================================================
     // 
     if (this.is_TT_use == 1) {
-      if (is_save_position.tn == Transposition_table_0x88_C.ALPHA_UPDATE) { // тут почему то ход черных???      
+      if ((is_save_position.tn == Transposition_table_0x88_C.ALPHA_UPDATE) && (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.WHITE)) {     
         move_list_0x88_O.set_tt_move_in_0(is_save_position.from, is_save_position.to);
         //test
         //console.log("Search_0x88_C->use ALPHA_UPDATE side_to_move " + chess_board_0x88_O.side_to_move);
         //console.log("Search_0x88_C->use ALPHA_UPDATE piece_color " + move_list_0x88_O.piece_color);        
         this.test_sorting.use_alpha_up = this.test_sorting.use_alpha_up + 1;
-      } else if (is_save_position.tn == Transposition_table_0x88_C.BETA_UPDATE) {  // а тут почему то ход белых?? 
+      } else if ((is_save_position.tn == Transposition_table_0x88_C.BETA_UPDATE) && (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.BLACK)) {
         move_list_0x88_O.set_tt_move_in_0(is_save_position.from, is_save_position.to);
         //test        
         //console.log("Search_0x88_C->use BETA_UPDATE side_to_move " + chess_board_0x88_O.side_to_move);
@@ -342,6 +342,8 @@ class Search_ab_0x88_C {
 
       // восстановили доску
       this.unmake_move_0x88_O.undo_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O);
+
+      // SCORE UPDATE
 
       if (move_list_0x88_O.piece_color == Chess_board_0x88_C.WHITE) {
 
@@ -451,7 +453,7 @@ class Search_ab_0x88_C {
             }//
 
             tt_type_node = Transposition_table_0x88_C.MAX_SCORE_UPDATE;
-            // if (depth == 0) this.chess_board_0x88_O_move.save_chess_board_0x88(chess_board_0x88_O);
+ 
             if (score < beta) {
               beta = score; //
               tt_type_node = Transposition_table_0x88_C.BETA_UPDATE;
