@@ -142,7 +142,9 @@ class Search_start_0x88_C {
     move_list_0x88_O.iniM();
     move_list_root_0x88_O.iniM();
 
-    //this.transposition_table_0x88_O.iniM();
+    this.transposition_table_0x88_O.iniM();
+    this.history_heuristic_0x88_O.iniM();
+
     let node = 0;
 
     chess_board_0x88_O_start.key_64 = this.transposition_table_0x88_O.set_key_from_board_0x88(chess_board_0x88_O_start);

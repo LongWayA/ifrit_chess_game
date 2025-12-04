@@ -125,7 +125,11 @@ class Search_ab_0x88_C {
       // ищем позицию в хеш таблице
       is_save_position = transposition_table_0x88_O.is_save_position(chess_board_0x88_O, depth, depth_max);
 
+        //test
+        //if (is_save_position.tn == 0) console.log("Search_0x88_C-> tn == 0 !!!! depth " + depth);
+
       if ((is_save_position.tn == Transposition_table_0x88_C.ALPHA_CUT) && (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.BLACK)) {
+
         if (is_save_position.sc <= alpha) {
           //test
           this.test_sorting.use_alpha_cut = this.test_sorting.use_alpha_cut + 1;
@@ -134,6 +138,7 @@ class Search_ab_0x88_C {
       }
 
       if ((is_save_position.tn == Transposition_table_0x88_C.BETA_CUT) && (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.WHITE)) {
+
         if (is_save_position.sc >= beta) {
           //test          
           this.test_sorting.use_beta_cut = this.test_sorting.use_beta_cut + 1;
@@ -142,6 +147,7 @@ class Search_ab_0x88_C {
       }
 
       if ((is_save_position.tn == Transposition_table_0x88_C.MAX_SCORE_UPDATE) && (isPV == 0)) {
+
         //test        
         this.test_sorting.use_score = this.test_sorting.use_score + 1;
         return is_save_position.sc;
@@ -253,7 +259,7 @@ class Search_ab_0x88_C {
     // используем хеш таблицу ====================================================
     // 
     if (this.is_TT_use == 1) {
-      if ((is_save_position.tn == Transposition_table_0x88_C.ALPHA_UPDATE) && (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.WHITE)) {     
+      if ((is_save_position.tn == Transposition_table_0x88_C.ALPHA_UPDATE) && (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.WHITE)) {
         move_list_0x88_O.set_tt_move_in_0(is_save_position.from, is_save_position.to);
         //test
         //console.log("Search_0x88_C->use ALPHA_UPDATE side_to_move " + chess_board_0x88_O.side_to_move);
@@ -403,7 +409,7 @@ class Search_ab_0x88_C {
               //test
               if (tt_type_node == Transposition_table_0x88_C.MAX_SCORE_UPDATE) {
                 this.test_sorting.save_score_up = this.test_sorting.save_score_up + 1;
-              } else if(tt_type_node == Transposition_table_0x88_C.ALPHA_UPDATE){
+              } else if (tt_type_node == Transposition_table_0x88_C.ALPHA_UPDATE) {
                 this.test_sorting.save_alpha_up = this.test_sorting.save_alpha_up + 1;
               }
             }
@@ -426,7 +432,7 @@ class Search_ab_0x88_C {
 
             // upper bound
             if (score <= alpha) {
- 
+
               // записываем ход в историю color, from_128, to_128, depth, depth_max
               if (this.is_history_heuristic_use == 1) {
                 if (move_list_0x88_O.type_move[move_i] > Move_list_0x88_С.CAPTURES_KING_PAWN) {// ход не взятие
@@ -446,14 +452,14 @@ class Search_ab_0x88_C {
               if (this.is_TT_use == 1) {
                 transposition_table_0x88_O.add_position(Transposition_table_0x88_C.ALPHA_CUT, move_list_0x88_O.type_move[move_i],
                   score, move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], depth, depth_max, chess_board_0x88_O);
-                  //test
-                  this.test_sorting.save_alpha_cut = this.test_sorting.save_alpha_cut + 1;
+                //test
+                this.test_sorting.save_alpha_cut = this.test_sorting.save_alpha_cut + 1;
               }
               return score;//
             }//
 
             tt_type_node = Transposition_table_0x88_C.MAX_SCORE_UPDATE;
- 
+
             if (score < beta) {
               beta = score; //
               tt_type_node = Transposition_table_0x88_C.BETA_UPDATE;
@@ -472,9 +478,9 @@ class Search_ab_0x88_C {
               //test                
               if (tt_type_node == Transposition_table_0x88_C.MAX_SCORE_UPDATE) {
                 this.test_sorting.save_score_up = this.test_sorting.save_score_up + 1;
-              } else if(tt_type_node == Transposition_table_0x88_C.BETA_UPDATE){
+              } else if (tt_type_node == Transposition_table_0x88_C.BETA_UPDATE) {
                 this.test_sorting.save_beta_up = this.test_sorting.save_beta_up + 1;
-              }                
+              }
             }
           } else {
             if (isPV == 1) {
