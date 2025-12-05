@@ -52,8 +52,8 @@ class Search_ab_0x88_C {
   is_history_heuristic_use = 1;
 
   // pruning
-  is_razoring_use = 0;
-  is_lmr_use = 0;
+  is_razoring_use = 1;
+  is_lmr_use = 1;
   is_futility_pruning_use = 0;// not working
   ///////////////////////////////////////
 
@@ -125,8 +125,8 @@ class Search_ab_0x88_C {
       // ищем позицию в хеш таблице
       is_save_position = transposition_table_0x88_O.is_save_position(chess_board_0x88_O, depth, depth_max);
 
-        //test
-        //if (is_save_position.tn == 0) console.log("Search_0x88_C-> tn == 0 !!!! depth " + depth);
+      //test
+      //if (is_save_position.tn == 0) console.log("Search_0x88_C-> tn == 0 !!!! depth " + depth);
 
       if ((is_save_position.tn == Transposition_table_0x88_C.ALPHA_CUT) && (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.BLACK)) {
 
@@ -160,23 +160,28 @@ class Search_ab_0x88_C {
 
       score = this.evaluate_0x88_O.score_position(chess_board_0x88_O, transposition_table_0x88_O);
 
+      let raz = Evaluate_0x88_C.PAWN_SCORE * (depth_max - depth);
+
       if (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.WHITE) {
 
-        if ((isPV == 0) && (score < (alpha - Evaluate_0x88_C.BISHOP_SCORE -
-          Evaluate_0x88_C.PAWN_SCORE * (depth_max - depth) * (depth_max - depth)))) {
+        // если нашли мат то альфа настолько большая, что любые ходы режутся 
+        // и вместо матовой оценки получаем обычную
+        // что бы этого небыло добавил условие 5000 > alpha.
+        if ((isPV == 0) && ((score + raz) < alpha) && (5000 > alpha)) {
 
           score = this.quiescence_search_0x88_O.quiescence_search(alpha, beta, chess_board_0x88_O,
             move_gen_1_captures_0x88_O, depth, transposition_table_0x88_O);
-          return score;
+
+          if (score < alpha) return score;
         }
       } else {
 
-        if ((isPV == 0) && (score > (beta + Evaluate_0x88_C.BISHOP_SCORE +
-          Evaluate_0x88_C.PAWN_SCORE * (depth_max - depth) * (depth_max - depth)))) {
+        if ((isPV == 0) && ((score - raz) > beta) && (-5000 < beta)) {
 
           score = this.quiescence_search_0x88_O.quiescence_search(alpha, beta, chess_board_0x88_O,
             move_gen_1_captures_0x88_O, depth, transposition_table_0x88_O);
-          return score;
+
+          if (score > beta) return score;
         }
       }
     }
@@ -282,8 +287,9 @@ class Search_ab_0x88_C {
     // console.log("--------------------------------------------- ");
 
     new_depth_max = depth_max;
+
     if (this.is_lmr_use == 1) {
-      i_lmr = move_list_0x88_O.number_captures_move + 3;//(3) взятия два киллера и тт ход не сокращаем 
+      i_lmr = move_list_0x88_O.number_captures_move + 2;//(3) взятия два киллера и тт ход не сокращаем 
     }
 
     for (let move_i = 0; move_i < move_list_0x88_O.number_move; move_i++) {
@@ -321,7 +327,7 @@ class Search_ab_0x88_C {
         } else {
 
           if (this.is_lmr_use == 1) {
-            if ((move_i > i_lmr) && (depth_max - depth) > 2) new_depth_max = depth_max - 1;
+            if ((move_i > i_lmr) && ((depth_max - depth) > 4)) new_depth_max = depth_max - 1;
           }
 
           if (move_list_0x88_O.piece_color == Chess_board_0x88_C.WHITE) {
