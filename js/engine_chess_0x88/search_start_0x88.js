@@ -268,20 +268,24 @@ class Search_start_0x88_C {
       console.log("Search_0x88_C->node " + node);
       console.log("Search_0x88_C->kN/s = node / time_delta " + Math.round(node / time_delta));
 
-      console.log("Search_0x88_C->SAVE----------------------------- ");
-      console.log("Search_0x88_C->save_alpha_up " + this.search_ab_0x88_O.test_sorting.save_alpha_up);
-      console.log("Search_0x88_C->save_alpha_cut " + this.search_ab_0x88_O.test_sorting.save_alpha_cut);
-      console.log("Search_0x88_C->save_beta_up " + this.search_ab_0x88_O.test_sorting.save_beta_up);
-      console.log("Search_0x88_C->save_beta_cut " + this.search_ab_0x88_O.test_sorting.save_beta_cut);
-      console.log("Search_0x88_C->save_score_up " + this.search_ab_0x88_O.test_sorting.save_score_up);      
+      // console.log("Search_0x88_C->SAVE----------------------------- ");
+      // console.log("Search_0x88_C->save_alpha_up " + this.search_ab_0x88_O.test_tt.save_alpha_up);
+      // console.log("Search_0x88_C->save_alpha_cut " + this.search_ab_0x88_O.test_tt.save_alpha_cut);
+      // console.log("Search_0x88_C->save_beta_up " + this.search_ab_0x88_O.test_tt.save_beta_up);
+      // console.log("Search_0x88_C->save_beta_cut " + this.search_ab_0x88_O.test_tt.save_beta_cut);
+      // console.log("Search_0x88_C->save_score_up " + this.search_ab_0x88_O.test_tt.save_score_up);      
 
-      console.log("Search_0x88_C->USE----------------------------- ");      
-      console.log("Search_0x88_C->use_alpha_up " + this.search_ab_0x88_O.test_sorting.use_alpha_up);
-      console.log("Search_0x88_C->use_alpha_cut " + this.search_ab_0x88_O.test_sorting.use_alpha_cut);
-      console.log("Search_0x88_C->use_beta_up " + this.search_ab_0x88_O.test_sorting.use_beta_up);
-      console.log("Search_0x88_C->use_beta_cut " + this.search_ab_0x88_O.test_sorting.use_beta_cut);
-      console.log("Search_0x88_C->use_score " + this.search_ab_0x88_O.test_sorting.use_score);     
+      // console.log("Search_0x88_C->USE----------------------------- ");      
+      // console.log("Search_0x88_C->use_alpha_up " + this.search_ab_0x88_O.test_tt.use_alpha_up);
+      // console.log("Search_0x88_C->use_alpha_cut " + this.search_ab_0x88_O.test_tt.use_alpha_cut);
+      // console.log("Search_0x88_C->use_beta_up " + this.search_ab_0x88_O.test_tt.use_beta_up);
+      // console.log("Search_0x88_C->use_beta_cut " + this.search_ab_0x88_O.test_tt.use_beta_cut);
+      // console.log("Search_0x88_C->use_score " + this.search_ab_0x88_O.test_tt.use_score);     
  
+      //console.log("Search_0x88_C->add_a_cnt_h_move " + this.search_ab_0x88_O.test_hh.add_a_cnt_h_move);
+      //console.log("Search_0x88_C->add_b_cnt_h_move " + this.search_ab_0x88_O.test_hh.add_b_cnt_h_move);
+ 
+
 
       this.info_return_search.chess_board_0x88_O_start = chess_board_0x88_O_start;
       this.info_return_search.chess_board_0x88_O_end = chess_board_0x88_O_end;

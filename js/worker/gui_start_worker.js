@@ -85,10 +85,10 @@ let GuiStartWorker_R = {
 
 
                   GuiStartWorker_R.IfritChessGame_O.checkbox_O.set_text_engine(
-                        " max depth:" + GuiStartWorker_R.IfritChessGame_O.gui_chess_O.depth_max + " nodes:" +
+                        " max depth:" + GuiStartWorker_R.IfritChessGame_O.gui_chess_O.depth_max + ", nodes:" +
                         GuiStartWorker_R.IfritChessGame_O.gui_chess_O.nodes +
-                        " kN/s:" + GuiStartWorker_R.IfritChessGame_O.gui_chess_O.nodes_per_second +
-                        " score:" + GuiStartWorker_R.IfritChessGame_O.gui_chess_O.score +
+                        ", kN/s:" + GuiStartWorker_R.IfritChessGame_O.gui_chess_O.nodes_per_second +
+                        ", score:" + GuiStartWorker_R.IfritChessGame_O.gui_chess_O.score +
                         "\n " + GuiStartWorker_R.IfritChessGame_O.gui_chess_O.pv_line_str);
 
                   if (GuiStartWorker_R.IfritChessGame_O.gui_chess_O.chessBoard_8x8_O.side_to_move != Gui_chess_C.WHITE) {

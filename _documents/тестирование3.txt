@@ -1,0 +1,60 @@
+07.12m.25
+
+ab
+max depth:7 nodes:1190947 kN/s:213 score:20
+PV line: 1.Ng1-f3 Ng8-f6 2.Nb1-c3 Pd7-d5 3.Pd2-d4 Bc8-f5 4.Bc1-f4 val = 20
+
+
+hh
+max depth:7 nodes:968302 kN/s:192 score:20
+ PV line: 1.Ng1-f3 Pd7-d5 2.Pd2-d4 Nb8-c6 3.Nb1-c3 Bc8-f5 4.Bc1-e3 val = 20
+time_delta 192
+
+ab
+max depth:5 nodes:20981 kN/s:187 score:15
+ PV line: 1.Ng1-f3 Ng8-f6 2.Pd2-d4 Nb8-c6 3.Bc1-f4 val = 15
+time_delta 112
+
+hh
+max depth:5 nodes:13432 kN/s:143 score:15
+ PV line: 1.Ng1-f3 Nb8-c6 2.Pd2-d4 Ng8-f6 3.Bc1-f4 val = 15
+time_delta 94
+max depth:7 nodes:968302 kN/s:192 score:20
+ PV line: 1.Ng1-f3 Pd7-d5 2.Pd2-d4 Nb8-c6 3.Nb1-c3 Bc8-f5 4.Bc1-e3 val = 20
+
+
+hh2
+max depth:5 nodes:14639 kN/s:179 score:15
+ PV line: 1.Ng1-f3 Ng8-f6 2.Pd2-d4 Nb8-c6 3.Bc1-f4 val = 15
+
+max depth:7 nodes:999649 kN/s:180 score:20
+ PV line: 1.Ng1-f3 Pd7-d5 2.Pd2-d4 Nb8-c6 3.Nb1-c3 Bc8-f5 4.Bc1-e3 val = 
+
+pvs+tt+kh+hh
+max depth:5 nodes:8721 kN/s:110 score:15
+PV line: 1.Ng1-f3 Ng8-f6 2.Pd2-d4 Nb8-c6 3.Bc1-f4 val = 15
+time_delta 79
+
+max depth:5 nodes:9304 kN/s:121 score:15
+ PV line: 1.Ng1-f3 Ng8-f6 2.Pd2-d4 Nb8-c6 3.Bc1-f4 val = 15 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

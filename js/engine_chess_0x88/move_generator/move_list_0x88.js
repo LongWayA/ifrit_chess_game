@@ -314,16 +314,37 @@ class Move_list_0x88_С {
 
         let start = this.number_captures_move;
 
+        let from_64_i;
+        let to_64_i;
+
+        let from_64_j;
+        let to_64_j;
+
         //console.log("Move_list_0x88_С-> SORTING -----------------------------------");
         // выводим в начало списка тихих ходов ходы с максимальной оценкой по истории. 
-        // т.е. отсортирванные тихие ходы идут после взятий
+        // т.е. отсортированные тихие ходы идут после взятий
         for (let i = start; i < this.number_move; i++) {
+
+            from_64_i = Chess_board_0x88_C.SQUARE_128_to_64[this.from[i]];
+            to_64_i = Chess_board_0x88_C.SQUARE_128_to_64[this.to[i]];
+            // console.log("Move_list_0x88_С-> SORTING from_64_i " + from_64_i + " to_64_i " + to_64_i);
+            // console.log("Move_list_0x88_С-> SORTING history i " +
+            //     history_heuristic_0x88_O.history[this.piece_color][from_64_i][to_64_i]);
+
             for (let j = i + 1; j < this.number_move; j++) {//
                 // 
-                if (history_heuristic_0x88_O.history[this.piece_color][Chess_board_0x88_C.SQUARE_128_to_64[this.from[i]]]
-                [Chess_board_0x88_C.SQUARE_128_to_64[this.to[i]]] <
-                    history_heuristic_0x88_O.history[this.piece_color][Chess_board_0x88_C.SQUARE_128_to_64[this.from[j]]]
-                    [Chess_board_0x88_C.SQUARE_128_to_64[this.to[j]]]) {
+                from_64_j = Chess_board_0x88_C.SQUARE_128_to_64[this.from[j]];
+                to_64_j = Chess_board_0x88_C.SQUARE_128_to_64[this.to[j]];
+
+
+                // console.log("Move_list_0x88_С-> SORTING from_64_j " + from_64_j + " to_64_j " + to_64_j);                
+                // console.log("Move_list_0x88_С-> SORTING history j " +
+                //     history_heuristic_0x88_O.history[this.piece_color][from_64_j][to_64_j]);                    
+
+                if (history_heuristic_0x88_O.history[this.piece_color][from_64_i][to_64_i] <
+                    history_heuristic_0x88_O.history[this.piece_color][from_64_j][to_64_j]) {
+
+//                    console.log("Move_list_0x88_С-> SORTING -----------------------------------");     
                     // сохраняем позицию на которую будем писать
                     save_type_move = this.type_move[i];
                     save_from = this.from[i];

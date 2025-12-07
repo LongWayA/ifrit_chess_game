@@ -1,0 +1,136 @@
+06.12m.25
+
+full
+max depth:5 nodes:4865609 kN/s:218 score:15
+ PV line: 1.Ng1-f3 Ng8-f6 2.Pd2-d4 Nb8-c6 3.Bc1-f4 val = 15
+time_delta 22297 ms
+
+ab
+max depth:5 nodes:20981 kN/s:181 score:15
+PV line: 1.Ng1-f3 Ng8-f6 2.Pd2-d4 Nb8-c6 3.Bc1-f4 val = 15
+time_delta 116
+
+tt
+max depth:5 nodes:18328 kN/s:171 score:15
+PV line: 1.Ng1-f3 Ng8-f6 2.Pd2-d4 Nb8-c6 3.Bc1-f4 val = 15 
+time_delta 107
+
+kh
+max depth:5 nodes:13505 kN/s:169 score:15
+PV line: 1.Ng1-f3 Ng8-f6 2.Pd2-d4 Nb8-c6 3.Bc1-f4 val = 15
+time_delta 80
+
+hh
+max depth:5 nodes:20981 kN/s:178 score:15
+PV line: 1.Ng1-f3 Ng8-f6 2.Pd2-d4 Nb8-c6 3.Bc1-f4 val = 15
+time_delta 118
+очень странно, что эта сортировка по истории вообще никак не меняет
+количество узлов. такое же, что и без нее. как такое может быть???
+
+tt+kh THE BEST TIME AND NODES!
+max depth:5 nodes:11780 kN/s:161 score:15
+PV line: 1.Ng1-f3 Ng8-f6 2.Pd2-d4 Nb8-c6 3.Bc1-f4 val = 15
+time_delta 73
+
+tt+hh
+max depth:5 nodes:18285 kN/s:156 score:15
+PV line: 1.Ng1-f3 Ng8-f6 2.Pd2-d4 Nb8-c6 3.Bc1-f4 val = 15
+time_delta 117
+
+kh+hh
+max depth:5 nodes:13505 kN/s:145 score:15
+PV line: 1.Ng1-f3 Ng8-f6 2.Pd2-d4 Nb8-c6 3.Bc1-f4 val = 15
+time_delta 93
+
+tt+kh+hh
+max depth:5 nodes:11780 kN/s:153 score:15
+PV line: 1.Ng1-f3 Ng8-f6 2.Pd2-d4 Nb8-c6 3.Bc1-f4 val = 15
+time_delta 77
+в общем история для чистой альфа-беты не работает.
+-------------------------
+
+pvs
+max depth:5 nodes:16113 kN/s:123 score:15
+PV line: 1.Ng1-f3 Ng8-f6 2.Pd2-d4 Nb8-c6 3.Bc1-f4 val = 15
+time_delta 131
+
+pvs+tt
+max depth:5 nodes:11548 kN/s:120 score:15
+PV line: 1.Ng1-f3 Ng8-f6 2.Pd2-d4 Nb8-c6 3.Bc1-f4 val = 15
+time_delta 96
+
+pvs+kh
+max depth:5 nodes:12912 kN/s:139 score:15
+PV line: 1.Ng1-f3 Ng8-f6 2.Pd2-d4 Nb8-c6 3.Bc1-f4 val = 15
+time_delta 93
+
+pvs+hh
+max depth:5 nodes:16113 kN/s:118 score:15
+PV line: 1.Ng1-f3 Ng8-f6 2.Pd2-d4 Nb8-c6 3.Bc1-f4 val = 15
+time_delta 136
+опять. что с историей что без. одно и то же. История НЕ РАБОТАЕТ! 
+
+pvs+tt+kh THE BEST TIME AND NODES!
+max depth:5 nodes:8721 kN/s:118 score:15
+PV line: 1.Ng1-f3 Ng8-f6 2.Pd2-d4 Nb8-c6 3.Bc1-f4 val = 15
+time_delta 74
+
+pvs+tt+kh+hh
+max depth:5 nodes:8721 kN/s:110 score:15
+PV line: 1.Ng1-f3 Ng8-f6 2.Pd2-d4 Nb8-c6 3.Bc1-f4 val = 15
+time_delta 79
+История НЕ РАБОТАЕТ! 
+===========================
+
+..+lmr
+max depth:5 nodes:8721 kN/s:121 score:15
+PV line: 1.Ng1-f3 Ng8-f6 2.Pd2-d4 Nb8-c6 3.Bc1-f4 val = 15
+time_delta 72
+НЕ РАБОТАЕТ!(видимо не глубине 5)
+
+..+raz
+max depth:5 nodes:7208 kN/s:104 score:15
+PV line: 1.Ng1-f3 Ng8-f6 2.Pd2-d4 Nb8-c6 3.Bc1-f4 val = 15
+time_delta 69
+
+..+raz+lmr
+max depth:5 nodes:7209 kN/s:108 score:15
+ PV line: 1.Ng1-f3 Ng8-f6 2.Pd2-d4 Nb8-c6 3.Bc1-f4 val = 15
+time_delta 67
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
