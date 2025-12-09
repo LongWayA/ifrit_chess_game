@@ -18,16 +18,15 @@ import { Unmake_move_0x88_C } from "./move_generator/unmake_move_0x88.js";
 import { Undo_0x88_C } from "./move_generator/undo_0x88.js";
 
 import { Evaluate_0x88_C } from "./evaluate_0x88.js";
+
 import { Transposition_table_0x88_C } from "./for_sorting_move/transposition_table_0x88.js";
 import { killer_heuristic_0x88_O } from "./for_sorting_move/killer_heuristic_0x88.js";
 import { History_heuristic_0x88_C } from "./for_sorting_move/history_heuristic_0x88.js";
+
 import { Search_minmax_0x88_C } from "./search_minmax_0x88.js";
 import { Search_ab_0x88_C } from "./search_ab_0x88.js";
+
 import { Timer_C } from "../browser/timer.js";
-
-
-
-
 
 /**
 * НАЗНАЧЕНИЕ
@@ -58,8 +57,6 @@ import { Timer_C } from "../browser/timer.js";
 *
 */
 
-
-
 class Search_start_0x88_C {
 
   chessEngine_0x88_O = null;
@@ -71,6 +68,7 @@ class Search_start_0x88_C {
   unmake_move_0x88_O = new Unmake_move_0x88_C();
 
   evaluate_0x88_O = new Evaluate_0x88_C();
+  
   transposition_table_0x88_O = new Transposition_table_0x88_C();
   killer_heuristic_0x88_O = new killer_heuristic_0x88_O();
   history_heuristic_0x88_O = new History_heuristic_0x88_C();
@@ -82,13 +80,15 @@ class Search_start_0x88_C {
 
   static NAME = "Search_start_0x88_C";
 
-  static ALPHA_VALUE = -30000;
-  static BETA_VALUE = 30000;
+  static ALPHA_SCORE = -30000;
+  static BETA_SCORE = 30000;
 
   info_return_search = {
     chess_board_0x88_O_start: null,//
     chess_board_0x88_O_end: null,//
-    score: 0,//
+    fen_start: "-",//
+    fen_end: "-",//    
+    best_score: 0,//
     pv_line: null,//
     node_count: 0,//
     nodes_per_second: 0,//
@@ -106,17 +106,18 @@ class Search_start_0x88_C {
     this.history_heuristic_0x88_O.iniM();
   }
 
-
   message_engine_to_search_start(message) {
 
   }
 
-
   // 
-  searching_iterative_deepening(chess_board_0x88_O_start, depth_max_2) {
+  searching_iterative_deepening(fen_start, depth_max_2) {
 
     let chess_board_0x88_O = new Chess_board_0x88_C();
+    let chess_board_0x88_O_start = new Chess_board_0x88_C();
     let chess_board_0x88_O_end = new Chess_board_0x88_C();
+
+
 
     let move_list_0x88_O = new Move_list_0x88_С();
     let move_list_root_0x88_O = new Move_list_root_0x88_С();
@@ -138,6 +139,8 @@ class Search_start_0x88_C {
     let time_start = 0;
     let time_end = 0;
     let time_delta = 0;
+
+    chess_board_0x88_O_start.set_0x88_from_fen(fen_start);
 
     move_list_0x88_O.iniM();
     move_list_root_0x88_O.iniM();
@@ -190,12 +193,13 @@ class Search_start_0x88_C {
       time_start = this.timer_O.getCurrentTimeMs();
 
       if (chess_board_0x88_O.side_to_move == 1) {
-        best_score = -Search_ab_0x88_C.BEST_VALUE_MOD;// максимальная оценка позиции
+        best_score = -Search_ab_0x88_C.BEST_SCORE_MOD;// максимальная оценка позиции
       } else {
-        best_score = Search_ab_0x88_C.BEST_VALUE_MOD;// максимальная оценка позиции
+        best_score = Search_ab_0x88_C.BEST_SCORE_MOD;// максимальная оценка позиции
       }
-      alpha = Search_start_0x88_C.ALPHA_VALUE;
-      beta = Search_start_0x88_C.BETA_VALUE;
+
+      alpha = Search_start_0x88_C.ALPHA_SCORE;
+      beta = Search_start_0x88_C.BETA_SCORE;
 
       pv_line_0x88_O.clear_list();
       //this.transposition_table_0x88_O.iniM();
@@ -285,11 +289,11 @@ class Search_start_0x88_C {
       //console.log("Search_0x88_C->add_a_cnt_h_move " + this.search_ab_0x88_O.test_hh.add_a_cnt_h_move);
       //console.log("Search_0x88_C->add_b_cnt_h_move " + this.search_ab_0x88_O.test_hh.add_b_cnt_h_move);
  
-
-
       this.info_return_search.chess_board_0x88_O_start = chess_board_0x88_O_start;
       this.info_return_search.chess_board_0x88_O_end = chess_board_0x88_O_end;
-      this.info_return_search.score = best_score;
+      this.info_return_search.fen_start = fen_start;
+      this.info_return_search.fen_end = chess_board_0x88_O_end.set_fen_from_0x88();           
+      this.info_return_search.best_score = best_score;
       this.info_return_search.pv_line = pv_line_0x88_O;
       this.info_return_search.node_count = node;
       this.info_return_search.nodes_per_second = Math.round(node / time_delta);
@@ -380,8 +384,8 @@ class Search_start_0x88_C {
   // alpha beta
   test_start_search_ab(depth_max) {
     let depth = 0;
-    let alpha = Search_start_0x88_C.ALPHA_VALUE;
-    let beta = Search_start_0x88_C.BETA_VALUE;
+    let alpha = Search_start_0x88_C.ALPHA_SCORE;
+    let beta = Search_start_0x88_C.BETA_SCORE;
     this.node = 0;
     this.search_ab_0x88_O.node = 0;
     let isPV_node = 1;

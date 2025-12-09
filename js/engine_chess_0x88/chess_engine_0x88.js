@@ -128,25 +128,21 @@ class ChessEngine_0x88_С {
   // GAME
 
   // iterative deepening
-  go_depth_id(depth_max) {
+  go_depth_id(fen_start, depth_max) {
     //console.log("ChessEngine_0x88_С->go_depth_id depth_max " + depth_max);
-    let info_return_search = this.search_start_0x88_O.searching_iterative_deepening(this.chess_board_0x88_O_start, depth_max);
+    let info_return_search = this.search_start_0x88_O.searching_iterative_deepening(fen_start, depth_max);
 
     return info_return_search;
   }
 
   /////////////////////////////
 
-  // set position
-  position(chessBoard_8x8_O) {
-    this.chess_board_0x88_O_start.set_0x88_from_8x8(chessBoard_8x8_O);
-  }
-
   //this.one_click_on_squares_x, this.one_click_on_squares_y, x_b_n, y_b_n
   pseudo_move_is_ok(from_x, from_y, to_x, to_y, chessBoard_8x8_O) {
 
     // инициализируем вспомогательный массив    
-    this.chess_board_0x88_O_gui.set_0x88_from_8x8(chessBoard_8x8_O);
+    let fen_start = chessBoard_8x8_O.set_fen_from_8x8();
+    this.chess_board_0x88_O_gui.set_0x88_from_fen(fen_start);
 
     let from = this.chess_board_0x88_O_gui.x07_y07_to_0x88(from_x, from_y);
 
@@ -173,7 +169,8 @@ class ChessEngine_0x88_С {
     let undo_0x88_O = new Undo_0x88_C();
 
     // инициализируем вспомогательный массив    
-    this.chess_board_0x88_O_gui.set_0x88_from_8x8(chessBoard_8x8_O);
+    let fen_start = chessBoard_8x8_O.set_fen_from_8x8();
+    this.chess_board_0x88_O_gui.set_0x88_from_fen(fen_start);
 
     // переводим кординаты х у в одну для генератора позиций
     let from = this.chess_board_0x88_O_gui.x07_y07_to_0x88(one_click_on_squares_x, one_click_on_squares_y);
@@ -204,7 +201,9 @@ class ChessEngine_0x88_С {
   }
 
   draw_rect_move(from_x, from_y, chessBoard_8x8_O, draw_O, is_white) {
-    this.chess_board_0x88_O_gui.set_0x88_from_8x8(chessBoard_8x8_O);
+
+    let fen_start = chessBoard_8x8_O.set_fen_from_8x8();
+    this.chess_board_0x88_O_gui.set_0x88_from_fen(fen_start);
 
     let from = this.chess_board_0x88_O_gui.x07_y07_to_0x88(from_x, from_y);
 

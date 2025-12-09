@@ -25,6 +25,7 @@ class Worker_ChessEngine_0x88_С {
   static NAME = "Worker_ChessEngine_0x88_С";
 
   PV_line_str_save = "-";
+  fen_start = "-";
 
   constructor() {
   }
@@ -46,12 +47,7 @@ class Worker_ChessEngine_0x88_С {
       fen = message.slice(13, end);
       //console.log('e fen from gui : ' + fen);
 
-      this.chessEngine_0x88_O.chess_board_0x88_O_start.set_0x88_from_fen(fen);
-
-      //console.log("e-> ini chess_board_0x88_O");
-      //w_chessEngine_0x88_O.chessEngine_0x88_O.chess_board_0x88_O.test_print_0x88();
-      //w_chessEngine_0x88_O.chessEngine_0x88_O.chess_board_0x88_O.test_print_0x88_color();
-      //w_chessEngine_0x88_O.chessEngine_0x88_O.chess_board_0x88_O.test_print_any_0x88();
+      this.fen_start = fen;
 
     } else if (message.includes("go depth ")) {
       let end = message.length;
@@ -60,17 +56,10 @@ class Worker_ChessEngine_0x88_С {
 
       //let info_return_e = w_chessEngine_0x88_O.chessEngine_0x88_O.test_go_depth_nm(depth_max);      
       //let info_return_e = w_chessEngine_0x88_O.chessEngine_0x88_O.test_go_depth_ab(depth_max);
-      let info_return_e = this.chessEngine_0x88_O.go_depth_id(depth_max);
-
-      //console.log("e-> info_return_e");
-      //info_return_e.chess_board_0x88_O_move.test_print_0x88();
-      //info_return_e.chess_board_0x88_O_move.test_print_0x88_color();
-      //info_return_e.chess_board_0x88_O_move.test_print_any_0x88();
-
-      fen = info_return_e.chess_board_0x88_O_end.set_fen_from_0x88();
-      //console.log('e fen to gui : ' + fen); 
-      postMessage("position fen " + fen);
-      postMessage("score " + info_return_e.score);
+      let info_return_e = this.chessEngine_0x88_O.go_depth_id(this.fen_start, depth_max);
+      
+      postMessage("position fen " + info_return_e.fen_end);
+      postMessage("score " + info_return_e.best_score);
       postMessage("node " + info_return_e.node_count);
       postMessage("nps " + info_return_e.nodes_per_second);      
       postMessage(this.PV_line_str_save);

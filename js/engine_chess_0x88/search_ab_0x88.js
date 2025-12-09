@@ -31,8 +31,8 @@ class Search_ab_0x88_C {
 
   static NAME = "Search_ab_0x88_C";
 
-  static MAT_VALUE_MOD = 10000;
-  static BEST_VALUE_MOD = 20000;
+  static MAT_SCORE_MOD = 10000;
+  static BEST_SCORE_MOD = 20000;
 
   //chess_board_0x88_O_move = new Chess_board_0x88_C();// для записи позиции с ходом в случае не IID
   quiescence_search_0x88_O = new Quiescence_search_0x88_C();// статический поиск
@@ -53,7 +53,7 @@ class Search_ab_0x88_C {
   // pruning
   is_lmr_use = 1;// уменьшаем глубину поиска ходов после всех взятий и двух киллеров, но не меньше 4 полухода 
   is_razoring_use = 1;// не смотрим очень плохие для нас позиции. отключаем если нашли мат.
-  is_futility_pruning_use = 1;// not working
+  is_futility_pruning_use = 0;// not working
   ///////////////////////////////////////
 
   // test_tt = {
@@ -92,7 +92,7 @@ class Search_ab_0x88_C {
       let best_node_line_0x88_O = new PV_line_0x88_C();
 
       let score = 0;// текущая оценка позиции
-      let found_score = 0;// максимальная оценка позиции
+      let best_score = 0;// максимальная оценка позиции
       let is_update_pv_line = 0;// максимальная оценка позиции    
       let number_moove_legal = 0;
       let isPV_node = 0;
@@ -108,19 +108,19 @@ class Search_ab_0x88_C {
       if (depth >= depth_max) {
 
         if (this.is_quiescence_use == 0) {
-          found_score = this.evaluate_0x88_O.score_position(chess_board_0x88_O, transposition_table_0x88_O);
+          best_score = this.evaluate_0x88_O.score_position(chess_board_0x88_O, transposition_table_0x88_O);
         }
         this.node = this.node + 1;
 
         //this.quiescence_search_0x88_O.node = 0;
         if (this.is_quiescence_use == 1) {
-          found_score = this.quiescence_search_0x88_O.quiescence_search(alpha, beta, chess_board_0x88_O,
+          best_score = this.quiescence_search_0x88_O.quiescence_search(alpha, beta, chess_board_0x88_O,
             move_gen_1_captures_0x88_O, depth, transposition_table_0x88_O);
         }
         //this.node = this.node + this.quiescence_search_0x88_O.node;
 
-        pv_line_0x88_O.score_depth_max = found_score;
-        return found_score;
+        pv_line_0x88_O.score_depth_max = best_score;
+        return best_score;
       }
       // -----------------------------------поиск на максимальной глубине
 
@@ -171,7 +171,7 @@ class Search_ab_0x88_C {
 
           // если нашли мат то альфа настолько большая, что любые ходы режутся 
           // и вместо матовой оценки получаем обычную
-          // что бы этого небыло добавил условие 5000 > alpha.
+          // что бы это предотвратить добавил условие 5000 > alpha.
           if ((isPV == 0) && ((score + raz) < alpha) && (5000 > alpha)) {
 
             score = this.quiescence_search_0x88_O.quiescence_search(alpha, beta, chess_board_0x88_O,
@@ -214,9 +214,9 @@ class Search_ab_0x88_C {
 
 
       if (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.WHITE) {
-        found_score = -Search_ab_0x88_C.BEST_VALUE_MOD;// максимальная оценка позиции
+        best_score = -Search_ab_0x88_C.BEST_SCORE_MOD;// максимальная оценка позиции
       } else {
-        found_score = Search_ab_0x88_C.BEST_VALUE_MOD;// максимальная оценка позиции
+        best_score = Search_ab_0x88_C.BEST_SCORE_MOD;// максимальная оценка позиции
       }
 
       //console.log("Search_0x88_C->depth " + depth);
@@ -369,9 +369,9 @@ class Search_ab_0x88_C {
         if (move_list_0x88_O.piece_color == Chess_board_0x88_C.WHITE) {
 
           // alpha < value < beta => exact value
-          if (score > found_score) {
+          if (score > best_score) {
 
-            found_score = score;
+            best_score = score;
 
             if (this.is_ab_use == 1) {
               // lower bound
@@ -442,9 +442,9 @@ class Search_ab_0x88_C {
 
         } else {// if (move_list_0x88_O.piece_color == Chess_board_0x88_C.WHITE)
 
-          if (score < found_score) {
+          if (score < best_score) {
 
-            found_score = score;
+            best_score = score;
 
             if (this.is_ab_use == 1) {
 
@@ -521,7 +521,7 @@ class Search_ab_0x88_C {
       //это мат или пат
       if (number_moove_legal == 0) {
 
-        let mat = Search_ab_0x88_C.MAT_VALUE_MOD - depth;
+        let mat = Search_ab_0x88_C.MAT_SCORE_MOD - depth;
 
         if (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.WHITE) {//
 
@@ -557,7 +557,7 @@ class Search_ab_0x88_C {
         }//if (chess_board_0x88_O.side_to_move == 1) {
       }// if (number_moove_legal == 0) {
 
-      return found_score;//found_score
+      return best_score;//best_score
     }
   }
 

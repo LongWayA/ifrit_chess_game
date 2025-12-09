@@ -346,51 +346,6 @@ class Chess_board_0x88_C {
 
     }
 
-
-    // инициализируем одномерную доску движка из двумерной доски оболочки
-    set_0x88_from_8x8(chessBoard_8x8_O) {
-        //console.log("ini_0x88_from_8x8");
-        let i = -1;
-
-        this.iniStartPositionForWhite();
-
-        for (let y = 0; y < 8; y++) {
-            for (let x = 0; x < 8; x++) {
-                i = this.x07_y07_to_0x88(x, y);
-                this.sq_piece_0x88[i] = chessBoard_8x8_O.sq_piece_8x8[y][x];
-                this.sq_piece_color_0x88[i] = chessBoard_8x8_O.sq_piece_color_8x8[y][x];
-
-                if (this.sq_piece_0x88[i] == Chess_board_0x88_C.KING) {
-                    if (this.sq_piece_color_0x88[i] == Chess_board_0x88_C.WHITE) {
-                        this.king_from_white = i;
-                        //console.log("ini_0x88_from_8x8 king_from_white[" + i + "] = " + this.king_from_white);
-                    } else {
-                        this.king_from_black = i;
-                        //console.log("ini_0x88_from_8x8 king_from_black[" + i + "] = " + this.king_from_black);
-                    }
-                }
-
-            }
-        }
-        // цвет хода 0 - черные 1 - белые
-        this.side_to_move = chessBoard_8x8_O.side_to_move;
-        // разрешение взятия на проходе 1/0
-        this.en_passant_yes = chessBoard_8x8_O.en_passant_yes;
-        // координата битого поля
-        this.en_passant_target_square = chessBoard_8x8_O.en_passant_target_square;
-        // рокировка белых в длинную сторону   1/0
-        this.castling_Q = chessBoard_8x8_O.castling_Q;
-        // рокировка белых в короткую сторону  1/0
-        this.castling_K = chessBoard_8x8_O.castling_K;
-        // рокировка черных в длинную сторону  1/0
-        this.castling_q = chessBoard_8x8_O.castling_q;
-        // рокировка черных в короткую сторону 1/0
-        this.castling_k = chessBoard_8x8_O.castling_k;
-
-        this.score = chessBoard_8x8_O.score;
-
-    }
-
     // https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
     // "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
     // инициируем позицию из фена
