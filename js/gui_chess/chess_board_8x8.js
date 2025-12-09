@@ -224,37 +224,6 @@ class ChessBoard_8x8_C {
         return y07;
     }
 
-
-    // инициализируем двумерную доску оболочки из одномерной доски движка
-    set_8x8_from_0x88(chess_board_0x88_O) {
-        //console.log("ini_0x88_from_8x8");
-        let i = -1;
-
-        for (let y = 0; y < 8; y++) {
-            for (let x = 0; x < 8; x++) {
-                i = chess_board_0x88_O.x07_y07_to_0x88(x, y);
-                this.sq_piece_8x8[y][x] = chess_board_0x88_O.sq_piece_0x88[i];
-                this.sq_piece_color_8x8[y][x] = chess_board_0x88_O.sq_piece_color_0x88[i];
-            }
-        }
-        // цвет хода 0 - черные 1 - белые
-        this.side_to_move = chess_board_0x88_O.side_to_move;
-        // разрешение взятия на проходе 1/0
-        this.en_passant_yes = chess_board_0x88_O.en_passant_yes;
-        // координата битого поля
-        this.en_passant_target_square = chess_board_0x88_O.en_passant_target_square;
-        // рокировка белых в длинную сторону   1/0
-        this.castling_Q = chess_board_0x88_O.castling_Q;
-        // рокировка белых в короткую сторону  1/0
-        this.castling_K = chess_board_0x88_O.castling_K;
-        // рокировка черных в длинную сторону  1/0
-        this.castling_q = chess_board_0x88_O.castling_q;
-        // рокировка черных в короткую сторону 1/0
-        this.castling_k = chess_board_0x88_O.castling_k;
-        // оценка позиции
-        this.score = chess_board_0x88_O.score;
-    }
-
     // https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
     // "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
     // SET BOARD инициируем позицию из фена
