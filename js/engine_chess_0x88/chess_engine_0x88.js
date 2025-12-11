@@ -78,8 +78,7 @@ class ChessEngine_0x88_С {
 
   // сообщение поиска движку
   message_search_start_to_engine(info_return_search) {
-     let message = info_return_search.pv_line.pv_line_to_string(this.chess_board_0x88_O_test,
-      this.move_list_0x88_O_test);
+     let message = info_return_search.pv_line_str;
 
       console.log("Search_0x88_C->pv_line_str " + message + " depth_search " + info_return_search.depth_search);
 
@@ -109,17 +108,9 @@ class ChessEngine_0x88_С {
 
   // запуск полного перебора minmax
   // тут можно проверить корректность игрового движка с помощью perf_t. как правильно он генерирует позиции.
-  test_go_depth_minmax(depth_max) {
+  test_go_depth_minmax(fen_start, depth_max) {
     //console.log("ChessEngine_0x88_С->test_go_depth_nm --------");
-    let info_return_search = this.search_start_0x88_O.test_start_search_minmax(this.chess_board_0x88_O_start, depth_max);
-
-    return info_return_search;
-  }
-
-  // alpha beta
-  test_go_depth_ab(depth_max) {
-    //console.log("ChessEngine_0x88_С->test_go_depth_ab --------");
-    let info_return_search = this.search_start_0x88_O.test_start_search_ab(depth_max);
+    let info_return_search = this.search_start_0x88_O.test_start_search_minmax(fen_start, depth_max);
 
     return info_return_search;
   }

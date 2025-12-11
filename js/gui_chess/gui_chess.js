@@ -35,26 +35,13 @@ class Gui_chess_C {
       static BLACK = 0;
 
       // test = 1 просто генерация ходов и просмотр в консоле
-      // test = 2 запуск полного перебора minmax     
-      // test = 3 alpha beta       
-      // test = 4 iterative deepening
-      // test = 5 message_to_engine(message) работа с воркером
-      static TEST_GEN_MOOVE = 1;
-      static TEST_NEGAMAX = 2;
-      static TEST_AB = 3;
-      static TEST_ID = 4;
-      static TEST_MESSAGE = 5;
-
-      // test = 1 просто генерация ходов и просмотр в консоле
-      // test = 2 запуск полного перебора minmax     
-      // test = 3 alpha beta       
-      // test = 4 iterative deepening
-      // test = 5 message_to_engine(message) работа с воркером
+      // test = 2 запуск полного перебора minmax         
+      // test = 3 iterative deepening
+      // test = 4 message_to_engine(message) работа с воркером
       static TEST_GEN_MOOVE = 1;
       static TEST_MINMAX = 2;
-      static TEST_AB = 3;
-      static TEST_ID = 4;
-      static TEST_MESSAGE = 5;
+      static TEST_ID = 3;
+      static TEST_MESSAGE = 4;
 
       static CLICK_NO = 0;
       static CLICK_ONE = 1;

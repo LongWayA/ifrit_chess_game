@@ -55,7 +55,6 @@ class Worker_ChessEngine_0x88_С {
       let depth_max = Number(depth_max_s);
 
       //let info_return_e = w_chessEngine_0x88_O.chessEngine_0x88_O.test_go_depth_nm(depth_max);      
-      //let info_return_e = w_chessEngine_0x88_O.chessEngine_0x88_O.test_go_depth_ab(depth_max);
       let info_return_e = this.chessEngine_0x88_O.go_depth_id(this.fen_start, depth_max);
       
       postMessage("position fen " + info_return_e.fen_end);
