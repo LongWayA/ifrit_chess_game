@@ -6,7 +6,7 @@
  * last modified 25.10m.2025
 */
 
-import { ChessEngine_0x88_С } from "../engine_chess_0x88/chess_engine_0x88.js";
+import { ChessEngine_0x88_С } from "../chess_engine_0x88/i_chess_engine_0x88.js";
 /**
 * НАЗНАЧЕНИЕ
 
@@ -54,13 +54,13 @@ class Worker_ChessEngine_0x88_С {
       let depth_max_s = message.slice(9, end);
       let depth_max = Number(depth_max_s);
 
-      //let info_return_e = w_chessEngine_0x88_O.chessEngine_0x88_O.test_go_depth_nm(depth_max);      
-      let info_return_e = this.chessEngine_0x88_O.go_depth_id(this.fen_start, depth_max);
+      //let info_return_search = w_chessEngine_0x88_O.chessEngine_0x88_O.test_go_depth_nm(depth_max);      
+      let info_return_search = this.chessEngine_0x88_O.go_depth_id(this.fen_start, depth_max);
       
-      postMessage("position fen " + info_return_e.fen_end);
-      postMessage("score " + info_return_e.best_score);
-      postMessage("node " + info_return_e.node_count);
-      postMessage("nps " + info_return_e.nodes_per_second);      
+      postMessage("position fen " + info_return_search.fen_end);
+      postMessage("score " + info_return_search.best_score_str);
+      postMessage("node " + info_return_search.node_count_str);
+      postMessage("nps " + info_return_search.nodes_per_second_str);      
       postMessage(this.PV_line_str_save);
       postMessage("go");
     }

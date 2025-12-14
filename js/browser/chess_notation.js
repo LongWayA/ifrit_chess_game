@@ -31,7 +31,7 @@ class Chess_notation_C {
   static NAME = "Chess_notation_C";
 
 
-  info_return_search = {
+  info_return_search_notat = {
     chess_board_0x88_O_start: null,//
     chess_board_0x88_O_end: null,//
     score: 0,//

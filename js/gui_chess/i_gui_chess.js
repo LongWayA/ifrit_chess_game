@@ -1,7 +1,7 @@
 /** 
  * @copyright Copyright (c) 2025, AnBr75 and/or its affiliates. All rights reserved.
  * @author AnBr75
- * @name gui_chess.js
+ * @name i_gui_chess.js
  * @version created 31.10m.2025 
  * last modified 31.10m.2025
 */
@@ -9,7 +9,9 @@
 import { GuiStartWorker_R } from "../worker/gui_start_worker.js";
 import { ChessBoard_8x8_C } from "./chess_board_8x8.js";
 import { Game_line_0x88_C } from "./game_line_0x88.js";
-import { Draw_С } from "../gui_chess/draw.js";
+import { GuiLegalMove_0x88_С } from "./gui_legal_move_0x88.js";
+
+import { Draw_С } from "./draw.js";
 // uci
 import { Uci_C } from "../uci/uci.js";
 
@@ -26,6 +28,9 @@ class Gui_chess_C {
       IfritChessGame_O = 0;
       chessBoard_8x8_O = new ChessBoard_8x8_C();// доска 8x8 для графического отображения в браузере
       game_line_0x88_O = new Game_line_0x88_C();//
+
+      guiLegalMove_0x88_O = new GuiLegalMove_0x88_С();//   
+
       draw_O = new Draw_С();// рисуем в браузере   
       uci_O = new Uci_C();
 
@@ -34,14 +39,10 @@ class Gui_chess_C {
       static WHITE = 1;
       static BLACK = 0;
 
-      // test = 1 просто генерация ходов и просмотр в консоле
-      // test = 2 запуск полного перебора minmax         
-      // test = 3 iterative deepening
-      // test = 4 message_to_engine(message) работа с воркером
-      static TEST_GEN_MOOVE = 1;
-      static TEST_MINMAX = 2;
-      static TEST_ID = 3;
-      static TEST_MESSAGE = 4;
+      // test = 1 запуск полного перебора minmax         
+      // test = 2 message_to_engine(message) работа с воркером
+      static TEST_MINMAX = 1;
+      static TEST_MESSAGE = 2;
 
       static CLICK_NO = 0;
       static CLICK_ONE = 1;
@@ -61,12 +62,12 @@ class Gui_chess_C {
       // максимальная глубина перебора
       depth_max = -1;
       // количество рассмотреных узлов
-      nodes = 0;
+      nodes_str = 0;
 
-      nodes_per_second = 0;
+      nodes_per_second_str = 0;
       
       // оценка найденного варианта
-      score = 0;
+      score_str = 0;
       // найденный вариант в виде строки с ходами и оценкой в конце
       pv_line_str = " no";
       // игра идет за белых или черных
@@ -85,6 +86,7 @@ class Gui_chess_C {
             this.GuiStartWorker_O.iniM(IfritChessGame_R);
             this.draw_O.iniM();
             this.uci_O.iniM();
+            this.guiLegalMove_0x88_O.iniM();
 
             this.click_state = Gui_chess_C.CLICK_NO;
             this.click_is_stop = Gui_chess_C.CLICK_NOT_STOP;
@@ -95,6 +97,8 @@ class Gui_chess_C {
             this.is_white = 1;
             this.nomber_move = 0;
             this.test = 1;
+
+ 
       }
 
       // координаты клика мышки переводим в номер клетки по х и у от 0 и до 7
