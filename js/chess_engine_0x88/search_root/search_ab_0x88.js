@@ -52,7 +52,7 @@ class Search_ab_0x88_C {
 
   // pruning
   is_lmr_use = 1;// уменьшаем глубину поиска ходов после всех взятий и двух киллеров, но не меньше 4 полухода 
-  is_razoring_use = 1;// не смотрим очень плохие для нас позиции. отключаем если нашли мат.
+  is_razoring_use = 0;// не смотрим очень плохие для нас позиции. отключаем если нашли мат.
   is_futility_pruning_use = 0;// not working
   ///////////////////////////////////////
 
@@ -151,12 +151,12 @@ class Search_ab_0x88_C {
         }
       }
 
-      if ((is_save_position.tn == Transposition_table_0x88_C.MAX_SCORE_UPDATE) && (isPV == 0)) {
+      // if ((is_save_position.tn == Transposition_table_0x88_C.MAX_SCORE_UPDATE) && (isPV == 0)) {
 
-        //test        
-        //this.test_tt.use_score = this.test_tt.use_score + 1;
-        return is_save_position.sc;
-      }
+      //   //test        
+      //   //this.test_tt.use_score = this.test_tt.use_score + 1;
+      //   return is_save_position.sc;
+      // }
     }
     // ==================================================== используем хеш таблицу    
 
@@ -569,11 +569,17 @@ export { Search_ab_0x88_C };
 
 // from Alexandria_src=====================
 // Reverse futility pruning -> (eval - futilityMargin) >= beta return (eval - futilityMargin)
+
 // Razoring
 //        if (depth <= 5 && eval + razoringCoeff() * depth < alpha){
 //            const int razorScore = Quiescence<false>(alpha, beta, 0, td, ss);
 //            if (razorScore <= alpha)
 //                return razorScore; }
+
+// Conditions to consider LMR. Calculate how much we should reduce the search depth.
+//if (totalMoves > 1 && depth >= 3 && (isQuiet || !ttPv)) {
+
+// =====================from Alexandria_src 
 
 // from Stockfish_src=====================
 // Step 4. Transposition table lookup
