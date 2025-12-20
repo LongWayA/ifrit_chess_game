@@ -94,7 +94,7 @@ class History_heuristic_0x88_C {
     // console.log("History_heuristic_0x88_C-> from_64 " + from_64 + " to_64 " + to_64 + " color " + color);
     // console.log("History_heuristic_0x88_C-> history " + this.history[color][from_64][to_64]);    
 
-    // если запись в ячейку истории превысила лемит все делим на два  
+    // если запись в ячейку истории превысила лимит все делим на два  
     if (this.history[color][from_64][to_64] > History_heuristic_0x88_C.MAX_HISTORY) {
 
       for (let color = 0; color < History_heuristic_0x88_C.MAX_COLOR; color++) {
@@ -106,23 +106,28 @@ class History_heuristic_0x88_C {
       }
     }
   }
-}
 
-export { History_heuristic_0x88_C };
-
-/*
-  // записываем плохой ход. я его не использую. сделал подобно старому ифриту. зачем нужен уже не помню 
+  // записываем плохой ход
   history_bad_save(color, from_128, to_128, depth, depth_max) {
 
     let delta_depth = depth_max - depth;
 
-    this.history[color][Chess_board_0x88_C.SQUARE_128_to_64[from_128]][Chess_board_0x88_C.SQUARE_128_to_64[to_128]] =
-      this.history[color][Chess_board_0x88_C.SQUARE_128_to_64[from_128]][Chess_board_0x88_C.SQUARE_128_to_64[to_128]] +
-      delta_depth * delta_depth;
+    // преобразование Chess_board_0x88_C.SQUARE_128_to_64[] переводит 128-клеточную доску в 64-клеточную 
+    // так как нам в масиве не нужны 64 дополнительные неиспользуемые в данном случае клетки. 
+    // напомню что 128 клеточная доска нужна что бы в одну операцию (SquareIndex & 0x88 == 0 - мы еще на доске) 
+    // оперделять выход за пределы доски
 
-    // если запись в ячейку истории превысила лемит все делим на два  
-    if (this.history[color][Chess_board_0x88_C.SQUARE_128_to_64[from_128]][Chess_board_0x88_C.SQUARE_128_to_64[to_128]] >
-      History_heuristic_0x88_C.MAX_HISTORY) {
+    let from_64 = Chess_board_0x88_C.SQUARE_128_to_64[from_128];
+    let to_64 = Chess_board_0x88_C.SQUARE_128_to_64[to_128];
+
+    this.history[color][from_64][to_64] = this.history[color][from_64][to_64] - delta_depth * delta_depth; 
+
+    // console.log("History_heuristic_0x88_C-> from_64 " + from_64 + " to_64 " + to_64 + " color " + color);
+    // console.log("History_heuristic_0x88_C-> history " + this.history[color][from_64][to_64]);    
+
+    // если запись в ячейку истории превысила лимит все делим на два  
+    if (this.history[color][from_64][to_64] < -1 * History_heuristic_0x88_C.MAX_HISTORY) {
+
       for (let color = 0; color < History_heuristic_0x88_C.MAX_COLOR; color++) {
         for (let from = 0; from < History_heuristic_0x88_C.MAX_COORDINATE; from++) {
           for (let to = 0; to < History_heuristic_0x88_C.MAX_COORDINATE; to++) {
@@ -131,5 +136,7 @@ export { History_heuristic_0x88_C };
         }
       }
     }
-  }
-*/
+  }  
+}
+
+export { History_heuristic_0x88_C };

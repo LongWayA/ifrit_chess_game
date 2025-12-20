@@ -25,6 +25,10 @@ class Uci_C {
 
       }
 
+      set_message() {
+
+      }
+
       quit() {
 
       }

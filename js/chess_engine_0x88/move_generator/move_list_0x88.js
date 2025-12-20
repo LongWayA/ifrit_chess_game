@@ -344,7 +344,7 @@ class Move_list_0x88_С {
                 if (history_heuristic_0x88_O.history[this.piece_color][from_64_i][to_64_i] <
                     history_heuristic_0x88_O.history[this.piece_color][from_64_j][to_64_j]) {
 
-//                    console.log("Move_list_0x88_С-> SORTING -----------------------------------");     
+                    //                    console.log("Move_list_0x88_С-> SORTING -----------------------------------");     
                     // сохраняем позицию на которую будем писать
                     save_type_move = this.type_move[i];
                     save_from = this.from[i];
@@ -589,17 +589,26 @@ class Move_list_0x88_С {
         return found;
     }
 
-    // находим и возвращем порядковый номер хода 
-    // по ходу from, to 
-    // в случае преващений вернет первое попавшееся превращение
-    return_i_move(from, to) {
+    // находим и возвращаем порядковый номер хода 
+    // по ходу from, to, promo
+    // в том числе и в случае превращений 
+    return_i_move(from, to, promo = "") {
 
         let i_move = -1;
 
         for (let i = 0; i < this.number_move; i++) {
             if ((this.from[i] == from) && (this.to[i] == to)) {
-                i_move = i;
-                return i_move;
+                if (promo == "") {
+                    i_move = i;
+                    return i_move;
+                } else {
+
+                    if (promo == this.return_promo_piece_from_type_move(this.type_move[i])) {
+                        i_move = i;
+                        return i_move;
+                    }
+                    continue;
+                }
             }
         }
 
@@ -610,17 +619,16 @@ class Move_list_0x88_С {
     }
 
     // возвращем ход из списка на заданной позиции 
-    // в виде строки вида Qe2-e4 
-    // для превращений сам не знаю что выведет 
-    // и взятия не отмечаются
+    // в виде строки вида e2e4, e7e8q 
     move_to_string(i_move, chess_board_0x88_O) {
 
-        let move_str = "" + this.type_move_to_name_piese(this.type_move[i_move]) + "" +
-            //pv_line_str = pv_line_str + this.type_move[i] + "" +       
-            Chess_board_0x88_C.LET_COOR[chess_board_0x88_O.s_0x88_to_x07(this.from[i_move])] + "" +
-            (8 - chess_board_0x88_O.s_0x88_to_y07(this.from[i_move])) + "-" +
-            Chess_board_0x88_C.LET_COOR[chess_board_0x88_O.s_0x88_to_x07(this.to[i_move])] + "" +
-            (8 - chess_board_0x88_O.s_0x88_to_y07(this.to[i_move])) + " ";
+        let promo = this.return_promo_piece_from_type_move(this.type_move[i_move]);
+
+        let move_str = "" +
+            Chess_board_0x88_C.LET_COOR[chess_board_0x88_O.s_0x88_to_x07(this.from[i_move])] +
+            (8 - chess_board_0x88_O.s_0x88_to_y07(this.from[i_move])) +
+            Chess_board_0x88_C.LET_COOR[chess_board_0x88_O.s_0x88_to_x07(this.to[i_move])] +
+            (8 - chess_board_0x88_O.s_0x88_to_y07(this.to[i_move])) + promo;
 
         return move_str;
     }
@@ -919,6 +927,39 @@ class Move_list_0x88_С {
         if (type_move == Move_list_0x88_С.MOVE_KING_CASTLE) return "KING";
         if (type_move == Move_list_0x88_С.MOVE_KING_QUEEN_CASTLE) return "KING";
     }
+
+    // возвращаем фигуру в которую превращается пешка по типу хода
+    return_promo_piece_from_type_move(type_move) {
+
+        if (type_move == Move_list_0x88_С.MOVE_PAWN_PROMO_QUEEN) return "q";
+        if (type_move == Move_list_0x88_С.MOVE_PAWN_PROMO_ROOK) return "r";
+        if (type_move == Move_list_0x88_С.MOVE_PAWN_PROMO_BISHOP) return "b";
+        if (type_move == Move_list_0x88_С.MOVE_PAWN_PROMO_KNIGHT) return "n";
+
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_QUEEN_PROMO_QUEEN) return "q";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_QUEEN_PROMO_ROOK) return "r";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_QUEEN_PROMO_BISHOP) return "b";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_QUEEN_PROMO_KNIGHT) return "n";
+
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_ROOK_PROMO_QUEEN) return "q";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_ROOK_PROMO_ROOK) return "r";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_ROOK_PROMO_BISHOP) return "b";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_ROOK_PROMO_KNIGHT) return "n";
+
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_BISHOP_PROMO_QUEEN) return "q";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_BISHOP_PROMO_ROOK) return "r";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_BISHOP_PROMO_BISHOP) return "b";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_BISHOP_PROMO_KNIGHT) return "n";
+
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_KNIGHT_PROMO_QUEEN) return "q";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_KNIGHT_PROMO_ROOK) return "r";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_KNIGHT_PROMO_BISHOP) return "b";
+        if (type_move == Move_list_0x88_С.CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT) return "n";
+
+        return "";
+
+    }
+
 }
 
 export { Move_list_0x88_С };

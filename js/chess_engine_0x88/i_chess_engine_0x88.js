@@ -48,29 +48,24 @@ class ChessEngine_0x88_С {
     this.uci_O.iniM();
   }
 
+
+
+
   // сообщение поиска движку
   message_search_root_to_engine(info_return_search) {
      let message = info_return_search.pv_line_str;
-
-      console.log("Search_0x88_C->pv_line_str " + message + " depth_search " + info_return_search.depth_search_str);
-
+     
     this.worker_chessEngine_0x88_O.message_chessEngine_0x88_to_worker_chessEngine_0x88_O(message);
   }
 
-  //////////////////////
-  // TEST
-
   // запуск полного перебора minmax
   // тут можно проверить корректность игрового движка с помощью perf_t. как правильно он генерирует позиции.
-  test_go_depth_minmax(fen_start, depth_max) {
+  go_depth_minmax(fen_start, depth_max) {
     //console.log("ChessEngine_0x88_С->test_go_depth_nm --------");
-    let info_return_search = this.search_root_0x88_O.test_start_search_minmax(fen_start, depth_max);
+    let info_return_search = this.search_root_0x88_O.start_search_minmax(fen_start, depth_max);
 
     return info_return_search;
   }
-
-  //////////////////////
-  // GAME
 
   // iterative deepening
   go_depth_id(fen_start, depth_max) {

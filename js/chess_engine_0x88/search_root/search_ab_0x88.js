@@ -410,38 +410,49 @@ class Search_ab_0x88_C {
               return score;   // 
             }//
 
-            tt_type_node = Transposition_table_0x88_C.MAX_SCORE_UPDATE;
+            //tt_type_node = Transposition_table_0x88_C.MAX_SCORE_UPDATE;
 
             if (score > alpha) {
               alpha = score; //
-              tt_type_node = Transposition_table_0x88_C.ALPHA_UPDATE;
+              //tt_type_node = Transposition_table_0x88_C.ALPHA_UPDATE;
+              if (this.is_TT_use == 1) {
+                // записываем ход в хеш
+                transposition_table_0x88_O.add_position(Transposition_table_0x88_C.ALPHA_UPDATE, move_list_0x88_O.type_move[move_i],
+                  score, move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], depth, depth_max, chess_board_0x88_O);
 
+                //test
+                if (tt_type_node == Transposition_table_0x88_C.MAX_SCORE_UPDATE) {
+                  //this.test_tt.save_score_up = this.test_tt.save_score_up + 1;
+                } else if (tt_type_node == Transposition_table_0x88_C.ALPHA_UPDATE) {
+                  //this.test_tt.save_alpha_up = this.test_tt.save_alpha_up + 1;
+                }
+              }
               if (isPV == 1) {
                 best_node_line_0x88_O.save_list(pv_line_0x88_O);
                 best_node_line_0x88_O.type_variant[depth] = "ab_W";
                 is_update_pv_line = 1;
               }
-            }
+            } 
+            // else {//if (score > alpha) {
+            //   // записываем ход в историю color, from_128, to_128, depth, depth_max
+            //   if (this.is_history_heuristic_use == 1) {
+            //     if (move_list_0x88_O.type_move[move_i] > Move_list_0x88_С.CAPTURES_KING_PAWN) {// ход не взятие
 
-            if (this.is_TT_use == 1) {
-              // записываем ход в хеш
-              transposition_table_0x88_O.add_position(tt_type_node, move_list_0x88_O.type_move[move_i],
-                score, move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], depth, depth_max, chess_board_0x88_O);
+            //       history_heuristic_0x88_O.history_bad_save(move_list_0x88_O.piece_color,
+            //         move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], depth, depth_max);
 
-              //test
-              if (tt_type_node == Transposition_table_0x88_C.MAX_SCORE_UPDATE) {
-                //this.test_tt.save_score_up = this.test_tt.save_score_up + 1;
-              } else if (tt_type_node == Transposition_table_0x88_C.ALPHA_UPDATE) {
-                //this.test_tt.save_alpha_up = this.test_tt.save_alpha_up + 1;
-              }
-            }
-          } else {
+            //       //this.test_hh.add_b_cnt_h_move = this.test_hh.add_b_cnt_h_move + 1;
+            //     }
+            //   }
+            // }
+
+          } else {//if (this.is_ab_use == 1) {
             if (isPV == 1) {
               best_node_line_0x88_O.save_list(pv_line_0x88_O);
               best_node_line_0x88_O.type_variant[depth] = "ab_B";
               is_update_pv_line = 1;
             }
-          }
+          }//if (this.is_ab_use == 1) {
         }
 
       } else {// if (move_list_0x88_O.piece_color == Chess_board_0x88_C.WHITE)
@@ -483,31 +494,43 @@ class Search_ab_0x88_C {
               return score;//
             }//
 
-            tt_type_node = Transposition_table_0x88_C.MAX_SCORE_UPDATE;
+            //tt_type_node = Transposition_table_0x88_C.MAX_SCORE_UPDATE;
 
             if (score < beta) {
               beta = score; //
-              tt_type_node = Transposition_table_0x88_C.BETA_UPDATE;
+              //tt_type_node = Transposition_table_0x88_C.BETA_UPDATE;
+              if (this.is_TT_use == 1) {
+                // записываем ход в хеш
+                transposition_table_0x88_O.add_position(Transposition_table_0x88_C.BETA_UPDATE, move_list_0x88_O.type_move[move_i],
+                  score, move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], depth, depth_max, chess_board_0x88_O);
 
+                //test
+                // if (tt_type_node == Transposition_table_0x88_C.MAX_SCORE_UPDATE) {
+                //   //this.test_tt.save_score_up = this.test_tt.save_score_up + 1;
+                // } else if (tt_type_node == Transposition_table_0x88_C.ALPHA_UPDATE) {
+                //   //this.test_tt.save_alpha_up = this.test_tt.save_alpha_up + 1;
+                // }
+              }
               if (isPV == 1) {
                 best_node_line_0x88_O.save_list(pv_line_0x88_O);
                 best_node_line_0x88_O.type_variant[depth] = "ab_B";
                 is_update_pv_line = 1;
               }
             }
-            // записываем ход в хеш
-            if (this.is_TT_use == 1) {
-              transposition_table_0x88_O.add_position(tt_type_node, move_list_0x88_O.type_move[move_i],
-                score, move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], depth, depth_max, chess_board_0x88_O);
+            // else {//if (score < beta) {
+            //   // записываем ход в историю color, from_128, to_128, depth, depth_max
+            //   if (this.is_history_heuristic_use == 1) {
+            //     if (move_list_0x88_O.type_move[move_i] > Move_list_0x88_С.CAPTURES_KING_PAWN) {// ход не взятие
 
-              //test                
-              if (tt_type_node == Transposition_table_0x88_C.MAX_SCORE_UPDATE) {
-                //this.test_tt.save_score_up = this.test_tt.save_score_up + 1;
-              } else if (tt_type_node == Transposition_table_0x88_C.BETA_UPDATE) {
-                //this.test_tt.save_beta_up = this.test_tt.save_beta_up + 1;
-              }
-            }
-          } else {
+            //       history_heuristic_0x88_O.history_bad_save(move_list_0x88_O.piece_color,
+            //         move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], depth, depth_max);
+
+            //       //this.test_hh.add_b_cnt_h_move = this.test_hh.add_b_cnt_h_move + 1;
+            //     }
+            //   }
+            // }
+
+          } else {//
             if (isPV == 1) {
               best_node_line_0x88_O.save_list(pv_line_0x88_O);
               best_node_line_0x88_O.type_variant[depth] = "ab_B";

@@ -115,6 +115,7 @@ class PV_line_0x88_C {
     let pv_line_str = "PV line: ";
     let v = 0;
     let v_i = 0;
+    let promo;
 
     for (let i = 0; i < this.depth_max + 1; i++) {
 
@@ -138,13 +139,38 @@ class PV_line_0x88_C {
         pv_line_str = pv_line_str + "-";
 
       }
+
+      promo = move_list_0x88_O.return_promo_piece_from_type_move(this.type_move[i]);
+
       pv_line_str = pv_line_str +         
         Chess_board_0x88_C.LET_COOR[chess_board_0x88_O.s_0x88_to_x07(this.to[i])] + "" +
-        (8 - chess_board_0x88_O.s_0x88_to_y07(this.to[i])) + " ";
+        (8 - chess_board_0x88_O.s_0x88_to_y07(this.to[i])) + promo + " ";
+
     }
     pv_line_str = pv_line_str + "val = " + this.score_depth_max;
     return pv_line_str;
   }
+
+  pv_line_to_uci_string(chess_board_0x88_O, move_list_0x88_O) {
+
+    let pv_line_str = "";
+    let promo;
+
+    for (let i = 0; i < this.depth_max + 1; i++) {
+
+      pv_line_str = pv_line_str +
+        Chess_board_0x88_C.LET_COOR[chess_board_0x88_O.s_0x88_to_x07(this.from[i])] + "" + 
+        (8 - chess_board_0x88_O.s_0x88_to_y07(this.from[i]));
+
+      promo = move_list_0x88_O.return_promo_piece_from_type_move(this.type_move[i]);
+
+      pv_line_str = pv_line_str +         
+        Chess_board_0x88_C.LET_COOR[chess_board_0x88_O.s_0x88_to_x07(this.to[i])] + "" +
+        (8 - chess_board_0x88_O.s_0x88_to_y07(this.to[i])) + promo + " ";
+    }
+    return pv_line_str;
+  }
+
 }
 
 export{PV_line_0x88_C};

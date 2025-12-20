@@ -311,7 +311,7 @@ let IfritChessGame_R = {
             let fen_start = IfritChessGame_R.gui_chess_O.chessBoard_8x8_O.set_fen_from_8x8();
 
             // режим тестовой игры движок отвечает на наш ход 
-            let info_return_search = IfritChessGame_R.chessEngine_0x88_O.test_go_depth_minmax(fen_start, IfritChessGame_R.gui_chess_O.depth_max);
+            let info_return_search = IfritChessGame_R.chessEngine_0x88_O.go_depth_minmax(fen_start, IfritChessGame_R.gui_chess_O.depth_max);
 
             IfritChessGame_R.gui_chess_O.score_str = info_return_search.best_score_str;
             IfritChessGame_R.gui_chess_O.nodes_str = info_return_search.node_count_str
@@ -395,7 +395,7 @@ let IfritChessGame_R = {
 
                 // режим тестовой игры движок отвечает на наш ход 
                 //let info_return_search = IfritChessGame_R.chessEngine_0x88_O.go_depth_id(fen_start, IfritChessGame_R.gui_chess_O.depth_max);
-                let info_return_search = IfritChessGame_R.chessEngine_0x88_O.test_go_depth_minmax(fen_start, IfritChessGame_R.gui_chess_O.depth_max);
+                let info_return_search = IfritChessGame_R.chessEngine_0x88_O.go_depth_minmax(fen_start, IfritChessGame_R.gui_chess_O.depth_max);
                 IfritChessGame_R.gui_chess_O.score = info_return_search.best_score_str;
                 IfritChessGame_R.gui_chess_O.nodes = info_return_search.node_count_str;
                 IfritChessGame_R.gui_chess_O.pv_line_str = info_return_search.pv_line_str;
@@ -442,7 +442,7 @@ let IfritChessGame_R = {
             if (IfritChessGame_R.gui_chess_O.test == Gui_chess_C.TEST_MINMAX) {
 
                 let fen_start = IfritChessGame_R.gui_chess_O.chessBoard_8x8_O.set_fen_from_8x8();
-                let info_return_search = IfritChessGame_R.chessEngine_0x88_O.test_go_depth_minmax(fen_start, IfritChessGame_R.gui_chess_O.depth_max);
+                let info_return_search = IfritChessGame_R.chessEngine_0x88_O.go_depth_minmax(fen_start, IfritChessGame_R.gui_chess_O.depth_max);
 
                 IfritChessGame_R.gui_chess_O.score = info_return_search.best_score_str;
                 IfritChessGame_R.gui_chess_O.nodes = info_return_search.node_count_str;
