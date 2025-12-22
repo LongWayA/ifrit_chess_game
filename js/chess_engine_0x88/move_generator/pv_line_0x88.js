@@ -132,7 +132,10 @@ class PV_line_0x88_C {
         Chess_board_0x88_C.LET_COOR[chess_board_0x88_O.s_0x88_to_x07(this.from[i])] + "" + 
         (8 - chess_board_0x88_O.s_0x88_to_y07(this.from[i]));
 
-      if (this.type_move[i] < 52) {// это взятия
+        let l1 = (this.type_move[i] > 0) && (this.type_move[i] < 17);
+        let l2 = (this.type_move[i] > 20) && (this.type_move[i] < 52);
+
+        if (l1 || l2) {// это взятия
         pv_line_str = pv_line_str + "x";
 
       } else {

@@ -87,7 +87,8 @@ class Search_root_0x88_C {
     pv_line_str: "-",// цепочка ходов приведшея к лучшему ходу и оценке на заданной глубине  
     pv_line_uci_str: "-",// цепочка ходов приведшея к лучшему ходу и оценке на заданной глубине         
     best_score_str: "-",// лучшая оценка найденная при поиске на заданной глубине
-    best_move_str: "-",// лучший найденный ход
+    best_score_uci_str: "-",// лучшая оценка найденная при поиске на заданной глубине
+    best_move_uci_str: "-",// лучший найденный ход
     node_count_str: "-",// количество просмотренных узлов или по другому позиций
     nodes_per_second_str: "-",// скорость узлы в сек.
     depth_max_search_str: "-"// заданная глубина поиска
@@ -213,8 +214,8 @@ class Search_root_0x88_C {
           continue;
         }
 
-      //  console.log("info currmove "+  move_list_0x88_O.move_to_string(move_i, chess_board_0x88_O) + 
-      // " currmovenumber " + move_i + " depth "+ String(depth_max_current));
+      //this.chessEngine_0x88_O.info_currmove(move_list_0x88_O.move_to_string_uci(move_i, chess_board_0x88_O),  move_i, String(depth_max_current));
+
 
         this.search_ab_0x88_O.node = 0;
         pv_line_0x88_O.add_move(move_i, move_list_0x88_O, depth);
@@ -293,31 +294,23 @@ class Search_root_0x88_C {
       //console.log("Search_0x88_C->add_a_cnt_h_move " + this.search_ab_0x88_O.test_hh.add_a_cnt_h_move);
       //console.log("Search_0x88_C->add_b_cnt_h_move " + this.search_ab_0x88_O.test_hh.add_b_cnt_h_move);
 
+      let w = (move_list_0x88_O.piece_color == Chess_board_0x88_C.WHITE) ? 1 : -1;
+
       this.info_return_search.fen_start = fen_start;
       this.info_return_search.fen_end = chess_board_0x88_O_end.set_fen_from_0x88();
       this.info_return_search.pv_line_str = pv_line_0x88_O.pv_line_to_string(chess_board_0x88_O, move_list_0x88_O);
       this.info_return_search.pv_line_uci_str = pv_line_0x88_O.pv_line_to_uci_string(chess_board_0x88_O, move_list_0x88_O);
       this.info_return_search.best_score_str = String(best_score);
-      this.info_return_search.best_move_str = move_list_0x88_O.move_to_string(best_move_i, chess_board_0x88_O);
+      this.info_return_search.best_score_uci_str = String(w * best_score);
+      this.info_return_search.best_move_uci_str = move_list_0x88_O.move_to_string_uci(best_move_i, chess_board_0x88_O);
       this.info_return_search.node_count_str = String(node);
       this.info_return_search.nodes_per_second_str = String(Math.round(node / time_delta));
       this.info_return_search.depth_max_search_str = String(depth_max_current);
 
+// nnnnnnnnnnnnnnnnnnnnnn
       this.chessEngine_0x88_O.message_search_root_to_engine(this.info_return_search);
 
-//      let w = (move_list_0x88_O.piece_color == Chess_board_0x88_C.WHITE) ? 1 : -1;
-
-      //  console.log("info currmove "+  move_list_0x88_O.move_to_string(best_move_i, chess_board_0x88_O) + 
-      // " currmovenumber " + best_move_i);
-
-      // console.log("info depth "+ String(depth_max_current) + " score cp " + w * String(best_score) 
-      // + " nodes " + String(node) + " nps " + String(Math.round(node / time_delta)) + " pv " + 
-      // pv_line_0x88_O.pv_line_to_uci_string(chess_board_0x88_O, move_list_0x88_O));
-
-      // console.log("info depth "+ this.info_return_search.depth_max_search_str + " score cp " + this.info_return_search.best_score_str 
-      // + " nodes " + this.info_return_search.node_count_str + " nps " + this.info_return_search.nodes_per_second_str 
-      // + " pv " + this.info_return_search.pv_line_uci_str);
-
+      this.chessEngine_0x88_O.info_from_depth(this.info_return_search);
 
       //console.log("Search_0x88_C->ADD");
       //console.log("Search_0x88_C->key_64_equal " + this.transposition_table_0x88_O.key_64_equal);

@@ -619,8 +619,33 @@ class Move_list_0x88_С {
     }
 
     // возвращем ход из списка на заданной позиции 
-    // в виде строки вида e2e4, e7e8q 
+    // в виде строки вида Pe2-e4, Pe7-e8q 
     move_to_string(i_move, chess_board_0x88_O) {
+
+        let promo = this.return_promo_piece_from_type_move(this.type_move[i_move]);
+
+        let move_str = "" + this.type_move_to_name_piese(this.type_move[i_move]) +
+            Chess_board_0x88_C.LET_COOR[chess_board_0x88_O.s_0x88_to_x07(this.from[i_move])] +
+            (8 - chess_board_0x88_O.s_0x88_to_y07(this.from[i_move]));
+ 
+        let l1 = (this.type_move[i_move] > 0) && (this.type_move[i_move] < 17);
+        let l2 = (this.type_move[i_move] > 20) && (this.type_move[i_move] < 52);
+
+        if (l1 || l2) {// это взятия
+            move_str = move_str + "x";
+        } else {
+            move_str = move_str + "-";
+        }
+
+        move_str = move_str + Chess_board_0x88_C.LET_COOR[chess_board_0x88_O.s_0x88_to_x07(this.to[i_move])] +
+            (8 - chess_board_0x88_O.s_0x88_to_y07(this.to[i_move])) + promo + " ";
+
+        return move_str;
+    }
+
+    // возвращем ход из списка на заданной позиции 
+    // в виде строки вида e2e4, e7e8q 
+    move_to_string_uci(i_move, chess_board_0x88_O) {
 
         let promo = this.return_promo_piece_from_type_move(this.type_move[i_move]);
 
@@ -632,8 +657,6 @@ class Move_list_0x88_С {
 
         return move_str;
     }
-
-
 
     // это нужно для работы генератора взятий. это очень важная функция и конечно полностью проверена
     // возвращаем название хода превращения пешки со взятием по взятой фигуре 

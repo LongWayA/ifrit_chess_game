@@ -103,7 +103,7 @@ rl.on('line', (line) => {
     // + " nodes " + info_return_search.node_count_str + " nps " + info_return_search.nodes_per_second_str 
     // + " pv " + info_return_search.pv_line_uci_str);
 
-    console.log('bestmove ' + info_return_search.best_move_str);
+    console.log('bestmove ' + info_return_search.best_move_uci_str);
   }
 
   else if (command === 'quit') {

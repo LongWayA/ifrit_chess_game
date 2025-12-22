@@ -48,12 +48,21 @@ class ChessEngine_0x88_С {
     this.uci_O.iniM();
   }
 
+  info_from_depth(info_return_search){
+     let str = "info depth "+ info_return_search.depth_max_search_str + " score cp " + info_return_search.best_score_uci_str + 
+     " nodes " + info_return_search.node_count_str + " nps " + info_return_search.nodes_per_second_str + 
+     " pv " + info_return_search.pv_line_uci_str;
+     console.log(str);
+  }
 
-
+  info_currmove(move,  move_i, depth_max_current){
+     let str = "info currmove "+  move + " currmovenumber " + move_i + " depth "+ depth_max_current;
+     console.log(str);
+  }
 
   // сообщение поиска движку
   message_search_root_to_engine(info_return_search) {
-     let message = info_return_search.pv_line_str;
+    let message = info_return_search.pv_line_str;
      
     this.worker_chessEngine_0x88_O.message_chessEngine_0x88_to_worker_chessEngine_0x88_O(message);
   }
