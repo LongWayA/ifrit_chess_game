@@ -81,6 +81,8 @@ class Search_root_0x88_C {
 
   START_POSITION_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
+  stop_search = 0;
+
   info_return_search = {
     fen_start: "-",// начальная позиция в виде fen передаваемая на вход движка
     fen_end: "-",// конечная позиция в виде fen возникшая после хода движка
@@ -101,8 +103,14 @@ class Search_root_0x88_C {
   iniM(chessEngine_0x88_O) {
     this.chessEngine_0x88_O = chessEngine_0x88_O;
 
+    this.search_ab_0x88_O.iniM();
     this.transposition_table_0x88_O.iniM();
     this.history_heuristic_0x88_O.iniM();
+  }
+
+  set_stop_search_in_1() {
+    this.search_ab_0x88_O.set_stop_search_in_1();
+    this.stop_search = 1;
   }
 
   // 
@@ -133,6 +141,10 @@ class Search_root_0x88_C {
     let time_start = 0;
     let time_end = 0;
     let time_delta = 0;
+
+    this.search_ab_0x88_O.set_stop_search_in_0();
+    this.stop_search = 0;
+
 
     chess_board_0x88_O_start.set_0x88_from_fen(fen_start);
 
@@ -214,7 +226,7 @@ class Search_root_0x88_C {
           continue;
         }
 
-      //this.chessEngine_0x88_O.info_currmove(move_list_0x88_O.move_to_string_uci(move_i, chess_board_0x88_O),  move_i, String(depth_max_current));
+        //this.chessEngine_0x88_O.info_currmove_uci(move_list_0x88_O.move_to_string_uci(move_i, chess_board_0x88_O), move_i, String(depth_max_current));
 
 
         this.search_ab_0x88_O.node = 0;
@@ -256,6 +268,10 @@ class Search_root_0x88_C {
 
         // восстановили доску
         this.unmake_move_0x88_O.undo_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O);
+
+      // эсктренный выход 
+      if (this.stop_search == 1) return 0;
+
       }//for (let move_i = 0; move_i < move_list_0x88_O.number_move; move_i++) {
 
       if (chess_board_0x88_O.side_to_move == 1) {
@@ -307,10 +323,10 @@ class Search_root_0x88_C {
       this.info_return_search.nodes_per_second_str = String(Math.round(node / time_delta));
       this.info_return_search.depth_max_search_str = String(depth_max_current);
 
-// nnnnnnnnnnnnnnnnnnnnnn
+      // nnnnnnnnnnnnnnnnnnnnnn
       this.chessEngine_0x88_O.message_search_root_to_engine(this.info_return_search);
 
-      this.chessEngine_0x88_O.info_from_depth(this.info_return_search);
+      this.chessEngine_0x88_O.info_from_depth_uci(this.info_return_search);
 
       //console.log("Search_0x88_C->ADD");
       //console.log("Search_0x88_C->key_64_equal " + this.transposition_table_0x88_O.key_64_equal);
@@ -462,7 +478,7 @@ class Search_root_0x88_C {
       //console.log("3 Search_0x88_C-> move_str[" + pos + "] " + move_str[pos]); 
       if (move_str[pos] != " ") {
         promo = move_str[pos];
-        pos = pos + 1;    
+        pos = pos + 1;
       }
 
       i_move = move_list_0x88_O.return_i_move(from, to, promo);

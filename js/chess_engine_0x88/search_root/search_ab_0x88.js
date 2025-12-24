@@ -54,6 +54,9 @@ class Search_ab_0x88_C {
   is_lmr_use = 1;// уменьшаем глубину поиска ходов после всех взятий и двух киллеров, но не меньше 4 полухода 
   is_razoring_use = 0;// не смотрим очень плохие для нас позиции. отключаем если нашли мат.
   is_futility_pruning_use = 0;// not working
+
+  stop_search = 0;
+
   ///////////////////////////////////////
 
   // test_tt = {
@@ -81,8 +84,17 @@ class Search_ab_0x88_C {
   }
 
   iniM() {
-
+     this.stop_search = 0;
   }
+
+  set_stop_search_in_1() {
+    this.stop_search = 1;
+  }
+
+  set_stop_search_in_0() {
+    this.stop_search = 0;
+  }
+
 
   // searching_alpha_beta_fail_soft
   searching_alpha_beta_id(alpha, beta, pv_line_0x88_O, chess_board_0x88_O, move_gen_1_captures_0x88_O,
@@ -103,6 +115,9 @@ class Search_ab_0x88_C {
 
     // test+++++++++++++++++++++++++++
     //let test_save_move_list_0x88_O = new Move_list_0x88_С();// для тестирования сортировок
+
+    // эсктренный выход
+    if(this.stop_search == 1) return 0;
 
     // поиск на максимальной глубине-----------------------------------
     if (depth >= depth_max) {
@@ -432,7 +447,7 @@ class Search_ab_0x88_C {
                 best_node_line_0x88_O.type_variant[depth] = "ab_W";
                 is_update_pv_line = 1;
               }
-            } 
+            }
             // else {//if (score > alpha) {
             //   // записываем ход в историю color, from_128, to_128, depth, depth_max
             //   if (this.is_history_heuristic_use == 1) {

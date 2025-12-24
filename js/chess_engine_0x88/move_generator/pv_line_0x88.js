@@ -113,19 +113,19 @@ class PV_line_0x88_C {
   pv_line_to_string(chess_board_0x88_O, move_list_0x88_O) {
 
     let pv_line_str = "PV line: ";
-    let v = 0;
-    let v_i = 0;
+    let side_to_move = 1;
+    let number_move = 0;
     let promo;
 
     for (let i = 0; i < this.depth_max + 1; i++) {
 
-      if (v == 0) {
-        v = 1;
-        v_i = v_i + 1;
-        pv_line_str = pv_line_str + (v_i) + ".";
+      if (side_to_move == 1) {
+        side_to_move = 0;
+        number_move = number_move + 1;
+        pv_line_str = pv_line_str + (number_move) + ".";
 
       } else {
-        v = 0;
+        side_to_move = 1;
       }
 
       pv_line_str = pv_line_str + move_list_0x88_O.type_move_to_name_piese(this.type_move[i]) + "" +
@@ -150,7 +150,7 @@ class PV_line_0x88_C {
         (8 - chess_board_0x88_O.s_0x88_to_y07(this.to[i])) + promo + " ";
 
     }
-    pv_line_str = pv_line_str + "val = " + this.score_depth_max;
+    pv_line_str = pv_line_str + "s = " + this.score_depth_max;
     return pv_line_str;
   }
 

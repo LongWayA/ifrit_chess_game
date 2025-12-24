@@ -49,7 +49,7 @@ rl.on('line', (line) => {
   save_command(command);
 
   if (command === 'uci') {
-    console.log('id name Ifrit_js_2112m25');
+    console.log('id name Ifrit_js_2412m25');
     console.log('id author AnBr75');
     console.log('uciok');
   }
@@ -79,7 +79,7 @@ rl.on('line', (line) => {
       //console.log('fen_start ' + fen_start);
 
     } else {
-      fen_start = command.slice(13,firstIndex - 1);     
+      fen_start = command.slice(13, firstIndex - 1);
       let move_str = command.slice(firstIndex);
 
       chessEngine_0x88_O.search_root_0x88_O.chess_board_0x88_O_uci.set_0x88_from_fen(fen_start);
@@ -104,6 +104,10 @@ rl.on('line', (line) => {
     // + " pv " + info_return_search.pv_line_uci_str);
 
     console.log('bestmove ' + info_return_search.best_move_uci_str);
+  }
+
+  else if (command === 'stop') {
+      chessEngine_0x88_O.set_stop_search_in_1();
   }
 
   else if (command === 'quit') {
