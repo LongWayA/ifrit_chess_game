@@ -269,7 +269,7 @@ class Search_root_0x88_C {
         // восстановили доску
         this.unmake_move_0x88_O.undo_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O);
 
-      // эсктренный выход 
+      // экстренный выход 
       if (this.stop_search == 1) return 0;
 
       }//for (let move_i = 0; move_i < move_list_0x88_O.number_move; move_i++) {

@@ -41,8 +41,8 @@ class Gui_chess_C {
 
       // test = 1 запуск полного перебора minmax         
       // test = 2 message_to_engine(message) работа с воркером
-      static TEST_MINMAX = 1;
-      static TEST_MESSAGE = 2;
+      static MINMAX = 1;
+      static ID = 2;
 
       static CLICK_NO = 0;
       static CLICK_ONE = 1;
@@ -65,7 +65,7 @@ class Gui_chess_C {
       nodes_str = 0;
 
       nodes_per_second_str = 0;
-      
+
       // оценка найденного варианта
       score_str = 0;
       // найденный вариант в виде строки с ходами и оценкой в конце
@@ -74,8 +74,9 @@ class Gui_chess_C {
       is_white = 1;
       // номер хода в записи партии
       nomber_move = 0;
+
       // режим игры
-      test = 1;
+      mode_game = 1;
 
       constructor() {
       }
@@ -96,9 +97,7 @@ class Gui_chess_C {
             this.pv_line_str = " no";
             this.is_white = 1;
             this.nomber_move = 0;
-            this.test = 1;
-
- 
+            this.mode_game = 1;
       }
 
       // координаты клика мышки переводим в номер клетки по х и у от 0 и до 7
@@ -125,6 +124,61 @@ class Gui_chess_C {
                   return true;
             } else {
                   return false;
+            }
+      }
+
+      // если кликнули по той же клетке снова
+      is_click_to_square_again(x_save, y_save, x, y) {
+
+            if ((x_save == x) && (y_save == y)) {
+                  return true;
+            } else {
+                  return false;
+            }
+      }
+
+      // если кликнули по фигуре цвета хода
+      is_click_to_our_piece(x, y) {
+
+            // фигуры цвет
+            let sq_piece_color_8x8 = this.chessBoard_8x8_O.sq_piece_color_8x8[y][x];
+
+            // фигуры имя
+            let sq_piece_8x8 = this.chessBoard_8x8_O.sq_piece_8x8[y][x];
+
+            // фигура цвета ходящей стороны и фигура есть 
+            if ((sq_piece_8x8 != 0) && (sq_piece_color_8x8 == this.chessBoard_8x8_O.side_to_move)) {//   
+                  return true;
+            } else {
+                  return false;
+            }
+      }
+
+      // если кликнули по фигуре цвета хода
+      is_legal_move() {
+
+            // обсчитали ход и выдали вердикт легальный ли он без шахов
+            if (this.guiLegalMove_0x88_O.pseudo_move_is_ok(
+                  this.click_save_on_squares_x,
+                  this.click_save_on_squares_y,
+                  this.click_on_squares_x,
+                  this.click_on_squares_y,
+                  this.chessBoard_8x8_O)) {
+
+                  // обсчитали ход и выдали вердикт легальный ли он с шахами
+                  let is_moove_legal = this.guiLegalMove_0x88_O.move_is_legal(
+                        this.click_save_on_squares_x,
+                        this.click_save_on_squares_y,
+                        this.click_on_squares_x,
+                        this.click_on_squares_y,
+                        this.chessBoard_8x8_O);
+
+                  // фигура цвета ходящей стороны и фигура есть 
+                  if (is_moove_legal) {//   
+                        return true;
+                  } else {
+                        return false;
+                  }
             }
       }
 

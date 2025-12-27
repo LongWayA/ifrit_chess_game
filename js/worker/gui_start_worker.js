@@ -14,8 +14,10 @@ import { Gui_chess_C } from "../gui_chess/i_gui_chess.js";
  *  
 */
 
+// при запуске игры сразу же запускается отдельный поток в котором идет расчет.
 const worker_egine_0x88 = new Worker('js/worker/worker_chess_engine_0x88.js', { type: "module" });
 
+// принимаем сообщения от движка
 worker_egine_0x88.onmessage = function (event) {
       //console.log('Сообщение от движка : ', event.data);
       GuiStartWorker_R.message_egnine_to_gui(event.data);
@@ -33,7 +35,7 @@ let GuiStartWorker_R = {
             GuiStartWorker_R.checkbox_O = IfritChessGame_R.checkbox_O;
       },
 
-      // функция работы с движком запущенным в отдельном потоке.
+      // функция работы с текстовыми сообщениями от движка который запущен в отдельном потоке.
       message_egnine_to_gui(message) {
             //console.log('TO GUI message ' + message);
 
@@ -107,21 +109,18 @@ let GuiStartWorker_R = {
             }
       },
 
-      test_message(not_go) {
-            GuiStartWorker_R.IfritChessGame_O.gui_chess_O.draw_O.draw_chess_board_8x8(GuiStartWorker_R.IfritChessGame_O.gui_chess_O.chessBoard_8x8_O,
-                  GuiStartWorker_R.IfritChessGame_O.gui_chess_O.is_white);
+      // это точно должно называться по другому. это команда от облочки движку
+      test_message(fen, depth_max, side_to_move, not_go, mode_game) {
 
-            GuiStartWorker_R.IfritChessGame_O.checkbox_O.set_text_engine(" Ифрит думает.");
-
-            // message_gui_to_engine    
-            let fen = GuiStartWorker_R.IfritChessGame_O.gui_chess_O.chessBoard_8x8_O.set_fen_from_8x8(
-                  GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.chess_board_0x88_O_start);
-            let message = "position fen " + fen;
-            worker_egine_0x88.postMessage(message);
-            message = "go depth " + GuiStartWorker_R.IfritChessGame_O.gui_chess_O.depth_max;
+            let message = "mode_game " + mode_game;
             worker_egine_0x88.postMessage(message);
 
-            if (GuiStartWorker_R.IfritChessGame_O.gui_chess_O.chessBoard_8x8_O.side_to_move != Gui_chess_C.WHITE) {
+            message = "position fen " + fen;
+            worker_egine_0x88.postMessage(message);
+            message = "go depth " + depth_max;
+            worker_egine_0x88.postMessage(message);
+
+            if (side_to_move != Gui_chess_C.WHITE) {
                   // GuiStartWorker_R.IfritChessGame_O.gui_chess_O.nomber_move = GuiStartWorker_R.IfritChessGame_O.gui_chess_O.nomber_move + 1;
                   if (not_go == 1) {
                         GuiStartWorker_R.IfritChessGame_O.gui_chess_O.nomber_move = GuiStartWorker_R.IfritChessGame_O.gui_chess_O.nomber_move + 1;

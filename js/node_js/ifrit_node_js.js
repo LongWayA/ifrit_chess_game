@@ -107,7 +107,7 @@ rl.on('line', (line) => {
   }
 
   else if (command === 'stop') {
-      chessEngine_0x88_O.set_stop_search_in_1();
+    chessEngine_0x88_O.set_stop_search_in_1();
   }
 
   else if (command === 'quit') {
