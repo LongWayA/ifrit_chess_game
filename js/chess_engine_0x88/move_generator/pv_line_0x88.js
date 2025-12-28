@@ -19,16 +19,24 @@ class PV_line_0x88_C {
 
   static MAX_DEPTH = 100;
 
-  type_move = new Array(PV_line_0x88_C.MAX_DEPTH).fill(-1);
-  piece_color = new Array(PV_line_0x88_C.MAX_DEPTH).fill(-1);
+  // type_move = new Array(PV_line_0x88_C.MAX_DEPTH).fill(-1);
+  // piece_color = new Array(PV_line_0x88_C.MAX_DEPTH).fill(-1);
 
-  from = new Array(PV_line_0x88_C.MAX_DEPTH).fill(-1);
-  to = new Array(PV_line_0x88_C.MAX_DEPTH).fill(-1);
+  // from = new Array(PV_line_0x88_C.MAX_DEPTH).fill(-1);
+  // to = new Array(PV_line_0x88_C.MAX_DEPTH).fill(-1);
 
-  type_variant = new Array(PV_line_0x88_C.MAX_DEPTH).fill(-1);
+  // type_variant = new Array(PV_line_0x88_C.MAX_DEPTH).fill(-1);
 
-  score_depth_max = -1;
-  depth_max = 0;
+  type_move = new Int32Array(PV_line_0x88_C.MAX_DEPTH).fill(-1);
+  piece_color = new Int32Array(PV_line_0x88_C.MAX_DEPTH).fill(-1);
+
+  from = new Int32Array(PV_line_0x88_C.MAX_DEPTH).fill(-1);
+  to = new Int32Array(PV_line_0x88_C.MAX_DEPTH).fill(-1);
+
+  type_variant = new Int32Array(PV_line_0x88_C.MAX_DEPTH).fill(-1);
+
+  score_depth_max = -1|0;
+  depth_max = 0|0;
 
 
   constructor() {

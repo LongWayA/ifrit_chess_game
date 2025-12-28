@@ -399,7 +399,7 @@ class Search_root_0x88_C {
     //chess_board_0x88_O_end.save_chess_board_0x88(this.search_minmax_0x88_O.chess_board_0x88_O_move);
 
     time_end = this.timer_O.getCurrentTimeMs();
-    time_delta = (time_end - time_start) / 1;
+    time_delta = (time_end - time_start) / 1000;
 
     this.info_return_search.fen_start = fen_start;
     this.info_return_search.fen_end = chess_board_0x88_O_end.set_fen_from_0x88();

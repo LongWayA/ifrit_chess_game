@@ -109,44 +109,47 @@ class Chess_board_0x88_C {
     ];
 
     // ФИГУРЫ НА ДОСКЕ
-    sq_piece_0x88 = new Array(128).fill(0);// доска 0x88 с фигурами
-    sq_piece_color_0x88 = new Array(128).fill(0);// доска 0x88 с цветом фигур
+    //sq_piece_0x88 = new Array(128).fill(0);// доска 0x88 с фигурами
+    sq_piece_0x88 = new Uint32Array(128).fill(0);// доска 0x88 с фигурами 
 
-    king_from_white = 0;// положение белого короля
-    king_from_black = 0;// положение черного короля
+    //sq_piece_color_0x88 = new Array(128).fill(0);// доска 0x88 с цветом фигур
+    sq_piece_color_0x88 = new Uint32Array(128).fill(0);// доска 0x88 с цветом фигур    
+
+    king_from_white = 0|0;// положение белого короля
+    king_from_black = 0|0;// положение черного короля
 
     // ВСПОМОГАТЕЛЬНАЯ ИНФОРМАЦИЯ
     // цвет хода 0 - черные 1 - белые
-    side_to_move = 0;
+    side_to_move = 0|0;
 
     // разрешение взятия на проходе 1/0
-    en_passant_yes = 0;
+    en_passant_yes = 0|0;
 
     // координата битого поля
-    en_passant_target_square = 0;
+    en_passant_target_square = 0|0;
 
     // рокировка белых в длинную сторону   1/0
-    castling_Q = 1;
+    castling_Q = 1|0;
 
     // рокировка белых в короткую сторону  1/0
-    castling_K = 1;
+    castling_K = 1|0;
 
     // рокировка черных в длинную сторону  1/0
-    castling_q = 1;
+    castling_q = 1|0;
 
     // рокировка черных в короткую сторону 1/0
-    castling_k = 1;
+    castling_k = 1|0;
 
     // оценка позиции
-    score = -1;
+    score = -1|0;
 
     //The number of halfmoves since the last capture or pawn advance, 
     // used for the fifty-move rule.(from wikipedia)
-    halfmove_clock = -1;
+    halfmove_clock = -1|0;
 
     //Fullmove number: The number of the full moves. 
     // It starts at 1 and is incremented after Black's move.(from wikipedia)   
-    fullmove_number = -1;
+    fullmove_number = -1|0;
 
     // 64 битный ключ позиции   
     key_64 = 0n;
@@ -707,7 +710,7 @@ class Chess_board_0x88_C {
          6 - король
         */
         // раставляем фигуры
-        this.sq_piece_0x88 = [
+        this.sq_piece_0x88.set([
             4, 2, 3, 5, 6, 3, 2, 4, 0, 0, 0, 0, 0, 0, 0, 0,
             1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -716,10 +719,10 @@ class Chess_board_0x88_C {
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
             4, 2, 3, 5, 6, 3, 2, 4, 0, 0, 0, 0, 0, 0, 0, 0,
-        ];
+        ]);
 
         // инициируем цвет фигур
-        this.sq_piece_color_0x88 = [
+        this.sq_piece_color_0x88.set([
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -728,7 +731,7 @@ class Chess_board_0x88_C {
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
             1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
-        ];
+        ]);
 
         this.king_from_black = 4;
         this.king_from_white = 116;
@@ -767,7 +770,7 @@ class Chess_board_0x88_C {
     iniPositionFor_0() {
 
         // раставляем фигуры
-        this.sq_piece_0x88 = [
+        this.sq_piece_0x88.set([
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -776,10 +779,10 @@ class Chess_board_0x88_C {
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        ];
+        ]);
 
         // инициируем цвет фигур
-        this.sq_piece_color_0x88 = [
+        this.sq_piece_color_0x88.set([
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -788,7 +791,7 @@ class Chess_board_0x88_C {
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        ];
+        ]);
 
         // цвет хода 0 - черные 1 - белые
         this.side_to_move = 0;

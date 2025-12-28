@@ -26,6 +26,8 @@ class Worker_ChessEngine_0x88_С {
 
   PV_line_str_save = "-";
   fen_start = "-";
+  mode_game = 0;
+
 
   constructor() {
   }
@@ -49,21 +51,33 @@ class Worker_ChessEngine_0x88_С {
 
       this.fen_start = fen;
 
-    } else if (message.includes("go depth ")) {
+    }
+    else if (message.includes("go depth ")) {
       let end = message.length;
       let depth_max_s = message.slice(9, end);
       let depth_max = Number(depth_max_s);
+      let info_return_search;
 
-      //let info_return_search = w_chessEngine_0x88_O.chessEngine_0x88_O.test_go_depth_nm(depth_max);      
-      let info_return_search = this.chessEngine_0x88_O.go_depth_id(this.fen_start, depth_max);
-      
+      if (this.mode_game == 1) {
+        info_return_search = this.chessEngine_0x88_O.go_depth_minmax(this.fen_start, depth_max);
+      }
+      else if (this.mode_game == 2) {
+        info_return_search = this.chessEngine_0x88_O.go_depth_id(this.fen_start, depth_max);
+      }
+
       postMessage("position fen " + info_return_search.fen_end);
       postMessage("score " + info_return_search.best_score_str);
       postMessage("node " + info_return_search.node_count_str);
-      postMessage("nps " + info_return_search.nodes_per_second_str);      
+      postMessage("nps " + info_return_search.nodes_per_second_str);
       postMessage(this.PV_line_str_save);
       postMessage("go");
     }
+    else if (message.includes("mode_game ")) {
+      let end = message.length;
+      let mode_game_s = message.slice(9, end);
+      this.mode_game = Number(mode_game_s);
+    }
+
   }
 }
 

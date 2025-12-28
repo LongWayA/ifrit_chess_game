@@ -186,22 +186,25 @@ class Move_list_0x88_С {
     // в типе хода записана фигура которая берет, которую берут, в которую превращаются 
     // и которую берут с превращением. так что имя взятой фигуры отдельно не нужно.
     // вообще тут все возможные типы ходов.
-    type_move = new Array(Move_list_0x88_С.LENGTH_LIST).fill(Move_list_0x88_С.MOVE_NO);
+    //type_move = new Array(Move_list_0x88_С.LENGTH_LIST).fill(Move_list_0x88_С.MOVE_NO);
+    type_move = new Int32Array(Move_list_0x88_С.LENGTH_LIST).fill(Move_list_0x88_С.MOVE_NO);    
 
     // откуда ходит фигура
-    from = new Array(Move_list_0x88_С.LENGTH_LIST).fill(-1);
+    //from = new Array(Move_list_0x88_С.LENGTH_LIST).fill(-1);
+    from = new Int32Array(Move_list_0x88_С.LENGTH_LIST).fill(-1);   
 
     // куда ходит фигура
-    to = new Array(Move_list_0x88_С.LENGTH_LIST).fill(-1);
+    //to = new Array(Move_list_0x88_С.LENGTH_LIST).fill(-1);
+    to = new Int32Array(Move_list_0x88_С.LENGTH_LIST).fill(-1);    
 
     // цвет ходяшей фигуры. 
-    piece_color = -1;
+    piece_color = -1|0;
 
     // количество взятий
-    number_captures_move = 0;
+    number_captures_move = 0|0;
 
     // количество всех ходов
-    number_move = 0;
+    number_move = 0|0;
 
     constructor() {
 

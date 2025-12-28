@@ -85,7 +85,7 @@ import { Chess_board_0x88_C } from "../move_generator/chess_board_0x88.js";
     мы его вообще не найдем в списке.
 */
 //-
-// надо еще много думать над этим :)
+// надо еще много думать над этим :) BigUint64Array Uint32Array const bitboards = new BigUint64Array(8)
 
 
 class Transposition_table_0x88_C {
@@ -110,11 +110,11 @@ class Transposition_table_0x88_C {
     out = { tn: -1, tm: -1, sc: -1, from: -1, to: -1, dd: -1 };
 
     // 64 битный ключ позиции   
-    key_64 = new Array(Transposition_table_0x88_C.MAX_TABLE_LENTH);
+    key_64 = new BigUint64Array(Transposition_table_0x88_C.MAX_TABLE_LENTH);
 
     // упакованная информация tn, tm, from, to, dd 
     // используется в сортировке ходов. ход выводится на первое место
-    move = new Array(Transposition_table_0x88_C.MAX_TABLE_LENTH);
+    move = new Int32Array(Transposition_table_0x88_C.MAX_TABLE_LENTH);
 
     // оценку позиции не буду использовать при отсечках по альфе и бете  
     // пока что слишком много коллизий. только сортировка, а для нее нужен только ход. 
@@ -122,7 +122,7 @@ class Transposition_table_0x88_C {
     // сейчас 64 битный ключ плюс убрал ошибку.
     // было много коллизий потому что не учитывал поле взятия на проходе.
 
-    score = new Array(Transposition_table_0x88_C.MAX_TABLE_LENTH);
+    score = new Int32Array(Transposition_table_0x88_C.MAX_TABLE_LENTH);
 
     // test_fen_board ----------------------------------------------------------------------------------
     // тестовый фен позиции. смотрим насколько адекватный получается ключ позиции
@@ -179,7 +179,7 @@ class Transposition_table_0x88_C {
 
             for (let name = 0; name < 7; name++) {
 
-                this.key_array_64[color][name] = new Array(64);
+                this.key_array_64[color][name] = new BigUint64Array(64);
             }
         }
 

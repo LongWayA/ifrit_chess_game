@@ -23,13 +23,13 @@ class killer_heuristic_0x88_O {
 
   static MAX_DEPTH = 100;
 
-  killer_moves_from_1 = new Array(killer_heuristic_0x88_O.MAX_DEPTH).fill(-1);
-  killer_moves_to_1 = new Array(killer_heuristic_0x88_O.MAX_DEPTH).fill(-1);
+  killer_moves_from_1 = new Int32Array(killer_heuristic_0x88_O.MAX_DEPTH).fill(-1);
+  killer_moves_to_1 = new Int32Array(killer_heuristic_0x88_O.MAX_DEPTH).fill(-1);
 
-  killer_moves_from_2 = new Array(killer_heuristic_0x88_O.MAX_DEPTH).fill(-1);
-  killer_moves_to_2 = new Array(killer_heuristic_0x88_O.MAX_DEPTH).fill(-1);
+  killer_moves_from_2 = new Int32Array(killer_heuristic_0x88_O.MAX_DEPTH).fill(-1);
+  killer_moves_to_2 = new Int32Array(killer_heuristic_0x88_O.MAX_DEPTH).fill(-1);
 
-  depth_max = 0;
+  depth_max = 0|0;
 
   constructor() {
 
