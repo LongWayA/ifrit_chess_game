@@ -21,7 +21,7 @@
             <b class="c2">
                 <!-- дата в виде  The dateTime is specified in the following form "YYYY-MM-DDThh:mm:ss" 
                 where: YYYY indicates the year. MM indicates the month. DD indicates the day.-->
-                *Last update <time datetime="2025-12-28">28.12m.25 </time>
+                *Last update <time datetime="2025-12-29">29.12m.25 </time>
                 *Site visits: <input type="text" name="t_requests" id="text_requests" value="requests"
                     style="background-color: rgb(215, 215, 223)">*<br>
             </b>
@@ -41,14 +41,28 @@
             Ваш браузер не поддерживает HTML5 графику<br>
         </canvas>
         <!-- кнопка -->
-        <input type="button" id="buttonStart" value="Start Game" onclick="window.startGameButton()" />
-        <input type="button" id="buttonGo" value="Go" onclick="window.goGameButton()" />
-        <input type="button" id="buttonFen" value="Fen Game" onclick="window.fenGameButton()" />
-        <input type="checkbox" id="is_black_game" name="is_black_game"> Играть за черных <br>
-        Макcимальная глубина перебора:
-        <input type="number" id="max_depth" name="max_depth" min="1" max="11" step="1" value="6" style="width: 40px"><br>
-        fen: <input type="text" id="set_fen" name="set_fen"
-            value="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" style="width: 400px" />
+        <div style="text-align: center;">
+            <input type="button" id="buttonLeft" value="    < " onclick="window.left()" />
+            <input type="button" id="buttonGo" value="   make a move   " onclick="window.goGameButton()" />
+            <input type="button" id="buttonRight" value=" >    " onclick="window.right()" />
+        </div>
+        <input type="button" id="buttonStart" value="Start game" onclick="window.startGameButton()" />
+        Начать игру.
+        <br>
+        <input type="checkbox" id="is_black_game" name="is_black_game">
+        За черных.
+        <input type="number" id="max_depth" name="max_depth" min="1" max="11" step="1" value="6" style="width: 40px">
+        Макc. глубина перебора.
+        <br>
+        <br>
+        Задать позицию из нотации Форсайта-Эдвардса.
+        <br>
+        <input type="button" id="buttonFen" value="Set position from FEN" onclick="window.fenGameButton()" />
+
+        <input type="text" id="set_fen" name="set_fen"
+            value="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" style="width: 430px" />
+
+
     </div>
     <!-- *************************** block 2-->
 
@@ -62,7 +76,7 @@
 
     <!--block 4 ***************************-->
     <div class="block_4">
-        <textarea id="text_engine" name="text_engine" rows="7" cols="106" readonly="true" style="resize: none">
+        <textarea id="text_engine" name="text_engine" rows="10" cols="106" readonly="true" style="resize: none">
           Вывод размышлений Ифрита
        </textarea>
     </div>
@@ -74,6 +88,14 @@
         import { IfritChessGame_R } from "./js/browser/ifrit_chess_game.js";
 
         IfritChessGame_R.iniM();
+
+        window.left = function () {
+
+        }
+
+        window.right = function () {
+
+        }
 
         window.startGameButton = function () {
             IfritChessGame_R.startGameButton();

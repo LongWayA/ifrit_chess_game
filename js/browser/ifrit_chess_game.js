@@ -82,10 +82,10 @@ let IfritChessGame_R = {
 
         IfritChessGame_R.POSITION_FEN = IfritChessGame_R.INITIAL_POSITION_FEN;
 
-        //IfritChessGame_R.gui_chess_O.mode_game = Gui_chess_C.MINMAX;//        
-        IfritChessGame_R.gui_chess_O.mode_game = Gui_chess_C.ID;//       
+        //IfritChessGame_R.gui_chess_O.mode_game = Gui_chess_C.MINMAX;// полный перебор        
+        IfritChessGame_R.gui_chess_O.mode_game = Gui_chess_C.ID;// циклическое погружение со всеми эвристиками      
 
-        // задаем глубину перебора во время игры или обсчета тестовых позиций на количество узлов
+        // задаем глубину перебора во время игры
         IfritChessGame_R.gui_chess_O.depth_max = 6;
         IfritChessGame_R.checkbox_O.set_input_max_depth_value(IfritChessGame_R.gui_chess_O.depth_max);
 
@@ -130,7 +130,6 @@ let IfritChessGame_R = {
 
             IfritChessGame_R.mouseDown_2(x, y);
         }
-        // IfritChessGame_R.gui_chess_O.click_is_stop = Gui_chess_C.CLICK_NOT_STOP;
     },
 
     mouseDown_2(x, y) {
@@ -171,9 +170,8 @@ let IfritChessGame_R = {
                     console.log('IfritChessGame_R->mouseDown2 x ' + x + " y " + y);
                 }
             }
-
-            // второй клик по доске
-        } else if (IfritChessGame_R.gui_chess_O.click_state == Gui_chess_C.CLICK_ONE) {
+        } // второй клик по доске
+        else if (IfritChessGame_R.gui_chess_O.click_state == Gui_chess_C.CLICK_ONE) {
             // попали по доске
             if (IfritChessGame_R.gui_chess_O.is_click_to_board()) {//
 
@@ -322,7 +320,7 @@ let IfritChessGame_R = {
         IfritChessGame_R.checkbox_O.set_text_chess_game("Новая игра");
         IfritChessGame_R.checkbox_O.add_text_chess_game("\n Game: ");
 
-        IfritChessGame_R.gui_chess_O.draw_O.draw_chess_board_8x8(IfritChessGame_R.gui_chess_O.chessBoard_8x8_O, 
+        IfritChessGame_R.gui_chess_O.draw_O.draw_chess_board_8x8(IfritChessGame_R.gui_chess_O.chessBoard_8x8_O,
             IfritChessGame_R.gui_chess_O.is_white);
 
     },

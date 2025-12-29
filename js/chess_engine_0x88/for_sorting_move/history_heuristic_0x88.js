@@ -44,7 +44,7 @@ class History_heuristic_0x88_C {
     for (let color = 0; color < History_heuristic_0x88_C.MAX_COLOR; color++) {
       this.history[color] = new Array(History_heuristic_0x88_C.MAX_COORDINATE);
       for (let from = 0; from < History_heuristic_0x88_C.MAX_COORDINATE; from++) {
-        this.history[color][from] = new Array(History_heuristic_0x88_C.MAX_COORDINATE);
+        this.history[color][from] = new Int32Array(History_heuristic_0x88_C.MAX_COORDINATE);
       }
     }
     this.clear_history();
