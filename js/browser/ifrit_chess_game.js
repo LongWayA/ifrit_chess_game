@@ -101,12 +101,15 @@ let IfritChessGame_R = {
         //console.log('IfritChessGame_R->startGame');
         IfritChessGame_R.updateGame();
         IfritChessGame_R.drawGame();
+
     },
 
     updateGame() {
         //console.log('IfritChessGame_R->updateGame');
         // проверяем правильность полного перебора. что все правила соблюдены.
         IfritChessGame_R.gui_chess_O.chessBoard_8x8_O.set_8x8_from_fen(IfritChessGame_R.POSITION_FEN);
+
+        IfritChessGame_R.gui_chess_O.game_line_0x88_O.add_position(IfritChessGame_R.POSITION_FEN, "move0");
     },
 
     drawGame() {
@@ -114,7 +117,7 @@ let IfritChessGame_R = {
         IfritChessGame_R.gui_chess_O.draw_O.draw_chess_board_8x8(IfritChessGame_R.gui_chess_O.chessBoard_8x8_O,
             IfritChessGame_R.gui_chess_O.is_white);
 
-        IfritChessGame_R.checkbox_O.set_text_chess_game(" Возврат хода еще не сделан." + "\n Game: ");
+        IfritChessGame_R.checkbox_O.set_text_chess_game(" Game: ");
     },
 
     mouseMove(x, y) {
@@ -248,6 +251,8 @@ let IfritChessGame_R = {
         // теперь пишем фен
         let fen = IfritChessGame_R.gui_chess_O.guiLegalMove_0x88_O.chess_board_0x88_O_gui.set_fen_from_0x88();
 
+        IfritChessGame_R.gui_chess_O.game_line_0x88_O.add_position(fen, "move0");
+
         // обновляем доску оболочки по раннее записанному фену
         IfritChessGame_R.gui_chess_O.chessBoard_8x8_O.set_8x8_from_fen(fen);
 
@@ -286,9 +291,13 @@ let IfritChessGame_R = {
 
     startGameButton() {
 
+        IfritChessGame_R.gui_chess_O.game_line_0x88_O.iniM();
+
         // инициализируем доску из фена
         IfritChessGame_R.POSITION_FEN = IfritChessGame_R.INITIAL_POSITION_FEN;
         IfritChessGame_R.gui_chess_O.chessBoard_8x8_O.set_8x8_from_fen(IfritChessGame_R.POSITION_FEN);
+
+        IfritChessGame_R.gui_chess_O.game_line_0x88_O.add_position(IfritChessGame_R.POSITION_FEN, "move0");
 
         // выводим фен в окошко
         IfritChessGame_R.checkbox_O.set_input_set_fen(IfritChessGame_R.POSITION_FEN);
@@ -359,11 +368,12 @@ let IfritChessGame_R = {
 
     fenGameButton() {
 
+        IfritChessGame_R.gui_chess_O.game_line_0x88_O.iniM();
+
         IfritChessGame_R.POSITION_FEN = IfritChessGame_R.checkbox_O.get_input_set_fen();
         IfritChessGame_R.gui_chess_O.chessBoard_8x8_O.set_8x8_from_fen(IfritChessGame_R.POSITION_FEN);
 
-        let fen_start = IfritChessGame_R.gui_chess_O.chessBoard_8x8_O.set_fen_from_8x8();
-        IfritChessGame_R.gui_chess_O.guiLegalMove_0x88_O.chess_board_0x88_O_start.set_0x88_from_fen(fen_start);
+        IfritChessGame_R.gui_chess_O.game_line_0x88_O.add_position(IfritChessGame_R.POSITION_FEN, "move0");
 
         IfritChessGame_R.gui_chess_O.draw_O.draw_chess_board_8x8(IfritChessGame_R.gui_chess_O.chessBoard_8x8_O, IfritChessGame_R.gui_chess_O.is_white);
 
@@ -376,11 +386,19 @@ let IfritChessGame_R = {
     },
 
     left() {
-
+        IfritChessGame_R.gui_chess_O.game_line_0x88_O.left();
+        let fen = IfritChessGame_R.gui_chess_O.game_line_0x88_O.get_position();
+        IfritChessGame_R.gui_chess_O.chessBoard_8x8_O.set_8x8_from_fen(fen);
+        IfritChessGame_R.gui_chess_O.draw_O.draw_chess_board_8x8(IfritChessGame_R.gui_chess_O.chessBoard_8x8_O,
+            IfritChessGame_R.gui_chess_O.is_white);
     },
 
     right() {
-
+        IfritChessGame_R.gui_chess_O.game_line_0x88_O.rigt();
+        let fen = IfritChessGame_R.gui_chess_O.game_line_0x88_O.get_position();
+        IfritChessGame_R.gui_chess_O.chessBoard_8x8_O.set_8x8_from_fen(fen);
+        IfritChessGame_R.gui_chess_O.draw_O.draw_chess_board_8x8(IfritChessGame_R.gui_chess_O.chessBoard_8x8_O,
+            IfritChessGame_R.gui_chess_O.is_white);
     },
 
 };

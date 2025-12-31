@@ -30,12 +30,6 @@ class GuiLegalMove_0x88_С {
 
   static NAME = "GuiLegalMove_0x88_С";
 
-  // для 
-  chess_board_0x88_O_start = new Chess_board_0x88_C();
-
-  chess_board_0x88_O_test = new Chess_board_0x88_C();
-  move_list_0x88_O_test = new Move_list_0x88_С();
-
   uci_O = new Uci_C();
 
   // обеспечение оболочки

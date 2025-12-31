@@ -8,7 +8,7 @@
 
 import { Chess_board_0x88_C } from "../move_generator/chess_board_0x88.js";
 // nnnnnnnnnnnnnnnnnnnnnn
-import crypto from 'node:crypto';
+//import crypto from 'node:crypto';
 
 /**
 * НАЗНАЧЕНИЕ
@@ -625,8 +625,8 @@ class Transposition_table_0x88_C {
                     //let hi = Math.floor(Math.random() * 65536);//65536   1302
                     //let lo = Math.floor(Math.random() * 65536);//65536   1302
 // nnnnnnnnnnnnnnnnnnnnnn
-                    crypto.getRandomValues(uint_a_64);
-                    //self.crypto.getRandomValues(uint_a_64);
+                    //crypto.getRandomValues(uint_a_64);
+                    self.crypto.getRandomValues(uint_a_64);
                     //window.crypto.getRandomValues(hi_lo);
                     uint64 = uint_a_64[0];//
 

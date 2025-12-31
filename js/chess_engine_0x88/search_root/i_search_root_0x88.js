@@ -225,7 +225,7 @@ class Search_root_0x88_C {
         }
 
         //gggggggggggggggggggggggggggggggggg
-        this.chessEngine_0x88_O.info_currmove_uci(move_list_0x88_O.move_to_string_uci(move_i, chess_board_0x88_O), move_i, String(depth_max_current));
+        //this.chessEngine_0x88_O.info_currmove_uci(move_list_0x88_O.move_to_string_uci(move_i, chess_board_0x88_O), move_i, String(depth_max_current));
 
 
         this.search_ab_0x88_O.node = 0;
@@ -323,7 +323,7 @@ class Search_root_0x88_C {
       this.info_return_search.depth_max_search_str = String(depth_max_current);
 
       // nnnnnnnnnnnnnnnnnnnnnn
-      //this.chessEngine_0x88_O.message_search_root_to_engine(this.info_return_search);
+      this.chessEngine_0x88_O.message_search_root_to_engine(this.info_return_search);
 
       this.chessEngine_0x88_O.info_from_depth_uci(this.info_return_search);
 

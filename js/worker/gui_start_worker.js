@@ -44,8 +44,9 @@ let GuiStartWorker_R = {
                   let fen = message.slice(13, end);
                   GuiStartWorker_R.checkbox_O.set_input_set_fen(fen);
                   //console.log('g fen from engine : ' + fen);
-                  GuiStartWorker_R.IfritChessGame_O.gui_chess_O.chessBoard_8x8_O.set_8x8_from_fen(fen,
-                        GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.chess_board_0x88_O_start);
+                  GuiStartWorker_R.IfritChessGame_O.gui_chess_O.chessBoard_8x8_O.set_8x8_from_fen(fen);
+                  
+                  GuiStartWorker_R.IfritChessGame_O.gui_chess_O.game_line_0x88_O.add_position(fen, "move0");
             }
 
             if (message.includes("score ")) {

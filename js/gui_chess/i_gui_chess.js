@@ -98,6 +98,8 @@ class Gui_chess_C {
             this.is_white = 1;
             this.nomber_move = 0;
             this.mode_game = 1;
+
+            this.game_line_0x88_O.iniM(); 
       }
 
       // координаты клика мышки переводим в номер клетки по х и у от 0 и до 7
