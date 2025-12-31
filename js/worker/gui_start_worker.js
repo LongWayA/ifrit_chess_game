@@ -45,7 +45,7 @@ let GuiStartWorker_R = {
                   GuiStartWorker_R.checkbox_O.set_input_set_fen(fen);
                   //console.log('g fen from engine : ' + fen);
                   GuiStartWorker_R.IfritChessGame_O.gui_chess_O.chessBoard_8x8_O.set_8x8_from_fen(fen);
-                  
+
                   GuiStartWorker_R.IfritChessGame_O.gui_chess_O.game_line_0x88_O.add_position(fen, "move0");
             }
 
@@ -100,9 +100,18 @@ let GuiStartWorker_R = {
 
                         GuiStartWorker_R.IfritChessGame_O.checkbox_O.add_text_chess_game(GuiStartWorker_R.IfritChessGame_O.gui_chess_O.nomber_move + "." +
                               GuiStartWorker_R.IfritChessGame_O.gui_chess_O.pv_line_str.slice(11, 18));
+
+                        GuiStartWorker_R.IfritChessGame_O.gui_chess_O.game_line_0x88_O.add_pv_line_str(GuiStartWorker_R.IfritChessGame_O.
+                              gui_chess_O.nomber_move + "." + GuiStartWorker_R.IfritChessGame_O.gui_chess_O.pv_line_str.slice(11, 18),
+                              GuiStartWorker_R.IfritChessGame_O.gui_chess_O.nomber_move, Gui_chess_C.WHITE);
+
                   } else {
 
                         GuiStartWorker_R.IfritChessGame_O.checkbox_O.add_text_chess_game(GuiStartWorker_R.IfritChessGame_O.gui_chess_O.pv_line_str.slice(11, 18));
+                        
+                        GuiStartWorker_R.IfritChessGame_O.gui_chess_O.game_line_0x88_O.add_pv_line_str(GuiStartWorker_R.IfritChessGame_O.gui_chess_O.pv_line_str.slice(11, 18),
+                              GuiStartWorker_R.IfritChessGame_O.gui_chess_O.nomber_move, 0);
+
                   }
 
                   GuiStartWorker_R.IfritChessGame_O.gui_chess_O.click_is_stop = Gui_chess_C.CLICK_NOT_STOP;
@@ -129,6 +138,13 @@ let GuiStartWorker_R = {
                               GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.move_list_0x88_O_gui.move_to_string(
                                     GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.i_move,
                                     GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.chess_board_0x88_O_gui));
+
+                        GuiStartWorker_R.IfritChessGame_O.gui_chess_O.game_line_0x88_O.add_pv_line_str(GuiStartWorker_R.IfritChessGame_O.gui_chess_O.nomber_move + "." +
+                              GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.move_list_0x88_O_gui.move_to_string(
+                                    GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.i_move,
+                                    GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.chess_board_0x88_O_gui),
+                              GuiStartWorker_R.IfritChessGame_O.gui_chess_O.nomber_move, Gui_chess_C.WHITE);
+
                   }
 
             } else {
@@ -137,6 +153,13 @@ let GuiStartWorker_R = {
                               GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.move_list_0x88_O_gui.move_to_string(
                                     GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.i_move,
                                     GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.chess_board_0x88_O_gui));
+
+                        GuiStartWorker_R.IfritChessGame_O.gui_chess_O.game_line_0x88_O.add_pv_line_str(
+                              GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.move_list_0x88_O_gui.move_to_string(
+                                    GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.i_move,
+                                    GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.chess_board_0x88_O_gui),
+                              GuiStartWorker_R.IfritChessGame_O.gui_chess_O.nomber_move, 0);
+
                   }
 
             }

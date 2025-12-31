@@ -299,6 +299,7 @@ let IfritChessGame_R = {
 
         IfritChessGame_R.gui_chess_O.game_line_0x88_O.add_position(IfritChessGame_R.POSITION_FEN, "move0");
 
+
         // выводим фен в окошко
         IfritChessGame_R.checkbox_O.set_input_set_fen(IfritChessGame_R.POSITION_FEN);
 
@@ -391,6 +392,10 @@ let IfritChessGame_R = {
         IfritChessGame_R.gui_chess_O.chessBoard_8x8_O.set_8x8_from_fen(fen);
         IfritChessGame_R.gui_chess_O.draw_O.draw_chess_board_8x8(IfritChessGame_R.gui_chess_O.chessBoard_8x8_O,
             IfritChessGame_R.gui_chess_O.is_white);
+
+        IfritChessGame_R.checkbox_O.set_text_chess_game(IfritChessGame_R.gui_chess_O.game_line_0x88_O.get_pv_line_str());
+
+        IfritChessGame_R.gui_chess_O.nomber_move = IfritChessGame_R.gui_chess_O.game_line_0x88_O.get_nomber_move();
     },
 
     right() {
@@ -399,6 +404,10 @@ let IfritChessGame_R = {
         IfritChessGame_R.gui_chess_O.chessBoard_8x8_O.set_8x8_from_fen(fen);
         IfritChessGame_R.gui_chess_O.draw_O.draw_chess_board_8x8(IfritChessGame_R.gui_chess_O.chessBoard_8x8_O,
             IfritChessGame_R.gui_chess_O.is_white);
+
+        IfritChessGame_R.checkbox_O.set_text_chess_game(IfritChessGame_R.gui_chess_O.game_line_0x88_O.get_pv_line_str()); 
+        
+        IfritChessGame_R.gui_chess_O.nomber_move = IfritChessGame_R.gui_chess_O.game_line_0x88_O.get_nomber_move();        
     },
 
 };

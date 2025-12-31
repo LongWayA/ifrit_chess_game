@@ -20,6 +20,10 @@ class Game_line_0x88_C {
 
   fen = new Array(Game_line_0x88_C.MAX_LENTH).fill(-1);
 
+  pv_line_str = new Array(Game_line_0x88_C.MAX_LENTH).fill("");
+
+  nomber_move = new Array(Game_line_0x88_C.MAX_LENTH).fill(0);
+
   current_position = 0;
 
   lenth_game = 0;
@@ -38,6 +42,8 @@ class Game_line_0x88_C {
     for (let i = 0; i < Game_line_0x88_C.MAX_LENTH; i++) {
 
       this.fen[i] = "";
+      this.pv_line_str[i] = "";
+      this.nomber_move[i] = 0;
     }
 
     this.current_position = 0;
@@ -65,6 +71,26 @@ class Game_line_0x88_C {
 
     this.full_game = this.full_game + move;
 
+  }
+
+  // 
+  add_pv_line_str(pv_line_str, nomber_move, w) {
+    //console.log('Game_line_0x88_C->add_position');
+
+    this.pv_line_str[this.current_position] = this.pv_line_str[this.current_position - 1] + pv_line_str;
+    if (w == 1) {
+      this.nomber_move[this.current_position] = nomber_move;
+    } else {
+      this.nomber_move[this.current_position] = nomber_move;
+    }
+  }
+
+  get_nomber_move() {
+    return this.nomber_move[this.current_position];
+  }
+
+  get_pv_line_str() {
+    return this.pv_line_str[this.current_position];
   }
 
   get_position() {
