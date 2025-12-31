@@ -374,6 +374,15 @@ let IfritChessGame_R = {
         IfritChessGame_R.checkbox_O.set_text_engine("\n Позиция задана из fen. Сами следите за его корректностью. Новая игра");
 
     },
+
+    left() {
+
+    },
+
+    right() {
+
+    },
+
 };
 
 export { IfritChessGame_R };

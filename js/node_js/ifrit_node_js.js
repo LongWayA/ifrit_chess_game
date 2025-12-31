@@ -49,7 +49,7 @@ rl.on('line', (line) => {
   save_command(command);
 
   if (command === 'uci') {
-    console.log('id name Ifrit_js_2412m25');
+    console.log('id name Ifrit_js_3112m25');
     console.log('id author AnBr75');
     console.log('uciok');
   }
@@ -63,10 +63,9 @@ rl.on('line', (line) => {
     // Здесь обычно парсят позицию (например, "position startpos moves e2e4")
     let move_str = command.slice(18);
 
-    chessEngine_0x88_O.search_root_0x88_O.chess_board_0x88_O_uci.set_0x88_from_fen(
-      chessEngine_0x88_O.search_root_0x88_O.START_POSITION_FEN);
-    fen_start = chessEngine_0x88_O.search_root_0x88_O.move_str_to_board(
-      chessEngine_0x88_O.search_root_0x88_O.chess_board_0x88_O_uci, move_str);
+    fen_start = chessEngine_0x88_O.search_root_0x88_O.START_POSITION_FEN;
+
+    fen_start = chessEngine_0x88_O.search_root_0x88_O.move_str_to_board(fen_start, move_str);
   }
 
   else if (command.startsWith('position fen')) {
@@ -82,9 +81,7 @@ rl.on('line', (line) => {
       fen_start = command.slice(13, firstIndex - 1);
       let move_str = command.slice(firstIndex);
 
-      chessEngine_0x88_O.search_root_0x88_O.chess_board_0x88_O_uci.set_0x88_from_fen(fen_start);
-      fen_start = chessEngine_0x88_O.search_root_0x88_O.move_str_to_board(
-        chessEngine_0x88_O.search_root_0x88_O.chess_board_0x88_O_uci, move_str);
+      fen_start = chessEngine_0x88_O.search_root_0x88_O.move_str_to_board(fen_start, move_str);
     }
   }
 
