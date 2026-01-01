@@ -46,7 +46,7 @@ let GuiStartWorker_R = {
                   //console.log('g fen from engine : ' + fen);
                   GuiStartWorker_R.IfritChessGame_O.gui_chess_O.chessBoard_8x8_O.set_8x8_from_fen(fen);
 
-                  GuiStartWorker_R.IfritChessGame_O.gui_chess_O.game_line_0x88_O.add_position(fen, "move0");
+                  GuiStartWorker_R.IfritChessGame_O.gui_chess_O.game_line_0x88_O.add_position(fen);
             }
 
             if (message.includes("score ")) {
@@ -94,23 +94,28 @@ let GuiStartWorker_R = {
                         ", score:" + GuiStartWorker_R.IfritChessGame_O.gui_chess_O.score +
                         "\n " + GuiStartWorker_R.IfritChessGame_O.gui_chess_O.pv_line_str);
 
+                  let move_str;      
+
                   if (GuiStartWorker_R.IfritChessGame_O.gui_chess_O.chessBoard_8x8_O.side_to_move != Gui_chess_C.WHITE) {
 
-                        GuiStartWorker_R.IfritChessGame_O.gui_chess_O.nomber_move = GuiStartWorker_R.IfritChessGame_O.gui_chess_O.nomber_move + 1;
+                        GuiStartWorker_R.IfritChessGame_O.gui_chess_O.number_move = GuiStartWorker_R.IfritChessGame_O.gui_chess_O.number_move + 1;
 
-                        GuiStartWorker_R.IfritChessGame_O.checkbox_O.add_text_chess_game(GuiStartWorker_R.IfritChessGame_O.gui_chess_O.nomber_move + "." +
-                              GuiStartWorker_R.IfritChessGame_O.gui_chess_O.pv_line_str.slice(11, 18));
+                        move_str = GuiStartWorker_R.IfritChessGame_O.gui_chess_O.number_move + "." +
+                              GuiStartWorker_R.IfritChessGame_O.gui_chess_O.pv_line_str.slice(11, 18);
 
-                        GuiStartWorker_R.IfritChessGame_O.gui_chess_O.game_line_0x88_O.add_pv_line_str(GuiStartWorker_R.IfritChessGame_O.
-                              gui_chess_O.nomber_move + "." + GuiStartWorker_R.IfritChessGame_O.gui_chess_O.pv_line_str.slice(11, 18),
-                              GuiStartWorker_R.IfritChessGame_O.gui_chess_O.nomber_move, Gui_chess_C.WHITE);
+                        GuiStartWorker_R.IfritChessGame_O.checkbox_O.add_text_chess_game(move_str);
+
+                        GuiStartWorker_R.IfritChessGame_O.gui_chess_O.game_line_0x88_O.add_pv_line_str(move_str,
+                              GuiStartWorker_R.IfritChessGame_O.gui_chess_O.number_move, Gui_chess_C.WHITE);
 
                   } else {
 
-                        GuiStartWorker_R.IfritChessGame_O.checkbox_O.add_text_chess_game(GuiStartWorker_R.IfritChessGame_O.gui_chess_O.pv_line_str.slice(11, 18));
-                        
-                        GuiStartWorker_R.IfritChessGame_O.gui_chess_O.game_line_0x88_O.add_pv_line_str(GuiStartWorker_R.IfritChessGame_O.gui_chess_O.pv_line_str.slice(11, 18),
-                              GuiStartWorker_R.IfritChessGame_O.gui_chess_O.nomber_move, 0);
+                        move_str = GuiStartWorker_R.IfritChessGame_O.gui_chess_O.pv_line_str.slice(11, 18);
+
+                        GuiStartWorker_R.IfritChessGame_O.checkbox_O.add_text_chess_game(move_str);
+
+                        GuiStartWorker_R.IfritChessGame_O.gui_chess_O.game_line_0x88_O.add_pv_line_str(move_str,
+                              GuiStartWorker_R.IfritChessGame_O.gui_chess_O.number_move, 0);
 
                   }
 
@@ -119,8 +124,10 @@ let GuiStartWorker_R = {
             }
       },
 
-      // это точно должно называться по другому. это команда от облочки движку
-      test_message(fen, depth_max, side_to_move, not_go, mode_game) {
+
+      // передаем сообщение движку после нажатия кнопки го или сделанного руками хода, 
+      // если ход сделали мы то добавляем его в линию игры
+      message_gui_to_egnine(fen, depth_max, side_to_move, not_go, mode_game) {
 
             let message = "mode_game " + mode_game;
             worker_egine_0x88.postMessage(message);
@@ -130,38 +137,37 @@ let GuiStartWorker_R = {
             message = "go depth " + depth_max;
             worker_egine_0x88.postMessage(message);
 
-            if (side_to_move != Gui_chess_C.WHITE) {
-                  // GuiStartWorker_R.IfritChessGame_O.gui_chess_O.nomber_move = GuiStartWorker_R.IfritChessGame_O.gui_chess_O.nomber_move + 1;
-                  if (not_go == 1) {
-                        GuiStartWorker_R.IfritChessGame_O.gui_chess_O.nomber_move = GuiStartWorker_R.IfritChessGame_O.gui_chess_O.nomber_move + 1;
-                        GuiStartWorker_R.IfritChessGame_O.checkbox_O.add_text_chess_game(GuiStartWorker_R.IfritChessGame_O.gui_chess_O.nomber_move + "." +
+            let move_str;
+
+            // когда нажимаем кнопку go то нам не нужно записывать ход потому что хода пока нет. 
+            // мы здесь записываем ход который сделали на доске
+            if (not_go == 1) {
+
+                  if (side_to_move != Gui_chess_C.WHITE) {
+                        // GuiStartWorker_R.IfritChessGame_O.gui_chess_O.number_move = GuiStartWorker_R.IfritChessGame_O.gui_chess_O.number_move + 1;
+                        GuiStartWorker_R.IfritChessGame_O.gui_chess_O.number_move = GuiStartWorker_R.IfritChessGame_O.gui_chess_O.number_move + 1;
+
+                        move_str = GuiStartWorker_R.IfritChessGame_O.gui_chess_O.number_move + "." +
                               GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.move_list_0x88_O_gui.move_to_string(
                                     GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.i_move,
-                                    GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.chess_board_0x88_O_gui));
+                                    GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.chess_board_0x88_O_gui);
 
-                        GuiStartWorker_R.IfritChessGame_O.gui_chess_O.game_line_0x88_O.add_pv_line_str(GuiStartWorker_R.IfritChessGame_O.gui_chess_O.nomber_move + "." +
-                              GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.move_list_0x88_O_gui.move_to_string(
+                        GuiStartWorker_R.IfritChessGame_O.checkbox_O.add_text_chess_game(move_str);
+
+                        GuiStartWorker_R.IfritChessGame_O.gui_chess_O.game_line_0x88_O.add_pv_line_str(move_str,
+                              GuiStartWorker_R.IfritChessGame_O.gui_chess_O.number_move, Gui_chess_C.WHITE);
+
+                  } else {
+
+                        move_str = GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.move_list_0x88_O_gui.move_to_string(
                                     GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.i_move,
-                                    GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.chess_board_0x88_O_gui),
-                              GuiStartWorker_R.IfritChessGame_O.gui_chess_O.nomber_move, Gui_chess_C.WHITE);
+                                    GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.chess_board_0x88_O_gui);
 
+                        GuiStartWorker_R.IfritChessGame_O.checkbox_O.add_text_chess_game(move_str);
+
+                        GuiStartWorker_R.IfritChessGame_O.gui_chess_O.game_line_0x88_O.add_pv_line_str( move_str,
+                              GuiStartWorker_R.IfritChessGame_O.gui_chess_O.number_move, 0);
                   }
-
-            } else {
-                  if (not_go == 1) {
-                        GuiStartWorker_R.IfritChessGame_O.checkbox_O.add_text_chess_game(
-                              GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.move_list_0x88_O_gui.move_to_string(
-                                    GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.i_move,
-                                    GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.chess_board_0x88_O_gui));
-
-                        GuiStartWorker_R.IfritChessGame_O.gui_chess_O.game_line_0x88_O.add_pv_line_str(
-                              GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.move_list_0x88_O_gui.move_to_string(
-                                    GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.i_move,
-                                    GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.chess_board_0x88_O_gui),
-                              GuiStartWorker_R.IfritChessGame_O.gui_chess_O.nomber_move, 0);
-
-                  }
-
             }
 
       }

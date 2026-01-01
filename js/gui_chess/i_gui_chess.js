@@ -73,7 +73,7 @@ class Gui_chess_C {
       // игра идет за белых или черных
       is_white = 1;
       // номер хода в записи партии
-      nomber_move = 0;
+      number_move = 0;
 
       // режим игры
       mode_game = 1;
@@ -96,7 +96,7 @@ class Gui_chess_C {
             this.score = 0;
             this.pv_line_str = " no";
             this.is_white = 1;
-            this.nomber_move = 0;
+            this.number_move = 0;
             this.mode_game = 1;
 
             this.game_line_0x88_O.iniM(); 
