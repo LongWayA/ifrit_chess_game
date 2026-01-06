@@ -120,6 +120,7 @@ let GuiStartWorker_R = {
                   }
 
                   GuiStartWorker_R.IfritChessGame_O.gui_chess_O.click_is_stop = Gui_chess_C.CLICK_NOT_STOP;
+                  GuiStartWorker_R.IfritChessGame_O.checkbox_O.set_disabled(false);
 
             }
       },

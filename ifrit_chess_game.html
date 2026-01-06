@@ -14,19 +14,20 @@
 </head>
 
 <body>
+
     <!--block 1 ***************************<img src="resource/images/creatures/cr_10.png" >-->
     <div class="block_1">
         <h1 class="c1">
-            *Ifrit Chess Game [in development]
+            &#9812Ifrit Chess Game [in development]
             <b class="c2">
                 <!-- дата в виде  The dateTime is specified in the following form "YYYY-MM-DDThh:mm:ss" 
                 where: YYYY indicates the year. MM indicates the month. DD indicates the day.-->
-                *Last update <time datetime="2026-01-01">01.01m.26 </time>
-                *Site visits: <input type="text" name="t_requests" id="text_requests" value="requests"
-                    style="background-color: rgb(215, 215, 223)">*<br>
+                &#9819Last update <time datetime="2026-01-06">06.01m.26</time>
+                &#9815Site visits: <input type="text" name="t_requests" id="text_requests" value="requests"
+                    style="background-color: rgb(215, 215, 223)"><br>
             </b>
             <b class="c3">
-                <a href="https://alphagameset.ru/"> *My games page*</a><br>
+                <a href="https://alphagameset.ru/"> &#9816My games page&#9816</a><br>
             </b>
         </h1>
     </div>
@@ -43,7 +44,7 @@
         <!-- кнопка -->
         <div style="text-align: center;">
             <input type="button" id="buttonLeft" value="    < " onclick="window.left()" />
-            <input type="button" id="buttonGo" value="   make a move   " onclick="window.goGameButton()" />
+            <input type="button" id="buttonGo" value="   Make a move   " onclick="window.goGameButton()" />
             <input type="button" id="buttonRight" value=" >    " onclick="window.right()" />
         </div>
         <input type="button" id="buttonStart" value="Start game" onclick="window.startGameButton()" />
@@ -77,14 +78,16 @@
     <!--block 4 ***************************-->
     <div class="block_4">
         <textarea id="text_engine" name="text_engine" rows="10" cols="106" readonly="true" style="resize: none">
-          Вывод размышлений Ифрита
+          &#9819 Вывод размышлений Ифрита &#9812
        </textarea>
     </div>
     <!--*************************** block 4 -->
 
+
     <!-- worker_chess_engine_0x88/w_chess_engine_0x88.js отдельный поток -->
 
     <script type="module">
+        
         import { IfritChessGame_R } from "./js/browser/ifrit_chess_game.js";
 
         IfritChessGame_R.iniM();

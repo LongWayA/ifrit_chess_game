@@ -60,7 +60,7 @@ class Game_line_0x88_C {
   }
 
   start_position(fen) {
-    console.log('Game_line_0x88_C->start_position ');
+    //console.log('Game_line_0x88_C->start_position ');
 
     this.current_position = 1;
 
@@ -78,7 +78,7 @@ class Game_line_0x88_C {
 
   // 
   add_position(fen) {
-    console.log('Game_line_0x88_C->add_position this.current_position ' + this.current_position);
+    //console.log('Game_line_0x88_C->add_position this.current_position ' + this.current_position);
 
     if (this.current_position < Game_line_0x88_C.MAX_LENTH) this.current_position = this.current_position + 1;
 
@@ -90,11 +90,11 @@ class Game_line_0x88_C {
 
   // 
   add_pv_line_str(pv_line_str, number_move, w) {
-    console.log('Game_line_0x88_C->add_pv_line_str');
+    // console.log('Game_line_0x88_C->add_pv_line_str');
 
-    console.log('Game_line_0x88_C->pv_line_str ' + pv_line_str);
-    console.log('Game_line_0x88_C->number_move ' + number_move);
-    console.log('Game_line_0x88_C->w ' + w);
+    // console.log('Game_line_0x88_C->pv_line_str ' + pv_line_str);
+    // console.log('Game_line_0x88_C->number_move ' + number_move);
+    // console.log('Game_line_0x88_C->w ' + w);
 
     this.pv_line_str[this.current_position] = this.pv_line_str[this.current_position - 1] + pv_line_str;
     if (w == 1) {
@@ -103,8 +103,8 @@ class Game_line_0x88_C {
       this.number_move[this.current_position] = number_move + 1;
     }
 
-    console.log('Game_line_0x88_C->pv_line_str[' + this.current_position + '] ' + this.pv_line_str[this.current_position]);
-    console.log('Game_line_0x88_C->pv_line_str[' + (this.current_position - 1) + '] ' + this.pv_line_str[this.current_position - 1]);
+    //console.log('Game_line_0x88_C->pv_line_str[' + this.current_position + '] ' + this.pv_line_str[this.current_position]);
+    //console.log('Game_line_0x88_C->pv_line_str[' + (this.current_position - 1) + '] ' + this.pv_line_str[this.current_position - 1]);
   }
 
   get_number_move() {

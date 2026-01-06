@@ -97,7 +97,7 @@ class Timer_C {
         this.ticksPerSecond = ticksPerSecond;
         //тысяча милисекунд это секунда
         this.tick_timeNeedOnAllMs = 1000 / this.ticksPerSecond;
-        console.log('Timer-> iniTicksPerSecond = ' + ticksPerSecond);
+        //console.log('Timer-> iniTicksPerSecond = ' + ticksPerSecond);
     }
 
     getTickTimeOnAllMs() {

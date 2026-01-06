@@ -32,17 +32,14 @@ import { Html5Canvas_C } from "../gui_chess/html5_canvas/html5_canvas.js";
 // корневой объект программы. поэтому объект, а не класс
 let IfritChessGame_R = {
 
-    chessEngine_0x88_O: new ChessEngine_0x88_С(),// встроенный шахматный движок на доске 0x88
-    gui_chess_O: new Gui_chess_C(),//
+    chessEngine_0x88_O: new ChessEngine_0x88_С(),// шахматный движок на доске 0x88
+    gui_chess_O: new Gui_chess_C(),// графическая оболочка
     mouse_O: Mouse_R, // это мышка работающая в граф окне    
-    checkbox_O: checkbox_R,
-
+    checkbox_O: checkbox_R,// кнопки и флажки 
 
     NAME: "IfritChessGame_R",
 
-    POSITION_FEN: "",
-
-    fen_position: "no",
+    position_fen: "no",
 
     // тестовые позиции с сайта:
     // https://www.chessprogramming.org/Perft_Results
@@ -80,7 +77,7 @@ let IfritChessGame_R = {
 
         IfritChessGame_R.gui_chess_O.iniM(IfritChessGame_R);
 
-        IfritChessGame_R.POSITION_FEN = IfritChessGame_R.INITIAL_POSITION_FEN;
+        IfritChessGame_R.position_fen = IfritChessGame_R.INITIAL_POSITION_FEN;
 
         //IfritChessGame_R.gui_chess_O.mode_game = Gui_chess_C.MINMAX;// полный перебор        
         IfritChessGame_R.gui_chess_O.mode_game = Gui_chess_C.ID;// циклическое погружение со всеми эвристиками      
@@ -108,9 +105,9 @@ let IfritChessGame_R = {
     updateGame() {
         //console.log('IfritChessGame_R->updateGame');
         // проверяем правильность полного перебора. что все правила соблюдены.
-        IfritChessGame_R.gui_chess_O.chessBoard_8x8_O.set_8x8_from_fen(IfritChessGame_R.POSITION_FEN);
+        IfritChessGame_R.gui_chess_O.chessBoard_8x8_O.set_8x8_from_fen(IfritChessGame_R.position_fen);
 
-        IfritChessGame_R.gui_chess_O.game_line_0x88_O.start_position(IfritChessGame_R.POSITION_FEN);
+        IfritChessGame_R.gui_chess_O.game_line_0x88_O.start_position(IfritChessGame_R.position_fen);
     },
 
     drawGame() {
@@ -130,7 +127,7 @@ let IfritChessGame_R = {
         // клики по доске игнорируются, пока Ифрит не сходит
         if (IfritChessGame_R.gui_chess_O.click_is_stop == Gui_chess_C.CLICK_NOT_STOP) {
 
-            console.log('IfritChessGame_R->mouseDown click_is_stop ' + IfritChessGame_R.gui_chess_O.click_is_stop);
+            //console.log('IfritChessGame_R->mouseDown click_is_stop ' + IfritChessGame_R.gui_chess_O.click_is_stop);
 
             IfritChessGame_R.mouseDown_2(x, y);
         }
@@ -149,8 +146,8 @@ let IfritChessGame_R = {
         // первый клик по доске
         if (IfritChessGame_R.gui_chess_O.click_state == Gui_chess_C.CLICK_NO) {
 
-            console.log('IfritChessGame_R->mouseDown2 click_on_squares_x ' + IfritChessGame_R.gui_chess_O.click_on_squares_x +
-                " click_on_squares_y " + IfritChessGame_R.gui_chess_O.click_on_squares_y);
+            // console.log('IfritChessGame_R->mouseDown2 click_on_squares_x ' + IfritChessGame_R.gui_chess_O.click_on_squares_x +
+            //     " click_on_squares_y " + IfritChessGame_R.gui_chess_O.click_on_squares_y);
 
             // попали по доске
             if (IfritChessGame_R.gui_chess_O.is_click_to_board()) {//
@@ -171,7 +168,7 @@ let IfritChessGame_R = {
                     //
                     IfritChessGame_R.click_first();
 
-                    console.log('IfritChessGame_R->mouseDown2 x ' + x + " y " + y);
+                    //console.log('IfritChessGame_R->mouseDown2 x ' + x + " y " + y);
                 }
             }
         } // второй клик по доске
@@ -269,6 +266,7 @@ let IfritChessGame_R = {
             console.log("IfritChessGame_R -> MINMAX");
 
             IfritChessGame_R.gui_chess_O.click_is_stop = Gui_chess_C.CLICK_YES_STOP;
+            IfritChessGame_R.checkbox_O.set_disabled(true);
 
             IfritChessGame_R.gui_chess_O.GuiStartWorker_O.message_gui_to_egnine(fen, IfritChessGame_R.gui_chess_O.depth_max, side_to_move,
                 1, Gui_chess_C.MINMAX);
@@ -278,6 +276,7 @@ let IfritChessGame_R = {
             console.log("IfritChessGame_R -> ID");
 
             IfritChessGame_R.gui_chess_O.click_is_stop = Gui_chess_C.CLICK_YES_STOP;
+            IfritChessGame_R.checkbox_O.set_disabled(true);
 
             IfritChessGame_R.gui_chess_O.GuiStartWorker_O.message_gui_to_egnine(fen, IfritChessGame_R.gui_chess_O.depth_max, side_to_move,
                 1, Gui_chess_C.ID);
@@ -295,14 +294,14 @@ let IfritChessGame_R = {
         IfritChessGame_R.gui_chess_O.game_line_0x88_O.iniM();
 
         // инициализируем доску из фена
-        IfritChessGame_R.POSITION_FEN = IfritChessGame_R.INITIAL_POSITION_FEN;
-        IfritChessGame_R.gui_chess_O.chessBoard_8x8_O.set_8x8_from_fen(IfritChessGame_R.POSITION_FEN);
+        IfritChessGame_R.position_fen = IfritChessGame_R.INITIAL_POSITION_FEN;
+        IfritChessGame_R.gui_chess_O.chessBoard_8x8_O.set_8x8_from_fen(IfritChessGame_R.position_fen);
 
-        IfritChessGame_R.gui_chess_O.game_line_0x88_O.start_position(IfritChessGame_R.POSITION_FEN);
+        IfritChessGame_R.gui_chess_O.game_line_0x88_O.start_position(IfritChessGame_R.position_fen);
 
 
         // выводим фен в окошко
-        IfritChessGame_R.checkbox_O.set_input_set_fen(IfritChessGame_R.POSITION_FEN);
+        IfritChessGame_R.checkbox_O.set_input_set_fen(IfritChessGame_R.position_fen);
 
         // счетчик выведенных парных ходов в 0
         IfritChessGame_R.gui_chess_O.number_move = 0;
@@ -316,12 +315,12 @@ let IfritChessGame_R = {
             // тут ход уже сделан на доске движка chess_board_0x88_O и мы считаем ответ
             if (IfritChessGame_R.gui_chess_O.mode_game == Gui_chess_C.MINMAX) {// test minmax запуск полного перебора 
                 console.log("IfritChessGame_R -> MINMAX");
-                IfritChessGame_R.gui_chess_O.GuiStartWorker_O.message_gui_to_egnine(IfritChessGame_R.POSITION_FEN,
+                IfritChessGame_R.gui_chess_O.GuiStartWorker_O.message_gui_to_egnine(IfritChessGame_R.position_fen,
                     IfritChessGame_R.gui_chess_O.depth_max, side_to_move, 0, Gui_chess_C.MINMAX);
 
             } else if (IfritChessGame_R.gui_chess_O.mode_game == Gui_chess_C.ID) {  // iterative deepening
                 console.log("IfritChessGame_R -> ID");
-                IfritChessGame_R.gui_chess_O.GuiStartWorker_O.message_gui_to_egnine(IfritChessGame_R.POSITION_FEN,
+                IfritChessGame_R.gui_chess_O.GuiStartWorker_O.message_gui_to_egnine(IfritChessGame_R.position_fen,
                     IfritChessGame_R.gui_chess_O.depth_max, side_to_move, 0, Gui_chess_C.ID);
 
             }
@@ -352,6 +351,7 @@ let IfritChessGame_R = {
             console.log("IfritChessGame_R -> MINMAX");
 
             IfritChessGame_R.gui_chess_O.click_is_stop = Gui_chess_C.CLICK_YES_STOP;
+            IfritChessGame_R.checkbox_O.set_disabled(true);
 
             IfritChessGame_R.gui_chess_O.GuiStartWorker_O.message_gui_to_egnine(fen, IfritChessGame_R.gui_chess_O.depth_max, side_to_move,
                 0, Gui_chess_C.MINMAX);
@@ -361,6 +361,7 @@ let IfritChessGame_R = {
             console.log("IfritChessGame_R -> ID");
 
             IfritChessGame_R.gui_chess_O.click_is_stop = Gui_chess_C.CLICK_YES_STOP;
+            IfritChessGame_R.checkbox_O.set_disabled(true);
 
             IfritChessGame_R.gui_chess_O.GuiStartWorker_O.message_gui_to_egnine(fen, IfritChessGame_R.gui_chess_O.depth_max, side_to_move,
                 0, Gui_chess_C.ID);
@@ -372,12 +373,13 @@ let IfritChessGame_R = {
 
         IfritChessGame_R.gui_chess_O.game_line_0x88_O.iniM();
 
-        IfritChessGame_R.POSITION_FEN = IfritChessGame_R.checkbox_O.get_input_set_fen();
-        IfritChessGame_R.gui_chess_O.chessBoard_8x8_O.set_8x8_from_fen(IfritChessGame_R.POSITION_FEN);
+        IfritChessGame_R.position_fen = IfritChessGame_R.checkbox_O.get_input_set_fen();
+        IfritChessGame_R.gui_chess_O.chessBoard_8x8_O.set_8x8_from_fen(IfritChessGame_R.position_fen);
 
-        IfritChessGame_R.gui_chess_O.game_line_0x88_O.start_position(IfritChessGame_R.POSITION_FEN);
+        IfritChessGame_R.gui_chess_O.game_line_0x88_O.start_position(IfritChessGame_R.position_fen);
 
-        IfritChessGame_R.gui_chess_O.draw_O.draw_chess_board_8x8(IfritChessGame_R.gui_chess_O.chessBoard_8x8_O, IfritChessGame_R.gui_chess_O.is_white);
+        IfritChessGame_R.gui_chess_O.draw_O.draw_chess_board_8x8(IfritChessGame_R.gui_chess_O.chessBoard_8x8_O,
+            IfritChessGame_R.gui_chess_O.is_white);
 
         IfritChessGame_R.checkbox_O.set_text_engine(
             " max depth " + IfritChessGame_R.gui_chess_O.depth_max +
@@ -406,9 +408,9 @@ let IfritChessGame_R = {
         IfritChessGame_R.gui_chess_O.draw_O.draw_chess_board_8x8(IfritChessGame_R.gui_chess_O.chessBoard_8x8_O,
             IfritChessGame_R.gui_chess_O.is_white);
 
-        IfritChessGame_R.checkbox_O.set_text_chess_game(IfritChessGame_R.gui_chess_O.game_line_0x88_O.get_pv_line_str()); 
-        
-        IfritChessGame_R.gui_chess_O.number_move = IfritChessGame_R.gui_chess_O.game_line_0x88_O.get_number_move();        
+        IfritChessGame_R.checkbox_O.set_text_chess_game(IfritChessGame_R.gui_chess_O.game_line_0x88_O.get_pv_line_str());
+
+        IfritChessGame_R.gui_chess_O.number_move = IfritChessGame_R.gui_chess_O.game_line_0x88_O.get_number_move();
     },
 
 };
@@ -416,6 +418,40 @@ let IfritChessGame_R = {
 export { IfritChessGame_R };
 
 /*
+Джимини подсказал :)
+
+&#9812
+
+Фигура	Название	Код (Hex)	Код (Decimal)
+♔	Король	&#x2654;	&#9812;
+♕	Ферзь	&#x2655;	&#9813;
+♖	Ладья	&#x2656;	&#9814;
+♗	Слон	&#x2657;	&#9815;
+♘	Конь	&#x2658;	&#9816;
+♙	Пешка	&#x2659;	&#9817;
+Черные фигуры
+Фигура	Название	Код (Hex)	Код (Decimal)
+♚	Король	&#x265A;	&#9818;
+♛	Ферзь	&#x265B;	&#9819;
+♜	Ладья	&#x265C;	&#9820;
+♝	Слон	&#x265D;	&#9821;
+♞	Конь	&#x265E;	&#9822;
+♟	Пешка	&#x265F;	&#9823;
+
+const pieces = {
+    'K': '&#9812;', 'Q': '&#9813;', 'R': '&#9814;', // Белые
+    'k': '&#9818;', 'q': '&#9819;', 'r': '&#9820;', // Черные
+    // ... и так далее
+};
+
+const PIECE_MASK = 0x07;
+const COLOR_MASK = 0x08;
+const WHITE = 0;
+const BLACK = 8;
+
+// Пример проверки:
+if (sq_piece_0x88[pos] & BLACK) { // черная фигура 
+
 const table = new Uint32Array(1024);
 table.fill(0); // Очень быстрая очистка на уровне памяти
 
@@ -427,5 +463,7 @@ const whitePawns = new Uint32Array(2);
 
 .set([
 
-
+    if (i % 2 === 0) {
+            html += `<span class="move-number">${(i / 2) + 1}.</span> `;
+        }
 */

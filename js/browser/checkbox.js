@@ -31,6 +31,11 @@ const input_set_fen = document.getElementById('set_fen');
 const text_chess_game = document.getElementById('text_chess_game');
 const text_engine = document.getElementById('text_engine');
 
+const buttonLeft = document.getElementById('buttonLeft');
+const buttonGo = document.getElementById('buttonGo');
+const buttonRight = document.getElementById('buttonRight');
+const buttonStart = document.getElementById('buttonStart');
+const buttonFen = document.getElementById('buttonFen');
 
 class Checkbox_C {
 
@@ -68,6 +73,15 @@ class Checkbox_C {
             }
       }
 
+      set_disabled(yes) {// true, false
+            buttonLeft.disabled = yes;
+            buttonGo.disabled = yes;
+            buttonRight.disabled = yes;
+            buttonStart.disabled = yes;
+            buttonFen.disabled = yes;
+      }
+
+
       set_input_max_depth_value(value) {
             input_max_depth.value = value;
       }
@@ -78,7 +92,7 @@ class Checkbox_C {
 
       get_input_set_fen() {
             return input_set_fen.value;
-      }      
+      }
 
       set_text_engine(value) {
             text_engine.value = value;
@@ -90,7 +104,7 @@ class Checkbox_C {
 
       get_text_engine() {
             return text_engine.value;
-      }      
+      }
 
       set_text_chess_game(value) {
             text_chess_game.value = value;
@@ -102,7 +116,7 @@ class Checkbox_C {
 
       get_text_chess_game() {
             return text_chess_game.value;
-      }      
+      }
 
 
 };
