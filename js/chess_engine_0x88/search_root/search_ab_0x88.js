@@ -84,7 +84,7 @@ class Search_ab_0x88_C {
   }
 
   iniM() {
-     this.stop_search = 0;
+    this.stop_search = 0;
   }
 
   set_stop_search_in_1() {
@@ -117,7 +117,7 @@ class Search_ab_0x88_C {
     //let test_save_move_list_0x88_O = new Move_list_0x88_С();// для тестирования сортировок
 
     // экстренный выход
-    if(this.stop_search == 1) return 0;
+    if (this.stop_search == 1) return 0;
 
     // поиск на максимальной глубине-----------------------------------
     if (depth >= depth_max) {
@@ -577,6 +577,7 @@ class Search_ab_0x88_C {
           mat = -1 * mat;
 
           pv_line_0x88_O.score_depth_max = mat;
+          pv_line_0x88_O.depth_max = depth - 1;
 
           // chess_board_0x88_O.test_print_0x88();
 
@@ -584,6 +585,8 @@ class Search_ab_0x88_C {
         }
 
         pv_line_0x88_O.score_depth_max = 0;
+        pv_line_0x88_O.depth_max = depth - 1;
+
         return 0;
 
       } else {//if (chess_board_0x88_O.side_to_move == 1) {
@@ -592,9 +595,13 @@ class Search_ab_0x88_C {
 
           //console.log("Search_0x88_C-> B chek ");
           pv_line_0x88_O.score_depth_max = mat;
+          pv_line_0x88_O.depth_max = depth - 1;
+
           return mat;
         }
         pv_line_0x88_O.score_depth_max = 0;
+        pv_line_0x88_O.depth_max = depth - 1;
+
         return 0;
       }//if (chess_board_0x88_O.side_to_move == 1) {
     }// if (number_move_legal == 0) {

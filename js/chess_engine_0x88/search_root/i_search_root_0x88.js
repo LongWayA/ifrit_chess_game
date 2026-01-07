@@ -197,6 +197,8 @@ class Search_root_0x88_C {
 
       node = 0;
 
+      let number_move_legal = 0;
+
       time_start = this.timer_O.getCurrentTimeMs();
 
       if (chess_board_0x88_O.side_to_move == 1) {
@@ -211,6 +213,9 @@ class Search_root_0x88_C {
       pv_line_0x88_O.clear_list();
       //this.transposition_table_0x88_O.iniM();
       this.killer_heuristic_0x88_O.clear_list();
+
+      number_move_legal = 0;
+
       // идем по списку ходов
       for (let move_i = 0; move_i < move_list_0x88_O.number_move; move_i++) {
 
@@ -227,6 +232,7 @@ class Search_root_0x88_C {
         //gggggggggggggggggggggggggggggggggg
         //this.chessEngine_0x88_O.info_currmove_uci(move_list_0x88_O.move_to_string_uci(move_i, chess_board_0x88_O), move_i, String(depth_max_current));
 
+        number_move_legal = number_move_legal + 1;
 
         this.search_ab_0x88_O.node = 0;
         pv_line_0x88_O.add_move(move_i, move_list_0x88_O, depth);
@@ -273,78 +279,81 @@ class Search_root_0x88_C {
 
       }//for (let move_i = 0; move_i < move_list_0x88_O.number_move; move_i++) {
 
-      if (chess_board_0x88_O.side_to_move == 1) {
-        move_list_root_0x88_O.sorting_list_top_max_score(move_list_0x88_O);
-      } else {
-        move_list_root_0x88_O.sorting_list_top_min_score(move_list_0x88_O);
+      if (number_move_legal != 0) {
+
+        if (chess_board_0x88_O.side_to_move == 1) {
+          move_list_root_0x88_O.sorting_list_top_max_score(move_list_0x88_O);
+        } else {
+          move_list_root_0x88_O.sorting_list_top_min_score(move_list_0x88_O);
+        }
+
+        pv_line_0x88_O.save_list(best_node_pv_line_0x88_O);
+
+        time_end = this.timer_O.getCurrentTimeMs();
+        time_delta = (time_end - time_start) / 1000;
+
+        // console.log("Search_0x88_C->time_start " + time_start);
+        // console.log("Search_0x88_C->time_end " + time_end);
+        //console.log("Search_0x88_C->time_delta " + time_delta);
+
+        //console.log("Search_0x88_C->node " + node);
+        //console.log("Search_0x88_C->kN/s = node / time_delta " + Math.round(node / time_delta));
+        //console.log("Search_0x88_C->best_move_i " + move_list_0x88_O.move_to_string(best_move_i, chess_board_0x88_O));
+
+        // console.log("Search_0x88_C->SAVE----------------------------- ");
+        // console.log("Search_0x88_C->save_alpha_up " + this.search_ab_0x88_O.test_tt.save_alpha_up);
+        // console.log("Search_0x88_C->save_alpha_cut " + this.search_ab_0x88_O.test_tt.save_alpha_cut);
+        // console.log("Search_0x88_C->save_beta_up " + this.search_ab_0x88_O.test_tt.save_beta_up);
+        // console.log("Search_0x88_C->save_beta_cut " + this.search_ab_0x88_O.test_tt.save_beta_cut);
+        // console.log("Search_0x88_C->save_score_up " + this.search_ab_0x88_O.test_tt.save_score_up);      
+
+        // console.log("Search_0x88_C->USE----------------------------- ");      
+        // console.log("Search_0x88_C->use_alpha_up " + this.search_ab_0x88_O.test_tt.use_alpha_up);
+        // console.log("Search_0x88_C->use_alpha_cut " + this.search_ab_0x88_O.test_tt.use_alpha_cut);
+        // console.log("Search_0x88_C->use_beta_up " + this.search_ab_0x88_O.test_tt.use_beta_up);
+        // console.log("Search_0x88_C->use_beta_cut " + this.search_ab_0x88_O.test_tt.use_beta_cut);
+        // console.log("Search_0x88_C->use_score " + this.search_ab_0x88_O.test_tt.use_score);     
+
+        //console.log("Search_0x88_C->add_a_cnt_h_move " + this.search_ab_0x88_O.test_hh.add_a_cnt_h_move);
+        //console.log("Search_0x88_C->add_b_cnt_h_move " + this.search_ab_0x88_O.test_hh.add_b_cnt_h_move);
+
+        let w = (move_list_0x88_O.piece_color == Chess_board_0x88_C.WHITE) ? 1 : -1;
+
+        this.info_return_search.fen_start = fen_start;
+        this.info_return_search.fen_end = chess_board_0x88_O_end.set_fen_from_0x88();
+        this.info_return_search.pv_line_str = pv_line_0x88_O.pv_line_to_string(chess_board_0x88_O, move_list_0x88_O);
+        this.info_return_search.pv_line_uci_str = pv_line_0x88_O.pv_line_to_uci_string(chess_board_0x88_O, move_list_0x88_O);
+        this.info_return_search.best_score_str = String(best_score);
+        this.info_return_search.best_score_uci_str = String(w * best_score);
+        this.info_return_search.best_move_uci_str = move_list_0x88_O.move_to_string_uci(best_move_i, chess_board_0x88_O);
+        this.info_return_search.node_count_str = String(node);
+        this.info_return_search.nodes_per_second_str = String(Math.round(node / time_delta));
+        this.info_return_search.depth_max_search_str = String(depth_max_current);
+
+        // nnnnnnnnnnnnnnnnnnnnnn
+        this.chessEngine_0x88_O.message_search_root_to_engine(this.info_return_search);
+
+        this.chessEngine_0x88_O.info_from_depth_uci(this.info_return_search);
+
+        //console.log("Search_0x88_C->ADD");
+        //console.log("Search_0x88_C->key_64_equal " + this.transposition_table_0x88_O.key_64_equal);
+        //console.log("Search_0x88_C->key_64_not_equal " + this.transposition_table_0x88_O.key_64_not_equal);
+        //console.log("Search_0x88_C->node " + node);
+        //console.log("Search_0x88_C->add_position " + this.transposition_table_0x88_O.add_position_p);
+        //console.log("Search_0x88_C->add_position_key_64_true " + this.transposition_table_0x88_O.add_position_key_64_true);
+        //console.log("Search_0x88_C->add_position_new " + this.transposition_table_0x88_O.add_position_new);
+        //console.log("Search_0x88_C->add_position_rew " + this.transposition_table_0x88_O.add_position_rew);
+        //console.log("Search_0x88_C->IS");
+        //console.log("Search_0x88_C->is_save_position " + this.transposition_table_0x88_O.is_save_position_p);
+        //console.log("Search_0x88_C->is_save_key_64_true " + this.transposition_table_0x88_O.is_save_key_64_true);
+        //console.log("Search_0x88_C->is_save_key_64_false " + this.transposition_table_0x88_O.is_save_key_64_false);
+        //console.log("Search_0x88_C->is_save_delta_depth_ok " + this.transposition_table_0x88_O.is_save_delta_depth_ok);
+        //console.log("Search_0x88_C->collision_fen " + this.transposition_table_0x88_O.collision_fen);
+        //console.log("Search_0x88_C->no_collision_fen " + this.transposition_table_0x88_O.no_collision_fen);
+
+
+        //this.transposition_table_0x88_O.test_uses_hash();
       }
-
-      pv_line_0x88_O.save_list(best_node_pv_line_0x88_O);
-
-      time_end = this.timer_O.getCurrentTimeMs();
-      time_delta = (time_end - time_start) / 1000;
-
-      // console.log("Search_0x88_C->time_start " + time_start);
-      // console.log("Search_0x88_C->time_end " + time_end);
-      //console.log("Search_0x88_C->time_delta " + time_delta);
-
-      //console.log("Search_0x88_C->node " + node);
-      //console.log("Search_0x88_C->kN/s = node / time_delta " + Math.round(node / time_delta));
-      //console.log("Search_0x88_C->best_move_i " + move_list_0x88_O.move_to_string(best_move_i, chess_board_0x88_O));
-
-      // console.log("Search_0x88_C->SAVE----------------------------- ");
-      // console.log("Search_0x88_C->save_alpha_up " + this.search_ab_0x88_O.test_tt.save_alpha_up);
-      // console.log("Search_0x88_C->save_alpha_cut " + this.search_ab_0x88_O.test_tt.save_alpha_cut);
-      // console.log("Search_0x88_C->save_beta_up " + this.search_ab_0x88_O.test_tt.save_beta_up);
-      // console.log("Search_0x88_C->save_beta_cut " + this.search_ab_0x88_O.test_tt.save_beta_cut);
-      // console.log("Search_0x88_C->save_score_up " + this.search_ab_0x88_O.test_tt.save_score_up);      
-
-      // console.log("Search_0x88_C->USE----------------------------- ");      
-      // console.log("Search_0x88_C->use_alpha_up " + this.search_ab_0x88_O.test_tt.use_alpha_up);
-      // console.log("Search_0x88_C->use_alpha_cut " + this.search_ab_0x88_O.test_tt.use_alpha_cut);
-      // console.log("Search_0x88_C->use_beta_up " + this.search_ab_0x88_O.test_tt.use_beta_up);
-      // console.log("Search_0x88_C->use_beta_cut " + this.search_ab_0x88_O.test_tt.use_beta_cut);
-      // console.log("Search_0x88_C->use_score " + this.search_ab_0x88_O.test_tt.use_score);     
-
-      //console.log("Search_0x88_C->add_a_cnt_h_move " + this.search_ab_0x88_O.test_hh.add_a_cnt_h_move);
-      //console.log("Search_0x88_C->add_b_cnt_h_move " + this.search_ab_0x88_O.test_hh.add_b_cnt_h_move);
-
-      let w = (move_list_0x88_O.piece_color == Chess_board_0x88_C.WHITE) ? 1 : -1;
-
-      this.info_return_search.fen_start = fen_start;
-      this.info_return_search.fen_end = chess_board_0x88_O_end.set_fen_from_0x88();
-      this.info_return_search.pv_line_str = pv_line_0x88_O.pv_line_to_string(chess_board_0x88_O, move_list_0x88_O);
-      this.info_return_search.pv_line_uci_str = pv_line_0x88_O.pv_line_to_uci_string(chess_board_0x88_O, move_list_0x88_O);
-      this.info_return_search.best_score_str = String(best_score);
-      this.info_return_search.best_score_uci_str = String(w * best_score);
-      this.info_return_search.best_move_uci_str = move_list_0x88_O.move_to_string_uci(best_move_i, chess_board_0x88_O);
-      this.info_return_search.node_count_str = String(node);
-      this.info_return_search.nodes_per_second_str = String(Math.round(node / time_delta));
-      this.info_return_search.depth_max_search_str = String(depth_max_current);
-
-      // nnnnnnnnnnnnnnnnnnnnnn
-      this.chessEngine_0x88_O.message_search_root_to_engine(this.info_return_search);
-
-      this.chessEngine_0x88_O.info_from_depth_uci(this.info_return_search);
-
-      //console.log("Search_0x88_C->ADD");
-      //console.log("Search_0x88_C->key_64_equal " + this.transposition_table_0x88_O.key_64_equal);
-      //console.log("Search_0x88_C->key_64_not_equal " + this.transposition_table_0x88_O.key_64_not_equal);
-      //console.log("Search_0x88_C->node " + node);
-      //console.log("Search_0x88_C->add_position " + this.transposition_table_0x88_O.add_position_p);
-      //console.log("Search_0x88_C->add_position_key_64_true " + this.transposition_table_0x88_O.add_position_key_64_true);
-      //console.log("Search_0x88_C->add_position_new " + this.transposition_table_0x88_O.add_position_new);
-      //console.log("Search_0x88_C->add_position_rew " + this.transposition_table_0x88_O.add_position_rew);
-      //console.log("Search_0x88_C->IS");
-      //console.log("Search_0x88_C->is_save_position " + this.transposition_table_0x88_O.is_save_position_p);
-      //console.log("Search_0x88_C->is_save_key_64_true " + this.transposition_table_0x88_O.is_save_key_64_true);
-      //console.log("Search_0x88_C->is_save_key_64_false " + this.transposition_table_0x88_O.is_save_key_64_false);
-      //console.log("Search_0x88_C->is_save_delta_depth_ok " + this.transposition_table_0x88_O.is_save_delta_depth_ok);
-      //console.log("Search_0x88_C->collision_fen " + this.transposition_table_0x88_O.collision_fen);
-      //console.log("Search_0x88_C->no_collision_fen " + this.transposition_table_0x88_O.no_collision_fen);
-
-
-      //this.transposition_table_0x88_O.test_uses_hash();
 
     }// for (let depth_max_current = 1; depth_max_current < depth_max_search; depth_max_current++) {
 

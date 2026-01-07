@@ -19,16 +19,8 @@ class PV_line_0x88_C {
 
   static MAX_DEPTH = 100;
 
-  // type_move = new Array(PV_line_0x88_C.MAX_DEPTH).fill(-1);
-  // piece_color = new Array(PV_line_0x88_C.MAX_DEPTH).fill(-1);
-
-  // from = new Array(PV_line_0x88_C.MAX_DEPTH).fill(-1);
-  // to = new Array(PV_line_0x88_C.MAX_DEPTH).fill(-1);
-
-  // type_variant = new Array(PV_line_0x88_C.MAX_DEPTH).fill(-1);
-
-  type_move = new Int32Array(PV_line_0x88_C.MAX_DEPTH).fill(-1);
-  piece_color = new Int32Array(PV_line_0x88_C.MAX_DEPTH).fill(-1);
+  type_move = new Int32Array(PV_line_0x88_C.MAX_DEPTH).fill(0);
+  piece_color = new Int32Array(PV_line_0x88_C.MAX_DEPTH).fill(0);
 
   from = new Int32Array(PV_line_0x88_C.MAX_DEPTH).fill(-1);
   to = new Int32Array(PV_line_0x88_C.MAX_DEPTH).fill(-1);
@@ -44,12 +36,12 @@ class PV_line_0x88_C {
   }
 
   iniM() {
-
+   this.clear_list();
   }
 
   clear_list() {
     for (let i = 0; i < PV_line_0x88_C.MAX_DEPTH; i++) {
-      this.type_move[i] = -1;
+      this.type_move[i] = 0;
       this.piece_color[i] = 0;
       this.from[i] = -1;
       this.to[i] = -1;

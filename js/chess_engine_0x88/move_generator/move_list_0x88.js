@@ -198,7 +198,7 @@ class Move_list_0x88_С {
     to = new Int32Array(Move_list_0x88_С.LENGTH_LIST).fill(-1);    
 
     // цвет ходяшей фигуры. 
-    piece_color = -1|0;
+    piece_color = 0|0;
 
     // количество взятий
     number_captures_move = 0|0;
@@ -212,19 +212,16 @@ class Move_list_0x88_С {
 
     iniM() {
         this.clear_list();
-        this.piece_color = -1;
-        this.number_captures_move = 0;
-        this.number_move = 0;
     }
 
     // очищаем список ходов
     clear_list() {
         for (let i = 0; i < Move_list_0x88_С.LENGTH_LIST; i++) {
-            this.type_move[i] = -1;
+            this.type_move[i] = Move_list_0x88_С.MOVE_NO;
             this.from[i] = -1;
             this.to[i] = -1;
         }
-        this.piece_color = -1;
+        this.piece_color = 0;
         this.number_captures_move = 0;
         this.number_move = 0;
     }
