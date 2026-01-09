@@ -157,6 +157,7 @@ class Search_root_0x88_C {
     chess_board_0x88_O_start.key_64 = this.transposition_table_0x88_O.set_key_from_board_0x88(chess_board_0x88_O_start);
 
     chess_board_0x88_O.save_chess_board_0x88(chess_board_0x88_O_start);
+    chess_board_0x88_O_end.save_chess_board_0x88(chess_board_0x88_O_start);
 
     // копируем доску чтобы когда у движка не будет ходов не получить пустую доску.
     chess_board_0x88_O_end.save_chess_board_0x88(chess_board_0x88_O);
@@ -256,7 +257,14 @@ class Search_root_0x88_C {
             best_score = score;
             best_move_i = move_i;
             chess_board_0x88_O_end.save_chess_board_0x88(chess_board_0x88_O);
-            if (score > alpha) alpha = score; // alpha acts like max in MiniMax
+            if (score > alpha) {
+              alpha = score; // alpha acts like max in MiniMax
+              if (pv_line_0x88_O.score_depth_max != score) {
+                console.log("Search_0x88_C-> pv_line_0x88_O.score_depth_max "
+                  + pv_line_0x88_O.score_depth_max + " score " + score);
+              }
+
+            }
           }//if (score > best_score) {
         } else {
           // черные ищут минимум
@@ -267,7 +275,13 @@ class Search_root_0x88_C {
             best_score = score;
             best_move_i = move_i;
             chess_board_0x88_O_end.save_chess_board_0x88(chess_board_0x88_O);
-            if (score < beta) beta = score; // beta acts like max in MiniMax
+            if (score < beta) {
+              beta = score; // beta acts like max in MiniMax
+              if (pv_line_0x88_O.score_depth_max != score) {
+                console.log("Search_0x88_C-> pv_line_0x88_O.score_depth_max "
+                  + pv_line_0x88_O.score_depth_max + " score " + score);
+              }
+            }
           }//if (score > best_score) {
         }
 
@@ -353,6 +367,17 @@ class Search_root_0x88_C {
 
 
         //this.transposition_table_0x88_O.test_uses_hash();
+      }
+      else { // if (number_move_legal != 0) {
+        this.info_return_search.fen_start = fen_start;
+        this.info_return_search.fen_end = chess_board_0x88_O_end.set_fen_from_0x88();
+        this.info_return_search.pv_line_str = "PV line: no move";
+        this.info_return_search.pv_line_uci_str = "PV line: no move";
+        this.info_return_search.best_move_uci_str = "no move";
+
+        this.chessEngine_0x88_O.message_search_root_to_engine(this.info_return_search);
+
+        this.chessEngine_0x88_O.info_from_depth_uci(this.info_return_search);
       }
 
     }// for (let depth_max_current = 1; depth_max_current < depth_max_search; depth_max_current++) {
