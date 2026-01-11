@@ -24,7 +24,6 @@ class Worker_ChessEngine_0x88_С {
 
   static NAME = "Worker_ChessEngine_0x88_С";
 
-  PV_line_str_save = "-";
   fen_start = "-";
   mode_game = 0;
 
@@ -36,8 +35,10 @@ class Worker_ChessEngine_0x88_С {
     this.chessEngine_0x88_O.iniM(this);
   }
 
+  // передаем оболочке информацию о текущем поиске это строки вида 
+  // info depth 3 score cp 42 nodes 72 nps 36000 pv e2e4 
+  // info currmove e2e4 currmovenumber 1 depth 8 - идет только когда делаем ехе uci engine
   message_chessEngine_0x88_to_worker_chessEngine_0x88_O(message) {
-    this.PV_line_str_save = message;
     postMessage(message);
   }
 
@@ -56,21 +57,18 @@ class Worker_ChessEngine_0x88_С {
       let end = message.length;
       let depth_max_s = message.slice(9, end);
       let depth_max = Number(depth_max_s);
-      let info_return_search;
+      let uci_return_search;
 
       if (this.mode_game == 1) {
-        info_return_search = this.chessEngine_0x88_O.go_depth_minmax(this.fen_start, depth_max);
+        uci_return_search = this.chessEngine_0x88_O.go_depth_minmax(this.fen_start, depth_max);
       }
       else if (this.mode_game == 2) {
-        info_return_search = this.chessEngine_0x88_O.go_depth_id(this.fen_start, depth_max);
+        uci_return_search = this.chessEngine_0x88_O.go_depth_id(this.fen_start, depth_max);
       }
 
-      postMessage("position fen " + info_return_search.fen_end);
-      postMessage("score " + info_return_search.best_score_str);
-      postMessage("node " + info_return_search.node_count_str);
-      postMessage("nps " + info_return_search.nodes_per_second_str);
-      postMessage(this.PV_line_str_save);
-      postMessage("go");
+      postMessage("position fen " + uci_return_search.fen_end);
+      postMessage(uci_return_search.info);
+      postMessage(uci_return_search.best_move);
     }
     else if (message.includes("mode_game ")) {
       let end = message.length;

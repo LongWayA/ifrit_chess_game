@@ -110,49 +110,49 @@ class PV_line_0x88_C {
     console.log("******** test_print_pv_line");
   }
 
-  pv_line_to_string(chess_board_0x88_O, move_list_0x88_O) {
+  // pv_line_to_string(chess_board_0x88_O, move_list_0x88_O) {
 
-    let pv_line_str = "PV line: ";
-    let side_to_move = 1;
-    let number_move = 0;
-    let promo;
+  //   let pv_line_str = "PV line: ";
+  //   let side_to_move = 1;
+  //   let number_move = 0;
+  //   let promo;
 
-    for (let i = 0; i < this.depth_max + 1; i++) {
+  //   for (let i = 0; i < this.depth_max + 1; i++) {
 
-      if (side_to_move == 1) {
-        side_to_move = 0;
-        number_move = number_move + 1;
-        pv_line_str = pv_line_str + (number_move) + ".";
+  //     if (side_to_move == 1) {
+  //       side_to_move = 0;
+  //       number_move = number_move + 1;
+  //       pv_line_str = pv_line_str + (number_move) + ".";
 
-      } else {
-        side_to_move = 1;
-      }
+  //     } else {
+  //       side_to_move = 1;
+  //     }
 
-      pv_line_str = pv_line_str + move_list_0x88_O.type_move_to_name_piese(this.type_move[i]) + "" +
-        Chess_board_0x88_C.LET_COOR[chess_board_0x88_O.s_0x88_to_x07(this.from[i])] + "" + 
-        (8 - chess_board_0x88_O.s_0x88_to_y07(this.from[i]));
+  //     pv_line_str = pv_line_str + move_list_0x88_O.type_move_to_name_piese(this.type_move[i]) + "" +
+  //       Chess_board_0x88_C.LET_COOR[chess_board_0x88_O.s_0x88_to_x07(this.from[i])] + "" + 
+  //       (8 - chess_board_0x88_O.s_0x88_to_y07(this.from[i]));
 
-        let l1 = (this.type_move[i] > 0) && (this.type_move[i] < 17);
-        let l2 = (this.type_move[i] > 20) && (this.type_move[i] < 52);
+  //       let l1 = (this.type_move[i] > 0) && (this.type_move[i] < 17);
+  //       let l2 = (this.type_move[i] > 20) && (this.type_move[i] < 52);
 
-        if (l1 || l2) {// это взятия
-        pv_line_str = pv_line_str + "x";
+  //       if (l1 || l2) {// это взятия
+  //       pv_line_str = pv_line_str + "x";
 
-      } else {
-        pv_line_str = pv_line_str + "-";
+  //     } else {
+  //       pv_line_str = pv_line_str + "-";
 
-      }
+  //     }
 
-      promo = move_list_0x88_O.return_promo_piece_from_type_move(this.type_move[i]);
+  //     promo = move_list_0x88_O.return_promo_piece_from_type_move(this.type_move[i]);
 
-      pv_line_str = pv_line_str +         
-        Chess_board_0x88_C.LET_COOR[chess_board_0x88_O.s_0x88_to_x07(this.to[i])] + "" +
-        (8 - chess_board_0x88_O.s_0x88_to_y07(this.to[i])) + promo + " ";
+  //     pv_line_str = pv_line_str +         
+  //       Chess_board_0x88_C.LET_COOR[chess_board_0x88_O.s_0x88_to_x07(this.to[i])] + "" +
+  //       (8 - chess_board_0x88_O.s_0x88_to_y07(this.to[i])) + promo + " ";
 
-    }
-    pv_line_str = pv_line_str + "s = " + this.score_depth_max;
-    return pv_line_str;
-  }
+  //   }
+  //   pv_line_str = pv_line_str + "s = " + this.score_depth_max;
+  //   return pv_line_str;
+  // }
 
   pv_line_to_uci_string(chess_board_0x88_O, move_list_0x88_O) {
 

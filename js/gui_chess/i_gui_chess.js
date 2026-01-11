@@ -70,6 +70,9 @@ class Gui_chess_C {
       score_str = 0;
       // найденный вариант в виде строки с ходами и оценкой в конце
       pv_line_str = " no";
+
+      info_from_engine = " no";     
+
       // игра идет за белых или черных
       is_white = 1;
       // номер хода в записи партии
@@ -95,6 +98,7 @@ class Gui_chess_C {
             this.nodes = 0;
             this.score = 0;
             this.pv_line_str = " no";
+            this.info_from_engine = " no";             
             this.is_white = 1;
             this.number_move = 0;
             this.mode_game = 1;

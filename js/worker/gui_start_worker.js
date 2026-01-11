@@ -49,37 +49,41 @@ let GuiStartWorker_R = {
                   GuiStartWorker_R.IfritChessGame_O.gui_chess_O.game_line_0x88_O.add_position(fen);
             }
 
-            if (message.includes("score ")) {
-                  let end = message.length;
-                  let score_s = message.slice(6, end);
-                  //console.log('Gg score ' + score_s);
-                  GuiStartWorker_R.IfritChessGame_O.gui_chess_O.score = Number(score_s);
-                  //console.log('g score ' + this.score);            
+            //0    1     2 3     4  5  6     7  8   9     10 11  
+            //info depth 3 score cp 42 nodes 72 nps 36000 pv e2e4
+            if (message.includes("info ")) {
+
+                  let info = message.split(' ');
+
+                  //console.log('message ' + message);
+                  // console.log('info[0] ' + info[0]);//info
+                  // console.log('info[1] ' + info[1]);//depth
+                  // console.log('info[2] ' + info[2]);//3
+                  // console.log('info[3] ' + info[3]);//score
+                  // console.log('info[4] ' + info[4]);//cp 
+                  // console.log('info[5] ' + info[5]);//42
+                  // console.log('info[6] ' + info[6]);//nodes
+                  // console.log('info[7] ' + info[7]);//72
+                  // console.log('info[8] ' + info[8]);//nps
+                  // console.log('info[9] ' + info[9]);//36000
+
+                  GuiStartWorker_R.IfritChessGame_O.gui_chess_O.score = Number(info[5]);
+                  GuiStartWorker_R.IfritChessGame_O.gui_chess_O.nodes = Number(info[7]);
+                  GuiStartWorker_R.IfritChessGame_O.gui_chess_O.nodes_per_second = Number(info[9]);
+
+                  if (message.includes("pv ")) {
+                        let pv_i = message.indexOf("pv");
+                        let end = message.length;
+                        let pv = message.slice(pv_i, end);
+
+                        GuiStartWorker_R.IfritChessGame_O.gui_chess_O.pv_line_str = pv;
+                        GuiStartWorker_R.IfritChessGame_O.gui_chess_O.info_from_engine = message;
+                        GuiStartWorker_R.IfritChessGame_O.checkbox_O.add_text_engine("\n" + message);
+                  }
+
             }
 
-            if (message.includes("node ")) {
-                  let end = message.length;
-                  let node_s = message.slice(5, end);
-                  //console.log('g node ' + node_s);
-                  GuiStartWorker_R.IfritChessGame_O.gui_chess_O.nodes = Number(node_s);
-                  //console.log('g node ' + this.nodes);           
-            }
-
-            if (message.includes("nps ")) {
-                  let end = message.length;
-                  let node_s = message.slice(3, end);
-                  //console.log('g node ' + node_s);
-                  GuiStartWorker_R.IfritChessGame_O.gui_chess_O.nodes_per_second = Number(node_s);
-                  //console.log('g node ' + this.nodes);           
-            }
-
-            if (message.includes("PV line: ")) {
-                  GuiStartWorker_R.IfritChessGame_O.gui_chess_O.pv_line_str = message;
-                  GuiStartWorker_R.IfritChessGame_O.checkbox_O.add_text_engine("\n" + message);
-
-            }
-
-            if (message.includes("go")) {
+            if (message.includes("bestmove")) {
                   //console.log('g go');
                   // рисуем доску                 
                   GuiStartWorker_R.IfritChessGame_O.gui_chess_O.draw_O.draw_chess_board_8x8(GuiStartWorker_R.IfritChessGame_O.
@@ -92,16 +96,26 @@ let GuiStartWorker_R = {
                         GuiStartWorker_R.IfritChessGame_O.gui_chess_O.nodes +
                         ", n/s:" + GuiStartWorker_R.IfritChessGame_O.gui_chess_O.nodes_per_second +
                         ", score:" + GuiStartWorker_R.IfritChessGame_O.gui_chess_O.score +
-                        "\n " + GuiStartWorker_R.IfritChessGame_O.gui_chess_O.pv_line_str);
+                        "\n " + GuiStartWorker_R.IfritChessGame_O.gui_chess_O.info_from_engine);
 
-                  let move_str;      
+                  let move_str;
 
                   if (GuiStartWorker_R.IfritChessGame_O.gui_chess_O.chessBoard_8x8_O.side_to_move != Gui_chess_C.WHITE) {
 
-                        GuiStartWorker_R.IfritChessGame_O.gui_chess_O.number_move = GuiStartWorker_R.IfritChessGame_O.gui_chess_O.number_move + 1;
+                        GuiStartWorker_R.IfritChessGame_O.gui_chess_O.number_move =
+                              GuiStartWorker_R.IfritChessGame_O.gui_chess_O.number_move + 1;
 
-                        move_str = GuiStartWorker_R.IfritChessGame_O.gui_chess_O.number_move + "." +
-                              GuiStartWorker_R.IfritChessGame_O.gui_chess_O.pv_line_str.slice(11, 18);
+                        move_str = GuiStartWorker_R.IfritChessGame_O.gui_chess_O.pv_line_str.slice(3, 8);
+
+                        if (move_str[4] != " ") {
+                              move_str = move_str + " ";
+                             // console.log("move_str " + move_str);
+                              console.log("move_str[4] " + move_str[4]);
+                        }
+
+                        move_str = GuiStartWorker_R.IfritChessGame_O.gui_chess_O.number_move + "." + move_str;
+
+
 
                         GuiStartWorker_R.IfritChessGame_O.checkbox_O.add_text_chess_game(move_str);
 
@@ -110,7 +124,14 @@ let GuiStartWorker_R = {
 
                   } else {
 
-                        move_str = GuiStartWorker_R.IfritChessGame_O.gui_chess_O.pv_line_str.slice(11, 18);
+                        move_str = GuiStartWorker_R.IfritChessGame_O.gui_chess_O.pv_line_str.slice(3, 8);
+
+
+                        if (move_str[4] != " ") {
+                              move_str = move_str + " ";
+                             // console.log("move_str " + move_str);                              
+                             // console.log("move_str[4] " + move_str[4]);
+                        }
 
                         GuiStartWorker_R.IfritChessGame_O.checkbox_O.add_text_chess_game(move_str);
 
@@ -149,9 +170,10 @@ let GuiStartWorker_R = {
                         GuiStartWorker_R.IfritChessGame_O.gui_chess_O.number_move = GuiStartWorker_R.IfritChessGame_O.gui_chess_O.number_move + 1;
 
                         move_str = GuiStartWorker_R.IfritChessGame_O.gui_chess_O.number_move + "." +
-                              GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.move_list_0x88_O_gui.move_to_string(
+                              GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.move_list_0x88_O_gui.move_to_string_uci(
                                     GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.i_move,
-                                    GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.chess_board_0x88_O_gui);
+                                    GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.chess_board_0x88_O_gui) +
+                              " ";
 
                         GuiStartWorker_R.IfritChessGame_O.checkbox_O.add_text_chess_game(move_str);
 
@@ -160,13 +182,15 @@ let GuiStartWorker_R = {
 
                   } else {
 
-                        move_str = GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.move_list_0x88_O_gui.move_to_string(
+                        move_str =
+                              GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.move_list_0x88_O_gui.move_to_string_uci(
                                     GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.i_move,
-                                    GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.chess_board_0x88_O_gui);
+                                    GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.chess_board_0x88_O_gui) +
+                              " ";
 
                         GuiStartWorker_R.IfritChessGame_O.checkbox_O.add_text_chess_game(move_str);
 
-                        GuiStartWorker_R.IfritChessGame_O.gui_chess_O.game_line_0x88_O.add_pv_line_str( move_str,
+                        GuiStartWorker_R.IfritChessGame_O.gui_chess_O.game_line_0x88_O.add_pv_line_str(move_str,
                               GuiStartWorker_R.IfritChessGame_O.gui_chess_O.number_move, 0);
                   }
             }
