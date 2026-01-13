@@ -375,8 +375,9 @@ class Search_root_0x88_C {
       else { // if (number_move_legal != 0) {
         this.uci_return_search.fen_start = fen_start;
         this.uci_return_search.fen_end = chess_board_0x88_O_end.set_fen_from_0x88();
-        this.uci_return_search.info = "pv no move";
-        this.uci_return_search.best_move = "no move";
+        this.uci_return_search.info =  "info depth " + -1 + " score cp " + 1 +
+          " nodes " + -1 + " nps " + -1 + " pv " + "no";
+        this.uci_return_search.best_move = "bestmove no move";
 
         this.chessEngine_0x88_O.message_search_root_to_engine(this.uci_return_search);
 
