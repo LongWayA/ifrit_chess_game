@@ -1,3 +1,4 @@
+// @ts-check
 /** 
  * @copyright Copyright (c) 2025, AnBr75 and/or its affiliates. All rights reserved.
  * @author AnBr75
@@ -6,6 +7,7 @@
  * last modified 17.11m.2025
 */
 
+import { Move_list_0x88_С } from "../move_generator/move_list_0x88.js";
 
 /**
 * НАЗНАЧЕНИЕ
@@ -15,6 +17,10 @@
 //+
 // тут все прозрачно. идей пока нет
 
+/**
+ * Класс.
+ * @class
+ */
 class Move_list_root_0x88_С {
 
     static NAME = "Move_list_root_0x88_С";
@@ -33,10 +39,10 @@ class Move_list_root_0x88_С {
         this.number_move = 0;
     }
 
-
-
-    // SORTING
-
+    /** SORTING W
+     * @param {Move_list_0x88_С} move_list_0x88_O
+     * @returns {void}
+     */
     sorting_list_top_max_score(move_list_0x88_O) {
 
         let save_type_move;
@@ -76,6 +82,10 @@ class Move_list_root_0x88_С {
         }
     }
 
+    /** SORTING B
+     * @param {Move_list_0x88_С} move_list_0x88_O
+     * @returns {void}
+     */
     sorting_list_top_min_score(move_list_0x88_O) {
         let save_type_move;
         let save_score_move;
@@ -114,11 +124,16 @@ class Move_list_root_0x88_С {
         }
     }
 
-    // 
-    add_score(score_move) {
+  /**
+   * @param {number} move_i
+   * @param {number} score_move
+   * @returns {void}
+   */
+    add_score(move_i, score_move) {
         //console.log('Move_list_0x88_С->add_move');
-        this.score_move[this.number_move] = score_move;
-        this.number_move = this.number_move + 1;
+        this.score_move[move_i] = score_move;
+
+        if(move_i > this.number_move) this.number_move = move_i;
     }
 
     clear_list() {

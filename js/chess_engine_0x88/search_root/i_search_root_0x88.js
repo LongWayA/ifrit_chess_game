@@ -1,3 +1,4 @@
+// @ts-check
 /** 
  * @copyright Copyright (c) 2025, AnBr75 and/or its affiliates. All rights reserved.
  * @author AnBr75
@@ -6,6 +7,7 @@
  * last modified 11.10m.2025, 24.10m.2025
 */
 
+import { ChessEngine_0x88_С } from "./../i_chess_engine_0x88.js";
 import { Chess_board_0x88_C } from "../move_generator/chess_board_0x88.js";
 import { Move_list_0x88_С } from "../move_generator/move_list_0x88.js";
 import { Move_list_root_0x88_С } from "../move_generator/move_list_root_0x88.js";
@@ -51,8 +53,13 @@ import { Timer_C } from "../../browser/timer.js";
 *
 */
 
+/**
+ * Класс.
+ * @class
+ */
 class Search_root_0x88_C {
 
+  /** @type {ChessEngine_0x88_С | null} */
   chessEngine_0x88_O = null;
 
   move_gen_1_captures_0x88_O = new Move_gen_1_captures_0x88_С();
@@ -72,15 +79,39 @@ class Search_root_0x88_C {
 
   timer_O = new Timer_C();
 
+  //@private / @public / @protected — задает уровень доступа
+  /** 
+   * @type {string} 
+   * @static
+  */
   static NAME = "Search_root_0x88_C";
 
+  /** 
+   * @type {number} 
+   * @static
+  */
   static ALPHA_SCORE = -30000;
+
+  /** 
+   * @type {number} 
+   * @static
+  */
   static BETA_SCORE = 30000;
 
+  /** @type {string} */
   START_POSITION_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
+  /** @type {number} */
   stop_search = 0;
 
+  /**
+    * 
+    * @typedef {Object} uci_return_search
+    * @property {string} fen_start
+    * @property {string} fen_end
+    * @property {string} info
+    * @property {string} best_move
+    */
   uci_return_search = {
     fen_start: "-",// начальная позиция в виде fen передаваемая на вход движка
     fen_end: "-",// конечная позиция в виде fen возникшая после хода движка
@@ -92,6 +123,10 @@ class Search_root_0x88_C {
 
   }
 
+  /**
+   * @param {ChessEngine_0x88_С} chessEngine_0x88_O
+   * @returns {void}
+   */
   iniM(chessEngine_0x88_O) {
     this.chessEngine_0x88_O = chessEngine_0x88_O;
 
@@ -100,12 +135,17 @@ class Search_root_0x88_C {
     this.history_heuristic_0x88_O.iniM();
   }
 
+  // @ts-ignore: Временный костыль, пока не опишу тип
   set_stop_search_in_1() {
     this.search_ab_0x88_O.set_stop_search_in_1();
     this.stop_search = 1;
   }
 
-  // 
+  /**
+   * @param {string} fen_start
+   * @param {number} depth_max
+   * @returns {uci_return_search}
+   */
   searching_iterative_deepening(fen_start, depth_max) {
 
     let chess_board_0x88_O = new Chess_board_0x88_C();
@@ -239,7 +279,7 @@ class Search_root_0x88_C {
 
         node = node + this.search_ab_0x88_O.node;
 
-        move_list_root_0x88_O.add_score[move_i] = score;
+        move_list_root_0x88_O.add_score(move_i, score);
 
         //console.log("Search_0x88_C-> должны смотреть за черных, а вот реально что " + move_list_0x88_O.piece_color);
         // белые ищут максимум
@@ -281,9 +321,6 @@ class Search_root_0x88_C {
 
         // восстановили доску
         this.unmake_move_0x88_O.undo_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O);
-
-        // экстренный выход 
-        if (this.stop_search == 1) return 0;
 
       }//for (let move_i = 0; move_i < move_list_0x88_O.number_move; move_i++) {
 
@@ -348,7 +385,7 @@ class Search_root_0x88_C {
         this.uci_return_search.best_move = "bestmove " + move_list_0x88_O.move_to_string_uci(best_move_i, chess_board_0x88_O);
 
         // nnnnnnnnnnnnnnnnnnnnnn
-        this.chessEngine_0x88_O.message_search_root_to_engine(this.uci_return_search);
+        this.chessEngine_0x88_O?.message_search_root_to_engine(this.uci_return_search);
 
         // nnnnnnnnnnnnnnnnnnnnnn
         //this.chessEngine_0x88_O.info_from_depth_uci(this.uci_return_search);
@@ -375,14 +412,17 @@ class Search_root_0x88_C {
       else { // if (number_move_legal != 0) {
         this.uci_return_search.fen_start = fen_start;
         this.uci_return_search.fen_end = chess_board_0x88_O_end.set_fen_from_0x88();
-        this.uci_return_search.info =  "info depth " + -1 + " score cp " + 1 +
+        this.uci_return_search.info = "info depth " + -1 + " score cp " + 1 +
           " nodes " + -1 + " nps " + -1 + " pv " + "no";
         this.uci_return_search.best_move = "bestmove no move";
 
-        this.chessEngine_0x88_O.message_search_root_to_engine(this.uci_return_search);
+        this.chessEngine_0x88_O?.message_search_root_to_engine(this.uci_return_search);
 
-        this.chessEngine_0x88_O.info_from_depth_uci(this.uci_return_search);
+        this.chessEngine_0x88_O?.info_from_depth_uci(this.uci_return_search);
       }
+
+      // экстренный выход 
+      if (this.stop_search == 1) return this.uci_return_search;
 
     }// for (let depth_max_current = 1; depth_max_current < depth_max_search; depth_max_current++) {
 
@@ -391,7 +431,11 @@ class Search_root_0x88_C {
 
   /////////////////////////////////////////////////////////
 
-  // minmax
+  /** minmax
+   * @param {string} fen_start
+   * @param {number} depth_max
+   * @returns {uci_return_search}
+   */
   start_search_minmax(fen_start, depth_max) {
     let depth = 0;
 
@@ -469,7 +513,12 @@ class Search_root_0x88_C {
     return this.uci_return_search;
   }
 
-  // moves e2e4 e7e5 g1f3 b8c6 f1b5
+
+  /** moves e2e4 e7e5 g1f3 b8c6 f1b5
+   * @param {string} fen_start
+   * @param {string} move_str
+   * @returns {string | number}
+   */
   move_str_to_board(fen_start, move_str) {
 
     // эта доска используется что бы перевести уки команду в позицию 
