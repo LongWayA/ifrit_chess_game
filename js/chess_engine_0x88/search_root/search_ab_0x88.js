@@ -1,9 +1,9 @@
+// @ts-check
 /** 
  * @copyright Copyright (c) 2025, AnBr75 and/or its affiliates. All rights reserved.
  * @author AnBr75
  * @name search_0x88.js
  * @version created 11.10m.2025 
- * last modified 11.10m.2025, 24.10m.2025
 */
 
 import { Move_list_0x88_С } from "../move_generator/move_list_0x88.js";
@@ -15,14 +15,20 @@ import { Evaluate_0x88_C } from "./evaluate_0x88.js";
 import { Chess_board_0x88_C } from "../move_generator/chess_board_0x88.js";
 import { Quiescence_search_0x88_C } from "./quiescence_search_0x88.js";
 import { Transposition_table_0x88_C } from "../for_sorting_move/transposition_table_0x88.js";
-
+import { Move_gen_1_captures_0x88_С } from "../move_generator/move_gen_1_captures_0x88.js";
+import { Move_gen_2_quiet_0x88_С } from "../move_generator/move_gen_2_quiet_0x88.js";
+import { killer_heuristic_0x88_O } from "../for_sorting_move/killer_heuristic_0x88.js";
+import { History_heuristic_0x88_C } from "../for_sorting_move/history_heuristic_0x88.js";
 /**
 * НАЗНАЧЕНИЕ
 
 
 */
 //-
-
+/**
+ * Класс.
+ * @class
+ */
 class Search_ab_0x88_C {
 
   make_move_0x88_O = new Make_move_0x88_C();
@@ -97,6 +103,21 @@ class Search_ab_0x88_C {
 
 
   // searching_alpha_beta_fail_soft
+  /**
+   * @param {number} alpha
+   * @param {number} beta
+   * @param {PV_line_0x88_C} pv_line_0x88_O 
+   * @param {Chess_board_0x88_C} chess_board_0x88_O
+   * @param {Move_gen_1_captures_0x88_С} move_gen_1_captures_0x88_O
+   * @param {Move_gen_2_quiet_0x88_С} move_gen_2_quiet_0x88_O 
+   * @param {number} depth
+   * @param {number} depth_max
+   * @param {number} isPV
+   * @param {Transposition_table_0x88_C} transposition_table_0x88_O 
+   * @param {killer_heuristic_0x88_O} killer_heuristic_0x88_O
+   * @param {History_heuristic_0x88_C} history_heuristic_0x88_O  
+   * @returns {number}
+   */ 
   searching_alpha_beta_id(alpha, beta, pv_line_0x88_O, chess_board_0x88_O, move_gen_1_captures_0x88_O,
     move_gen_2_quiet_0x88_O, depth, depth_max, isPV, transposition_table_0x88_O, killer_heuristic_0x88_O, history_heuristic_0x88_O) {
 
@@ -111,7 +132,7 @@ class Search_ab_0x88_C {
     let tt_type_node = 0;
     let new_depth_max = 0;
     let i_lmr = 0;
-    let is_save_position = 0;
+    let is_save_position = null;
 
     // test+++++++++++++++++++++++++++
     //let test_save_move_list_0x88_O = new Move_list_0x88_С();// для тестирования сортировок
@@ -123,7 +144,7 @@ class Search_ab_0x88_C {
     if (depth >= depth_max) {
 
       if (this.is_quiescence_use == 0) {
-        best_score = this.evaluate_0x88_O.score_position(chess_board_0x88_O, transposition_table_0x88_O);
+        best_score = this.evaluate_0x88_O.score_position(chess_board_0x88_O);
       }
       this.node = this.node + 1;
 
@@ -180,7 +201,7 @@ class Search_ab_0x88_C {
 
       if ((isPV == 0) && ((depth_max - depth) <= 5)) {
 
-        score = this.evaluate_0x88_O.score_position(chess_board_0x88_O, transposition_table_0x88_O);
+        score = this.evaluate_0x88_O.score_position(chess_board_0x88_O);
 
         let raz = Evaluate_0x88_C.PAWN_SCORE * (depth_max - depth);
 
@@ -292,13 +313,13 @@ class Search_ab_0x88_C {
     // используем хеш таблицу ====================================================
     // 
     if (this.is_TT_use == 1) {
-      if ((is_save_position.tn == Transposition_table_0x88_C.ALPHA_UPDATE) && (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.WHITE)) {
+      if ((is_save_position?.tn == Transposition_table_0x88_C.ALPHA_UPDATE) && (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.WHITE)) {
         move_list_0x88_O.set_tt_move_in_0(is_save_position.from, is_save_position.to);
         //test
         //console.log("Search_0x88_C->use ALPHA_UPDATE side_to_move " + chess_board_0x88_O.side_to_move);
         //console.log("Search_0x88_C->use ALPHA_UPDATE piece_color " + move_list_0x88_O.piece_color);        
         //this.test_tt.use_alpha_up = this.test_tt.use_alpha_up + 1;
-      } else if ((is_save_position.tn == Transposition_table_0x88_C.BETA_UPDATE) && (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.BLACK)) {
+      } else if ((is_save_position?.tn == Transposition_table_0x88_C.BETA_UPDATE) && (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.BLACK)) {
         move_list_0x88_O.set_tt_move_in_0(is_save_position.from, is_save_position.to);
         //test        
         //console.log("Search_0x88_C->use BETA_UPDATE side_to_move " + chess_board_0x88_O.side_to_move);

@@ -1,9 +1,9 @@
+// @ts-check
 /** 
  * @copyright Copyright (c) 2025, AnBr75 and/or its affiliates. All rights reserved.
  * @author AnBr75
  * @name quiescence_search_0x88.js
  * @version created 27.10m.2025 
- * last modified 27.10m.2025
 */
 
 import { Chess_board_0x88_C } from "../move_generator/chess_board_0x88.js";
@@ -12,12 +12,17 @@ import { Unmake_move_0x88_C } from "../move_generator/unmake_move_0x88.js";
 import { Evaluate_0x88_C} from "./evaluate_0x88.js";
 import { Undo_0x88_C } from "../move_generator/undo_0x88.js";
 import { Move_list_0x88_С } from "../move_generator/move_list_0x88.js";
+import { Move_gen_1_captures_0x88_С } from "../move_generator/move_gen_1_captures_0x88.js";
+import { Transposition_table_0x88_C } from "../for_sorting_move/transposition_table_0x88.js";
 
 /**
 * НАЗНАЧЕНИЕ
 
 */
-
+/**
+ * Класс.
+ * @class
+ */
 class Quiescence_search_0x88_C {
 
   make_move_0x88_O = new Make_move_0x88_C();
@@ -35,6 +40,15 @@ class Quiescence_search_0x88_C {
     //for tactical and quiet moves
   }
 
+ /**
+   * @param {number} alpha
+   * @param {number} beta
+   * @param {Chess_board_0x88_C} chess_board_0x88_O
+   * @param {Move_gen_1_captures_0x88_С} move_gen_1_captures_0x88_O
+   * @param {number} depth
+   * @param {Transposition_table_0x88_C} transposition_table_0x88_O 
+   * @returns {number}
+   */ 
   //quiescence_search(alpha, beta, pv_line_0x88_O, chess_board_0x88_O, move_gen_1_captures_0x88_O, depth) {
   quiescence_search(alpha, beta, chess_board_0x88_O, move_gen_1_captures_0x88_O, depth, transposition_table_0x88_O) {
     let undo_0x88_O = new Undo_0x88_C();

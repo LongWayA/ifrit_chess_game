@@ -81,3 +81,5 @@ class Worker_ChessEngine_0x88_С {
 
 let worker_chessEngine_0x88_O = new Worker_ChessEngine_0x88_С();
 worker_chessEngine_0x88_O.iniM();
+
+//export { Worker_ChessEngine_0x88_С };

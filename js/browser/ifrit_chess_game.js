@@ -3,7 +3,6 @@
  * @author AnBr75
  * @name ifrit_chess_game.js
  * @version created 26.09m.2025 
- * last modified 27.09m.2025
 */
 
 /**

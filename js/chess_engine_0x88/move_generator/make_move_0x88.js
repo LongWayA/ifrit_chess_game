@@ -1,14 +1,16 @@
+// @ts-check
 /** 
  * @copyright Copyright (c) 2025, AnBr75 and/or its affiliates. All rights reserved.
  * @author AnBr75
  * @name make_move_0x88.js
  * @version created 22.10m.2025 
- * last modified 22.10m.2025
 */
 
 import { Chess_board_0x88_C } from "./chess_board_0x88.js";
 import { Move_list_0x88_С } from "./move_list_0x88.js";
 import { Move_gen_1_captures_0x88_С } from "./move_gen_1_captures_0x88.js";
+import { Undo_0x88_C } from "../move_generator/undo_0x88.js";
+import { Transposition_table_0x88_C } from "../for_sorting_move/transposition_table_0x88.js";
 
 /**
 * НАЗНАЧЕНИЕ
@@ -23,6 +25,10 @@ import { Move_gen_1_captures_0x88_С } from "./move_gen_1_captures_0x88.js";
 //+
 // тут все прозрачно. идей пока нет
 
+/**
+ * Класс.
+ * @class
+ */
 class Make_move_0x88_C {
 
   static NAME = "Make_move_0x88_C";
@@ -37,6 +43,15 @@ class Make_move_0x88_C {
   }
 
   // делаем ход под номером move_i из списка move_list_0x88_O на доске chess_board_0x88_O
+  /**
+* @param {number} move_i
+* @param {Chess_board_0x88_C} chess_board_0x88_O
+* @param {Move_list_0x88_С} move_list_0x88_O
+* @param {Undo_0x88_C} undo_0x88_O 
+* @param {Move_gen_1_captures_0x88_С} move_gen_1_captures_0x88_O
+* @param {Transposition_table_0x88_C} transposition_table_0x88_O 
+* @returns {number}
+*/
   do_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O, move_gen_1_captures_0x88_O, transposition_table_0x88_O) {
     //console.log("Make_move_0x88_C->do_moves  move_i " + move_i);
     let is_moove_legal = 1;// по умолчанию ход считаем легальным.
@@ -527,7 +542,14 @@ class Make_move_0x88_C {
     return is_moove_legal;
   }
 
-  // рисуем фигуру на новом месте и стираем на старом. это и просто ход и взятие.  
+  // рисуем фигуру на новом месте и стираем на старом. это и просто ход и взятие. 
+  /**
+   * @param {number} move_i
+   * @param {Chess_board_0x88_C} chess_board_0x88_O
+   * @param {Move_list_0x88_С} move_list_0x88_O
+   * @param {Transposition_table_0x88_C} transposition_table_0x88_O 
+   * @returns {void}
+   */
   make_simple_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O, transposition_table_0x88_O) {
 
     let piece_to = chess_board_0x88_O.sq_piece_0x88[move_list_0x88_O.to[move_i]];
@@ -557,6 +579,13 @@ class Make_move_0x88_C {
   }
 
   // если берется ладья на исходном месте то отменяем флаг возможности связанной с ней рокировки
+  /**
+   * @param {number} move_i
+   * @param {Chess_board_0x88_C} chess_board_0x88_O
+   * @param {Move_list_0x88_С} move_list_0x88_O
+   * @param {Transposition_table_0x88_C} transposition_table_0x88_O 
+   * @returns {void}
+   */  
   stop_king_castle_captures_rook_0x88(move_i, chess_board_0x88_O, move_list_0x88_O, transposition_table_0x88_O) {
 
     if (chess_board_0x88_O.castling_K == 1) {
@@ -601,6 +630,13 @@ class Make_move_0x88_C {
   }
 
   // отмена флага возможности рокировок из за хода ладьи
+  /**
+   * @param {number} move_i
+   * @param {Chess_board_0x88_C} chess_board_0x88_O
+   * @param {Move_list_0x88_С} move_list_0x88_O
+   * @param {Transposition_table_0x88_C} transposition_table_0x88_O 
+   * @returns {void}
+   */  
   stop_king_castle_move_rook_0x88(move_i, chess_board_0x88_O, move_list_0x88_O, transposition_table_0x88_O) {
 
     if (chess_board_0x88_O.castling_K == 1) {
@@ -645,6 +681,13 @@ class Make_move_0x88_C {
   }
 
   // отмена флагов возможности рокировок из за хода короля
+  /**
+   * @param {number} move_i
+   * @param {Chess_board_0x88_C} chess_board_0x88_O
+   * @param {Move_list_0x88_С} move_list_0x88_O
+   * @param {Transposition_table_0x88_C} transposition_table_0x88_O 
+   * @returns {void}
+   */  
   stop_king_castle_move_king_0x88(move_i, chess_board_0x88_O, move_list_0x88_O, transposition_table_0x88_O) {
 
     if (chess_board_0x88_O.castling_K == 1) {
@@ -685,6 +728,14 @@ class Make_move_0x88_C {
   }
 
   // короткая рокировка
+  /**
+   * @param {number} move_i
+   * @param {Chess_board_0x88_C} chess_board_0x88_O
+   * @param {Move_list_0x88_С} move_list_0x88_O
+   * @param {Move_gen_1_captures_0x88_С} move_gen_1_captures_0x88_O
+   * @param {Transposition_table_0x88_C} transposition_table_0x88_O 
+   * @returns {number}
+   */  
   make_king_castle_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O, move_gen_1_captures_0x88_O, transposition_table_0x88_O) {
 
     let is_moove_legal = 1;
@@ -797,6 +848,14 @@ class Make_move_0x88_C {
   }
 
   // длинная рокировка
+  /**
+   * @param {number} move_i
+   * @param {Chess_board_0x88_C} chess_board_0x88_O
+   * @param {Move_list_0x88_С} move_list_0x88_O
+   * @param {Move_gen_1_captures_0x88_С} move_gen_1_captures_0x88_O
+   * @param {Transposition_table_0x88_C} transposition_table_0x88_O 
+   * @returns {number}
+   */    
   make_king_queen_castle_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O, move_gen_1_captures_0x88_O, transposition_table_0x88_O) {
 
     let is_moove_legal = 1;
@@ -911,6 +970,13 @@ class Make_move_0x88_C {
 
   // остались пешки
   //  взятие на проходе
+  /**
+   * @param {number} move_i
+   * @param {Chess_board_0x88_C} chess_board_0x88_O
+   * @param {Move_list_0x88_С} move_list_0x88_O
+   * @param {Transposition_table_0x88_C} transposition_table_0x88_O 
+   * @returns {void}
+   */    
   make_en_passant_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O, transposition_table_0x88_O) {
 
     // записываем имя фигуры на новом месте
@@ -955,6 +1021,14 @@ class Make_move_0x88_C {
   }
 
   // ход пешки с превращением
+  /**
+   * @param {number} move_i
+   * @param {Chess_board_0x88_C} chess_board_0x88_O
+   * @param {Move_list_0x88_С} move_list_0x88_O
+   * @param {number} promo_piece 
+   * @param {Transposition_table_0x88_C} transposition_table_0x88_O 
+   * @returns {void}
+   */      
   make_promo_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O, promo_piece, transposition_table_0x88_O) {
 
     let piece_to = chess_board_0x88_O.sq_piece_0x88[move_list_0x88_O.to[move_i]];

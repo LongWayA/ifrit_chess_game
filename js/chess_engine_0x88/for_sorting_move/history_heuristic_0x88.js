@@ -1,9 +1,9 @@
+// @ts-check
 /** 
  * @copyright Copyright (c) 2025, AnBr75 and/or its affiliates. All rights reserved.
  * @author AnBr75
  * @name history_heuristic_0x88.js
  * @version created 05.11m.2025 
- * last modified 05.11m.2025
 */
 
 import { Chess_board_0x88_C } from "../move_generator/chess_board_0x88.js";
@@ -24,6 +24,10 @@ import { Chess_board_0x88_C } from "../move_generator/chess_board_0x88.js";
 //+
 //
 
+/**
+ * Класс.
+ * @class
+ */
 class History_heuristic_0x88_C {
 
   static NAME = "History_heuristic_0x88_C";
@@ -77,6 +81,14 @@ class History_heuristic_0x88_C {
 
 
   // записываем хороший ход
+   /**
+   * @param {number} color
+   * @param {number} from_128
+   * @param {number} to_128
+   * @param {number} depth
+   * @param {number} depth_max
+   * @returns {void}
+   */ 
   history_good_save(color, from_128, to_128, depth, depth_max) {
 
     let delta_depth = depth_max - depth;
@@ -108,6 +120,14 @@ class History_heuristic_0x88_C {
   }
 
   // записываем плохой ход
+   /**
+   * @param {number} color
+   * @param {number} from_128
+   * @param {number} to_128
+   * @param {number} depth
+   * @param {number} depth_max
+   * @returns {void}
+   */   
   history_bad_save(color, from_128, to_128, depth, depth_max) {
 
     let delta_depth = depth_max - depth;

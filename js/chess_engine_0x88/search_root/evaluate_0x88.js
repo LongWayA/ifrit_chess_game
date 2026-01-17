@@ -1,9 +1,9 @@
+// @ts-check
 /** 
  * @copyright Copyright (c) 2025, AnBr75 and/or its affiliates. All rights reserved.
  * @author AnBr75
  * @name evaluate_0x88.js
  * @version created 12.10m.2025 
- * last modified 12.10m.2025
 */
 
 import { Chess_board_0x88_C } from "../move_generator/chess_board_0x88.js";
@@ -12,7 +12,10 @@ import { Chess_board_0x88_C } from "../move_generator/chess_board_0x88.js";
 * НАЗНАЧЕНИЕ
 
 */
-
+/**
+ * Класс.
+ * @class
+ */
 class Evaluate_0x88_C {
 
   static NAME = "Evaluate_0x88_C";
@@ -110,7 +113,10 @@ class Evaluate_0x88_C {
   iniM() {
 
   }
-
+  /**
+  * @param {Chess_board_0x88_C} chess_board_0x88_O
+  * @returns {number}
+  */
   score_position(chess_board_0x88_O) {
 
     let color_piece = 0;
@@ -172,6 +178,10 @@ class Evaluate_0x88_C {
 
 
   // тестируем фен. то что правильно в него записывается позиция и наоборот - считывается
+  /**
+  * @param {Chess_board_0x88_C} chess_board_0x88_O
+  * @returns {void}
+  */  
   test_fen(chess_board_0x88_O) {
 
     let chess_board_0x88_O_save = new Chess_board_0x88_C();

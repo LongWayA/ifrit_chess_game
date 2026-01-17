@@ -1,9 +1,9 @@
+// @ts-check
 /** 
  * @copyright Copyright (c) 2025, AnBr75 and/or its affiliates. All rights reserved.
  * @author AnBr75
  * @name search_minmax_0x88.js
  * @version created 31.10m.2025 
- * last modified 31.10m.2025
 */
 
 /**
@@ -18,7 +18,14 @@ import { Evaluate_0x88_C } from "./evaluate_0x88.js";
 import { Chess_board_0x88_C } from "../move_generator/chess_board_0x88.js";
 import { Undo_0x88_C } from "../move_generator/undo_0x88.js";
 import { PV_line_0x88_C } from "../move_generator/pv_line_0x88.js";
+import { Move_gen_1_captures_0x88_С } from "../move_generator/move_gen_1_captures_0x88.js";
+import { Move_gen_2_quiet_0x88_С } from "../move_generator/move_gen_2_quiet_0x88.js";
+import { Transposition_table_0x88_C } from "../for_sorting_move/transposition_table_0x88.js";
 
+/**
+ * Класс.
+ * @class
+ */
 class Search_minmax_0x88_C {
 
   make_move_0x88_O = new Make_move_0x88_C();
@@ -40,6 +47,16 @@ class Search_minmax_0x88_C {
     //for tactical and quiet moves
   }
 
+  /**
+   * @param {PV_line_0x88_C} pv_line_0x88_O 
+   * @param {Chess_board_0x88_C} chess_board_0x88_O
+   * @param {Move_gen_1_captures_0x88_С} move_gen_1_captures_0x88_O
+   * @param {Move_gen_2_quiet_0x88_С} move_gen_2_quiet_0x88_O 
+   * @param {number} depth
+   * @param {number} depth_max
+   * @param {Transposition_table_0x88_C} transposition_table_0x88_O 
+   * @returns {number}
+   */ 
   searching_minmax(pv_line_0x88_O, chess_board_0x88_O,
     move_gen_1_captures_0x88_O, move_gen_2_quiet_0x88_O, depth, depth_max, transposition_table_0x88_O) {
     let undo_0x88_O = new Undo_0x88_C();

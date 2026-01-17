@@ -4,7 +4,6 @@
  * @author AnBr75
  * @name pv_line_0x88.js
  * @version created 22.10m.2025 
- * last modified 22.10m.2025
 */
 
 import { Chess_board_0x88_C } from "./chess_board_0x88.js";

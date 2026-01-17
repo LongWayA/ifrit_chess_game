@@ -1,9 +1,9 @@
+// @ts-check
 /** 
  * @copyright Copyright (c) 2025, AnBr75 and/or its affiliates. All rights reserved.
  * @author AnBr75
  * @name move_gen_1_captures_0x88.js
  * @version created 27.10m.2025 
- * last modified 27.10m.2025
 */
 
 import { Chess_board_0x88_C } from "./chess_board_0x88.js";
@@ -18,6 +18,10 @@ import { Move_list_0x88_С } from "./move_list_0x88.js";
 //+
 // тут все прозрачно. идей пока нет
 
+/**
+ * Класс.
+ * @class
+ */
 class Move_gen_1_captures_0x88_С {
 
     static NAME = "Move_gen_1_captures_0x88_С";
@@ -91,6 +95,11 @@ class Move_gen_1_captures_0x88_С {
     }
 
     // генерируем всевозможные ходы, но не учитываем шахи и вскрытые шахи.
+    /**
+   * @param {Chess_board_0x88_C} chess_board_0x88_O
+   * @param {Move_list_0x88_С} move_list_0x88_O
+   * @returns {void}
+   */
     generated_pseudo_legal_moves(chess_board_0x88_O, move_list_0x88_O) {
         //console.log('->generated_pseudo_legal_moves');
         // вывели из цикла чтобы определить один раз
@@ -106,6 +115,12 @@ class Move_gen_1_captures_0x88_С {
     }
 
     //  считаем ходы одной фигуры из конкретной позиции
+    /**
+  * @param {number} from
+  * @param {Chess_board_0x88_C} chess_board_0x88_O
+  * @param {Move_list_0x88_С} move_list_0x88_O
+  * @returns {void}
+  */
     generated_pseudo_legal_moves_one_piece_for_gui(from, chess_board_0x88_O, move_list_0x88_O) {
         //console.log('->generated_pseudo_legal_moves');
         // тут определяем чтобы не менять вызов generated_pseudo_legal_moves_one_piece(from, side_to_move, ...
@@ -119,6 +134,13 @@ class Move_gen_1_captures_0x88_С {
 
 
     //  считаем ходы одной фигуры из конкретной позиции
+    /**
+   * @param {number} from
+   * @param {number} side_to_move
+   * @param {Chess_board_0x88_C} chess_board_0x88_O
+   * @param {Move_list_0x88_С} move_list_0x88_O
+   * @returns {void}
+   */
     generated_pseudo_legal_moves_one_piece(from, side_to_move, chess_board_0x88_O, move_list_0x88_O) {
 
         let piece_name = -1;// имя фигуры типа 1,2, ...,6
@@ -162,6 +184,15 @@ class Move_gen_1_captures_0x88_С {
     }
 
     // смотрим ход from, to и если это взятие добавляем в список.
+    /**
+   * @param {number} piece_name
+   * @param {number} piece_color
+   * @param {number} from
+   * @param {number} to
+   * @param {Chess_board_0x88_C} chess_board_0x88_O
+   * @param {Move_list_0x88_С} move_list_0x88_O
+   * @returns {number}
+   */
     add_captures_move(piece_name, piece_color, from, to, chess_board_0x88_O, move_list_0x88_O) {
 
         let piece_captures = chess_board_0x88_O.sq_piece_0x88[to];// имя взятой фигуры
@@ -182,6 +213,13 @@ class Move_gen_1_captures_0x88_С {
     }
 
     // взятия королем
+    /**
+   * @param {number} piece_color
+   * @param {number} from
+   * @param {Chess_board_0x88_C} chess_board_0x88_O
+   * @param {Move_list_0x88_С} move_list_0x88_O
+   * @returns {void}
+   */
     generated_captures_moves_king(piece_color, from, chess_board_0x88_O, move_list_0x88_O) {
         //console.log("king " + piece + " c " + piece_color + " f " + from);
         //console.log("king");
@@ -200,6 +238,13 @@ class Move_gen_1_captures_0x88_С {
     }
 
     // взятия ферзем
+    /**
+   * @param {number} piece_color
+   * @param {number} from
+   * @param {Chess_board_0x88_C} chess_board_0x88_O
+   * @param {Move_list_0x88_С} move_list_0x88_O
+   * @returns {void}
+   */
     generated_captures_moves_queen(piece_color, from, chess_board_0x88_O, move_list_0x88_O) {
         //console.log("queen " + piece + " c " + piece_color + " f " + from);
         //console.log("queen");
@@ -228,6 +273,13 @@ class Move_gen_1_captures_0x88_С {
     }
 
     // взятия ладьей
+    /**
+  * @param {number} piece_color
+  * @param {number} from
+  * @param {Chess_board_0x88_C} chess_board_0x88_O
+  * @param {Move_list_0x88_С} move_list_0x88_O
+  * @returns {void}
+  */
     generated_captures_moves_rook(piece_color, from, chess_board_0x88_O, move_list_0x88_O) {
         //console.log("rook " + piece + " c " + piece_color + " f " + from);
         //console.log("rook");
@@ -253,6 +305,13 @@ class Move_gen_1_captures_0x88_С {
     }
 
     // взятия слоном
+    /**
+  * @param {number} piece_color
+  * @param {number} from
+  * @param {Chess_board_0x88_C} chess_board_0x88_O
+  * @param {Move_list_0x88_С} move_list_0x88_O
+  * @returns {void}
+  */
     generated_captures_moves_bishop(piece_color, from, chess_board_0x88_O, move_list_0x88_O) {
         //console.log("bishop " + piece + " c " + piece_color + " f " + from);
         //console.log("bishop");
@@ -279,6 +338,13 @@ class Move_gen_1_captures_0x88_С {
     }
 
     // взятие конем
+    /**
+  * @param {number} piece_color
+  * @param {number} from
+  * @param {Chess_board_0x88_C} chess_board_0x88_O
+  * @param {Move_list_0x88_С} move_list_0x88_O
+  * @returns {void}
+  */
     generated_captures_moves_knight(piece_color, from, chess_board_0x88_O, move_list_0x88_O) {
         //console.log("knight " + piece + " c " + piece_color + " f " + from);
         //console.log("knight");
@@ -298,6 +364,13 @@ class Move_gen_1_captures_0x88_С {
     }
 
     // взятия пешкой
+    /**
+  * @param {number} piece_color
+  * @param {number} from
+  * @param {Chess_board_0x88_C} chess_board_0x88_O
+  * @param {Move_list_0x88_С} move_list_0x88_O
+  * @returns {void}
+  */
     generated_captures_moves_pawn(piece_color, from, chess_board_0x88_O, move_list_0x88_O) {
         //console.log("pawn " + piece + " c " + piece_color + " f " + from);
         //console.log("pawn");
@@ -317,6 +390,13 @@ class Move_gen_1_captures_0x88_С {
     ///////////////////////////////////////
 
     // взятия белой пешкой
+    /**
+   * @param {number} piece_color
+   * @param {number} from
+   * @param {Chess_board_0x88_C} chess_board_0x88_O
+   * @param {Move_list_0x88_С} move_list_0x88_O
+   * @returns {void}
+   */
     generated_captures_moves_pawn_white(piece_color, from, chess_board_0x88_O, move_list_0x88_O) {
         if (Math.floor(from / 16) == 1) {// белая пешка на на предпоследней позиции(7-ая линия из 8). можно смотреть взятие с превращением
             // смотрим и если есть добавляем взятия пешкой с превращением
@@ -330,6 +410,13 @@ class Move_gen_1_captures_0x88_С {
     }
 
     // взятия черной пешкой
+    /**
+   * @param {number} piece_color
+   * @param {number} from
+   * @param {Chess_board_0x88_C} chess_board_0x88_O
+   * @param {Move_list_0x88_С} move_list_0x88_O
+   * @returns {void}
+   */
     generated_captures_moves_pawn_black(piece_color, from, chess_board_0x88_O, move_list_0x88_O) {
         if (Math.floor(from / 16) == 6) {// черная пешка на на предпоследней позиции(2-ая линия из 8). можно смотреть взятие с превращением
             this.generated_captures_moves_pawn_promo(from, (from + 15), (from + 17), piece_color,
@@ -341,6 +428,15 @@ class Move_gen_1_captures_0x88_С {
     }
 
     // простые взятия пешкой как белой так и черной
+    /**
+   * @param {number} from
+   * @param {number} to_left
+   * @param {number} to_right
+   * @param {number} piece_color 
+   * @param {Chess_board_0x88_C} chess_board_0x88_O
+   * @param {Move_list_0x88_С} move_list_0x88_O
+   * @returns {void}
+   */
     generated_moves_pawn_captures(from, to_left, to_right, piece_color, chess_board_0x88_O, move_list_0x88_O) {
         let piece_color_captures = -1;
         let piece_captures = -1;
@@ -372,6 +468,15 @@ class Move_gen_1_captures_0x88_С {
     }
 
     // взятие пешкой с превращением
+    /**
+    * @param {number} from
+    * @param {number} to_left
+    * @param {number} to_right
+    * @param {number} piece_color 
+    * @param {Chess_board_0x88_C} chess_board_0x88_O
+    * @param {Move_list_0x88_С} move_list_0x88_O
+    * @returns {void}
+    */
     generated_captures_moves_pawn_promo(from, to_left, to_right, piece_color, chess_board_0x88_O, move_list_0x88_O) {
         let piece_color_captures = -1;
         let piece_captures = -1;
@@ -416,6 +521,12 @@ class Move_gen_1_captures_0x88_С {
     }
 
     // у нас нету хода взятия короля, поэтому пришлось специально прописывать функцию обнаружения короля на дистанции хода короля
+    /**
+   * @param {number} from
+   * @param {number} piece_color 
+   * @param {Chess_board_0x88_C} chess_board_0x88_O
+   * @returns {number}
+   */
     check_detected_generated_moves_king(from, piece_color, chess_board_0x88_O) {
         let to = -1;
         let check = -1;
@@ -434,6 +545,12 @@ class Move_gen_1_captures_0x88_С {
     }
 
     // ищем шахи
+    /**
+  * @param {number} from
+  * @param {number} piece_color 
+  * @param {Chess_board_0x88_C} chess_board_0x88_O
+  * @returns {number}
+  */
     check_detected(from, piece_color, chess_board_0x88_O) {
 
         let move_list_0x88_O = new Move_list_0x88_С();

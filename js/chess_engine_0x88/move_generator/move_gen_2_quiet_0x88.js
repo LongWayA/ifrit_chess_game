@@ -1,9 +1,9 @@
+// @ts-check
 /** 
  * @copyright Copyright (c) 2025, AnBr75 and/or its affiliates. All rights reserved.
  * @author AnBr75
  * @name move_gen_2_quiet_0x88.js
  * @version created 22.10m.2025 
- * last modified 22.10m.2025
 */
 
 import { Chess_board_0x88_C } from "./chess_board_0x88.js";
@@ -19,6 +19,10 @@ import { Move_list_0x88_С } from "./move_list_0x88.js";
 //+
 // тут все прозрачно. идей пока нет
 
+/**
+ * Класс.
+ * @class
+ */
 class Move_gen_2_quiet_0x88_С {
 
     static NAME = "Move_gen_2_quiet_0x88_С";
@@ -84,6 +88,11 @@ class Move_gen_2_quiet_0x88_С {
     }
 
     // генерируем всевозможные ходы, но не учитываем шахи и вскрытые шахи.
+    /**
+   * @param {Chess_board_0x88_C} chess_board_0x88_O
+   * @param {Move_list_0x88_С} move_list_0x88_O
+   * @returns {void}
+   */
     generated_pseudo_legal_moves(chess_board_0x88_O, move_list_0x88_O) {
         //console.log('Move_gen_2_quiet_0x88_С->generated_pseudo_legal_moves');
         let side_to_move = chess_board_0x88_O.side_to_move;
@@ -93,6 +102,12 @@ class Move_gen_2_quiet_0x88_С {
     }
 
     //  считаем ходы одной фигуры из конкретной позиции
+    /**
+  * @param {number} from
+  * @param {Chess_board_0x88_C} chess_board_0x88_O
+  * @param {Move_list_0x88_С} move_list_0x88_O
+  * @returns {void}
+  */
     generated_pseudo_legal_moves_one_piece_for_gui(from, chess_board_0x88_O, move_list_0x88_O) {
         //console.log('Move_gen_2_quiet_0x88_С->generated_pseudo_legal_moves');
         let side_to_move = chess_board_0x88_O.side_to_move;
@@ -101,6 +116,13 @@ class Move_gen_2_quiet_0x88_С {
 
 
     //  считаем ходы одной фигуры из конкретной позиции
+    /**
+   * @param {number} from
+   * @param {number} side_to_move
+   * @param {Chess_board_0x88_C} chess_board_0x88_O
+   * @param {Move_list_0x88_С} move_list_0x88_O
+   * @returns {void}
+   */
     generated_pseudo_legal_moves_one_piece(from, side_to_move, chess_board_0x88_O, move_list_0x88_O) {
 
         let piece_name = -1;
@@ -145,6 +167,15 @@ class Move_gen_2_quiet_0x88_С {
     }
 
     // смотрим и если находим простые ходы то добавляем в список ходов
+    /**
+  * @param {number} piece_name
+  * @param {number} piece_color
+  * @param {number} from
+  * @param {number} to
+  * @param {Chess_board_0x88_C} chess_board_0x88_O
+  * @param {Move_list_0x88_С} move_list_0x88_O
+  * @returns {number}
+  */
     add_quiet_move(piece_name, piece_color, from, to, chess_board_0x88_O, move_list_0x88_O) {
         let piece_to = chess_board_0x88_O.sq_piece_0x88[to];
         let piece_color_to = chess_board_0x88_O.sq_piece_color_0x88[to];
@@ -162,6 +193,13 @@ class Move_gen_2_quiet_0x88_С {
     }
 
     // простые ходы короля (т.е. не взятия и не рокировки)
+    /**
+   * @param {number} piece_color
+   * @param {number} from
+   * @param {Chess_board_0x88_C} chess_board_0x88_O
+   * @param {Move_list_0x88_С} move_list_0x88_O
+   * @returns {void}
+   */
     generated_quiet_moves_king(piece_color, from, chess_board_0x88_O, move_list_0x88_O) {
         //console.log("king " + piece + " c " + piece_color + " f " + from);
         //console.log("king");
@@ -180,6 +218,13 @@ class Move_gen_2_quiet_0x88_С {
     }
 
     // простые ходы ферзя (т.е. не взятия)
+    /**
+* @param {number} piece_color
+* @param {number} from
+* @param {Chess_board_0x88_C} chess_board_0x88_O
+* @param {Move_list_0x88_С} move_list_0x88_O
+* @returns {void}
+*/
     generated_quiet_moves_queen(piece_color, from, chess_board_0x88_O, move_list_0x88_O) {
         //console.log("queen " + piece + " c " + piece_color + " f " + from);
         //console.log("queen");
@@ -206,6 +251,13 @@ class Move_gen_2_quiet_0x88_С {
     }
 
     // простые ходы ладьи
+    /**
+* @param {number} piece_color
+* @param {number} from
+* @param {Chess_board_0x88_C} chess_board_0x88_O
+* @param {Move_list_0x88_С} move_list_0x88_O
+* @returns {void}
+*/
     generated_quiet_moves_rook(piece_color, from, chess_board_0x88_O, move_list_0x88_O) {
         //console.log("rook " + piece + " c " + piece_color + " f " + from);
         //console.log("rook");
@@ -231,6 +283,13 @@ class Move_gen_2_quiet_0x88_С {
     }
 
     // простые ходы слона
+    /**
+* @param {number} piece_color
+* @param {number} from
+* @param {Chess_board_0x88_C} chess_board_0x88_O
+* @param {Move_list_0x88_С} move_list_0x88_O
+* @returns {void}
+*/
     generated_quiet_moves_bishop(piece_color, from, chess_board_0x88_O, move_list_0x88_O) {
         //console.log("bishop " + piece + " c " + piece_color + " f " + from);
         //console.log("bishop");
@@ -257,6 +316,13 @@ class Move_gen_2_quiet_0x88_С {
     }
 
     // простые ходы коня
+    /**
+* @param {number} piece_color
+* @param {number} from
+* @param {Chess_board_0x88_C} chess_board_0x88_O
+* @param {Move_list_0x88_С} move_list_0x88_O
+* @returns {void}
+*/
     generated_quiet_moves_knight(piece_color, from, chess_board_0x88_O, move_list_0x88_O) {
         //console.log("knight " + piece + " c " + piece_color + " f " + from);
         //console.log("knight");
@@ -276,6 +342,13 @@ class Move_gen_2_quiet_0x88_С {
     }
 
     // рокировки короля. черного, белого, длинные, короткие
+    /**
+* @param {number} piece_color
+* @param {number} from
+* @param {Chess_board_0x88_C} chess_board_0x88_O
+* @param {Move_list_0x88_С} move_list_0x88_O
+* @returns {void}
+*/
     generated_moves_castle_king(piece_color, from, chess_board_0x88_O, move_list_0x88_O) {
         let to = -1;
         let piece_to_1 = -1;
@@ -334,6 +407,13 @@ class Move_gen_2_quiet_0x88_С {
     }
 
     // простые ходы пешек белых и черных
+    /**
+* @param {number} piece_color
+* @param {number} from
+* @param {Chess_board_0x88_C} chess_board_0x88_O
+* @param {Move_list_0x88_С} move_list_0x88_O
+* @returns {void}
+*/
     generated_quiet_moves_pawn(piece_color, from, chess_board_0x88_O, move_list_0x88_O) {
         //console.log("pawn " + piece + " c " + piece_color + " f " + from);
         //console.log("pawn");
@@ -350,6 +430,12 @@ class Move_gen_2_quiet_0x88_С {
 
 
     // простые ходы белых пешек
+    /**
+  * @param {number} from
+  * @param {Chess_board_0x88_C} chess_board_0x88_O
+  * @param {Move_list_0x88_С} move_list_0x88_O
+  * @returns {void}
+  */
     generated_quiet_moves_pawn_white(from, chess_board_0x88_O, move_list_0x88_O) {
 
         if (Math.floor(from / 16) == 6) {// белая пешка на стартовой позиции(2-ая линия). можно ходить на две клетки
@@ -366,6 +452,12 @@ class Move_gen_2_quiet_0x88_С {
     }
 
     // простые ходы черных пешек
+   /**
+  * @param {number} from
+  * @param {Chess_board_0x88_C} chess_board_0x88_O
+  * @param {Move_list_0x88_С} move_list_0x88_O
+  * @returns {void}
+  */    
     generated_quiet_moves_pawn_black(from, chess_board_0x88_O, move_list_0x88_O) {
 
         if (Math.floor(from / 16) == 1) {// белые пешки на стартовой позиции. можно ходить на две клетки
@@ -382,6 +474,13 @@ class Move_gen_2_quiet_0x88_С {
     }
 
     // ход пешки на одну клетку
+    /**
+  * @param {number} from
+  * @param {number} to
+  * @param {Chess_board_0x88_C} chess_board_0x88_O
+  * @param {Move_list_0x88_С} move_list_0x88_O
+  * @returns {void}
+  */   
     generated_moves_pawn_one(from, to, chess_board_0x88_O, move_list_0x88_O) {
         let piece_to = -1;
         let type_move = -1;
@@ -394,6 +493,14 @@ class Move_gen_2_quiet_0x88_С {
     }
 
     // ход пешки на две клетки
+     /**
+  * @param {number} from
+  * @param {number} to_void
+  * @param {number} to
+  * @param {Chess_board_0x88_C} chess_board_0x88_O
+  * @param {Move_list_0x88_С} move_list_0x88_O
+  * @returns {void}
+  */      
     generated_moves_pawn_double(from, to_void, to, chess_board_0x88_O, move_list_0x88_O) {
         let piece_to = -1;
         let piece_to_void = -1;
@@ -408,6 +515,13 @@ class Move_gen_2_quiet_0x88_С {
     }
 
     // ходы пешки с превращением
+    /**
+  * @param {number} from
+  * @param {number} to_center
+  * @param {Chess_board_0x88_C} chess_board_0x88_O
+  * @param {Move_list_0x88_С} move_list_0x88_O
+  * @returns {void}
+  */         
     generated_quiet_moves_pawn_promo(from, to_center, chess_board_0x88_O, move_list_0x88_O) {
         let piece_to = -1;
         let type_move = -1;

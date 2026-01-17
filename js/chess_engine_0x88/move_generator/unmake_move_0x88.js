@@ -1,14 +1,15 @@
+// @ts-check
 /** 
  * @copyright Copyright (c) 2025, AnBr75 and/or its affiliates. All rights reserved.
  * @author AnBr75
  * @name unmake_move_0x88.js
  * @version created 24.10m.2025 
- * last modified 24.10m.2025
 */
 
 import { Chess_board_0x88_C } from "./chess_board_0x88.js";
 import { Move_list_0x88_С } from "./move_list_0x88.js";
 import { Move_gen_1_captures_0x88_С } from "./move_gen_1_captures_0x88.js";
+import { Undo_0x88_C } from "../move_generator/undo_0x88.js";
 
 /**
 * НАЗНАЧЕНИЕ
@@ -17,6 +18,10 @@ import { Move_gen_1_captures_0x88_С } from "./move_gen_1_captures_0x88.js";
 //+
 // тут все прозрачно. идей пока нет
 
+/**
+ * Класс.
+ * @class
+ */
 class Unmake_move_0x88_C {
 
   static NAME = "Unmake_move_0x88_C";
@@ -31,6 +36,13 @@ class Unmake_move_0x88_C {
   }
 
   // возврат хода
+  /**
+* @param {number} move_i
+* @param {Chess_board_0x88_C} chess_board_0x88_O
+* @param {Move_list_0x88_С} move_list_0x88_O
+* @param {Undo_0x88_C} undo_0x88_O  
+* @returns {void}
+*/
   undo_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O) {
     //console.log("Make_move_0x88_C->do_moves  move_i " + move_i);
     let type_move = move_list_0x88_O.type_move[move_i];
@@ -285,6 +297,12 @@ class Unmake_move_0x88_C {
   }
 
   // возврат хода рисуем фигуру на старом месте и стираем на новом. это и просто ход.
+  /**
+* @param {number} move_i
+* @param {Chess_board_0x88_C} chess_board_0x88_O
+* @param {Move_list_0x88_С} move_list_0x88_O
+* @returns {void}
+*/
   unmake_simple_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O) {
 
     // записываем имя фигуры на старом месте
@@ -304,6 +322,13 @@ class Unmake_move_0x88_C {
 
 
   // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
+  /**
+* @param {number} move_i
+* @param {Chess_board_0x88_C} chess_board_0x88_O
+* @param {Move_list_0x88_С} move_list_0x88_O
+* @param {number} captures_piece  
+* @returns {void}
+*/    
   unmake_captures_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O, captures_piece) {
 
     // записываем имя фигуры на старом месте
@@ -324,6 +349,12 @@ class Unmake_move_0x88_C {
 
 
   // возврат короткой рокировки
+   /**
+* @param {number} move_i
+* @param {Chess_board_0x88_C} chess_board_0x88_O
+* @param {Move_list_0x88_С} move_list_0x88_O  
+* @returns {void}
+*/     
   unmake_king_castle_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O) {
 
     //   move_list_0x88_O.test_print_i_move_list(move_i, chess_board_0x88_O);
@@ -389,6 +420,12 @@ class Unmake_move_0x88_C {
   }
 
   // возврат длинной рокировки
+   /**
+* @param {number} move_i
+* @param {Chess_board_0x88_C} chess_board_0x88_O
+* @param {Move_list_0x88_С} move_list_0x88_O 
+* @returns {void}
+*/     
   unmake_king_queen_castle_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O) {
 
     // перемещаем назад короля. его ход прописан в списке ходов
@@ -446,6 +483,12 @@ class Unmake_move_0x88_C {
 
   // остались пешки
   // возврат взятия на проходе 
+  /**
+* @param {number} move_i
+* @param {Chess_board_0x88_C} chess_board_0x88_O
+* @param {Move_list_0x88_С} move_list_0x88_O 
+* @returns {void}
+*/      
   unmake_en_passant_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O) {
 
     // записываем имя фигуры на старом месте
@@ -476,6 +519,12 @@ class Unmake_move_0x88_C {
   }
 
   //возврат простого хода превращения
+  /**
+* @param {number} move_i
+* @param {Chess_board_0x88_C} chess_board_0x88_O
+* @param {Move_list_0x88_С} move_list_0x88_O 
+* @returns {void}
+*/      
   unmake_promo_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O) {
 
     // записываем имя фигуры на старом месте
@@ -493,6 +542,13 @@ class Unmake_move_0x88_C {
   }
 
   //возврат  хода превращения со взятием
+   /**
+* @param {number} move_i
+* @param {Chess_board_0x88_C} chess_board_0x88_O
+* @param {Move_list_0x88_С} move_list_0x88_O
+* @param {number} captures_piece  
+* @returns {void}
+*/     
   unmake_promo_captures_move_0x88(move_i, chess_board_0x88_O, move_list_0x88_O, captures_piece) {
 
     // записываем имя фигуры на старом месте

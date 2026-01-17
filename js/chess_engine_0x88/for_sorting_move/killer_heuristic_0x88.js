@@ -1,9 +1,9 @@
+// @ts-check
 /** 
  * @copyright Copyright (c) 2025, AnBr75 and/or its affiliates. All rights reserved.
  * @author AnBr75
  * @name killer_heuristic_0x88.js
  * @version created 04.11m.2025 
- * last modified 04.11m.2025
 */
 
 /**
@@ -17,6 +17,10 @@
 //+
 // тут все прозрачно. идей пока нет
 
+/**
+ * Класс.
+ * @class
+ */
 class killer_heuristic_0x88_O {
 
   static NAME = "killer_heuristic_0x88_O";
@@ -51,6 +55,12 @@ class killer_heuristic_0x88_O {
   }
 
   // записываем не взятия вызвавшие отсечку 
+     /**
+   * @param {number} from
+   * @param {number} to
+   * @param {number} depth
+   * @returns {void}
+   */ 
   add_move(from, to, depth) {
 
     //console.log('killer_heuristic_0x88_O->add_move depth ' + depth +" type_move " + type_move);

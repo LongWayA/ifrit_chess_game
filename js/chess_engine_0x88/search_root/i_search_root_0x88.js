@@ -4,7 +4,6 @@
  * @author AnBr75
  * @name i_search_root_0x88.js
  * @version created 11.10m.2025 
- * last modified 11.10m.2025, 24.10m.2025
 */
 
 import { ChessEngine_0x88_С } from "./../i_chess_engine_0x88.js";
@@ -135,7 +134,6 @@ class Search_root_0x88_C {
     this.history_heuristic_0x88_O.iniM();
   }
 
-  // @ts-ignore: Временный костыль, пока не опишу тип
   set_stop_search_in_1() {
     this.search_ab_0x88_O.set_stop_search_in_1();
     this.stop_search = 1;
@@ -164,7 +162,7 @@ class Search_root_0x88_C {
     let score = 0;// текущая оценка позиции
     let depth = 0;
     let best_score;// лучшая оценка позиции
-    let best_move_i;// лучшая 
+    let best_move_i = -1;// лучшая 
     let isPV_node = 1;
 
     //console.log("Search_0x88_C->depth " + depth);
@@ -265,7 +263,7 @@ class Search_root_0x88_C {
         }
 
         //gggggggggggggggggggggggggggggggggg
-        //this.chessEngine_0x88_O.info_currmove_uci(move_list_0x88_O.move_to_string_uci(move_i, chess_board_0x88_O), move_i, String(depth_max_current));
+        //this.chessEngine_0x88_O?.info_currmove_uci(move_list_0x88_O.move_to_string_uci(move_i, chess_board_0x88_O), move_i, String(depth_max_current));
 
         number_move_legal = number_move_legal + 1;
 

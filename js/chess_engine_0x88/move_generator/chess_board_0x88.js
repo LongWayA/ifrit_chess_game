@@ -1,9 +1,9 @@
+// @ts-check
 /** 
  * @copyright Copyright (c) 2025, AnBr75 and/or its affiliates. All rights reserved.
  * @author AnBr75
  * @name chess_board_0x88.js
  * @version created 27.09m.2025 
- * last modified 27.09m.2025
 */
 
 /**
@@ -60,6 +60,10 @@
 //+
 // тут все прозрачно. идей пока нет
 
+/**
+ * Класс.
+ * @class
+ */
 class Chess_board_0x88_C {
 
     static NAME = "Chess_board_0x88_C";
@@ -115,41 +119,41 @@ class Chess_board_0x88_C {
     //sq_piece_color_0x88 = new Array(128).fill(0);// доска 0x88 с цветом фигур
     sq_piece_color_0x88 = new Uint32Array(128).fill(0);// доска 0x88 с цветом фигур    
 
-    king_from_white = 0|0;// положение белого короля
-    king_from_black = 0|0;// положение черного короля
+    king_from_white = 0 | 0;// положение белого короля
+    king_from_black = 0 | 0;// положение черного короля
 
     // ВСПОМОГАТЕЛЬНАЯ ИНФОРМАЦИЯ
     // цвет хода 0 - черные 1 - белые
-    side_to_move = 0|0;
+    side_to_move = 0 | 0;
 
     // разрешение взятия на проходе 1/0
-    en_passant_yes = 0|0;
+    en_passant_yes = 0 | 0;
 
     // координата битого поля
-    en_passant_target_square = 0|0;
+    en_passant_target_square = 0 | 0;
 
     // рокировка белых в длинную сторону   1/0
-    castling_Q = 1|0;
+    castling_Q = 1 | 0;
 
     // рокировка белых в короткую сторону  1/0
-    castling_K = 1|0;
+    castling_K = 1 | 0;
 
     // рокировка черных в длинную сторону  1/0
-    castling_q = 1|0;
+    castling_q = 1 | 0;
 
     // рокировка черных в короткую сторону 1/0
-    castling_k = 1|0;
+    castling_k = 1 | 0;
 
     // оценка позиции
-    score = -1|0;
+    score = -1 | 0;
 
     //The number of halfmoves since the last capture or pawn advance, 
     // used for the fifty-move rule.(from wikipedia)
-    halfmove_clock = -1|0;
+    halfmove_clock = -1 | 0;
 
     //Fullmove number: The number of the full moves. 
     // It starts at 1 and is incremented after Black's move.(from wikipedia)   
-    fullmove_number = -1|0;
+    fullmove_number = -1 | 0;
 
     // 64 битный ключ позиции   
     key_64 = 0n;
@@ -163,18 +167,31 @@ class Chess_board_0x88_C {
     }
 
     // переводим координаты х и у в линейную координату доски 128(0x88)
+    /**
+    * @param {number} x07
+    * @param {number} y07
+    * @returns {number}
+    */
     x07_y07_to_0x88(x07, y07) {//rank07, file07
         let s_0x88 = 16 * y07 + x07;
         return s_0x88;
     }
 
     // переводим линейную координату доски 128(0x88) в х
+    /**
+   * @param {number} s_0x88
+   * @returns {number}
+   */
     s_0x88_to_x07(s_0x88) {//rank07, file07
         let x07 = s_0x88 & 7;
         return x07;
     }
 
     // переводим линейную координату доски 128(0x88) в у
+    /**
+   * @param {number} s_0x88
+   * @returns {number}
+   */
     s_0x88_to_y07(s_0x88) {//rank07, file07
         let y07 = s_0x88 >> 4; // s_0x88 / 16    
         return y07;
@@ -249,6 +266,10 @@ class Chess_board_0x88_C {
     }
 
     // проверяем совпадение двух позиций. нужно для тестирования
+    /**
+   * @param {Chess_board_0x88_C} chess_board_0x88_O
+   * @returns {number}
+   */
     test_compare_chess_board_0x88(chess_board_0x88_O) {
 
         let is_test_ok = 1;
@@ -318,6 +339,10 @@ class Chess_board_0x88_C {
 
 
     // записываем одну позицию в другую (копируем массив и вспомогательную информацию)
+    /**
+     * @param {Chess_board_0x88_C} chess_board_0x88_O
+     * @returns {void}
+    */
     save_chess_board_0x88(chess_board_0x88_O) {
         //console.log("Make_move_0x88_C->do_undo_moves");
         for (let i = 0; i < 128; i++) {
@@ -352,6 +377,10 @@ class Chess_board_0x88_C {
     // https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
     // "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
     // инициируем позицию из фена
+    /**
+     * @param {string} fen
+     * @returns {void}
+    */    
     set_0x88_from_fen(fen) {
         //console.log('ChessBoard_0x88_C->set_0x88_from_fen');
 
@@ -439,12 +468,16 @@ class Chess_board_0x88_C {
                     //this.fullmove_number = Number(char);
                 }
             }
-        }     
+        }
         //console.log("ChessBoard_0x88_C set_0x88_from_fen king_from_white = " + this.king_from_white);
         //console.log("ChessBoard_0x88_C set_0x88_from_fen king_from_white = " + this.king_from_white);
     }
 
     // переводим букву в координату
+    /**
+     * @param {string} letter
+     * @returns {number}
+    */       
     letter_to_x_coordinate(letter) {
         if (letter == "a") return 0;
         if (letter == "b") return 1;
@@ -461,6 +494,12 @@ class Chess_board_0x88_C {
     // по букве из фена ставим фигуру на позицию. 
     // если вместо буквы цифра то перводим ее в количество пустых клеток 
     // так сделано потому что запись фена вида /1p6/8/
+    /**
+     * @param {string} char
+     * @param {number} x
+     * @param {number} y 
+     * @returns {number}
+    */        
     char_fen_to_board(char, x, y) {
 
         let delta_x = 1;
@@ -615,6 +654,10 @@ class Chess_board_0x88_C {
     }
 
     // первод имени фигуры в виде цифры в букву для фена
+     /**
+     * @param {number} z 
+     * @returns {string}
+    */      
     fen_piece_to_char(z) {
         let char = "";
         // KING
@@ -682,6 +725,10 @@ class Chess_board_0x88_C {
     }
 
     // ищем короля заданного цвета. нужно для обнаружения шаха
+    /**
+     * @param {number} piece_color
+     * @returns {number}
+    */       
     searching_king(piece_color) {
         for (let i = 0; i < 128; i++) {
             if ((i & 136) == 0) {// 136 0x88

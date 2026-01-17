@@ -4,7 +4,6 @@
  * @author AnBr75
  * @name move_list_root_0x88.js
  * @version created 17.11m.2025 
- * last modified 17.11m.2025
 */
 
 import { Move_list_0x88_С } from "../move_generator/move_list_0x88.js";
