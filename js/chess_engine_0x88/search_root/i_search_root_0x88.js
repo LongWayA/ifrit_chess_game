@@ -31,26 +31,34 @@ import { Timer_C } from "../../browser/timer.js";
 
 /**
 * НАЗНАЧЕНИЕ
+* Есть два режима поиска: 
+* searching_iterative_deepening(fen_start, depth_max) - основной поиск
+* start_search_minmax(fen_start, depth_max) - тестирование перебора
+*
 * Поиск начинается с присланой в виде fen позиции fen_start
-* и максимальной глубины depth_max_search
+* и максимальной глубины depth_max
 * Из fen мы заполняем chess_board_0x88_O_start.
 *
 * Во время поиска идет циклическое погружение и на каждой просчитанной глубине
-* возвращается заполненный объект info_return_search
+* возвращается заполненный объект uci_return_search
 * Конечно есть финальная позиция fen_end
 * Так что поиск начинается со стартового fen и заканчивается
 * финальным.
-* Конечно есть лучшая оценка найденная во время поиска best_score_str
-* Конечно же выводим лучший вариант pv_line_str
-* его вид еще не окончательный. надо будет еще обдумать.
-* Дальше вывод количество рассмотреных узлов node_count_str.
-* Также есть вывод скорости поиска nodes_per_second_str.
-* И конечно же глубина поиска depth_max_search_str.
-*
+* Конечно же выводим лучший вариант info. тут и скорость и оценка и колличество узлов и глубина перебора
+* Выводим так же лучший ход best_move
 * Думаю этот интерфейс останется надолго. Добавление эвристик и даже замена генератора
 * на него влиять не должны.
 *
 */
+ 
+/**
+    * 
+    * @typedef {Object} uci_return_search
+    * @property {string} fen_start - начальная позиция в виде fen передаваемая на вход движка
+    * @property {string} fen_end - конечная позиция в виде fen возникшая после хода движка
+    * @property {string} info - info depth 1 score cp 17 nodes 20 nps 20000 pv e2e4 
+    * @property {string} best_move - bestmove e2e4 ponder e7e6
+    */
 
 /**
  * Класс.
@@ -103,14 +111,6 @@ class Search_root_0x88_C {
   /** @type {number} */
   stop_search = 0;
 
-  /**
-    * 
-    * @typedef {Object} uci_return_search
-    * @property {string} fen_start
-    * @property {string} fen_end
-    * @property {string} info
-    * @property {string} best_move
-    */
   uci_return_search = {
     fen_start: "-",// начальная позиция в виде fen передаваемая на вход движка
     fen_end: "-",// конечная позиция в виде fen возникшая после хода движка

@@ -21,14 +21,6 @@ import { Uci_C } from "../uci/uci.js";
 выдавать количество рассмотренных позиций
 выдавать фен позиции
 */
-/**
-  * 
-  * @typedef {Object} uci_return_search
-  * @property {string} fen_start
-  * @property {string} fen_end
-  * @property {string} info
-  * @property {string} best_move
-  */
 
 /**
  * Класс.
@@ -71,7 +63,7 @@ class ChessEngine_0x88_С {
   }
 
   /**
-   * @param {uci_return_search} uci_return_search
+   * @param {import('./search_root/i_search_root_0x88.js').uci_return_search} uci_return_search
    * @returns {void}
    */
   info_from_depth_uci(uci_return_search) {
@@ -91,7 +83,7 @@ class ChessEngine_0x88_С {
 
   // сообщение поиска движку
   /**
-   * @param {uci_return_search} uci_return_search
+   * @param {import('./search_root/i_search_root_0x88.js').uci_return_search} uci_return_search
    * @returns {void}
    */
   message_search_root_to_engine(uci_return_search) {

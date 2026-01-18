@@ -69,16 +69,8 @@ class Worker_ChessEngine_0x88_С {
       let depth_max_s = message.slice(9, end);
       let depth_max = Number(depth_max_s);
 
-      /**
-        * 
-        * @typedef {Object} uci_return_search
-        * @property {string} fen_start
-        * @property {string} fen_end
-        * @property {string} info
-        * @property {string} best_move
-        */
 
-      /** @type {uci_return_search}*/
+      /** @type {import('../chess_engine_0x88/search_root/i_search_root_0x88.js').uci_return_search}*/
       let uci_return_search;
 
       if (this.mode_game == 1) {
