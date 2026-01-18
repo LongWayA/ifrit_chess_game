@@ -1,12 +1,17 @@
+// @ts-check
 /** 
  * @copyright Copyright (c) 2025, AnBr75 and/or its affiliates. All rights reserved.
  * @author AnBr75
- * @name n.js
+ * @name ifrit_node_js.js
  * @version created 17.12m.2025 
 */
+
 //const readline = require('node:readline');
+// @ts-ignore
 import * as readline from 'node:readline';
 //import { writeFile } from 'node:fs/promises';
+
+// @ts-ignore
 import { appendFile } from 'node:fs/promises';
 
 import { ChessEngine_0x88_С } from "../chess_engine_0x88/i_chess_engine_0x88.js";
@@ -20,9 +25,13 @@ let chessEngine_0x88_O = new ChessEngine_0x88_С();// встроенный ша�
 
 chessEngine_0x88_O.iniM();
 
-let fen_start;
-let depth_max;
+let fen_start = "";
+let depth_max = -1;
 
+  /**
+   * @param {string} command
+   * @returns {Promise<void>}
+   */
 async function save_command(command) {
   try {
     //await writeFile('ifrit_save_command.txt', command, 'utf8');
@@ -36,12 +45,17 @@ async function save_command(command) {
 // Создаем интерфейс для чтения из стандартного ввода (stdin) 
 // и записи в стандартный вывод (stdout)
 const rl = readline.createInterface({
+
+  // @ts-ignore
   input: process.stdin,
+
+  // @ts-ignore
   output: process.stdout,
   terminal: false
 });
 
 // Обработка каждой новой строки от оболочки
+// @ts-ignore
 rl.on('line', (line) => {
   const command = line.trim();
 
@@ -99,7 +113,7 @@ rl.on('line', (line) => {
     // + " nodes " + info_return_search.node_count_str + " nps " + info_return_search.nodes_per_second_str 
     // + " pv " + info_return_search.pv_line_uci_str);
 
-    console.log('bestmove ' + info_return_search.best_move_uci_str);
+    console.log('bestmove ' + info_return_search.best_move);
   }
 
   else if (command === 'stop') {
@@ -108,6 +122,8 @@ rl.on('line', (line) => {
 
   else if (command === 'quit') {
     rl.close();
+
+    // @ts-ignore
     process.exit(0);
   }
 });

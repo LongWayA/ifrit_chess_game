@@ -515,7 +515,7 @@ class Search_root_0x88_C {
   /** moves e2e4 e7e5 g1f3 b8c6 f1b5
    * @param {string} fen_start
    * @param {string} move_str
-   * @returns {string | number}
+   * @returns {string}
    */
   move_str_to_board(fen_start, move_str) {
 
@@ -591,10 +591,10 @@ class Search_root_0x88_C {
 
       if (is_moove_legal == 0) { // король под шахом. отменяем ход и пропускаем этот цикл
         //console.log("Search_0x88_C->ошибка хода");
-        return -1;
+        return "-1";
       } else if (is_moove_legal == 2) {// нелегальные рокировки не генерируются. просто пропускаем ход
         //console.log("Search_0x88_C->ошибка рокировки");
-        return -1;
+        return "-1";
       }
     }//for (let pos = pos_start; pos < move_str.length; pos++) {
 
