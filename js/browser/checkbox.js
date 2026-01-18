@@ -1,9 +1,9 @@
+// @ts-check
 /** 
  * @copyright Copyright (c) 2025, AnBr75 and/or its affiliates. All rights reserved.
  * @author AnBr75
  * @name checkbox.js
  * @version created 09.11m.2025 
- * last modified 09.11m.2025
 */
 
 import { Gui_chess_C } from "../gui_chess/i_gui_chess.js";
@@ -14,38 +14,64 @@ import { Gui_chess_C } from "../gui_chess/i_gui_chess.js";
  *  
 */
 
-const checkbox_is_black_game = document.getElementById('is_black_game');
+/** @type {HTMLInputElement} */
+const checkbox_is_black_game = /** @type {HTMLInputElement} */ (document.getElementById('is_black_game'));
 
-checkbox_is_black_game.addEventListener('change', function () {
+checkbox_is_black_game?.addEventListener('change', function () {
       checkbox_R.checkbox_is_black_game_checked();
 });
 
-const input_max_depth = document.getElementById('max_depth');
+/** @type {HTMLInputElement} */
+const input_max_depth = /** @type {HTMLInputElement} */(document.getElementById('max_depth'));
 
-input_max_depth.addEventListener('input', function () {
+input_max_depth?.addEventListener('input', function () {
       checkbox_R.input_max_depth_checked();
 });
 
-const input_set_fen = document.getElementById('set_fen');
+/** @type {HTMLInputElement} */
+const input_set_fen = /** @type {HTMLInputElement} */ (document.getElementById('set_fen'));
 
-const text_chess_game = document.getElementById('text_chess_game');
-const text_engine = document.getElementById('text_engine');
+/** @type {HTMLTextAreaElement} */
+const text_chess_game = /** @type {HTMLTextAreaElement} */ (document.getElementById('text_chess_game'));
 
-const buttonLeft = document.getElementById('buttonLeft');
-const buttonGo = document.getElementById('buttonGo');
-const buttonRight = document.getElementById('buttonRight');
-const buttonStart = document.getElementById('buttonStart');
-const buttonFen = document.getElementById('buttonFen');
+/** @type {HTMLTextAreaElement} */
+const text_engine = /** @type {HTMLTextAreaElement} */ (document.getElementById('text_engine'));
 
+/** @type {HTMLButtonElement} */
+const buttonLeft = /** @type {HTMLButtonElement} */ (document.getElementById('buttonLeft'));
+
+/** @type {HTMLButtonElement} */
+const buttonGo = /** @type {HTMLButtonElement} */ (document.getElementById('buttonGo'));
+
+/** @type {HTMLButtonElement} */
+const buttonRight = /** @type {HTMLButtonElement} */ (document.getElementById('buttonRight'));
+
+/** @type {HTMLButtonElement} */
+const buttonStart = /** @type {HTMLButtonElement} */ (document.getElementById('buttonStart'));
+
+/** @type {HTMLButtonElement} */
+const buttonFen = /** @type {HTMLButtonElement} */ (document.getElementById('buttonFen'));
+
+
+
+/**
+ * Класс.
+ * @class
+ */
 class Checkbox_C {
 
       static NAME = "Checkbox_C";
 
-      IfritChessGame_O = 0;
+      /** @type {any} */
+      IfritChessGame_O = null;
 
       constructor() {
       }
 
+      /**
+       * @param {any} IfritChessGame_R
+       * @returns {void}
+       */
       iniM(IfritChessGame_R) {
 
             this.IfritChessGame_O = IfritChessGame_R;
@@ -62,7 +88,7 @@ class Checkbox_C {
       }
 
       input_max_depth_checked() {
-            if (isNaN(parseInt(input_max_depth.value))) {
+            if (isNaN(parseInt(input_max_depth?.value))) {
                   this.IfritChessGame_O.gui_chess_O.depth_max = 1;
                   input_max_depth.value = this.IfritChessGame_O.gui_chess_O.depth_max;
             } else {
@@ -73,6 +99,10 @@ class Checkbox_C {
             }
       }
 
+      /**
+       * @param {boolean} yes
+       * @returns {void}
+       */
       set_disabled(yes) {// true, false
             buttonLeft.disabled = yes;
             buttonGo.disabled = yes;
@@ -81,11 +111,18 @@ class Checkbox_C {
             buttonFen.disabled = yes;
       }
 
-
+      /**
+        * @param {string} value
+        * @returns {void}
+        */
       set_input_max_depth_value(value) {
             input_max_depth.value = value;
       }
 
+      /**
+       * @param {string} value
+       * @returns {void}
+       */
       set_input_set_fen(value) {
             input_set_fen.value = value;
       }
@@ -94,10 +131,18 @@ class Checkbox_C {
             return input_set_fen.value;
       }
 
+      /**
+        * @param {string} value
+        * @returns {void}
+        */
       set_text_engine(value) {
             text_engine.value = value;
       }
 
+      /**
+        * @param {string} value
+        * @returns {void}
+        */
       add_text_engine(value) {
             text_engine.value += value;
       }
@@ -106,10 +151,18 @@ class Checkbox_C {
             return text_engine.value;
       }
 
+      /**
+       * @param {string} value
+       * @returns {void}
+       */     
       set_text_chess_game(value) {
             text_chess_game.value = value;
       }
 
+     /**
+       * @param {string} value
+       * @returns {void}
+       */      
       add_text_chess_game(value) {
             text_chess_game.value += value;
       }
@@ -123,4 +176,4 @@ class Checkbox_C {
 
 let checkbox_R = new Checkbox_C();
 
-export { checkbox_R };
+export { checkbox_R, Checkbox_C };

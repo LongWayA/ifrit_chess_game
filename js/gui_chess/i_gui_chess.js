@@ -1,9 +1,9 @@
+// @ts-check
 /** 
  * @copyright Copyright (c) 2025, AnBr75 and/or its affiliates. All rights reserved.
  * @author AnBr75
  * @name i_gui_chess.js
  * @version created 31.10m.2025 
- * last modified 31.10m.2025
 */
 
 import { GuiStartWorker_R } from "../worker/gui_start_worker.js";
@@ -84,6 +84,7 @@ class Gui_chess_C {
       constructor() {
       }
 
+      // @ts-ignore
       iniM(IfritChessGame_R) {
             this.IfritChessGame_O = IfritChessGame_R;
             this.chessBoard_8x8_O.iniM();
@@ -107,6 +108,11 @@ class Gui_chess_C {
       }
 
       // координаты клика мышки переводим в номер клетки по х и у от 0 и до 7
+     /**
+     * @param {number} x
+     * @param {number} y
+     * @returns {void}
+     */     
       xy_to_squares_xy(x, y) {
             //console.log('Gui_chess_C-> xy_to_squares_xy x ' + x + " y " + y);
             this.click_on_squares_x = Math.floor((x - this.chessBoard_8x8_O.x_start) / this.chessBoard_8x8_O.squares_width);
@@ -134,6 +140,13 @@ class Gui_chess_C {
       }
 
       // если кликнули по той же клетке снова
+     /**
+     * @param {number} x_save
+     * @param {number} y_save 
+     * @param {number} x
+     * @param {number} y
+     * @returns {boolean}
+     */        
       is_click_to_square_again(x_save, y_save, x, y) {
 
             if ((x_save == x) && (y_save == y)) {
@@ -144,6 +157,11 @@ class Gui_chess_C {
       }
 
       // если кликнули по фигуре цвета хода
+     /**
+     * @param {number} x
+     * @param {number} y
+     * @returns {boolean}
+     */          
       is_click_to_our_piece(x, y) {
 
             // фигуры цвет

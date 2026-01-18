@@ -1,9 +1,9 @@
+// @ts-check
 /** 
  * @copyright Copyright (c) 2025, AnBr75 and/or its affiliates. All rights reserved.
  * @author AnBr75
  * @name pathes_browser.js
  * @version created 12.09m.2025 
- * last modified 12.09m.2025
 */
 
 /**

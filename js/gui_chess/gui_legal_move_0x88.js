@@ -1,9 +1,9 @@
+// @ts-check
 /** 
  * @copyright Copyright (c) 2025, AnBr75 and/or its affiliates. All rights reserved.
  * @author AnBr75
  * @name gui_legal_move_0x88.js
  * @version created 27.09m.2025 
- * last modified 27.09m.2025
 */
 
 import { Html5Canvas_C } from "./html5_canvas/html5_canvas.js";
@@ -20,12 +20,18 @@ import { Unmake_move_0x88_C } from "../chess_engine_0x88/move_generator/unmake_m
 import { Undo_0x88_C } from "../chess_engine_0x88/move_generator/undo_0x88.js";
 
 import { Transposition_table_0x88_C } from "../chess_engine_0x88/for_sorting_move/transposition_table_0x88.js";
+import { ChessBoard_8x8_C } from "./chess_board_8x8.js";
 
+import { Draw_С } from "./draw.js";
 /**
 * НАЗНАЧЕНИЕ
 
 */
 
+/**
+ * Класс.
+ * @class
+ */
 class GuiLegalMove_0x88_С {
 
   static NAME = "GuiLegalMove_0x88_С";
@@ -61,6 +67,14 @@ class GuiLegalMove_0x88_С {
   }
 
   //this.one_click_on_squares_x, this.one_click_on_squares_y, x_b_n, y_b_n
+   /**
+   * @param {number} from_x
+   * @param {number} from_y
+   * @param {number} to_x
+   * @param {number} to_y
+   * @param {ChessBoard_8x8_C} chessBoard_8x8_O
+   * @returns {boolean}
+   */
   pseudo_move_is_ok(from_x, from_y, to_x, to_y, chessBoard_8x8_O) {
 
     // инициализируем вспомогательный массив    
@@ -86,7 +100,14 @@ class GuiLegalMove_0x88_С {
     return ret;
   }
 
-  //
+   /**
+   * @param {number} one_click_on_squares_x
+   * @param {number} one_click_on_squares_y
+   * @param {number} x_b_n
+   * @param {number} y_b_n
+   * @param {ChessBoard_8x8_C} chessBoard_8x8_O
+   * @returns {number}
+   */
   move_is_legal(one_click_on_squares_x, one_click_on_squares_y, x_b_n, y_b_n, chessBoard_8x8_O) {
 
     let undo_0x88_O = new Undo_0x88_C();
@@ -123,6 +144,14 @@ class GuiLegalMove_0x88_С {
 
   }
 
+   /**
+   * @param {number} from_x
+   * @param {number} from_y
+   * @param {ChessBoard_8x8_C} chessBoard_8x8_O
+   * @param {Draw_С} draw_O
+   * @param {number} is_white
+   * @returns {void}
+   */
   draw_rect_move(from_x, from_y, chessBoard_8x8_O, draw_O, is_white) {
 
     let fen_start = chessBoard_8x8_O.set_fen_from_8x8();

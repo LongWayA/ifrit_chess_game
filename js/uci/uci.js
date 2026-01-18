@@ -1,9 +1,9 @@
+// @ts-check
 /** 
  * @copyright Copyright (c) 2025, AnBr75 and/or its affiliates. All rights reserved.
  * @author AnBr75
  * @name uci.js
  * @version created 15.11m.2025 
- * last modified 15.11m.2025
 */
 
 

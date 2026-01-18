@@ -1,9 +1,9 @@
+// @ts-check
 /** 
  * @copyright Copyright (c) 2025, AnBr75 and/or its affiliates. All rights reserved.
  * @author AnBr75
  * @name mouse.js
  * @version created 19.07m.2025 
- * last modified 19.07m.2025
 */
 
 /**
@@ -14,6 +14,7 @@
 
 let Mouse_R = {
 
+    /** @type {any} */
     ifritChessGame_R: 0,// при инициализации переприсваеваем.
 
     NAME: "Mouse_R",
@@ -30,24 +31,32 @@ let Mouse_R = {
     mouseUp_x: 0,
     mouseUp_y: 0,
 
-
+    /**
+     * @param {any} idCanvas
+     * @param {any} IfritChessGame_R
+     * @returns {void}
+     */
     iniM(idCanvas, IfritChessGame_R) {
 
         this.ifritChessGame_R = IfritChessGame_R;
 
-
+        // @ts-ignore
         idCanvas.addEventListener('mousemove', (event) => {
             Mouse_R.mouseMoveIsChange = true;
             Mouse_R.mouseMove_x = event.offsetX;
             Mouse_R.mouseMove_y = event.offsetY;
             Mouse_R.mouseMove();
         });
+
+        // @ts-ignore
         idCanvas.addEventListener('mousedown', (event) => {
             Mouse_R.mouseDownIsChange = true;
             Mouse_R.mouseDown_x = event.offsetX;
             Mouse_R.mouseDown_y = event.offsetY;
             Mouse_R.mouseDown();
         });
+
+        // @ts-ignore
         idCanvas.addEventListener('mouseup', (event) => {
             Mouse_R.mouseUpIsChange = true;
             Mouse_R.mouseUp_x = event.offsetX;
@@ -57,7 +66,7 @@ let Mouse_R = {
     },
 
     mouseMove() {
-        this.ifritChessGame_R.mouseMove(Mouse_R.mouseMove_x, Mouse_R.mouseMove_y);
+        //this.ifritChessGame_R.mouseMove(Mouse_R.mouseMove_x, Mouse_R.mouseMove_y);
     },
 
     mouseDown() {
@@ -65,9 +74,9 @@ let Mouse_R = {
     },
 
     mouseUp() {
-        this.ifritChessGame_R.mouseUp(Mouse_R.mouseUp_x, Mouse_R.mouseUp_y);
+        //this.ifritChessGame_R.mouseUp(Mouse_R.mouseUp_x, Mouse_R.mouseUp_y);
     },
 }
 
 
-export{Mouse_R};
+export { Mouse_R };

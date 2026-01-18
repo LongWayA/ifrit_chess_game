@@ -1,9 +1,9 @@
+// @ts-check
 /** 
  * @copyright Copyright (c) 2025, AnBr75 and/or its affiliates. All rights reserved.
  * @author AnBr75
  * @name timer.js
  * @version created 18.07m.2025 
- * last modified 18.07m.2025
 */
 
 /**
@@ -93,6 +93,10 @@ class Timer_C {
         this.tick_timeThreadSleepGameMs = (this.tick_timeThreadSleepGameMs < 10) ? 10 : this.tick_timeThreadSleepGameMs;
     }
     // стартовая инициализация таймера
+    /**
+    * @param {number} ticksPerSecond
+    * @returns {void}
+    */
     iniTicksPerSecond(ticksPerSecond) {
         this.ticksPerSecond = ticksPerSecond;
         //тысяча милисекунд это секунда

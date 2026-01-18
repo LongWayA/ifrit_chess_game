@@ -3,7 +3,6 @@
  * @author AnBr75
  * @name n.js
  * @version created 17.12m.2025 
- * last modified 21.12m.2025
 */
 //const readline = require('node:readline');
 import * as readline from 'node:readline';

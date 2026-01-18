@@ -1,3 +1,4 @@
+// @ts-check
 /** 
  * @copyright Copyright (c) 2025, AnBr75 and/or its affiliates. All rights reserved.
  * @author AnBr75
@@ -26,7 +27,21 @@ import { get_text_requests } from "../web/counter.js";
 //---
 import { Html5Canvas_C } from "../gui_chess/html5_canvas/html5_canvas.js";
 
-
+/**
+  * 
+  * @typedef {Object} IfritChessGame_R
+  * @property {ChessEngine_0x88_С} chessEngine_0x88_O
+  * @property {Gui_chess_C} gui_chess_O
+  * @property {Mouse_R} mouse_O
+  * @property {checkbox_R} checkbox_O
+  * @property {string} NAME
+  * @property {string} position_fen
+  * @property {checkbox_R} checkbox_O
+  * @property {checkbox_R} checkbox_O
+  * @property {checkbox_R} checkbox_O
+  * 
+  * 
+  */
 
 // корневой объект программы. поэтому объект, а не класс
 let IfritChessGame_R = {
@@ -83,6 +98,8 @@ let IfritChessGame_R = {
 
         // задаем глубину перебора во время игры
         IfritChessGame_R.gui_chess_O.depth_max = 6;
+        
+        // @ts-ignore
         IfritChessGame_R.checkbox_O.set_input_max_depth_value(IfritChessGame_R.gui_chess_O.depth_max);
 
         //console.log('IfritChessGame_R->iniM');       
@@ -117,10 +134,15 @@ let IfritChessGame_R = {
         IfritChessGame_R.checkbox_O.set_text_chess_game(" Game: ");
     },
 
-    mouseMove(x, y) {
+    // mouseMove(x, y) {
 
-    },
+    // },
 
+    /**
+    * @param {number} x
+    * @param {number} y
+    * @returns {void}
+    */
     mouseDown(x, y) {
 
         // клики по доске игнорируются, пока Ифрит не сходит
@@ -132,6 +154,11 @@ let IfritChessGame_R = {
         }
     },
 
+     /**
+    * @param {number} x
+    * @param {number} y
+    * @returns {void}
+    */   
     mouseDown_2(x, y) {
         //console.log("ChessBoard_8x8_C->click(mouseDown) START ========================= START ");
         //console.log('IfritChessGame_R->mouseDown2 x ' + x + " y " + y);
@@ -220,6 +247,7 @@ let IfritChessGame_R = {
         // рисуем квадратик кликнутой клетки
         IfritChessGame_R.gui_chess_O.draw_O.draw_rect(IfritChessGame_R.gui_chess_O.chessBoard_8x8_O,
             IfritChessGame_R.gui_chess_O.click_on_squares_x,
+            // @ts-ignore
             IfritChessGame_R.gui_chess_O.click_on_squares_y, Html5Canvas_C.GREEN,);
 
         IfritChessGame_R.checkbox_O.set_text_engine(" После Вашего хода Ифрит будет думать.");
@@ -284,9 +312,9 @@ let IfritChessGame_R = {
 
     },
 
-    mouseUp(x, y) {
-        //console.log('IfritChessGame_R->mouseUp x ' + x + " y " + y);
-    },
+    // mouseUp(x, y) {
+    //     //console.log('IfritChessGame_R->mouseUp x ' + x + " y " + y);
+    // },
 
     startGameButton() {
 

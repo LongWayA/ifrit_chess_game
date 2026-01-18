@@ -1,9 +1,9 @@
+// @ts-check
 /** 
  * @copyright Copyright (c) 2025, AnBr75 and/or its affiliates. All rights reserved.
  * @author AnBr75
  * @name chess_board_8x8.js
  * @version created 27.09m.2025 
- * last modified 27.09m.2025
 */
 
 
@@ -13,6 +13,10 @@
  *  
 */
 
+/**
+ * Класс.
+ * @class
+ */
 class ChessBoard_8x8_C {
 
     html5Sprites_O = null;// при инициализации переприсваеваем.
@@ -42,10 +46,14 @@ class ChessBoard_8x8_C {
     static SQUARES_WIDTH = 50;
     static SQUARES_HEIGHT = 50;
 
+    /** @type {number[][]} */
+    squares_color_8x8 = [[1]];// цвет клеток
 
-    squares_color_8x8 = null;// цвет клеток
-    sq_piece_8x8 = null;// фигуры
-    sq_piece_color_8x8 = null;//цвет фигур
+   /** @type {number[][]} */
+    sq_piece_8x8 = [[1]];// фигуры
+
+    /** @type {number[][]} */   
+    sq_piece_color_8x8 = [[1]];//цвет фигур
 
     // ВСПОМОГАТЕЛЬНАЯ ИНФОРМАЦИЯ
     // цвет хода 0 - черные 1 - белые
@@ -207,18 +215,31 @@ class ChessBoard_8x8_C {
 
     // нужно для расчета позиции бития на проходе
     // переводим координаты х и у в линейную координату доски 128(0x88)
+        /**
+    * @param {number} x07
+    * @param {number} y07
+    * @returns {number}
+    */
     x07_y07_to_0x88(x07, y07) {//rank07, file07
         let s_0x88 = 16 * y07 + x07;
         return s_0x88;
     }
 
-    // переводим линейную координату доски 128(0x88) в х
+    // переводим линейную координату доски 128(0x88) в х    
+    /**
+    * @param {number} s_0x88
+    * @returns {number}
+    */
     s_0x88_to_x07(s_0x88) {//rank07, file07
         let x07 = s_0x88 & 7;
         return x07;
     }
 
     // переводим линейную координату доски 128(0x88) в у
+     /**
+    * @param {number} s_0x88
+    * @returns {number}
+    */   
     s_0x88_to_y07(s_0x88) {//rank07, file07
         let y07 = s_0x88 >> 4; // s_0x88 / 16    
         return y07;
@@ -228,6 +249,10 @@ class ChessBoard_8x8_C {
     // "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
     // SET BOARD инициируем позицию из фена
     // проверено на тестах. грубых ошибок нет. проверить взятие на проходе  
+     /**
+     * @param {string} fen
+     * @returns {void}
+    */    
     set_8x8_from_fen(fen) {
         //console.log('ChessBoard_8x8_C->set_8x8_from_fen');
         let char = "";
@@ -307,6 +332,10 @@ class ChessBoard_8x8_C {
     }
 
     // переводим букву в координату
+    /**
+     * @param {string} letter
+     * @returns {number}
+    */      
     letter_to_x_coordinate(letter) {
         if (letter == "a") return 0;
         if (letter == "b") return 1;
@@ -320,7 +349,12 @@ class ChessBoard_8x8_C {
     }
 
 
-    //
+    /**
+     * @param {string} char
+     * @param {number} x
+     * @param {number} y 
+     * @returns {number}
+    */   
     char_fen_to_board(char, x, y) {
 
         let delta_x = 1;
@@ -461,7 +495,11 @@ class ChessBoard_8x8_C {
 
     }
 
-    //
+     /**
+     * @param {number} x 
+     * @param {number} y
+     * @returns {string}
+    */  
     fen_piece_to_char(x, y) {
         let char = "";
         // KING

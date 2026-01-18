@@ -1,12 +1,13 @@
+// @ts-check
 /** 
  * @copyright Copyright (c) 2025, AnBr75 and/or its affiliates. All rights reserved.
  * @author AnBr75
  * @name gui_start_worker.js
  * @version created 31.10m.2025 
- * last modified 31.10m.2025
 */
 
 import { Gui_chess_C } from "../gui_chess/i_gui_chess.js";
+import { Checkbox_C } from "../browser/checkbox.js";
 
 /**
  * НАЗНАЧЕНИЕ
@@ -18,6 +19,10 @@ import { Gui_chess_C } from "../gui_chess/i_gui_chess.js";
 const worker_egine_0x88 = new Worker('js/worker/worker_chess_engine_0x88.js', { type: "module" });
 
 // принимаем сообщения от движка
+/**
+ * @param {any} event
+ * @returns {void}
+ */
 worker_egine_0x88.onmessage = function (event) {
       //console.log('Сообщение от движка : ', event.data);
       GuiStartWorker_R.message_egnine_to_gui(event.data);
@@ -27,22 +32,32 @@ worker_egine_0x88.onmessage = function (event) {
 let GuiStartWorker_R = {
 
       NAME: "GuiStartWorker_R",
-      IfritChessGame_O: 0,
-      checkbox_O: 0,
+      /** @type {any} */
+      IfritChessGame_O: null,
 
+      /** @type {Checkbox_C | null} */
+      checkbox_O: null,
+      /**
+       * @param {any} IfritChessGame_R
+       * @returns {void}
+       */
       iniM(IfritChessGame_R) {
             GuiStartWorker_R.IfritChessGame_O = IfritChessGame_R;
             GuiStartWorker_R.checkbox_O = IfritChessGame_R.checkbox_O;
       },
 
       // функция работы с текстовыми сообщениями от движка который запущен в отдельном потоке.
+      /**
+       * @param {string} message
+       * @returns {void}
+       */
       message_egnine_to_gui(message) {
             //console.log('TO GUI message ' + message);
 
             if (message.includes("position fen ")) {
                   let end = message.length;
                   let fen = message.slice(13, end);
-                  GuiStartWorker_R.checkbox_O.set_input_set_fen(fen);
+                  GuiStartWorker_R.checkbox_O?.set_input_set_fen(fen);
                   //console.log('g fen from engine : ' + fen);
                   GuiStartWorker_R.IfritChessGame_O.gui_chess_O.chessBoard_8x8_O.set_8x8_from_fen(fen);
 
@@ -109,7 +124,7 @@ let GuiStartWorker_R = {
 
                         if (move_str[4] != " ") {
                               move_str = move_str + " ";
-                             // console.log("move_str " + move_str);
+                              // console.log("move_str " + move_str);
                               console.log("move_str[4] " + move_str[4]);
                         }
 
@@ -129,8 +144,8 @@ let GuiStartWorker_R = {
 
                         if (move_str[4] != " ") {
                               move_str = move_str + " ";
-                             // console.log("move_str " + move_str);                              
-                             // console.log("move_str[4] " + move_str[4]);
+                              // console.log("move_str " + move_str);                              
+                              // console.log("move_str[4] " + move_str[4]);
                         }
 
                         GuiStartWorker_R.IfritChessGame_O.checkbox_O.add_text_chess_game(move_str);
@@ -149,6 +164,14 @@ let GuiStartWorker_R = {
 
       // передаем сообщение движку после нажатия кнопки го или сделанного руками хода, 
       // если ход сделали мы то добавляем его в линию игры
+      /**
+       * @param {string} fen
+       * @param {number} depth_max
+       * @param {number} side_to_move 
+       * @param {number} not_go
+       * @param {number} mode_game  
+       * @returns {void}
+       */
       message_gui_to_egnine(fen, depth_max, side_to_move, not_go, mode_game) {
 
             let message = "mode_game " + mode_game;

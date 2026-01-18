@@ -1,9 +1,9 @@
+// @ts-check
 /** 
  * @copyright Copyright (c) 2025, AnBr75 and/or its affiliates. All rights reserved.
  * @author AnBr75
  * @name game_line_0x88.js
  * @version created 31.12m.2025 
- * last modified 31.12m.2025
 */
 
 
@@ -12,6 +12,10 @@
 
 */
 
+/**
+ * Класс.
+ * @class
+ */
 class Game_line_0x88_C {
 
   static NAME = "Game_line_0x88_C";
@@ -59,6 +63,10 @@ class Game_line_0x88_C {
     if (this.current_position < this.lenth_game) this.current_position = this.current_position + 1;
   }
 
+  /**
+   * @param {string} fen
+   * @returns {void}
+   */
   start_position(fen) {
     //console.log('Game_line_0x88_C->start_position ');
 
@@ -76,7 +84,10 @@ class Game_line_0x88_C {
 
 
 
-  // 
+  /**
+   * @param {string} fen
+   * @returns {void}
+   */ 
   add_position(fen) {
     //console.log('Game_line_0x88_C->add_position this.current_position ' + this.current_position);
 
@@ -88,7 +99,12 @@ class Game_line_0x88_C {
 
   }
 
-  // 
+  /**
+   * @param {string} pv_line_str
+   * @param {number} number_move 
+   * @param {number} w 
+   * @returns {void}
+   */ 
   add_pv_line_str(pv_line_str, number_move, w) {
     // console.log('Game_line_0x88_C->add_pv_line_str');
 
