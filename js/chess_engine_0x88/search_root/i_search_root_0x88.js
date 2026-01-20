@@ -12,8 +12,8 @@ import { Move_list_0x88_С } from "../move_generator/move_list_0x88.js";
 import { Move_list_root_0x88_С } from "../move_generator/move_list_root_0x88.js";
 import { PV_line_0x88_C } from "../move_generator/pv_line_0x88.js";
 
-import { Move_gen_1_captures_0x88_С } from "../move_generator/move_gen_1_captures_0x88.js";
-import { Move_gen_2_quiet_0x88_С } from "../move_generator/move_gen_2_quiet_0x88.js";
+import { Move_generator_captures_0x88_С } from "../move_generator/move_generator_captures_0x88.js";
+import { Move_generator_quiet_0x88_С } from "../move_generator/move_generator_quiet_0x88.js";
 import { Make_move_0x88_C } from "../move_generator/make_move_0x88.js";
 import { Unmake_move_0x88_C } from "../move_generator/unmake_move_0x88.js";
 import { Undo_0x88_C } from "../move_generator/undo_0x88.js";
@@ -36,7 +36,7 @@ import { Timer_C } from "../../browser/timer.js";
 * start_search_minmax(fen_start, depth_max) - тестирование перебора
 *
 * Поиск начинается с присланой в виде fen позиции fen_start
-* и максимальной глубины depth_max
+* и максимальной глубины перебора depth_max
 * Из fen мы заполняем chess_board_0x88_O_start.
 *
 * Во время поиска идет циклическое погружение и на каждой просчитанной глубине
@@ -44,11 +44,13 @@ import { Timer_C } from "../../browser/timer.js";
 * Конечно есть финальная позиция fen_end
 * Так что поиск начинается со стартового fen и заканчивается
 * финальным.
-* Конечно же выводим лучший вариант info. тут и скорость и оценка и колличество узлов и глубина перебора
+* Конечно же выводим строку с информацией info : "info depth 1 score cp 17 nodes 20 nps 20000 pv e2e4 "
+* тут и глубина перебора  и оценка и колличество узлов и скорость перебора и лучший вариант 
+*
 * Выводим так же лучший ход best_move
+*
 * Думаю этот интерфейс останется надолго. Добавление эвристик и даже замена генератора
 * на него влиять не должны.
-*
 */
  
 /**
@@ -69,8 +71,8 @@ class Search_root_0x88_C {
   /** @type {ChessEngine_0x88_С | null} */
   chessEngine_0x88_O = null;
 
-  move_gen_1_captures_0x88_O = new Move_gen_1_captures_0x88_С();
-  move_gen_2_quiet_0x88_O = new Move_gen_2_quiet_0x88_С();
+  move_generator_captures_0x88_O = new Move_generator_captures_0x88_С();
+  move_generator_quiet_0x88_O = new Move_generator_quiet_0x88_С();
 
   make_move_0x88_O = new Make_move_0x88_C();
   unmake_move_0x88_O = new Unmake_move_0x88_C();
@@ -195,8 +197,8 @@ class Search_root_0x88_C {
     chess_board_0x88_O_end.save_chess_board_0x88(chess_board_0x88_O);
 
 
-    this.move_gen_1_captures_0x88_O.generated_pseudo_legal_moves(chess_board_0x88_O, move_list_0x88_O);
-    this.move_gen_2_quiet_0x88_O.generated_pseudo_legal_moves(chess_board_0x88_O, move_list_0x88_O);
+    this.move_generator_captures_0x88_O.generated_pseudo_legal_moves(chess_board_0x88_O, move_list_0x88_O);
+    this.move_generator_quiet_0x88_O.generated_pseudo_legal_moves(chess_board_0x88_O, move_list_0x88_O);
 
     move_list_0x88_O.sorting_list();
 
@@ -253,7 +255,7 @@ class Search_root_0x88_C {
       for (let move_i = 0; move_i < move_list_0x88_O.number_move; move_i++) {
 
         is_moove_legal = this.make_move_0x88_O.do_moves(move_i, chess_board_0x88_O, move_list_0x88_O,
-          undo_0x88_O, this.move_gen_1_captures_0x88_O, this.transposition_table_0x88_O);
+          undo_0x88_O, this.move_generator_captures_0x88_O, this.transposition_table_0x88_O);
 
         if (is_moove_legal == 0) { // король под шахом. отменяем ход и пропускаем этот цикл
           this.unmake_move_0x88_O.undo_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O);
@@ -272,7 +274,7 @@ class Search_root_0x88_C {
         pv_line_0x88_O.type_variant[depth] = "id";
 
         score = this.search_ab_0x88_O.searching_alpha_beta_id(alpha, beta, pv_line_0x88_O, chess_board_0x88_O,
-          this.move_gen_1_captures_0x88_O, this.move_gen_2_quiet_0x88_O, (depth + 1), depth_max_current,
+          this.move_generator_captures_0x88_O, this.move_generator_quiet_0x88_O, (depth + 1), depth_max_current,
           isPV_node, this.transposition_table_0x88_O, this.killer_heuristic_0x88_O, this.history_heuristic_0x88_O);
 
         node = node + this.search_ab_0x88_O.node;
@@ -466,7 +468,7 @@ class Search_root_0x88_C {
     this.search_minmax_0x88_O.node = 0;
 
     let best_score = this.search_minmax_0x88_O.searching_minmax(pv_line_0x88_O, chess_board_0x88_O,
-      this.move_gen_1_captures_0x88_O, this.move_gen_2_quiet_0x88_O, depth, depth_max, this.transposition_table_0x88_O);
+      this.move_generator_captures_0x88_O, this.move_generator_quiet_0x88_O, depth, depth_max, this.transposition_table_0x88_O);
 
     //console.log("=========================================================================");
     //console.log("Search_0x88_C->start_search 22222 =============================================");
@@ -550,8 +552,8 @@ class Search_root_0x88_C {
       //  move_str[pos + 2] + move_str[pos + 3] + move_str[pos + 4]);
 
       move_list_0x88_O.iniM();
-      this.move_gen_1_captures_0x88_O.generated_pseudo_legal_moves(chess_board_0x88_O_uci, move_list_0x88_O);
-      this.move_gen_2_quiet_0x88_O.generated_pseudo_legal_moves(chess_board_0x88_O_uci, move_list_0x88_O);
+      this.move_generator_captures_0x88_O.generated_pseudo_legal_moves(chess_board_0x88_O_uci, move_list_0x88_O);
+      this.move_generator_quiet_0x88_O.generated_pseudo_legal_moves(chess_board_0x88_O_uci, move_list_0x88_O);
 
       //console.log("1 Search_0x88_C-> move_str[" + pos + "] " + move_str[pos]);      
       x07 = chess_board_0x88_O_uci.letter_to_x_coordinate(move_str[pos]);
@@ -587,7 +589,7 @@ class Search_root_0x88_C {
       //console.log("Search_0x88_C-> from " + from + " to " + to + " promo " + promo + " i_move " + i_move);
 
       is_moove_legal = this.make_move_0x88_O.do_moves(i_move, chess_board_0x88_O_uci, move_list_0x88_O,
-        undo_0x88_O, this.move_gen_1_captures_0x88_O, this.transposition_table_0x88_O);
+        undo_0x88_O, this.move_generator_captures_0x88_O, this.transposition_table_0x88_O);
 
       if (is_moove_legal == 0) { // король под шахом. отменяем ход и пропускаем этот цикл
         //console.log("Search_0x88_C->ошибка хода");

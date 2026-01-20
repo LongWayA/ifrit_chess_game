@@ -22,9 +22,10 @@ import { Move_list_0x88_С } from "./move_list_0x88.js";
  * Класс.
  * @class
  */
-class Move_gen_1_captures_0x88_С {
 
-    static NAME = "Move_gen_1_captures_0x88_С";
+class Move_generator_captures_0x88_С {
+
+    static NAME = "Move_generator_captures_0x88_С";
 
     // 0,   1,   2,   3,   4,   5,   6,   7,   8,   9,   10,  11,  12,  13,  14,  15,
     // 16,  17,  18,  19,  20,  21,  22,  23,  24,  25,  26,  27,  28,  29,  30,  31,
@@ -617,4 +618,4 @@ class Move_gen_1_captures_0x88_С {
     }
 }
 
-export { Move_gen_1_captures_0x88_С };
+export { Move_generator_captures_0x88_С };

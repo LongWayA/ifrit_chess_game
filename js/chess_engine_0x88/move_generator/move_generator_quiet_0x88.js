@@ -23,9 +23,9 @@ import { Move_list_0x88_С } from "./move_list_0x88.js";
  * Класс.
  * @class
  */
-class Move_gen_2_quiet_0x88_С {
+class Move_generator_quiet_0x88_С {
 
-    static NAME = "Move_gen_2_quiet_0x88_С";
+    static NAME = "Move_generator_quiet_0x88_С";
     // 0,   1,   2,   3,   4,   5,   6,   7,   8,   9,   10,  11,  12,  13,  14,  15,
     // 16,  17,  18,  19,  20,  21,  22,  23,  24,  25,  26,  27,  28,  29,  30,  31,
     // 32,  33,  34,  35,  36,  37,  38,  39,  40,  41,  42,  43,  44,  45,  46,  47,
@@ -94,7 +94,7 @@ class Move_gen_2_quiet_0x88_С {
    * @returns {void}
    */
     generated_pseudo_legal_moves(chess_board_0x88_O, move_list_0x88_O) {
-        //console.log('Move_gen_2_quiet_0x88_С->generated_pseudo_legal_moves');
+        //console.log('Move_generator_quiet_0x88_С->generated_pseudo_legal_moves');
         let side_to_move = chess_board_0x88_O.side_to_move;
         for (let from = 0; from < 128; from++) {
             this.generated_pseudo_legal_moves_one_piece(from, side_to_move, chess_board_0x88_O, move_list_0x88_O);
@@ -109,7 +109,7 @@ class Move_gen_2_quiet_0x88_С {
   * @returns {void}
   */
     generated_pseudo_legal_moves_one_piece_for_gui(from, chess_board_0x88_O, move_list_0x88_O) {
-        //console.log('Move_gen_2_quiet_0x88_С->generated_pseudo_legal_moves');
+        //console.log('Move_generator_quiet_0x88_С->generated_pseudo_legal_moves');
         let side_to_move = chess_board_0x88_O.side_to_move;
         this.generated_pseudo_legal_moves_one_piece(from, side_to_move, chess_board_0x88_O, move_list_0x88_O);
     }
@@ -356,48 +356,48 @@ class Move_gen_2_quiet_0x88_С {
         let piece_to_3 = -1;
         let type_move = -1;
 
-        if (from == Move_gen_2_quiet_0x88_С.E1) {// король стоит на стартовой позиции
+        if (from == Move_generator_quiet_0x88_С.E1) {// король стоит на стартовой позиции
             if (piece_color == 1) {// король белый
                 if (chess_board_0x88_O.castling_Q == 1) {// рокировка белых в длинную сторону   1/0
-                    piece_to_1 = chess_board_0x88_O.sq_piece_0x88[Move_gen_2_quiet_0x88_С.B1];
-                    piece_to_2 = chess_board_0x88_O.sq_piece_0x88[Move_gen_2_quiet_0x88_С.C1];
-                    piece_to_3 = chess_board_0x88_O.sq_piece_0x88[Move_gen_2_quiet_0x88_С.D1];
+                    piece_to_1 = chess_board_0x88_O.sq_piece_0x88[Move_generator_quiet_0x88_С.B1];
+                    piece_to_2 = chess_board_0x88_O.sq_piece_0x88[Move_generator_quiet_0x88_С.C1];
+                    piece_to_3 = chess_board_0x88_O.sq_piece_0x88[Move_generator_quiet_0x88_С.D1];
                     if ((piece_to_1 == 0) && (piece_to_2 == 0) && (piece_to_3 == 0)) {//
-                        to = Move_gen_2_quiet_0x88_С.C1;
+                        to = Move_generator_quiet_0x88_С.C1;
                         type_move = Move_list_0x88_С.MOVE_KING_QUEEN_CASTLE;
                         move_list_0x88_O.add_move(type_move, from, to);
                     }
                 }
 
                 if (chess_board_0x88_O.castling_K == 1) {// рокировка белых в короткую сторону  1/0
-                    piece_to_1 = chess_board_0x88_O.sq_piece_0x88[Move_gen_2_quiet_0x88_С.F1];
-                    piece_to_2 = chess_board_0x88_O.sq_piece_0x88[Move_gen_2_quiet_0x88_С.G1];
+                    piece_to_1 = chess_board_0x88_O.sq_piece_0x88[Move_generator_quiet_0x88_С.F1];
+                    piece_to_2 = chess_board_0x88_O.sq_piece_0x88[Move_generator_quiet_0x88_С.G1];
                     if ((piece_to_1 == 0) && (piece_to_2 == 0)) {//
-                        to = Move_gen_2_quiet_0x88_С.G1;
+                        to = Move_generator_quiet_0x88_С.G1;
                         type_move = Move_list_0x88_С.MOVE_KING_CASTLE;
                         move_list_0x88_O.add_move(type_move, from, to);
                     }
                 }
             }
 
-        } else if (from == Move_gen_2_quiet_0x88_С.E8) {// король стоит на стартовой позиции
+        } else if (from == Move_generator_quiet_0x88_С.E8) {// король стоит на стартовой позиции
             if (piece_color == 0) {// король черный
                 if (chess_board_0x88_O.castling_q == 1) {// рокировка черных в длинную сторону   1/0
-                    piece_to_1 = chess_board_0x88_O.sq_piece_0x88[Move_gen_2_quiet_0x88_С.B8];
-                    piece_to_2 = chess_board_0x88_O.sq_piece_0x88[Move_gen_2_quiet_0x88_С.C8];
-                    piece_to_3 = chess_board_0x88_O.sq_piece_0x88[Move_gen_2_quiet_0x88_С.D8];
+                    piece_to_1 = chess_board_0x88_O.sq_piece_0x88[Move_generator_quiet_0x88_С.B8];
+                    piece_to_2 = chess_board_0x88_O.sq_piece_0x88[Move_generator_quiet_0x88_С.C8];
+                    piece_to_3 = chess_board_0x88_O.sq_piece_0x88[Move_generator_quiet_0x88_С.D8];
                     if ((piece_to_1 == 0) && (piece_to_2 == 0) && (piece_to_3 == 0)) {//
-                        to = Move_gen_2_quiet_0x88_С.C8;
+                        to = Move_generator_quiet_0x88_С.C8;
                         type_move = Move_list_0x88_С.MOVE_KING_QUEEN_CASTLE;
                         move_list_0x88_O.add_move(type_move, from, to);
                     }
                 }
 
                 if (chess_board_0x88_O.castling_k == 1) {// рокировка черных в короткую сторону  1/0
-                    piece_to_1 = chess_board_0x88_O.sq_piece_0x88[Move_gen_2_quiet_0x88_С.F8];
-                    piece_to_2 = chess_board_0x88_O.sq_piece_0x88[Move_gen_2_quiet_0x88_С.G8];
+                    piece_to_1 = chess_board_0x88_O.sq_piece_0x88[Move_generator_quiet_0x88_С.F8];
+                    piece_to_2 = chess_board_0x88_O.sq_piece_0x88[Move_generator_quiet_0x88_С.G8];
                     if ((piece_to_1 == 0) && (piece_to_2 == 0)) {//
-                        to = Move_gen_2_quiet_0x88_С.G8;
+                        to = Move_generator_quiet_0x88_С.G8;
                         type_move = Move_list_0x88_С.MOVE_KING_CASTLE;
                         move_list_0x88_O.add_move(type_move, from, to);
                     }
@@ -541,4 +541,4 @@ class Move_gen_2_quiet_0x88_С {
     }
 }
 
-export { Move_gen_2_quiet_0x88_С };
+export { Move_generator_quiet_0x88_С };

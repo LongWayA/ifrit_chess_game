@@ -12,7 +12,7 @@ import { Unmake_move_0x88_C } from "../move_generator/unmake_move_0x88.js";
 import { Evaluate_0x88_C} from "./evaluate_0x88.js";
 import { Undo_0x88_C } from "../move_generator/undo_0x88.js";
 import { Move_list_0x88_С } from "../move_generator/move_list_0x88.js";
-import { Move_gen_1_captures_0x88_С } from "../move_generator/move_gen_1_captures_0x88.js";
+import { Move_generator_captures_0x88_С } from "../move_generator/move_generator_captures_0x88.js";
 import { Transposition_table_0x88_C } from "../for_sorting_move/transposition_table_0x88.js";
 
 /**
@@ -44,13 +44,13 @@ class Quiescence_search_0x88_C {
    * @param {number} alpha
    * @param {number} beta
    * @param {Chess_board_0x88_C} chess_board_0x88_O
-   * @param {Move_gen_1_captures_0x88_С} move_gen_1_captures_0x88_O
+   * @param {Move_generator_captures_0x88_С} move_generator_captures_0x88_O
    * @param {number} depth
    * @param {Transposition_table_0x88_C} transposition_table_0x88_O 
    * @returns {number}
    */ 
-  //quiescence_search(alpha, beta, pv_line_0x88_O, chess_board_0x88_O, move_gen_1_captures_0x88_O, depth) {
-  quiescence_search(alpha, beta, chess_board_0x88_O, move_gen_1_captures_0x88_O, depth, transposition_table_0x88_O) {
+  //quiescence_search(alpha, beta, pv_line_0x88_O, chess_board_0x88_O, move_generator_captures_0x88_O, depth) {
+  quiescence_search(alpha, beta, chess_board_0x88_O, move_generator_captures_0x88_O, depth, transposition_table_0x88_O) {
     let undo_0x88_O = new Undo_0x88_C();
     let score = 0;// текущая оценка позиции
     let best_value;// максимальная оценка позиции
@@ -74,14 +74,14 @@ class Quiescence_search_0x88_C {
     // ===================================== Stand Pat
 
     move_list_0x88_O.iniM();
-    move_gen_1_captures_0x88_O.generated_pseudo_legal_moves(chess_board_0x88_O, move_list_0x88_O);
+    move_generator_captures_0x88_O.generated_pseudo_legal_moves(chess_board_0x88_O, move_list_0x88_O);
     move_list_0x88_O.sorting_list();
 
 
     for (let move_i = 0; move_i < move_list_0x88_O.number_move; move_i++) {
 
       is_moove_legal = this.make_move_0x88_O.do_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O, 
-        move_gen_1_captures_0x88_O, transposition_table_0x88_O);
+        move_generator_captures_0x88_O, transposition_table_0x88_O);
 
         if (is_moove_legal == 0) { // король под шахом. отменяем ход и пропускаем этот цикл
           this.unmake_move_0x88_O.undo_moves(move_i, chess_board_0x88_O, move_list_0x88_O, undo_0x88_O);
@@ -90,7 +90,7 @@ class Quiescence_search_0x88_C {
           continue;
         }
 
-      score = this.quiescence_search(alpha, beta, chess_board_0x88_O, move_gen_1_captures_0x88_O, (depth + 1), transposition_table_0x88_O);
+      score = this.quiescence_search(alpha, beta, chess_board_0x88_O, move_generator_captures_0x88_O, (depth + 1), transposition_table_0x88_O);
 
       if (move_list_0x88_O.piece_color == Chess_board_0x88_C.WHITE) {
         if (score >= beta) {

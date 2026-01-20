@@ -8,7 +8,7 @@
 
 import { Chess_board_0x88_C } from "./chess_board_0x88.js";
 import { Move_list_0x88_С } from "./move_list_0x88.js";
-import { Move_gen_1_captures_0x88_С } from "./move_gen_1_captures_0x88.js";
+import { Move_generator_captures_0x88_С } from "./move_generator_captures_0x88.js";
 import { Undo_0x88_C } from "../move_generator/undo_0x88.js";
 
 /**
@@ -387,35 +387,35 @@ class Unmake_move_0x88_C {
 
       // перемещаем ладью. ее ход не прописан в списке ходов
       // записываем имя фигуры на старом месте
-      chess_board_0x88_O.sq_piece_0x88[Move_gen_1_captures_0x88_С.H1] =
-        chess_board_0x88_O.sq_piece_0x88[Move_gen_1_captures_0x88_С.F1];
+      chess_board_0x88_O.sq_piece_0x88[Move_generator_captures_0x88_С.H1] =
+        chess_board_0x88_O.sq_piece_0x88[Move_generator_captures_0x88_С.F1];
 
       // записываем цвет фигуры на старом месте 
-      chess_board_0x88_O.sq_piece_color_0x88[Move_gen_1_captures_0x88_С.H1] =
-        chess_board_0x88_O.sq_piece_color_0x88[Move_gen_1_captures_0x88_С.F1];
+      chess_board_0x88_O.sq_piece_color_0x88[Move_generator_captures_0x88_С.H1] =
+        chess_board_0x88_O.sq_piece_color_0x88[Move_generator_captures_0x88_С.F1];
 
       // стираем имя фигуры на новом месте
-      chess_board_0x88_O.sq_piece_0x88[Move_gen_1_captures_0x88_С.F1] = Chess_board_0x88_C.PIECE_NO;//
+      chess_board_0x88_O.sq_piece_0x88[Move_generator_captures_0x88_С.F1] = Chess_board_0x88_C.PIECE_NO;//
 
       // стираем цвет фигуры на новом месте 
-      chess_board_0x88_O.sq_piece_color_0x88[Move_gen_1_captures_0x88_С.F1] = Chess_board_0x88_C.BLACK;//
+      chess_board_0x88_O.sq_piece_color_0x88[Move_generator_captures_0x88_С.F1] = Chess_board_0x88_C.BLACK;//
 
     } else {
 
       // перемещаем ладью. ее ход не прописан в списке ходов
       // записываем имя фигуры на старом месте
-      chess_board_0x88_O.sq_piece_0x88[Move_gen_1_captures_0x88_С.H8] =
-        chess_board_0x88_O.sq_piece_0x88[Move_gen_1_captures_0x88_С.F8];
+      chess_board_0x88_O.sq_piece_0x88[Move_generator_captures_0x88_С.H8] =
+        chess_board_0x88_O.sq_piece_0x88[Move_generator_captures_0x88_С.F8];
 
       // записываем цвет фигуры на старом месте 
-      chess_board_0x88_O.sq_piece_color_0x88[Move_gen_1_captures_0x88_С.H8] =
-        chess_board_0x88_O.sq_piece_color_0x88[Move_gen_1_captures_0x88_С.F8];
+      chess_board_0x88_O.sq_piece_color_0x88[Move_generator_captures_0x88_С.H8] =
+        chess_board_0x88_O.sq_piece_color_0x88[Move_generator_captures_0x88_С.F8];
 
       // стираем имя фигуры на новом месте
-      chess_board_0x88_O.sq_piece_0x88[Move_gen_1_captures_0x88_С.F8] = Chess_board_0x88_C.PIECE_NO;// 0
+      chess_board_0x88_O.sq_piece_0x88[Move_generator_captures_0x88_С.F8] = Chess_board_0x88_C.PIECE_NO;// 0
 
       // стираем цвет фигуры на новом месте 
-      chess_board_0x88_O.sq_piece_color_0x88[Move_gen_1_captures_0x88_С.F8] = Chess_board_0x88_C.BLACK;// 0   
+      chess_board_0x88_O.sq_piece_color_0x88[Move_generator_captures_0x88_С.F8] = Chess_board_0x88_C.BLACK;// 0   
     }
   }
 
@@ -447,35 +447,35 @@ class Unmake_move_0x88_C {
 
       // перемещаем ладью. ее ход не прописан в списке ходов
       // записываем имя фигуры на старом месте
-      chess_board_0x88_O.sq_piece_0x88[Move_gen_1_captures_0x88_С.A1] =
-        chess_board_0x88_O.sq_piece_0x88[Move_gen_1_captures_0x88_С.D1];
+      chess_board_0x88_O.sq_piece_0x88[Move_generator_captures_0x88_С.A1] =
+        chess_board_0x88_O.sq_piece_0x88[Move_generator_captures_0x88_С.D1];
 
       // записываем цвет фигуры на старом месте 
-      chess_board_0x88_O.sq_piece_color_0x88[Move_gen_1_captures_0x88_С.A1] =
-        chess_board_0x88_O.sq_piece_color_0x88[Move_gen_1_captures_0x88_С.D1];
+      chess_board_0x88_O.sq_piece_color_0x88[Move_generator_captures_0x88_С.A1] =
+        chess_board_0x88_O.sq_piece_color_0x88[Move_generator_captures_0x88_С.D1];
 
       // стираем имя фигуры на новом месте
-      chess_board_0x88_O.sq_piece_0x88[Move_gen_1_captures_0x88_С.D1] = Chess_board_0x88_C.PIECE_NO;// 0
+      chess_board_0x88_O.sq_piece_0x88[Move_generator_captures_0x88_С.D1] = Chess_board_0x88_C.PIECE_NO;// 0
 
       // стираем цвет фигуры на новом месте 
-      chess_board_0x88_O.sq_piece_color_0x88[Move_gen_1_captures_0x88_С.D1] = Chess_board_0x88_C.BLACK;// 0
+      chess_board_0x88_O.sq_piece_color_0x88[Move_generator_captures_0x88_С.D1] = Chess_board_0x88_C.BLACK;// 0
 
     } else {
 
       // перемещаем ладью. ее ход не прописан в списке ходов
       // записываем имя фигуры на старом месте
-      chess_board_0x88_O.sq_piece_0x88[Move_gen_1_captures_0x88_С.A8] =
-        chess_board_0x88_O.sq_piece_0x88[Move_gen_1_captures_0x88_С.D8];
+      chess_board_0x88_O.sq_piece_0x88[Move_generator_captures_0x88_С.A8] =
+        chess_board_0x88_O.sq_piece_0x88[Move_generator_captures_0x88_С.D8];
 
       // записываем цвет фигуры на старом месте 
-      chess_board_0x88_O.sq_piece_color_0x88[Move_gen_1_captures_0x88_С.A8] =
-        chess_board_0x88_O.sq_piece_color_0x88[Move_gen_1_captures_0x88_С.D8];
+      chess_board_0x88_O.sq_piece_color_0x88[Move_generator_captures_0x88_С.A8] =
+        chess_board_0x88_O.sq_piece_color_0x88[Move_generator_captures_0x88_С.D8];
 
       // стираем имя фигуры на новом месте
-      chess_board_0x88_O.sq_piece_0x88[Move_gen_1_captures_0x88_С.D8] = Chess_board_0x88_C.PIECE_NO;// 0
+      chess_board_0x88_O.sq_piece_0x88[Move_generator_captures_0x88_С.D8] = Chess_board_0x88_C.PIECE_NO;// 0
 
       // стираем цвет фигуры на новом месте 
-      chess_board_0x88_O.sq_piece_color_0x88[Move_gen_1_captures_0x88_С.D8] = Chess_board_0x88_C.BLACK;// 0   
+      chess_board_0x88_O.sq_piece_color_0x88[Move_generator_captures_0x88_С.D8] = Chess_board_0x88_C.BLACK;// 0   
 
     }// 
 
