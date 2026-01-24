@@ -534,7 +534,7 @@ class Move_generator_captures_0x88_С {
         for (let j = 0; j < 8; j++) {
             to = from + this.moves_king[j];
             if ((to & 136) == 0) {// если мы не вышли за пределы доски
-                // если на клетке хода обнаружили короля проверим цвет, так как детектором и рокировки проверям, а там свой король тусуется :)
+                // если на клетке хода обнаружили короля проверим цвет, так как детектором и рокировки проверяем, а там свой король тусуется :)
                 if ((chess_board_0x88_O.sq_piece_0x88[to] == Chess_board_0x88_C.KING) &&
                     (chess_board_0x88_O.sq_piece_color_0x88[to] != piece_color)) {
                     check = Chess_board_0x88_C.KING;

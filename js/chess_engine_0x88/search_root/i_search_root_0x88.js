@@ -498,7 +498,7 @@ class Search_root_0x88_C {
     this.uci_return_search.info = "info depth " + depth_uci + " score cp " + score_cp +
       " nodes " + nodes + " nps " + nps + " pv " + pv;
 
-    this.uci_return_search.best_move = "no";
+    this.uci_return_search.best_move = "bestmove no";
 
 
     //  this.search_minmax_0x88_O.chess_board_0x88_O_move.test_print_0x88();

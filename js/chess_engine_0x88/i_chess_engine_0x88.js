@@ -7,6 +7,8 @@
 */
 
 import { Search_root_0x88_C } from "./search_root/i_search_root_0x88.js";
+import { start_search_minmax } from "./search_root/i_search_root_new.js";
+
 import { Uci_C } from "../uci/uci.js";
 //import { Worker_ChessEngine_0x88_С } from "../worker/worker_chess_engine_0x88.js";
 
@@ -101,7 +103,8 @@ class ChessEngine_0x88_С {
    */
   go_depth_minmax(fen_start, depth_max) {
     //console.log("ChessEngine_0x88_С->test_go_depth_nm --------");
-    let uci_return_search = this.search_root_0x88_O.start_search_minmax(fen_start, depth_max);
+    //let uci_return_search = this.search_root_0x88_O.start_search_minmax(fen_start, depth_max);
+    let uci_return_search = go_depth_minmax(fen_start, depth_max);    
 
     return uci_return_search;
   }
@@ -120,4 +123,19 @@ class ChessEngine_0x88_С {
   }
 }
 
-export { ChessEngine_0x88_С };
+  // запуск полного перебора minmax
+  // тут можно проверить корректность игрового движка с помощью perf_t. как правильно он генерирует позиции.
+  /**
+   * @param {string} fen_start
+   * @param {number} depth_max
+   * @returns {uci_return_search}
+   */
+  const go_depth_minmax = function(fen_start, depth_max) {
+    //console.log("ChessEngine_0x88_С->test_go_depth_nm --------");
+    let uci_return_search = start_search_minmax(fen_start, depth_max);
+
+    return uci_return_search;
+  }
+
+
+export { ChessEngine_0x88_С, go_depth_minmax };
