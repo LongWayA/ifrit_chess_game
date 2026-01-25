@@ -24,8 +24,14 @@ import { undo_moves } from "../move_generator/unmake_move_new.js";
 
 import {  set_undo, get_undo, UNDO_MAX } from "../move_generator/undo_new.js";
 
-//import { Move_list_0x88_С } from "../move_generator/move_list_new.js";
-import { Move_list_0x88_С } from "../move_generator/move_list_0x88.js";
+import { clear_list, add_packing_move, get_type_move, get_from, get_to, get_name_capture_piece, set_color, set_number_captures_move,
+     sorting_list, test_compare_list_from, test_print_i_move_list, test_print_list, save_list_from, move_is_found, 
+     return_i_move, move_to_string_uci, return_type_captures_pawn_promo, return_type_simple_move, 
+     return_piece_name_captures_from_type_move, type_move_to_name_piese, type_move_to_name_piese_f, 
+     return_promo_piece_from_type_move,
+        LENGTH_LIST, IND_PIESE_COLOR, IND_NUMBER_CAPTURES_MOVE, IND_NUMBER_MOVE, 
+    IND_PROMO_QUEEN, IND_PROMO_ROOK, IND_PROMO_BISHOP, IND_PROMO_KNIGHT, MOVE_NO } from "../move_generator/move_list_new.js";
+
 
 //import { Evaluate_0x88_C } from "./evaluate_0x88.js";
 
@@ -35,8 +41,6 @@ import {generated_pseudo_legal_captures} from "../move_generator/move_generator_
 import {generated_pseudo_legal_quiet_moves} from "../move_generator/move_generator_quiet_new.js";
 
 //  const evaluate_0x88_O = new Evaluate_0x88_C();
-
-let chess_board_0x88_test = new Chess_board_0x88_C();
 
 
 const BEST_VALUE_MOD = 20000;
@@ -77,8 +81,10 @@ const searching_minmax = function (pv_line_0x88_O, chess_board_0x88, depth, dept
   } else {
     //console.log("Search_0x88_C->depth " + depth);
     let is_moove_legal = -1;
-    let move_list_0x88_O = new Move_list_0x88_С();
-    move_list_0x88_O.iniM();
+
+    let packing_moves = new Uint32Array(LENGTH_LIST).fill(MOVE_NO);
+
+
 
     if (chess_board_0x88[SIDE_TO_MOVE] == WHITE) {
       found_score = -BEST_VALUE_MOD;// максимальная оценка позиции
@@ -86,61 +92,60 @@ const searching_minmax = function (pv_line_0x88_O, chess_board_0x88, depth, dept
       found_score = BEST_VALUE_MOD;// максимальная оценка позиции
     }
 
-    generated_pseudo_legal_captures(chess_board_0x88, move_list_0x88_O);
-    generated_pseudo_legal_quiet_moves(chess_board_0x88, move_list_0x88_O);
+    generated_pseudo_legal_captures(chess_board_0x88, packing_moves);
+    generated_pseudo_legal_quiet_moves(chess_board_0x88, packing_moves);
 
-    //move_list_0x88_O.sorting_list(); 
-    //move_list_0x88_O.test_print_list(chess_board_0x88_test);
+    test_print_list(packing_moves);
 
-    for (let move_i = 0; move_i < move_list_0x88_O.number_move; move_i++) {
+    // for (let move_i = 0; move_i < packing_moves[IND_NUMBER_MOVE]; move_i++) {
 
-      is_moove_legal = do_moves(move_i, chess_board_0x88, move_list_0x88_O, undo);
+    //   is_moove_legal = do_moves(move_i, chess_board_0x88, packing_moves, undo);
 
-      if (is_moove_legal == 0) { // король под шахом. отменяем ход и пропускаем этот цикл
-        undo_moves(move_i, chess_board_0x88, move_list_0x88_O, undo);
-        continue;
-      } else if (is_moove_legal == 2) {// нелегальные рокировки не генерируются. просто пропускаем ход
-        continue;
-      }
+    //   if (is_moove_legal == 0) { // король под шахом. отменяем ход и пропускаем этот цикл
+    //     undo_moves(move_i, chess_board_0x88, packing_moves, undo);
+    //     continue;
+    //   } else if (is_moove_legal == 2) {// нелегальные рокировки не генерируются. просто пропускаем ход
+    //     continue;
+    //   }
 
-      pv_line_0x88_O.add_move(move_i, move_list_0x88_O, depth);
-      pv_line_0x88_O.type_variant[depth] = "nm";
+    //   pv_line_0x88_O.add_move(move_i, packing_moves, depth);
+    //   pv_line_0x88_O.type_variant[depth] = "nm";
 
-      score = searching_minmax(pv_line_0x88_O, chess_board_0x88, (depth + 1), depth_max);
+    //   score = searching_minmax(pv_line_0x88_O, chess_board_0x88, (depth + 1), depth_max);
 
-      if (move_list_0x88_O.piece_color == WHITE) {
+    //   if (packing_moves[IND_PIESE_COLOR] == WHITE) {
 
-        if (score > found_score) {
-          found_score = score;
-          best_node_line_0x88_O.save_list(pv_line_0x88_O);
-          best_node_line_0x88_O.type_variant[depth] = "mm_M";
+    //     if (score > found_score) {
+    //       found_score = score;
+    //       best_node_line_0x88_O.save_list(pv_line_0x88_O);
+    //       best_node_line_0x88_O.type_variant[depth] = "mm_M";
 
-          if (depth == 0) save_chess_board_0x88(chess_board_0x88_end_original, chess_board_0x88);
-          //console.log("Search_0x88_C->score > max_score depth " + depth + " found_score " + found_score);
-        }//if (score > found_score) {
+    //       if (depth == 0) save_chess_board_0x88(chess_board_0x88_end_original, chess_board_0x88);
+    //       //console.log("Search_0x88_C->score > max_score depth " + depth + " found_score " + found_score);
+    //     }//if (score > found_score) {
 
-      } else {
+    //   } else {
 
-        if (score < found_score) {
-          found_score = score;
-          best_node_line_0x88_O.save_list(pv_line_0x88_O);
-          best_node_line_0x88_O.type_variant[depth] = "mm_B";
+    //     if (score < found_score) {
+    //       found_score = score;
+    //       best_node_line_0x88_O.save_list(pv_line_0x88_O);
+    //       best_node_line_0x88_O.type_variant[depth] = "mm_B";
 
-          if (depth == 0) save_chess_board_0x88(chess_board_0x88_end_original, chess_board_0x88);
-          //console.log("Search_0x88_C->score > max_score depth " + depth + " found_score " + found_score);
-        }//if (score > found_score) {
+    //       if (depth == 0) save_chess_board_0x88(chess_board_0x88_end_original, chess_board_0x88);
+    //       //console.log("Search_0x88_C->score > max_score depth " + depth + " found_score " + found_score);
+    //     }//if (score > found_score) {
 
-      }
+    //   }
 
-      undo_moves(move_i, chess_board_0x88, move_list_0x88_O, undo);
+    //   undo_moves(move_i, chess_board_0x88, packing_moves, undo);
 
-    }//for (let move_i = 0; move_i < move_list_0x88_O.number_move; move_i++) {
+    // }//for (let move_i = 0; move_i < move_list_0x88_O.number_move; move_i++) {
 
-    pv_line_0x88_O.save_list(best_node_line_0x88_O);
+    // pv_line_0x88_O.save_list(best_node_line_0x88_O);
   }//if (depth >= depth_max) {
 
   return found_score;
-}//searching_negamax(pv_line_0x88_O, chess_board_0x88,
+}//searching_minmax(pv_line_0x88_O, chess_board_0x88,
 
 export { searching_minmax, chess_board_0x88_end_original, node_mm};
 

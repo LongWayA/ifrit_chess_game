@@ -125,8 +125,8 @@ import { Timer_C } from "../../browser/timer.js";
     let w = (chess_board_0x88_O_start[SIDE_TO_MOVE] == WHITE) ? 1 : -1;
 
     uci_return_search.fen_start = fen_start;
-    uci_return_search.fen_end = set_fen_from_0x88(chess_board_0x88_O_end);
-    //uci_return_search.fen_end = fen_start;
+    //uci_return_search.fen_end = set_fen_from_0x88(chess_board_0x88_O_end);
+    uci_return_search.fen_end = fen_start;
 
     let depth_uci = String(depth_max);
     let score_cp = String(w * best_score);

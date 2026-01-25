@@ -67,7 +67,8 @@ class Search_minmax_0x88_C {
 
 
     if (depth >= depth_max) {
-      found_score = this.evaluate_0x88_O.score_position(chess_board_0x88_O);
+      //found_score = this.evaluate_0x88_O.score_position(chess_board_0x88_O);
+      found_score = 0;
       this.node = this.node + 1;
       pv_line_0x88_O.score_depth_max = found_score;
 

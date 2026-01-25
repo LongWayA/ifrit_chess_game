@@ -29,7 +29,7 @@ import {
 
  Ход содержит:
 
- packing_moves = new Int32Array(260).fill(MOVE_NO);
+ let packing_moves = new Int32Array(LENGTH_LIST = 260).fill(MOVE_NO);
 
   индексы массива от 0 до 256 зарезервированы для упакованого хода:
   packing_moves[i]
@@ -225,7 +225,7 @@ const TYPE_MOVE_NAME = [
 // очищаем список ходов
 /**
 * выводим дополнительную информацию по позиции на консоль браузера (для тестирования)
-* @param {Uint8Array} packing_moves
+* @param {Uint32Array} packing_moves
 * @returns {void}
 */
 const clear_list = function (packing_moves) {
@@ -238,7 +238,7 @@ const clear_list = function (packing_moves) {
 // добавляем ход в список 
 // количество ходов увеличиваем на один
 /**
-* @param {Uint8Array} packing_moves
+* @param {Uint32Array} packing_moves
 * @param {number} type_move
 * @param {number} from
 * @param {number} to
@@ -275,7 +275,7 @@ const add_packing_move = function (packing_moves, type_move, from, to, name_capt
 // 
 /**
  * @param {number} i
- * @param {Uint8Array} packing_moves
+ * @param {Uint32Array} packing_moves
  * @returns {number}
  */
 const get_type_move = function (i, packing_moves) {
@@ -288,7 +288,7 @@ const get_type_move = function (i, packing_moves) {
 // 
 /**
  * @param {number} i
- * @param {Uint8Array} packing_moves
+ * @param {Uint32Array} packing_moves
  * @returns {number}
  */
 const get_from = function (i, packing_moves) {
@@ -302,7 +302,7 @@ const get_from = function (i, packing_moves) {
 // 
 /**
  * @param {number} i
- * @param {Uint8Array} packing_moves
+ * @param {Uint32Array} packing_moves
  * @returns {number}
  */
 const get_to = function (i, packing_moves) {
@@ -316,7 +316,7 @@ const get_to = function (i, packing_moves) {
 // 
 /**
  * @param {number} i
- * @param {Uint8Array} packing_moves
+ * @param {Uint32Array} packing_moves
  * @returns {number}
  */
 const get_name_capture_piece = function (i, packing_moves) {
@@ -329,7 +329,7 @@ const get_name_capture_piece = function (i, packing_moves) {
 
 // присвоить списку цвет фигуры он же цвет ходящей стороны
 /**
- * @param {Uint8Array} packing_moves
+ * @param {Uint32Array} packing_moves
  * @param {number} piece_color
  * @returns {void}
  */
@@ -339,7 +339,7 @@ const set_color = function (packing_moves, piece_color) {
 
 // присвоить количество взятий в списке
 /**
- * @param {Uint8Array} packing_moves
+ * @param {Uint32Array} packing_moves
  * @param {number} number_captures_move
  * @returns {void}
  */
@@ -363,7 +363,7 @@ const set_number_captures_move = function (packing_moves, number_captures_move) 
 // и самые последние рокировки 
 // взятия раньше других ходов для удобства поиска и сортировки тихих ходов
 /**
- * @param {Uint8Array} packing_moves
+ * @param {Uint32Array} packing_moves
  * @returns {void}
  */
 const sorting_list = function (packing_moves) {
@@ -405,8 +405,8 @@ const sorting_list = function (packing_moves) {
 // сравнение двух списков ходов. 
 // если есть отличия то печатем в консоль предупреждение
 /**
-* @param {Uint8Array} packing_moves_original
-* @param {Uint8Array} packing_moves
+* @param {Uint32Array} packing_moves_original
+* @param {Uint32Array} packing_moves
 * @returns {void}
 */
 const test_compare_list_from = function (packing_moves_original, packing_moves) {
@@ -492,7 +492,7 @@ const test_compare_list_from = function (packing_moves_original, packing_moves) 
 // печатаем в консоль ход из списка под заданным номером
 /**
  * @param {number} i
- * @param {Uint8Array} packing_moves
+ * @param {Uint32Array} packing_moves
  * @returns {void}
  */
 const test_print_i_move_list = function (i, packing_moves) {
@@ -528,7 +528,7 @@ const test_print_i_move_list = function (i, packing_moves) {
 
 // печатаем в консоль весь список ходов
 /**
- * @param {Uint8Array} packing_moves
+ * @param {Uint32Array} packing_moves
  * @returns {void}
  */
 const test_print_list = function (packing_moves) {
@@ -576,8 +576,8 @@ const test_print_list = function (packing_moves) {
 // копируем в наш список список из параметров функции 
 // т.е. тот что задан в скобках тот и копируем
 /**
-* @param {Uint8Array} packing_moves_to
-* @param {Uint8Array} packing_moves_from
+* @param {Uint32Array} packing_moves_to
+* @param {Uint32Array} packing_moves_from
 * @returns {void}
 */
 const save_list_from = function (packing_moves_to, packing_moves_from) {
@@ -593,7 +593,7 @@ const save_list_from = function (packing_moves_to, packing_moves_from) {
 // нашли в списке ходов 
 // в случае превращений это первое попавшееся
 /**
-* @param {Uint8Array} packing_moves
+* @param {Uint32Array} packing_moves
 * @param {number} from
 * @param {number} to
 * @returns {boolean}
@@ -628,7 +628,7 @@ const move_is_found = function (packing_moves, from, to) {
 // по ходу from, to, promo
 // в том числе и в случае превращений 
 /**
-* @param {Uint8Array} packing_moves
+* @param {Uint32Array} packing_moves
 * @param {number} from
 * @param {number} to
 * @returns {number}
@@ -675,7 +675,7 @@ const return_i_move = function (packing_moves, from, to, promo = "") {
 // в виде строки вида e2e4, e7e8q 
 /**
 * @param {number} i
-* @param {Uint8Array} packing_moves
+* @param {Uint32Array} packing_moves
 * @returns {string}
 */
 const move_to_string_uci = function (i, packing_moves) {
@@ -1236,7 +1236,10 @@ export { clear_list, add_packing_move, get_type_move, get_from, get_to, get_name
      return_i_move, move_to_string_uci, return_type_captures_pawn_promo, return_type_simple_move, 
      return_piece_name_captures_from_type_move, type_move_to_name_piese, type_move_to_name_piese_f, 
      return_promo_piece_from_type_move,
-    IND_PROMO_QUEEN, IND_PROMO_ROOK, IND_PROMO_BISHOP, IND_PROMO_KNIGHT };
+    LENGTH_LIST, IND_PIESE_COLOR, IND_NUMBER_CAPTURES_MOVE, IND_NUMBER_MOVE, 
+    IND_PROMO_QUEEN, IND_PROMO_ROOK, IND_PROMO_BISHOP, IND_PROMO_KNIGHT, MOVE_NO,
+    EP_CAPTURES, MOVE_KING_CASTLE,MOVE_KING_QUEEN_CASTLE, MOVE_PAWN, MOVE_DOUBLE_PAWN,
+    MOVE_PAWN_PROMO_QUEEN, MOVE_PAWN_PROMO_ROOK, MOVE_PAWN_PROMO_BISHOP, MOVE_PAWN_PROMO_KNIGHT };
 
 
 /*

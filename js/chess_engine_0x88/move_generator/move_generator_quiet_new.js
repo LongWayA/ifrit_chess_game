@@ -12,11 +12,21 @@ import {
     IND_CASTLING_Q, IND_CASTLING_q, IND_CASTLING_K, IND_CASTLING_k
 } from "./chess_board_new.js";
 
-import { Move_list_0x88_С } from "./move_list_0x88.js";
+import {
+    clear_list, add_packing_move, get_type_move, get_from, get_to, get_name_capture_piece, set_color, set_number_captures_move,
+    sorting_list, test_compare_list_from, test_print_i_move_list, test_print_list, save_list_from, move_is_found,
+    return_i_move, move_to_string_uci, return_type_captures_pawn_promo, return_type_simple_move,
+    return_piece_name_captures_from_type_move, type_move_to_name_piese, type_move_to_name_piese_f,
+    return_promo_piece_from_type_move,
+    LENGTH_LIST, IND_PIESE_COLOR, IND_NUMBER_CAPTURES_MOVE, IND_NUMBER_MOVE,
+    IND_PROMO_QUEEN, IND_PROMO_ROOK, IND_PROMO_BISHOP, IND_PROMO_KNIGHT, MOVE_NO,
+    EP_CAPTURES, MOVE_KING_CASTLE,MOVE_KING_QUEEN_CASTLE, MOVE_PAWN, MOVE_DOUBLE_PAWN,  
+    MOVE_PAWN_PROMO_QUEEN, MOVE_PAWN_PROMO_ROOK, MOVE_PAWN_PROMO_BISHOP, MOVE_PAWN_PROMO_KNIGHT
+} from "../move_generator/move_list_new.js";
 
 /**
 * НАЗНАЧЕНИЕ
-  Проходим по доске chess_board_0x88_O и пишем в список move_list_0x88_O только ходы не взятия.
+  Проходим по доске chess_board_0x88 и пишем в список packing_moves только ходы не взятия.
   Списка фигур нет. Максимально простой, на мой взгляд, генератор.
   Ходы псевдолегальные, т.е. тут есть ходы под шах или открывающие шах, а также рокировки 
   через битые поля.
@@ -79,29 +89,29 @@ const moves_knight = [-33, -31, -14, 18, 33, 31, 14, -18];
 
 // генерируем всевозможные ходы, но не учитываем шахи и вскрытые шахи.
 /**
-* @param {Uint8Array} chess_board_0x88_O
-* @param {Move_list_0x88_С} move_list_0x88_O
+* @param {Uint8Array} chess_board_0x88
+* @param {Uint32Array} packing_moves
 * @returns {void}
 */
-const generated_pseudo_legal_quiet_moves = function (chess_board_0x88_O, move_list_0x88_O) {
+const generated_pseudo_legal_quiet_moves = function (chess_board_0x88, packing_moves) {
     //console.log('Move_generator_quiet_0x88_С->generated_pseudo_legal_moves');
-    let side_to_move = chess_board_0x88_O[SIDE_TO_MOVE];
+    let side_to_move = chess_board_0x88[SIDE_TO_MOVE];
     for (let from = 0; from < 128; from++) {
-        generated_pseudo_legal_moves_one_piece(from, side_to_move, chess_board_0x88_O, move_list_0x88_O);
+        generated_pseudo_legal_moves_one_piece(from, side_to_move, chess_board_0x88, packing_moves);
     }
 }
 
 //  считаем ходы одной фигуры из конкретной позиции
 /**
 * @param {number} from
-* @param {Uint8Array} chess_board_0x88_O
-* @param {Move_list_0x88_С} move_list_0x88_O
+* @param {Uint8Array} chess_board_0x88
+* @param {Uint32Array} packing_moves
 * @returns {void}
 */
-const generated_pseudo_legal_moves_one_piece_for_gui = function (from, chess_board_0x88_O, move_list_0x88_O) {
+const generated_pseudo_legal_moves_one_piece_for_gui = function (from, chess_board_0x88, packing_moves) {
     //console.log('Move_generator_quiet_0x88_С->generated_pseudo_legal_moves');
-    let side_to_move = chess_board_0x88_O[SIDE_TO_MOVE];
-    generated_pseudo_legal_moves_one_piece(from, side_to_move, chess_board_0x88_O, move_list_0x88_O);
+    let side_to_move = chess_board_0x88[SIDE_TO_MOVE];
+    generated_pseudo_legal_moves_one_piece(from, side_to_move, chess_board_0x88, packing_moves);
 }
 
 
@@ -109,19 +119,19 @@ const generated_pseudo_legal_moves_one_piece_for_gui = function (from, chess_boa
 /**
 * @param {number} from
 * @param {number} side_to_move
-* @param {Uint8Array} chess_board_0x88_O
-* @param {Move_list_0x88_С} move_list_0x88_O
+* @param {Uint8Array} chess_board_0x88
+* @param {Uint32Array} packing_moves
 * @returns {void}
 */
-const generated_pseudo_legal_moves_one_piece = function (from, side_to_move, chess_board_0x88_O, move_list_0x88_O) {
+const generated_pseudo_legal_moves_one_piece = function (from, side_to_move, chess_board_0x88, packing_moves) {
 
     let piece_name = -1;
     let piece_color = -1;
 
     // если мы не вышли за пределы доски
     if ((from & 136) == 0) {// 136 0x88
-        piece_name = chess_board_0x88_O[from];
-        piece_color = chess_board_0x88_O[from + SHIFT_COLOR];
+        piece_name = chess_board_0x88[from];
+        piece_color = chess_board_0x88[from + SHIFT_COLOR];
 
         // если фигура иммеет цвет ходящей стороны
         if (piece_color == side_to_move) {
@@ -129,24 +139,24 @@ const generated_pseudo_legal_moves_one_piece = function (from, side_to_move, che
             // смотрим фигуру на доске
             switch (piece_name) {
                 case KING:// KING
-                    generated_quiet_moves_king(piece_color, from, chess_board_0x88_O, move_list_0x88_O);
-                    generated_moves_castle_king(piece_color, from, chess_board_0x88_O, move_list_0x88_O);
+                    generated_quiet_moves_king(piece_color, from, chess_board_0x88, packing_moves);
+                    generated_moves_castle_king(piece_color, from, chess_board_0x88, packing_moves);
                     break;
 
                 case QUEEN://QUEEN
-                    generated_quiet_moves_queen(piece_color, from, chess_board_0x88_O, move_list_0x88_O);
+                    generated_quiet_moves_queen(piece_color, from, chess_board_0x88, packing_moves);
                     break;
                 case ROOK://ROOK
-                    generated_quiet_moves_rook(piece_color, from, chess_board_0x88_O, move_list_0x88_O);
+                    generated_quiet_moves_rook(piece_color, from, chess_board_0x88, packing_moves);
                     break;
                 case BISHOP://BISHOP
-                    generated_quiet_moves_bishop(piece_color, from, chess_board_0x88_O, move_list_0x88_O);
+                    generated_quiet_moves_bishop(piece_color, from, chess_board_0x88, packing_moves);
                     break;
                 case KNIGHT://KNIGHT
-                    generated_quiet_moves_knight(piece_color, from, chess_board_0x88_O, move_list_0x88_O);
+                    generated_quiet_moves_knight(piece_color, from, chess_board_0x88, packing_moves);
                     break;
                 case PAWN://PAWN
-                    generated_quiet_moves_pawn(piece_color, from, chess_board_0x88_O, move_list_0x88_O);
+                    generated_quiet_moves_pawn(piece_color, from, chess_board_0x88, packing_moves);
                     break;
 
                 default://
@@ -162,18 +172,18 @@ const generated_pseudo_legal_moves_one_piece = function (from, side_to_move, che
 * @param {number} piece_color
 * @param {number} from
 * @param {number} to
-* @param {Uint8Array} chess_board_0x88_O
-* @param {Move_list_0x88_С} move_list_0x88_O
+* @param {Uint8Array} chess_board_0x88
+* @param {Uint32Array} packing_moves
 * @returns {number}
 */
-const add_quiet_move = function (piece_name, piece_color, from, to, chess_board_0x88_O, move_list_0x88_O) {
-    let piece_to = chess_board_0x88_O[to];
-    let piece_color_to = chess_board_0x88_O[to + SHIFT_COLOR];
+const add_quiet_move = function (piece_name, piece_color, from, to, chess_board_0x88, packing_moves) {
+    let piece_to = chess_board_0x88[to];
+    let piece_color_to = chess_board_0x88[to + SHIFT_COLOR];
     let type_move;
 
     if (piece_to == 0) {// проверяем клетку куда ходим. Если там нет фигур то можно ходить
-        type_move = move_list_0x88_O.return_type_simple_move(piece_name, PIECE_NO);
-        move_list_0x88_O.add_move(type_move, from, to);
+        type_move = return_type_simple_move(piece_name, PIECE_NO);
+        add_packing_move(packing_moves, type_move, from, to, PIECE_NO);
         return 0;// можно продолжать луч
     } else if (piece_color != piece_color_to) {// мы уже знаем что тут есть фигура и если цвет отличен, то это взятие
         return 1;// луч прерываем на вражеской фигуре включительно
@@ -186,11 +196,11 @@ const add_quiet_move = function (piece_name, piece_color, from, to, chess_board_
 /**
 * @param {number} piece_color
 * @param {number} from
-* @param {Uint8Array} chess_board_0x88_O
-* @param {Move_list_0x88_С} move_list_0x88_O
+* @param {Uint8Array} chess_board_0x88
+* @param {Uint32Array} packing_moves
 * @returns {void}
 */
-const generated_quiet_moves_king = function (piece_color, from, chess_board_0x88_O, move_list_0x88_O) {
+const generated_quiet_moves_king = function (piece_color, from, chess_board_0x88, packing_moves) {
     //console.log("king " + piece + " c " + piece_color + " f " + from);
     //console.log("king");
     //console.log("from = " + from);
@@ -202,7 +212,7 @@ const generated_quiet_moves_king = function (piece_color, from, chess_board_0x88
     for (let j = 0; j < 8; j++) {
         to = from + moves_king[j];
         if ((to & 136) == 0) {// если мы не вышли за пределы доски
-            bre_ak = add_quiet_move(KING, piece_color, from, to, chess_board_0x88_O, move_list_0x88_O);
+            bre_ak = add_quiet_move(KING, piece_color, from, to, chess_board_0x88, packing_moves);
         }
     }
 }
@@ -211,11 +221,11 @@ const generated_quiet_moves_king = function (piece_color, from, chess_board_0x88
 /**
 * @param {number} piece_color
 * @param {number} from
-* @param {Uint8Array} chess_board_0x88_O
-* @param {Move_list_0x88_С} move_list_0x88_O
+* @param {Uint8Array} chess_board_0x88
+* @param {Uint32Array} packing_moves
 * @returns {void}
 */
-const generated_quiet_moves_queen = function (piece_color, from, chess_board_0x88_O, move_list_0x88_O) {
+const generated_quiet_moves_queen = function (piece_color, from, chess_board_0x88, packing_moves) {
     //console.log("queen " + piece + " c " + piece_color + " f " + from);
     //console.log("queen");
     //console.log("from = " + from);
@@ -231,7 +241,7 @@ const generated_quiet_moves_queen = function (piece_color, from, chess_board_0x8
         to = from + moves_queen[j];
         if ((to & 136) == 0) {// если мы не вышли за пределы доски
             while (true) {
-                bre_ak = add_quiet_move(QUEEN, piece_color, from, to, chess_board_0x88_O, move_list_0x88_O);
+                bre_ak = add_quiet_move(QUEEN, piece_color, from, to, chess_board_0x88, packing_moves);
                 if (bre_ak == 1) break;// уперлись в фигуру
                 to = to + moves_queen[j];
                 if ((to & 136) != 0) break;// конец доски
@@ -244,11 +254,11 @@ const generated_quiet_moves_queen = function (piece_color, from, chess_board_0x8
 /**
 * @param {number} piece_color
 * @param {number} from
-* @param {Uint8Array} chess_board_0x88_O
-* @param {Move_list_0x88_С} move_list_0x88_O
+* @param {Uint8Array} chess_board_0x88
+* @param {Uint32Array} packing_moves
 * @returns {void}
 */
-const generated_quiet_moves_rook = function (piece_color, from, chess_board_0x88_O, move_list_0x88_O) {
+const generated_quiet_moves_rook = function (piece_color, from, chess_board_0x88, packing_moves) {
     //console.log("rook " + piece + " c " + piece_color + " f " + from);
     //console.log("rook");
     //console.log("from = " + from);
@@ -263,7 +273,7 @@ const generated_quiet_moves_rook = function (piece_color, from, chess_board_0x88
         to = from + moves_rook[j];
         if ((to & 136) == 0) {// если мы не вышли за пределы доски
             while (true) {
-                bre_ak = add_quiet_move(ROOK, piece_color, from, to, chess_board_0x88_O, move_list_0x88_O);
+                bre_ak = add_quiet_move(ROOK, piece_color, from, to, chess_board_0x88, packing_moves);
                 if (bre_ak == 1) break;
                 to = to + moves_rook[j];
                 if ((to & 136) != 0) break;
@@ -276,11 +286,11 @@ const generated_quiet_moves_rook = function (piece_color, from, chess_board_0x88
 /**
 * @param {number} piece_color
 * @param {number} from
-* @param {Uint8Array} chess_board_0x88_O
-* @param {Move_list_0x88_С} move_list_0x88_O
+* @param {Uint8Array} chess_board_0x88
+* @param {Uint32Array} packing_moves
 * @returns {void}
 */
-const generated_quiet_moves_bishop = function (piece_color, from, chess_board_0x88_O, move_list_0x88_O) {
+const generated_quiet_moves_bishop = function (piece_color, from, chess_board_0x88, packing_moves) {
     //console.log("bishop " + piece + " c " + piece_color + " f " + from);
     //console.log("bishop");
     //console.log("from = " + from);
@@ -295,7 +305,7 @@ const generated_quiet_moves_bishop = function (piece_color, from, chess_board_0x
         to = from + moves_bishop[j];
         if ((to & 136) == 0) {// если мы не вышли за пределы доски
             while (true) {
-                bre_ak = add_quiet_move(BISHOP, piece_color, from, to, chess_board_0x88_O, move_list_0x88_O);
+                bre_ak = add_quiet_move(BISHOP, piece_color, from, to, chess_board_0x88, packing_moves);
                 if (bre_ak == 1) break;
                 to = to + moves_bishop[j];
                 if ((to & 136) != 0) break;
@@ -309,11 +319,11 @@ const generated_quiet_moves_bishop = function (piece_color, from, chess_board_0x
 /**
 * @param {number} piece_color
 * @param {number} from
-* @param {Uint8Array} chess_board_0x88_O
-* @param {Move_list_0x88_С} move_list_0x88_O
+* @param {Uint8Array} chess_board_0x88
+* @param {Uint32Array} packing_moves
 * @returns {void}
 */
-const generated_quiet_moves_knight = function (piece_color, from, chess_board_0x88_O, move_list_0x88_O) {
+const generated_quiet_moves_knight = function (piece_color, from, chess_board_0x88, packing_moves) {
     //console.log("knight " + piece + " c " + piece_color + " f " + from);
     //console.log("knight");
     //console.log("from = " + from);
@@ -326,7 +336,7 @@ const generated_quiet_moves_knight = function (piece_color, from, chess_board_0x
     for (let j = 0; j < 8; j++) {
         to = from + moves_knight[j];
         if ((to & 136) == 0) {// если мы не вышли за пределы доски
-            bre_ak = add_quiet_move(KNIGHT, piece_color, from, to, chess_board_0x88_O, move_list_0x88_O);
+            bre_ak = add_quiet_move(KNIGHT, piece_color, from, to, chess_board_0x88, packing_moves);
         }
     }
 }
@@ -335,11 +345,11 @@ const generated_quiet_moves_knight = function (piece_color, from, chess_board_0x
 /**
 * @param {number} piece_color
 * @param {number} from
-* @param {Uint8Array} chess_board_0x88_O
-* @param {Move_list_0x88_С} move_list_0x88_O
+* @param {Uint8Array} chess_board_0x88
+* @param {Uint32Array} packing_moves
 * @returns {void}
 */
-const generated_moves_castle_king = function (piece_color, from, chess_board_0x88_O, move_list_0x88_O) {
+const generated_moves_castle_king = function (piece_color, from, chess_board_0x88, packing_moves) {
     let to = -1;
     let piece_to_1 = -1;
     let piece_to_2 = -1;
@@ -348,48 +358,48 @@ const generated_moves_castle_king = function (piece_color, from, chess_board_0x8
 
     if (from == E1) {// король стоит на стартовой позиции
         if (piece_color == 1) {// король белый
-            if (chess_board_0x88_O[IND_CASTLING_Q] == 1) {// рокировка белых в длинную сторону   1/0
-                piece_to_1 = chess_board_0x88_O[B1];
-                piece_to_2 = chess_board_0x88_O[C1];
-                piece_to_3 = chess_board_0x88_O[D1];
+            if (chess_board_0x88[IND_CASTLING_Q] == 1) {// рокировка белых в длинную сторону   1/0
+                piece_to_1 = chess_board_0x88[B1];
+                piece_to_2 = chess_board_0x88[C1];
+                piece_to_3 = chess_board_0x88[D1];
                 if ((piece_to_1 == 0) && (piece_to_2 == 0) && (piece_to_3 == 0)) {//
                     to = C1;
-                    type_move = Move_list_0x88_С.MOVE_KING_QUEEN_CASTLE;
-                    move_list_0x88_O.add_move(type_move, from, to);
+                    type_move = MOVE_KING_QUEEN_CASTLE;
+                    add_packing_move(packing_moves, type_move, from, to, PIECE_NO);
                 }
             }
 
-            if (chess_board_0x88_O[IND_CASTLING_K] == 1) {// рокировка белых в короткую сторону  1/0
-                piece_to_1 = chess_board_0x88_O[F1];
-                piece_to_2 = chess_board_0x88_O[G1];
+            if (chess_board_0x88[IND_CASTLING_K] == 1) {// рокировка белых в короткую сторону  1/0
+                piece_to_1 = chess_board_0x88[F1];
+                piece_to_2 = chess_board_0x88[G1];
                 if ((piece_to_1 == 0) && (piece_to_2 == 0)) {//
                     to = G1;
-                    type_move = Move_list_0x88_С.MOVE_KING_CASTLE;
-                    move_list_0x88_O.add_move(type_move, from, to);
+                    type_move = MOVE_KING_CASTLE;
+                    add_packing_move(packing_moves, type_move, from, to, PIECE_NO);
                 }
             }
         }
 
     } else if (from == E8) {// король стоит на стартовой позиции
         if (piece_color == 0) {// король черный
-            if (chess_board_0x88_O[IND_CASTLING_q] == 1) {// рокировка черных в длинную сторону   1/0
-                piece_to_1 = chess_board_0x88_O[B8];
-                piece_to_2 = chess_board_0x88_O[C8];
-                piece_to_3 = chess_board_0x88_O[D8];
+            if (chess_board_0x88[IND_CASTLING_q] == 1) {// рокировка черных в длинную сторону   1/0
+                piece_to_1 = chess_board_0x88[B8];
+                piece_to_2 = chess_board_0x88[C8];
+                piece_to_3 = chess_board_0x88[D8];
                 if ((piece_to_1 == 0) && (piece_to_2 == 0) && (piece_to_3 == 0)) {//
                     to = C8;
-                    type_move = Move_list_0x88_С.MOVE_KING_QUEEN_CASTLE;
-                    move_list_0x88_O.add_move(type_move, from, to);
+                    type_move = MOVE_KING_QUEEN_CASTLE;
+                    add_packing_move(packing_moves, type_move, from, to, PIECE_NO);
                 }
             }
 
-            if (chess_board_0x88_O[IND_CASTLING_k] == 1) {// рокировка черных в короткую сторону  1/0
-                piece_to_1 = chess_board_0x88_O[F8];
-                piece_to_2 = chess_board_0x88_O[G8];
+            if (chess_board_0x88[IND_CASTLING_k] == 1) {// рокировка черных в короткую сторону  1/0
+                piece_to_1 = chess_board_0x88[F8];
+                piece_to_2 = chess_board_0x88[G8];
                 if ((piece_to_1 == 0) && (piece_to_2 == 0)) {//
                     to = G8;
-                    type_move = Move_list_0x88_С.MOVE_KING_CASTLE;
-                    move_list_0x88_O.add_move(type_move, from, to);
+                    type_move = MOVE_KING_CASTLE;
+                    add_packing_move(packing_moves, type_move, from, to, PIECE_NO);
                 }
             }
         }
@@ -400,11 +410,11 @@ const generated_moves_castle_king = function (piece_color, from, chess_board_0x8
 /**
 * @param {number} piece_color
 * @param {number} from
-* @param {Uint8Array} chess_board_0x88_O
-* @param {Move_list_0x88_С} move_list_0x88_O
+* @param {Uint8Array} chess_board_0x88
+* @param {Uint32Array} packing_moves
 * @returns {void}
 */
-const generated_quiet_moves_pawn = function (piece_color, from, chess_board_0x88_O, move_list_0x88_O) {
+const generated_quiet_moves_pawn = function (piece_color, from, chess_board_0x88, packing_moves) {
     //console.log("pawn " + piece + " c " + piece_color + " f " + from);
     //console.log("pawn");
     //console.log("from = " + from);
@@ -412,9 +422,9 @@ const generated_quiet_moves_pawn = function (piece_color, from, chess_board_0x88
     //console.log("piece_color = " + piece_color);
 
     if (piece_color == 1) {// белая пешка
-        generated_quiet_moves_pawn_white(from, chess_board_0x88_O, move_list_0x88_O);
+        generated_quiet_moves_pawn_white(from, chess_board_0x88, packing_moves);
     } else if (piece_color == 0) {
-        generated_quiet_moves_pawn_black(from, chess_board_0x88_O, move_list_0x88_O);
+        generated_quiet_moves_pawn_black(from, chess_board_0x88, packing_moves);
     }
 }
 
@@ -422,21 +432,21 @@ const generated_quiet_moves_pawn = function (piece_color, from, chess_board_0x88
 // простые ходы белых пешек
 /**
 * @param {number} from
-* @param {Uint8Array} chess_board_0x88_O
-* @param {Move_list_0x88_С} move_list_0x88_O
+* @param {Uint8Array} chess_board_0x88
+* @param {Uint32Array} packing_moves
 * @returns {void}
 */
-const generated_quiet_moves_pawn_white = function (from, chess_board_0x88_O, move_list_0x88_O) {
+const generated_quiet_moves_pawn_white = function (from, chess_board_0x88, packing_moves) {
 
     if (Math.floor(from / 16) == 6) {// белая пешка на стартовой позиции(2-ая линия). можно ходить на две клетки
         generated_moves_pawn_double(from, (from - 16), (from - 32),
-            chess_board_0x88_O, move_list_0x88_O);
+            chess_board_0x88, packing_moves);
     }
     if (Math.floor(from / 16) == 1) {// белая пешка на на предпоследней позиции(7-ая линия). можно ходить с превращением
         generated_quiet_moves_pawn_promo(from, (from - 16),
-            chess_board_0x88_O, move_list_0x88_O);
+            chess_board_0x88, packing_moves);
     } else {
-        generated_moves_pawn_one(from, (from - 16), chess_board_0x88_O, move_list_0x88_O);
+        generated_moves_pawn_one(from, (from - 16), chess_board_0x88, packing_moves);
     }
 
 }
@@ -444,21 +454,21 @@ const generated_quiet_moves_pawn_white = function (from, chess_board_0x88_O, mov
 // простые ходы черных пешек
 /**
 * @param {number} from
-* @param {Uint8Array} chess_board_0x88_O
-* @param {Move_list_0x88_С} move_list_0x88_O
+* @param {Uint8Array} chess_board_0x88
+* @param {Uint32Array} packing_moves
 * @returns {void}
 */
-const generated_quiet_moves_pawn_black = function (from, chess_board_0x88_O, move_list_0x88_O) {
+const generated_quiet_moves_pawn_black = function (from, chess_board_0x88, packing_moves) {
 
     if (Math.floor(from / 16) == 1) {// белые пешки на стартовой позиции. можно ходить на две клетки
         generated_moves_pawn_double(from, (from + 16), (from + 32),
-            chess_board_0x88_O, move_list_0x88_O);
+            chess_board_0x88, packing_moves);
     }
     if (Math.floor(from / 16) == 6) {// 136 0x88
         generated_quiet_moves_pawn_promo(from, (from + 16),
-            chess_board_0x88_O, move_list_0x88_O);
+            chess_board_0x88, packing_moves);
     } else {
-        generated_moves_pawn_one(from, (from + 16), chess_board_0x88_O, move_list_0x88_O);
+        generated_moves_pawn_one(from, (from + 16), chess_board_0x88, packing_moves);
     }
 
 }
@@ -467,18 +477,18 @@ const generated_quiet_moves_pawn_black = function (from, chess_board_0x88_O, mov
 /**
 * @param {number} from
 * @param {number} to
-* @param {Uint8Array} chess_board_0x88_O
-* @param {Move_list_0x88_С} move_list_0x88_O
+* @param {Uint8Array} chess_board_0x88
+* @param {Uint32Array} packing_moves
 * @returns {void}
 */
-const generated_moves_pawn_one = function (from, to, chess_board_0x88_O, move_list_0x88_O) {
+const generated_moves_pawn_one = function (from, to, chess_board_0x88, packing_moves) {
     let piece_to = -1;
     let type_move = -1;
 
-    piece_to = chess_board_0x88_O[to];
+    piece_to = chess_board_0x88[to];
     if (piece_to == 0) {// цвет не задан и значит фигуры там нет. можно ходить. это спокойный ход 
-        type_move = Move_list_0x88_С.MOVE_PAWN;
-        move_list_0x88_O.add_move(type_move, from, to);
+        type_move = MOVE_PAWN;
+        add_packing_move(packing_moves, type_move, from, to, PIECE_NO);
     }
 }
 
@@ -487,20 +497,20 @@ const generated_moves_pawn_one = function (from, to, chess_board_0x88_O, move_li
 * @param {number} from
 * @param {number} to_void
 * @param {number} to
-* @param {Uint8Array} chess_board_0x88_O
-* @param {Move_list_0x88_С} move_list_0x88_O
+* @param {Uint8Array} chess_board_0x88
+* @param {Uint32Array} packing_moves
 * @returns {void}
 */
-const generated_moves_pawn_double = function (from, to_void, to, chess_board_0x88_O, move_list_0x88_O) {
+const generated_moves_pawn_double = function (from, to_void, to, chess_board_0x88, packing_moves) {
     let piece_to = -1;
     let piece_to_void = -1;
     let type_move = -1;
 
-    piece_to = chess_board_0x88_O[to];
-    piece_to_void = chess_board_0x88_O[to_void];
+    piece_to = chess_board_0x88[to];
+    piece_to_void = chess_board_0x88[to_void];
     if ((piece_to == 0) && (piece_to_void == 0)) {// фигур там нет. можно ходить. это спокойный ход
-        type_move = Move_list_0x88_С.MOVE_DOUBLE_PAWN;
-        move_list_0x88_O.add_move(type_move, from, to);
+        type_move = MOVE_DOUBLE_PAWN;
+        add_packing_move(packing_moves, type_move, from, to, PIECE_NO);
     }
 }
 
@@ -508,25 +518,25 @@ const generated_moves_pawn_double = function (from, to_void, to, chess_board_0x8
 /**
 * @param {number} from
 * @param {number} to_center
-* @param {Uint8Array} chess_board_0x88_O
-* @param {Move_list_0x88_С} move_list_0x88_O
+* @param {Uint8Array} chess_board_0x88
+* @param {Uint32Array} packing_moves
 * @returns {void}
 */
-const generated_quiet_moves_pawn_promo = function (from, to_center, chess_board_0x88_O, move_list_0x88_O) {
+const generated_quiet_moves_pawn_promo = function (from, to_center, chess_board_0x88, packing_moves) {
     let piece_to = -1;
     let type_move = -1;
 
-    // ход с превращением
-    piece_to = chess_board_0x88_O[to_center];
+    // ход с превращением 
+    piece_to = chess_board_0x88[to_center];
     if (piece_to == 0) {// цвет не задан и значит фигуры там нет. можно ходить. это спокойный ход
-        type_move = Move_list_0x88_С.MOVE_PAWN_PROMO_QUEEN;
-        move_list_0x88_O.add_move(type_move, from, to_center);
-        type_move = Move_list_0x88_С.MOVE_PAWN_PROMO_ROOK;
-        move_list_0x88_O.add_move(type_move, from, to_center);
-        type_move = Move_list_0x88_С.MOVE_PAWN_PROMO_BISHOP;
-        move_list_0x88_O.add_move(type_move, from, to_center);
-        type_move = Move_list_0x88_С.MOVE_PAWN_PROMO_KNIGHT;
-        move_list_0x88_O.add_move(type_move, from, to_center);
+        type_move = MOVE_PAWN_PROMO_QUEEN;
+        add_packing_move(packing_moves, type_move, from, to_center, PIECE_NO);
+        type_move = MOVE_PAWN_PROMO_ROOK;
+        add_packing_move(packing_moves, type_move, from, to_center, PIECE_NO);
+        type_move = MOVE_PAWN_PROMO_BISHOP;
+        add_packing_move(packing_moves, type_move, from, to_center, PIECE_NO);
+        type_move = MOVE_PAWN_PROMO_KNIGHT;
+        add_packing_move(packing_moves, type_move, from, to_center, PIECE_NO);
     }
 }
 
