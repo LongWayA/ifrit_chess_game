@@ -6,7 +6,8 @@
  * @version created 24.01m.2026 
 */
 
-import { Move_list_0x88_С } from "./move_list_new.js";
+//import { Move_list_0x88_С } from "./move_list_new.js";
+import { Move_list_0x88_С } from "./move_list_0x88.js";
 
 import {
     SIDE_TO_MOVE, SHIFT_COLOR,

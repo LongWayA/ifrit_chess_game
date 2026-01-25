@@ -13,7 +13,9 @@ import { test_print_any_0x88, test_print_piese_0x88, test_print_piese_color_0x88
 test_compare_chess_board_0x88, save_chess_board_0x88, set_board_from_fen_0x88, set_fen_from_0x88, 
 searching_king, iniStartPositionForWhite, IND_MAX, SIDE_TO_MOVE, WHITE  } from "../move_generator/chess_board_new.js";
 
-import { Move_list_0x88_С } from "../move_generator/move_list_new.js";
+//import { Move_list_0x88_С } from "../move_generator/move_list_new.js";
+import { Move_list_0x88_С } from "../move_generator/move_list_0x88.js";
+
 import { PV_line_0x88_C } from "../move_generator/pv_line_new.js";
 
 import { searching_minmax, chess_board_0x88_end_original, node_mm} from "./search_minmax_new.js";
@@ -88,6 +90,12 @@ import { Timer_C } from "../../browser/timer.js";
     let time_delta = 0;
 
     time_start = timer_O.getCurrentTimeMs();
+
+    let num = new Int32Array(2).fill(0);
+
+    num[1] = 255;
+
+    console.log("start_search_minmax->num " + num[1].toString(2));
 
     console.log("start_search_minmax->fen_start " + fen_start);
 

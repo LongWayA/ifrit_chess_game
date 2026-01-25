@@ -149,7 +149,7 @@ const s_0x88_to_x07 = function (s_0x88) {//rank07, file07
     return x07;
 }
 
-/**
+/** 
  * переводим линейную координату доски 128(0x88) в у
 * @param {number} s_0x88
 * @returns {number}
@@ -836,10 +836,10 @@ const iniPositionFor_0 = function (chess_board_0x88) {
     chess_board_0x88[IND_CASTLING_k] = 0;
 }
 
-export {
+export { x07_y07_to_0x88, s_0x88_to_x07, s_0x88_to_y07,
     test_print_any_0x88, test_print_piese_0x88, test_print_piese_color_0x88, test_print_piese_in_line_0x88, test_compare_chess_board_0x88,
     save_chess_board_0x88, set_board_from_fen_0x88, set_fen_from_0x88, searching_king, iniStartPositionForWhite,
-    IND_MAX, SIDE_TO_MOVE, SHIFT_COLOR,
+    IND_MAX, SIDE_TO_MOVE, SHIFT_COLOR, LET_COOR,
     BLACK, WHITE, PIECE_NO, PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING,
     IND_CASTLING_Q, IND_CASTLING_q, IND_CASTLING_K, IND_CASTLING_k,
     IND_EN_PASSANT_YES, IND_EN_PASSANT_TARGET_SQUARE, IND_KING_FROM_WHITE, IND_KING_FROM_BLACK

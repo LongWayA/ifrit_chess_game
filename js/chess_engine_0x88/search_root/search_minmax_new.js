@@ -24,7 +24,8 @@ import { undo_moves } from "../move_generator/unmake_move_new.js";
 
 import {  set_undo, get_undo, UNDO_MAX } from "../move_generator/undo_new.js";
 
-import { Move_list_0x88_С } from "../move_generator/move_list_new.js";
+//import { Move_list_0x88_С } from "../move_generator/move_list_new.js";
+import { Move_list_0x88_С } from "../move_generator/move_list_0x88.js";
 
 //import { Evaluate_0x88_C } from "./evaluate_0x88.js";
 

@@ -1,2 +1,0 @@
-test_print_any_0x88, test_print_piese_0x88, test_print_piese_color_0x88, test_print_piese_in_line_0x88,
-test_compare_chess_board_0x88, save_chess_board_0x88, set_0x88_from_fen, set_fen_from_0x88, searching_king, iniStartPositionForWhite
