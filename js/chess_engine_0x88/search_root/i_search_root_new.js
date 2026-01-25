@@ -91,12 +91,6 @@ import { Timer_C } from "../../browser/timer.js";
 
     time_start = timer_O.getCurrentTimeMs();
 
-    let num = new Int32Array(2).fill(0);
-
-    num[1] = 255;
-
-    console.log("start_search_minmax->num " + num[1].toString(2));
-
     console.log("start_search_minmax->fen_start " + fen_start);
 
     set_board_from_fen_0x88(fen_start, chess_board_0x88_O_start);
@@ -113,6 +107,8 @@ import { Timer_C } from "../../browser/timer.js";
 
     node = node + node_mm;
 
+    test_compare_chess_board_0x88( chess_board_0x88_O_save_test, chess_board_0x88_O);
+
     //console.log("=========================================================================");
     //console.log("Search_0x88_C->start_search 22222 =============================================");
 
@@ -125,8 +121,8 @@ import { Timer_C } from "../../browser/timer.js";
     let w = (chess_board_0x88_O_start[SIDE_TO_MOVE] == WHITE) ? 1 : -1;
 
     uci_return_search.fen_start = fen_start;
-    //uci_return_search.fen_end = set_fen_from_0x88(chess_board_0x88_O_end);
-    uci_return_search.fen_end = fen_start;
+    uci_return_search.fen_end = set_fen_from_0x88(chess_board_0x88_O_end);
+    //uci_return_search.fen_end = fen_start;
 
     let depth_uci = String(depth_max);
     let score_cp = String(w * best_score);

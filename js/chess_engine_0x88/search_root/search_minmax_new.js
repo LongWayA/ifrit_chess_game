@@ -95,53 +95,53 @@ const searching_minmax = function (pv_line_0x88_O, chess_board_0x88, depth, dept
     generated_pseudo_legal_captures(chess_board_0x88, packing_moves);
     generated_pseudo_legal_quiet_moves(chess_board_0x88, packing_moves);
 
-    test_print_list(packing_moves);
+    //test_print_list(packing_moves);
 
-    // for (let move_i = 0; move_i < packing_moves[IND_NUMBER_MOVE]; move_i++) {
+    for (let move_i = 0; move_i < packing_moves[IND_NUMBER_MOVE]; move_i++) {
 
-    //   is_moove_legal = do_moves(move_i, chess_board_0x88, packing_moves, undo);
+      is_moove_legal = do_moves(move_i, chess_board_0x88, packing_moves, undo);
 
-    //   if (is_moove_legal == 0) { // король под шахом. отменяем ход и пропускаем этот цикл
-    //     undo_moves(move_i, chess_board_0x88, packing_moves, undo);
-    //     continue;
-    //   } else if (is_moove_legal == 2) {// нелегальные рокировки не генерируются. просто пропускаем ход
-    //     continue;
-    //   }
+      if (is_moove_legal == 0) { // король под шахом. отменяем ход и пропускаем этот цикл
+        undo_moves(move_i, chess_board_0x88, packing_moves, undo);
+        continue;
+      } else if (is_moove_legal == 2) {// нелегальные рокировки не генерируются. просто пропускаем ход
+        continue;
+      }
 
-    //   pv_line_0x88_O.add_move(move_i, packing_moves, depth);
-    //   pv_line_0x88_O.type_variant[depth] = "nm";
+      //pv_line_0x88_O.add_move(move_i, packing_moves, depth);
+      pv_line_0x88_O.type_variant[depth] = "nm";
 
-    //   score = searching_minmax(pv_line_0x88_O, chess_board_0x88, (depth + 1), depth_max);
+      score = searching_minmax(pv_line_0x88_O, chess_board_0x88, (depth + 1), depth_max);
 
-    //   if (packing_moves[IND_PIESE_COLOR] == WHITE) {
+      if (packing_moves[IND_PIESE_COLOR] == WHITE) {
 
-    //     if (score > found_score) {
-    //       found_score = score;
-    //       best_node_line_0x88_O.save_list(pv_line_0x88_O);
-    //       best_node_line_0x88_O.type_variant[depth] = "mm_M";
+        if (score > found_score) {
+          found_score = score;
+          best_node_line_0x88_O.save_list(pv_line_0x88_O);
+          best_node_line_0x88_O.type_variant[depth] = "mm_M";
 
-    //       if (depth == 0) save_chess_board_0x88(chess_board_0x88_end_original, chess_board_0x88);
-    //       //console.log("Search_0x88_C->score > max_score depth " + depth + " found_score " + found_score);
-    //     }//if (score > found_score) {
+          if (depth == 0) save_chess_board_0x88(chess_board_0x88_end_original, chess_board_0x88);
+          //console.log("Search_0x88_C->score > max_score depth " + depth + " found_score " + found_score);
+        }//if (score > found_score) {
 
-    //   } else {
+      } else {
 
-    //     if (score < found_score) {
-    //       found_score = score;
-    //       best_node_line_0x88_O.save_list(pv_line_0x88_O);
-    //       best_node_line_0x88_O.type_variant[depth] = "mm_B";
+        if (score < found_score) {
+          found_score = score;
+          best_node_line_0x88_O.save_list(pv_line_0x88_O);
+          best_node_line_0x88_O.type_variant[depth] = "mm_B";
 
-    //       if (depth == 0) save_chess_board_0x88(chess_board_0x88_end_original, chess_board_0x88);
-    //       //console.log("Search_0x88_C->score > max_score depth " + depth + " found_score " + found_score);
-    //     }//if (score > found_score) {
+          if (depth == 0) save_chess_board_0x88(chess_board_0x88_end_original, chess_board_0x88);
+          //console.log("Search_0x88_C->score > max_score depth " + depth + " found_score " + found_score);
+        }//if (score > found_score) {
 
-    //   }
+      }
 
-    //   undo_moves(move_i, chess_board_0x88, packing_moves, undo);
+      undo_moves(move_i, chess_board_0x88, packing_moves, undo);
 
-    // }//for (let move_i = 0; move_i < move_list_0x88_O.number_move; move_i++) {
+    }//for (let move_i = 0; move_i < move_list_0x88_O.number_move; move_i++) {
 
-    // pv_line_0x88_O.save_list(best_node_line_0x88_O);
+    pv_line_0x88_O.save_list(best_node_line_0x88_O);
   }//if (depth >= depth_max) {
 
   return found_score;

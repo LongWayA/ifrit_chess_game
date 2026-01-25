@@ -519,6 +519,7 @@ const generated_captures_moves_pawn_promo = function (from, to_left, to_right, p
 const check_detected_generated_moves_king = function (from, piece_color, chess_board_0x88) {
     let to = -1;
     let check = -1;
+
     for (let j = 0; j < 8; j++) {
         to = from + moves_king[j];
         if ((to & 136) == 0) {// если мы не вышли за пределы доски
@@ -545,7 +546,7 @@ const check_detected = function (from, piece_color, chess_board_0x88) {
     let check = -1;
     let packing_moves_in = new Uint32Array(LENGTH_LIST).fill(MOVE_NO);
     let type_move_i;
-    let number_move = packing_moves_in[IND_NUMBER_MOVE]
+    let number_move;
 
     clear_list(packing_moves_in);
     // 1 шах от короля это если подошли к королю противника вплотную
@@ -558,6 +559,8 @@ const check_detected = function (from, piece_color, chess_board_0x88) {
     // 2 шах от коня
     generated_captures_moves_knight(piece_color, from, chess_board_0x88, packing_moves_in);
 
+    number_move = packing_moves_in[IND_NUMBER_MOVE];
+
     for (let i = 0; i < number_move; i++) {
         type_move_i = get_type_move(i, packing_moves_in);
         if (return_piece_name_captures_from_type_move(type_move_i) == KNIGHT) {
@@ -568,7 +571,10 @@ const check_detected = function (from, piece_color, chess_board_0x88) {
 
     clear_list(packing_moves_in);
     // 3 шах от слона + 1/2 шах от половины ходов ферзя как у слона
-    generated_captures_moves_bishop(piece_color, from, chess_board_0x88, packing_moves_in);
+    generated_captures_moves_bishop(piece_color, from, chess_board_0x88, packing_moves_in)
+
+    number_move = packing_moves_in[IND_NUMBER_MOVE];
+
     for (let i = 0; i < number_move; i++) {
         type_move_i = get_type_move(i, packing_moves_in);
         if (return_piece_name_captures_from_type_move(type_move_i) == BISHOP) {
@@ -584,6 +590,9 @@ const check_detected = function (from, piece_color, chess_board_0x88) {
     clear_list(packing_moves_in);
     // 4 шах от ладьи + 1/2 шах от половины ходов ферзя как у ладьи
     generated_captures_moves_rook(piece_color, from, chess_board_0x88, packing_moves_in);
+
+    number_move = packing_moves_in[IND_NUMBER_MOVE];
+
     for (let i = 0; i < number_move; i++) {
         type_move_i = get_type_move(i, packing_moves_in);
         if (return_piece_name_captures_from_type_move(type_move_i) == ROOK) {
@@ -599,6 +608,9 @@ const check_detected = function (from, piece_color, chess_board_0x88) {
     clear_list(packing_moves_in);
     // 5 шах от пешек
     generated_captures_moves_pawn(piece_color, from, chess_board_0x88, packing_moves_in);
+
+    number_move = packing_moves_in[IND_NUMBER_MOVE];
+
     for (let i = 0; i < number_move; i++) {
         type_move_i = get_type_move(i, packing_moves_in);
         if (return_piece_name_captures_from_type_move(type_move_i) == PAWN) {
