@@ -48,16 +48,17 @@ import { get_undo } from "../move_generator/undo_new.js";
 
   // возврат хода
 /**
-* @param {number} move_i
 * @param {Uint8Array} chess_board_0x88
-* @param {Uint32Array} packing_moves
 * @param {Uint8Array} undo
+* @param {number} type_move
+* @param {number} from
+* @param {number} to
+* @param {number} name_capture_piece
+* @param {number} piece_color
 * @returns {void}
 */
-  const undo_moves = function (move_i, chess_board_0x88, packing_moves, undo) {
+  const undo_moves = function (chess_board_0x88, undo, type_move, from, to, name_capture_piece, piece_color) {
     //console.log("Make_move_0x88_C->do_moves  move_i " + move_i);
-
-    let type_move = get_type_move(move_i, packing_moves);
 
     get_undo(chess_board_0x88, undo);
 
@@ -81,7 +82,7 @@ import { get_undo } from "../move_generator/undo_new.js";
       //  break;
       case MOVE_PAWN:
         // возвращаем простой ход.
-        unmake_simple_move_0x88(move_i, chess_board_0x88, packing_moves);
+        unmake_simple_move_0x88(chess_board_0x88, from, to);
         break;
 
       ///////////////////////////////////////////////////////  
@@ -89,109 +90,109 @@ import { get_undo } from "../move_generator/undo_new.js";
       // CAPTURES_KING_...
       case CAPTURES_KING_QUEEN:
         // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-        unmake_captures_move_0x88(move_i, chess_board_0x88, packing_moves, QUEEN);
+        unmake_captures_move_0x88(chess_board_0x88, from, to, QUEEN);
         break;
       case CAPTURES_KING_BISHOP:
         // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-        unmake_captures_move_0x88(move_i, chess_board_0x88, packing_moves, BISHOP);
+        unmake_captures_move_0x88(chess_board_0x88, from, to, BISHOP);
         break;
       case CAPTURES_KING_KNIGHT:
         // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-        unmake_captures_move_0x88(move_i, chess_board_0x88, packing_moves, KNIGHT);
+        unmake_captures_move_0x88(chess_board_0x88, from, to, KNIGHT);
         break;
       case CAPTURES_KING_PAWN:
         // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-        unmake_captures_move_0x88(move_i, chess_board_0x88, packing_moves, PAWN);
+        unmake_captures_move_0x88(chess_board_0x88, from, to, PAWN);
         break;
 
       // CAPTURES_ROOK_...
       case CAPTURES_ROOK_QUEEN:
         // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-        unmake_captures_move_0x88(move_i, chess_board_0x88, packing_moves, QUEEN);
+        unmake_captures_move_0x88(chess_board_0x88, from, to, QUEEN);
         break;
       case CAPTURES_ROOK_BISHOP:
         // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-        unmake_captures_move_0x88(move_i, chess_board_0x88, packing_moves, BISHOP);
+        unmake_captures_move_0x88(chess_board_0x88, from, to, BISHOP);
         break;
       case CAPTURES_ROOK_KNIGHT:
         // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-        unmake_captures_move_0x88(move_i, chess_board_0x88, packing_moves, KNIGHT);
+        unmake_captures_move_0x88(chess_board_0x88, from, to, KNIGHT);
         break;
       case CAPTURES_ROOK_PAWN:
         // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-        unmake_captures_move_0x88(move_i, chess_board_0x88, packing_moves, PAWN);
+        unmake_captures_move_0x88(chess_board_0x88, from, to, PAWN);
         break;
 
       // CAPTURES_QUEEN
       case CAPTURES_QUEEN_QUEEN:
         // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-        unmake_captures_move_0x88(move_i, chess_board_0x88, packing_moves, QUEEN);
+        unmake_captures_move_0x88(chess_board_0x88, from, to, QUEEN);
         break;
       case CAPTURES_QUEEN_BISHOP:
         // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-        unmake_captures_move_0x88(move_i, chess_board_0x88, packing_moves, BISHOP);
+        unmake_captures_move_0x88(chess_board_0x88, from, to, BISHOP);
         break;
       case CAPTURES_QUEEN_KNIGHT:
         // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-        unmake_captures_move_0x88(move_i, chess_board_0x88, packing_moves, KNIGHT);
+        unmake_captures_move_0x88(chess_board_0x88, from, to, KNIGHT);
         break;
       case CAPTURES_QUEEN_PAWN:
         // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-        unmake_captures_move_0x88(move_i, chess_board_0x88, packing_moves, PAWN);
+        unmake_captures_move_0x88(chess_board_0x88, from, to, PAWN);
         break;
 
       // CAPTURES_BISHOP
       case CAPTURES_BISHOP_QUEEN:
         // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-        unmake_captures_move_0x88(move_i, chess_board_0x88, packing_moves, QUEEN);
+        unmake_captures_move_0x88(chess_board_0x88, from, to, QUEEN);
         break;
       case CAPTURES_BISHOP_BISHOP:
         // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-        unmake_captures_move_0x88(move_i, chess_board_0x88, packing_moves, BISHOP);
+        unmake_captures_move_0x88(chess_board_0x88, from, to, BISHOP);
         break;
       case CAPTURES_BISHOP_KNIGHT:
         // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-        unmake_captures_move_0x88(move_i, chess_board_0x88, packing_moves, KNIGHT);
+        unmake_captures_move_0x88(chess_board_0x88, from, to, KNIGHT);
         break;
       case CAPTURES_BISHOP_PAWN:
         // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-        unmake_captures_move_0x88(move_i, chess_board_0x88, packing_moves, PAWN);
+        unmake_captures_move_0x88(chess_board_0x88, from, to, PAWN);
         break;
 
       // CAPTURES_KNIGHT
       case CAPTURES_KNIGHT_QUEEN:
         // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-        unmake_captures_move_0x88(move_i, chess_board_0x88, packing_moves, QUEEN);
+        unmake_captures_move_0x88(chess_board_0x88, from, to, QUEEN);
         break;
       case CAPTURES_KNIGHT_BISHOP:
         // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-        unmake_captures_move_0x88(move_i, chess_board_0x88, packing_moves, BISHOP);
+        unmake_captures_move_0x88(chess_board_0x88, from, to, BISHOP);
         break;
       case CAPTURES_KNIGHT_KNIGHT:
         // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-        unmake_captures_move_0x88(move_i, chess_board_0x88, packing_moves, KNIGHT);
+        unmake_captures_move_0x88(chess_board_0x88, from, to, KNIGHT);
         break;
       case CAPTURES_KNIGHT_PAWN:
         // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-        unmake_captures_move_0x88(move_i, chess_board_0x88, packing_moves, PAWN);
+        unmake_captures_move_0x88(chess_board_0x88, from, to, PAWN);
         break;
 
       // CAPTURES_PAWN
       case CAPTURES_PAWN_QUEEN:
         // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-        unmake_captures_move_0x88(move_i, chess_board_0x88, packing_moves, QUEEN);
+        unmake_captures_move_0x88(chess_board_0x88, from, to, QUEEN);
         break;
       case CAPTURES_PAWN_BISHOP:
         // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-        unmake_captures_move_0x88(move_i, chess_board_0x88, packing_moves, BISHOP);
+        unmake_captures_move_0x88(chess_board_0x88, from, to, BISHOP);
         break;
       case CAPTURES_PAWN_KNIGHT:
         // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-        unmake_captures_move_0x88(move_i, chess_board_0x88, packing_moves, KNIGHT);
+        unmake_captures_move_0x88(chess_board_0x88, from, to, KNIGHT);
         break;
       case CAPTURES_PAWN_PAWN:
         // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-        unmake_captures_move_0x88(move_i, chess_board_0x88, packing_moves, PAWN);
+        unmake_captures_move_0x88(chess_board_0x88, from, to, PAWN);
         break;
 
       // CAPTURES_..._ROOK   
@@ -209,30 +210,30 @@ import { get_undo } from "../move_generator/undo_new.js";
       //break;
       case CAPTURES_KING_ROOK:
         // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-        unmake_captures_move_0x88(move_i, chess_board_0x88, packing_moves, ROOK)
+        unmake_captures_move_0x88(chess_board_0x88, from, to, ROOK)
         break;
 
       //////////////////////////////////////////////
       // MOVE_KING_CASTLE
       case MOVE_KING_CASTLE:
-        unmake_king_castle_move_0x88(move_i, chess_board_0x88, packing_moves);
+        unmake_king_castle_move_0x88(chess_board_0x88, from, to, piece_color);
         break;
 
       // MOVE_KING_QUEEN_CASTLE   
       case MOVE_KING_QUEEN_CASTLE:
-        unmake_king_queen_castle_move_0x88(move_i, chess_board_0x88, packing_moves);
+        unmake_king_queen_castle_move_0x88(chess_board_0x88, from, to, piece_color);
         break;
 
       //////////////////////////////////////////////
       // специальный ходы все про пешки 
       // MOVE_DOUBLE_PAWN       
       case MOVE_DOUBLE_PAWN:
-        unmake_simple_move_0x88(move_i, chess_board_0x88, packing_moves);
+        unmake_simple_move_0x88(chess_board_0x88, from, to);
         break;
 
       // EP_CAPTURES
       case EP_CAPTURES:
-        unmake_en_passant_move_0x88(move_i, chess_board_0x88, packing_moves);
+        unmake_en_passant_move_0x88(chess_board_0x88, from, to, piece_color);
         break;
 
       // MOVE PAWN PROMO  
@@ -243,64 +244,64 @@ import { get_undo } from "../move_generator/undo_new.js";
       case MOVE_PAWN_PROMO_BISHOP:
       //break;
       case MOVE_PAWN_PROMO_KNIGHT:
-        unmake_promo_move_0x88(move_i, chess_board_0x88, packing_moves);
+        unmake_promo_move_0x88(chess_board_0x88, from, to);
         break;
 
       //CAPTURES PAWN PROMO
       //CAPTURES_PROMO_QUEEN
       case CAPTURES_PAWN_QUEEN_PROMO_QUEEN:
-        unmake_promo_captures_move_0x88(move_i, chess_board_0x88, packing_moves, QUEEN);
+        unmake_promo_captures_move_0x88(chess_board_0x88, from, to, QUEEN);
         break;
       case CAPTURES_PAWN_BISHOP_PROMO_QUEEN:
-        unmake_promo_captures_move_0x88(move_i, chess_board_0x88, packing_moves, BISHOP);
+        unmake_promo_captures_move_0x88(chess_board_0x88, from, to, BISHOP);
         break;
       case CAPTURES_PAWN_KNIGHT_PROMO_QUEEN:
-        unmake_promo_captures_move_0x88(move_i, chess_board_0x88, packing_moves, KNIGHT);
+        unmake_promo_captures_move_0x88(chess_board_0x88, from, to, KNIGHT);
         break;
       case CAPTURES_PAWN_ROOK_PROMO_QUEEN:
-        unmake_promo_captures_move_0x88(move_i, chess_board_0x88, packing_moves, ROOK);
+        unmake_promo_captures_move_0x88(chess_board_0x88, from, to, ROOK);
         break;
 
       //CAPTURES_PROMO_ROOK
       case CAPTURES_PAWN_QUEEN_PROMO_ROOK:
-        unmake_promo_captures_move_0x88(move_i, chess_board_0x88, packing_moves, QUEEN);
+        unmake_promo_captures_move_0x88(chess_board_0x88, from, to, QUEEN);
         break;
       case CAPTURES_PAWN_BISHOP_PROMO_ROOK:
-        unmake_promo_captures_move_0x88(move_i, chess_board_0x88, packing_moves, BISHOP);
+        unmake_promo_captures_move_0x88(chess_board_0x88, from, to, BISHOP);
         break;
       case CAPTURES_PAWN_KNIGHT_PROMO_ROOK:
-        unmake_promo_captures_move_0x88(move_i, chess_board_0x88, packing_moves, KNIGHT);
+        unmake_promo_captures_move_0x88(chess_board_0x88, from, to, KNIGHT);
         break;
       case CAPTURES_PAWN_ROOK_PROMO_ROOK:
-        unmake_promo_captures_move_0x88(move_i, chess_board_0x88, packing_moves, ROOK);
+        unmake_promo_captures_move_0x88(chess_board_0x88, from, to, ROOK);
         break;
 
       //CAPTURES_PROMO_BISHOP
       case CAPTURES_PAWN_QUEEN_PROMO_BISHOP:
-        unmake_promo_captures_move_0x88(move_i, chess_board_0x88, packing_moves, QUEEN);
+        unmake_promo_captures_move_0x88(chess_board_0x88, from, to, QUEEN);
         break;
       case CAPTURES_PAWN_BISHOP_PROMO_BISHOP:
-        unmake_promo_captures_move_0x88(move_i, chess_board_0x88, packing_moves, BISHOP);
+        unmake_promo_captures_move_0x88(chess_board_0x88, from, to, BISHOP);
         break;
       case CAPTURES_PAWN_KNIGHT_PROMO_BISHOP:
-        unmake_promo_captures_move_0x88(move_i, chess_board_0x88, packing_moves, KNIGHT);
+        unmake_promo_captures_move_0x88(chess_board_0x88, from, to, KNIGHT);
         break;
       case CAPTURES_PAWN_ROOK_PROMO_BISHOP:
-        unmake_promo_captures_move_0x88(move_i, chess_board_0x88, packing_moves, ROOK);
+        unmake_promo_captures_move_0x88(chess_board_0x88, from, to, ROOK);
         break;
 
       // CAPTURES_PROMO_KNIGHT
       case CAPTURES_PAWN_QUEEN_PROMO_KNIGHT:
-        unmake_promo_captures_move_0x88(move_i, chess_board_0x88, packing_moves, QUEEN);
+        unmake_promo_captures_move_0x88(chess_board_0x88, from, to, QUEEN);
         break;
       case CAPTURES_PAWN_BISHOP_PROMO_KNIGHT:
-        unmake_promo_captures_move_0x88(move_i, chess_board_0x88, packing_moves, BISHOP);
+        unmake_promo_captures_move_0x88(chess_board_0x88, from, to, BISHOP);
         break;
       case CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT:
-        unmake_promo_captures_move_0x88(move_i, chess_board_0x88, packing_moves, KNIGHT);
+        unmake_promo_captures_move_0x88(chess_board_0x88, from, to, KNIGHT);
         break;
       case CAPTURES_PAWN_ROOK_PROMO_KNIGHT:
-        unmake_promo_captures_move_0x88(move_i, chess_board_0x88, packing_moves, ROOK);
+        unmake_promo_captures_move_0x88(chess_board_0x88, from, to, ROOK);
         break;
 
       default://
@@ -310,93 +311,94 @@ import { get_undo } from "../move_generator/undo_new.js";
   }
 
   // возврат хода рисуем фигуру на старом месте и стираем на новом. это и просто ход.
-  /**
-* @param {number} move_i
-* @param {Uint8Array} chess_board_0x88
-* @param {Uint32Array} packing_moves
-* @returns {void}
-*/
-  const unmake_simple_move_0x88 = function (move_i, chess_board_0x88, packing_moves) {
+/**
+ * @param {Uint8Array} chess_board_0x88
+ * @param {number} from
+ * @param {number} to 
+ * @returns {void}
+ */
+  const unmake_simple_move_0x88 = function (chess_board_0x88, from, to) {
 
     // записываем имя фигуры на старом месте
-    chess_board_0x88[get_from(move_i, packing_moves)] =
-      chess_board_0x88[get_to(move_i, packing_moves)];
+    chess_board_0x88[from] =
+      chess_board_0x88[to];
 
     // записываем цвет фигуры на старом  месте 
-    chess_board_0x88[get_from(move_i, packing_moves) + SHIFT_COLOR] =
-      chess_board_0x88[get_to(move_i, packing_moves) + SHIFT_COLOR];
+    chess_board_0x88[from + SHIFT_COLOR] =
+      chess_board_0x88[to + SHIFT_COLOR];
 
     // стираем имя фигуры на новом месте
-    chess_board_0x88[get_to(move_i, packing_moves)] = PIECE_NO;// 0
+    chess_board_0x88[to] = PIECE_NO;// 0
 
     // стираем цвет фигуры на новом месте 
-    chess_board_0x88[get_to(move_i, packing_moves) + SHIFT_COLOR] = BLACK;// 0
+    chess_board_0x88[to + SHIFT_COLOR] = BLACK;// 0
   }
 
 
   // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-  /**
-* @param {number} move_i
-* @param {Uint8Array} chess_board_0x88
-* @param {Uint32Array} packing_moves
-* @param {number} captures_piece  
-* @returns {void}
-*/    
-  const unmake_captures_move_0x88 = function (move_i, chess_board_0x88, packing_moves, captures_piece) {
+/**
+ * @param {Uint8Array} chess_board_0x88
+ * @param {number} from
+ * @param {number} to 
+ * @param {number} captures_piece 
+ * @returns {void}
+ */
+  const unmake_captures_move_0x88 = function (chess_board_0x88, from, to, captures_piece) {
 
     // записываем имя фигуры на старом месте
-    chess_board_0x88[get_from(move_i, packing_moves)] =
-      chess_board_0x88[get_to(move_i, packing_moves)];
+    chess_board_0x88[from] =
+      chess_board_0x88[to];
 
     // записываем цвет фигуры на старом  месте 
-    chess_board_0x88[get_from(move_i, packing_moves) + SHIFT_COLOR] =
-      chess_board_0x88[get_to(move_i, packing_moves) + SHIFT_COLOR];
+    chess_board_0x88[from + SHIFT_COLOR] =
+      chess_board_0x88[to + SHIFT_COLOR];
 
     // востанавливаем имя фигуры на новом месте
-    chess_board_0x88[get_to(move_i, packing_moves)] = captures_piece;//
+    chess_board_0x88[to] = captures_piece;//
 
     // востанавливаем цвет фигуры на новом месте цвет взятой фигуры противоположен цвету берущей
-    chess_board_0x88[get_to(move_i, packing_moves) + SHIFT_COLOR] = 1 -
-      chess_board_0x88[get_from(move_i, packing_moves) + SHIFT_COLOR];//
+    chess_board_0x88[to + SHIFT_COLOR] = 1 -
+      chess_board_0x88[from + SHIFT_COLOR];//
   }
 
 
   // возврат короткой рокировки
-   /**
-* @param {number} move_i
-* @param {Uint8Array} chess_board_0x88
-* @param {Uint32Array} packing_moves  
-* @returns {void}
-*/     
-  const unmake_king_castle_move_0x88 = function (move_i, chess_board_0x88, packing_moves) {
+/**
+ * @param {Uint8Array} chess_board_0x88
+ * @param {number} from
+ * @param {number} to 
+ * @param {number} piece_color 
+ * @returns {void}
+ */ 
+  const unmake_king_castle_move_0x88 = function (chess_board_0x88, from, to, piece_color) {
 
     //   packing_moves.test_print_i_move_list(move_i, chess_board_0x88);
-    //   console.log("sq_piece from " + chess_board_0x88[get_from(move_i, packing_moves)]);
-    //   console.log("sq_piece to " + chess_board_0x88[get_to(move_i, packing_moves)]);
+    //   console.log("sq_piece from " + chess_board_0x88[from]);
+    //   console.log("sq_piece to " + chess_board_0x88[to]);
 
     // перемещаем назад короля. его ход прописан в списке ходов
     // записываем имя фигуры на старом месте
-    chess_board_0x88[get_from(move_i, packing_moves)] =
-      chess_board_0x88[get_to(move_i, packing_moves)];
+    chess_board_0x88[from] =
+      chess_board_0x88[to];
 
     // записываем цвет фигуры на старом месте 
-    chess_board_0x88[get_from(move_i, packing_moves) + SHIFT_COLOR] =
-      chess_board_0x88[get_to(move_i, packing_moves) + SHIFT_COLOR];
+    chess_board_0x88[from + SHIFT_COLOR] =
+      chess_board_0x88[to + SHIFT_COLOR];
 
     // стираем имя фигуры на новом месте
-    chess_board_0x88[get_to(move_i, packing_moves)] = PIECE_NO;// 0
+    chess_board_0x88[to] = PIECE_NO;// 0
 
     // стираем цвет фигуры на новом месте 
-    chess_board_0x88[get_to(move_i, packing_moves) + SHIFT_COLOR] = BLACK;// 0
+    chess_board_0x88[to + SHIFT_COLOR] = BLACK;// 0
 
-    // if (packing_moves[IND_PIESE_COLOR] != chess_board_0x88[get_from(move_i, packing_moves)]) {
+    // if (piece_color != chess_board_0x88[from]) {
     //   console.log("ЦВЕТА НЕ СОВПАДАЮТ!----------------------------------");
-    //   console.log("piece_color " + packing_moves[IND_PIESE_COLOR]);
-    //   console.log("sq_piece_color " + chess_board_0x88[get_from(move_i, packing_moves)]);
-    //   console.log("sq_piece " + chess_board_0x88[get_from(move_i, packing_moves)]);
+    //   console.log("piece_color " + piece_color);
+    //   console.log("sq_piece_color " + chess_board_0x88[from]);
+    //   console.log("sq_piece " + chess_board_0x88[from]);
     // }
 
-    if (packing_moves[IND_PIESE_COLOR] == 1) {
+    if (piece_color == 1) {
 
       // перемещаем ладью. ее ход не прописан в списке ходов
       // записываем имя фигуры на старом месте
@@ -431,30 +433,31 @@ import { get_undo } from "../move_generator/undo_new.js";
   }
 
   // возврат длинной рокировки
-   /**
-* @param {number} move_i
-* @param {Uint8Array} chess_board_0x88
-* @param {Uint32Array} packing_moves 
-* @returns {void}
-*/     
-  const unmake_king_queen_castle_move_0x88 = function (move_i, chess_board_0x88, packing_moves) {
+/**
+ * @param {Uint8Array} chess_board_0x88
+ * @param {number} from
+ * @param {number} to 
+ * @param {number} piece_color 
+ * @returns {void}
+ */ 
+  const unmake_king_queen_castle_move_0x88 = function (chess_board_0x88, from, to, piece_color) {
 
     // перемещаем назад короля. его ход прописан в списке ходов
     // записываем имя фигуры на старом месте
-    chess_board_0x88[get_from(move_i, packing_moves)] =
-      chess_board_0x88[get_to(move_i, packing_moves)];
+    chess_board_0x88[from] =
+      chess_board_0x88[to];
 
     // записываем цвет фигуры на старом месте 
-    chess_board_0x88[get_from(move_i, packing_moves) + SHIFT_COLOR] =
-      chess_board_0x88[get_to(move_i, packing_moves) + SHIFT_COLOR];
+    chess_board_0x88[from + SHIFT_COLOR] =
+      chess_board_0x88[to + SHIFT_COLOR];
 
     // стираем имя фигуры на новом месте
-    chess_board_0x88[get_to(move_i, packing_moves)] = PIECE_NO;// 0
+    chess_board_0x88[to] = PIECE_NO;// 0
 
     // стираем цвет фигуры на новом месте 
-    chess_board_0x88[get_to(move_i, packing_moves) + SHIFT_COLOR] = BLACK;// 0
+    chess_board_0x88[to + SHIFT_COLOR] = BLACK;// 0
 
-    if (packing_moves[IND_PIESE_COLOR] == 1) {
+    if (piece_color == 1) {
 
       // перемещаем ладью. ее ход не прописан в списке ходов
       // записываем имя фигуры на старом месте
@@ -492,87 +495,88 @@ import { get_undo } from "../move_generator/undo_new.js";
 
   // остались пешки
   // возврат взятия на проходе 
-  /**
-* @param {number} move_i
-* @param {Uint8Array} chess_board_0x88
-* @param {Uint32Array} packing_moves 
-* @returns {void}
-*/      
-  const unmake_en_passant_move_0x88 = function (move_i, chess_board_0x88, packing_moves) {
+/**
+ * @param {Uint8Array} chess_board_0x88
+ * @param {number} from
+ * @param {number} to 
+ * @param {number} piece_color 
+ * @returns {void}
+ */ 
+  const unmake_en_passant_move_0x88 = function (chess_board_0x88, from, to, piece_color) {
 
     // записываем имя фигуры на старом месте
-    chess_board_0x88[get_from(move_i, packing_moves)] =
-      chess_board_0x88[get_to(move_i, packing_moves)];
+    chess_board_0x88[from] =
+      chess_board_0x88[to];
 
     // записываем цвет фигуры на старом месте 
-    chess_board_0x88[get_from(move_i, packing_moves) + SHIFT_COLOR] =
-      chess_board_0x88[get_to(move_i, packing_moves) + SHIFT_COLOR];
+    chess_board_0x88[from + SHIFT_COLOR] =
+      chess_board_0x88[to + SHIFT_COLOR];
 
     // стираем имя фигуры на новом месте
-    chess_board_0x88[get_to(move_i, packing_moves)] = PIECE_NO;//
+    chess_board_0x88[to] = PIECE_NO;//
 
     // стираем цвет фигуры на новом месте 
-    chess_board_0x88[get_to(move_i, packing_moves) + SHIFT_COLOR] = BLACK;//
+    chess_board_0x88[to + SHIFT_COLOR] = BLACK;//
 
-    if (packing_moves[IND_PIESE_COLOR] == 1) {
+    if (piece_color == 1) {
       // востанавливаем имя битой на проходе пешки
-      chess_board_0x88[get_to(move_i, packing_moves) + 16] = PAWN;//
+      chess_board_0x88[to + 16] = PAWN;//
       // востанавливаем цвет битой на проходе пешки 
-      chess_board_0x88[get_to(move_i, packing_moves) + 16 + SHIFT_COLOR] =
-        1 - chess_board_0x88[get_from(move_i, packing_moves) + SHIFT_COLOR];//
+      chess_board_0x88[to + 16 + SHIFT_COLOR] =
+        1 - chess_board_0x88[from + SHIFT_COLOR];//
     } else {
-      chess_board_0x88[get_to(move_i, packing_moves) - 16] = PAWN;//
-      chess_board_0x88[get_to(move_i, packing_moves) - 16 + SHIFT_COLOR] =
-        1 - chess_board_0x88[get_from(move_i, packing_moves) + SHIFT_COLOR];//
+      chess_board_0x88[to - 16] = PAWN;//
+      chess_board_0x88[to - 16 + SHIFT_COLOR] =
+        1 - chess_board_0x88[from + SHIFT_COLOR];//
     }
   }
 
   //возврат простого хода превращения
-  /**
-* @param {number} move_i
-* @param {Uint8Array} chess_board_0x88
-* @param {Uint32Array} packing_moves 
-* @returns {void}
-*/      
-  const unmake_promo_move_0x88 = function (move_i, chess_board_0x88, packing_moves) {
+/**
+ * @param {Uint8Array} chess_board_0x88
+ * @param {number} from
+ * @param {number} to 
+ * @returns {void}
+ */ 
+  const unmake_promo_move_0x88 = function (chess_board_0x88, from, to) {
 
     // записываем имя фигуры на старом месте
-    chess_board_0x88[get_from(move_i, packing_moves)] = PAWN;
+    chess_board_0x88[from] = PAWN;
 
     // записываем цвет фигуры на старом месте 
-    chess_board_0x88[get_from(move_i, packing_moves) + SHIFT_COLOR] =
-      chess_board_0x88[get_to(move_i, packing_moves) + SHIFT_COLOR];
+    chess_board_0x88[from + SHIFT_COLOR] =
+      chess_board_0x88[to + SHIFT_COLOR];
 
     // стираем имя фигуры на новом месте
-    chess_board_0x88[get_to(move_i, packing_moves)] = PIECE_NO;// 0
+    chess_board_0x88[to] = PIECE_NO;// 0
 
     // стираем цвет фигуры на новом месте 
-    chess_board_0x88[get_to(move_i, packing_moves) + SHIFT_COLOR] = BLACK;// 0
+    chess_board_0x88[to + SHIFT_COLOR] = BLACK;// 0
   }
 
   //возврат  хода превращения со взятием
-   /**
-* @param {number} move_i
-* @param {Uint8Array} chess_board_0x88
-* @param {Uint32Array} packing_moves
-* @param {number} captures_piece  
-* @returns {void}
-*/     
-  const unmake_promo_captures_move_0x88 = function (move_i, chess_board_0x88, packing_moves, captures_piece) {
+/**
+ * @param {Uint8Array} chess_board_0x88
+ * @param {number} from
+ * @param {number} to 
+ * @param {number} captures_piece
+ * @returns {void}
+ */ 
+  const unmake_promo_captures_move_0x88 = function (chess_board_0x88, from, to, captures_piece) {
 
     // записываем имя фигуры на старом месте
-    chess_board_0x88[get_from(move_i, packing_moves)] = PAWN;
+    chess_board_0x88[from] = PAWN;
 
     // записываем цвет фигуры на старом месте 
-    chess_board_0x88[get_from(move_i, packing_moves) + SHIFT_COLOR] =
-      chess_board_0x88[get_to(move_i, packing_moves) + SHIFT_COLOR];
+    chess_board_0x88[from + SHIFT_COLOR] =
+      chess_board_0x88[to + SHIFT_COLOR];
 
     // записываем имя взятой фигуры на новом месте
-    chess_board_0x88[get_to(move_i, packing_moves)] = captures_piece;//
+    chess_board_0x88[to] = captures_piece;//
 
     // записываем цвет взятой фигуры на новом месте. цвет противоположен цвету берущей фигуры 
-    chess_board_0x88[get_to(move_i, packing_moves) + SHIFT_COLOR] =
-      1 - chess_board_0x88[get_from(move_i, packing_moves) + SHIFT_COLOR];// 0
+    chess_board_0x88[to + SHIFT_COLOR] =
+      1 - chess_board_0x88[from + SHIFT_COLOR];// 0
   }
 
 export { undo_moves };

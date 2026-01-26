@@ -59,16 +59,18 @@ import { set_undo } from "../move_generator/undo_new.js";
 
 // делаем ход под номером move_i из списка packing_moves на доске chess_board_0x88
 /**
-* @param {number} move_i
 * @param {Uint8Array} chess_board_0x88
-* @param {Uint32Array} packing_moves
 * @param {Uint8Array} undo
+* @param {number} type_move
+* @param {number} from
+* @param {number} to
+* @param {number} name_capture_piece
+* @param {number} piece_color
 * @returns {number}
 */
-const do_moves = function (move_i, chess_board_0x88, packing_moves, undo) {
+const do_moves = function (chess_board_0x88, undo, type_move, from, to, name_capture_piece, piece_color) {
   //console.log("Make_move_0x88_C->do_moves  move_i " + move_i);
   let is_moove_legal = 1;// по умолчанию ход считаем легальным.
-  let type_move = get_type_move(move_i, packing_moves);// тип хода
   set_undo(undo, chess_board_0x88);// заполняем вспогательную структуру для возврата хода
 
   //console.log("Make_move_0x88_C king_from_white[" + move_i + "] = " + chess_board_0x88.king_from_white);
@@ -86,35 +88,35 @@ const do_moves = function (move_i, chess_board_0x88, packing_moves, undo) {
     // ходит король. обнуляем связанные с ним рокировки
     case MOVE_KING:
 
-      if (packing_moves[IND_PIESE_COLOR] == 1) {
-        chess_board_0x88[IND_KING_FROM_WHITE] = get_to(move_i, packing_moves);
+      if (piece_color == 1) {
+        chess_board_0x88[IND_KING_FROM_WHITE] = to;
         //console.log("Make_move_0x88_C king_from_white[" + move_i + "] = " + chess_board_0x88.king_from_white);
       } else {
-        chess_board_0x88[IND_KING_FROM_BLACK] = get_to(move_i, packing_moves);
+        chess_board_0x88[IND_KING_FROM_BLACK] = to;
         //console.log("Make_move_0x88_C king_from_white[" + move_i + "] = " + chess_board_0x88.king_from_white);
       }
 
       // делаем простой ход. он одинаковый для всех фигур
-      make_simple_move_0x88(move_i, chess_board_0x88, packing_moves);
+      make_simple_move_0x88(chess_board_0x88, from, to);
 
       // обнуляем взятие на проходе. 
       if (chess_board_0x88[IND_EN_PASSANT_YES] == 1) {
         chess_board_0x88[IND_EN_PASSANT_YES] = 0;
       }
       // если король ходил то отменяем зависимые рокировки
-      stop_king_castle_move_king_0x88(move_i, chess_board_0x88, packing_moves);
+      stop_king_castle_move_king_0x88(chess_board_0x88, from);
       break;
 
     // ходит ладья. обнуляем все связанные с ней рокировки  
     case MOVE_ROOK:
       // делаем простой ход. он одинаковый для всех фигур
-      make_simple_move_0x88(move_i, chess_board_0x88, packing_moves);
+      make_simple_move_0x88(chess_board_0x88, from, to);
       // обнуляем взятие на проходе. 
       if (chess_board_0x88[IND_EN_PASSANT_YES] == 1) {
         chess_board_0x88[IND_EN_PASSANT_YES] = 0;
       }
       // если ладья ходила то отменяем зависимые рокировки
-      stop_king_castle_move_rook_0x88(move_i, chess_board_0x88, packing_moves);
+      stop_king_castle_move_rook_0x88(chess_board_0x88, from);
       break;
 
     // эти ходы не влияют на рокировку или превращения  
@@ -126,7 +128,7 @@ const do_moves = function (move_i, chess_board_0x88, packing_moves, undo) {
     //  break;
     case MOVE_PAWN:
       // делаем простой ход. он одинаковый для всех фигур
-      make_simple_move_0x88(move_i, chess_board_0x88, packing_moves);
+      make_simple_move_0x88(chess_board_0x88, from, to);
       // обнуляем взятие на проходе.
       if (chess_board_0x88[IND_EN_PASSANT_YES] == 1) {
         chess_board_0x88[IND_EN_PASSANT_YES] = 0;
@@ -145,18 +147,18 @@ const do_moves = function (move_i, chess_board_0x88, packing_moves, undo) {
     //break;
     case CAPTURES_KING_PAWN:
 
-      if (packing_moves[IND_PIESE_COLOR] == 1) {
-        chess_board_0x88[IND_KING_FROM_WHITE] = get_to(move_i, packing_moves);
+      if (piece_color == 1) {
+        chess_board_0x88[IND_KING_FROM_WHITE] = to;
       } else {
-        chess_board_0x88[IND_KING_FROM_BLACK] = get_to(move_i, packing_moves);
+        chess_board_0x88[IND_KING_FROM_BLACK] = to;
       }
-      make_simple_move_0x88(move_i, chess_board_0x88, packing_moves);
+      make_simple_move_0x88(chess_board_0x88, from, to);
       // обнуляем взятие на проходе. 
       if (chess_board_0x88[IND_EN_PASSANT_YES] == 1) {
         chess_board_0x88[IND_EN_PASSANT_YES] = 0;
       }
       // если король ходил то отменяем зависимые рокировки
-      stop_king_castle_move_king_0x88(move_i, chess_board_0x88, packing_moves);
+      stop_king_castle_move_king_0x88(chess_board_0x88, from);
       break;
 
     // CAPTURES_ROOK_...
@@ -168,13 +170,13 @@ const do_moves = function (move_i, chess_board_0x88, packing_moves, undo) {
     case CAPTURES_ROOK_KNIGHT:
     //break;
     case CAPTURES_ROOK_PAWN:
-      make_simple_move_0x88(move_i, chess_board_0x88, packing_moves);
+      make_simple_move_0x88(chess_board_0x88, from, to);
       // обнуляем взятие на проходе. 
       if (chess_board_0x88[IND_EN_PASSANT_YES] == 1) {
         chess_board_0x88[IND_EN_PASSANT_YES] = 0;
       }
       // если ладья ходила то отменяем зависимые рокировки
-      stop_king_castle_move_rook_0x88(move_i, chess_board_0x88, packing_moves);
+      stop_king_castle_move_rook_0x88(chess_board_0x88, from);
       break;
 
     // эти взятия не влияют на рокировку и превращения  
@@ -216,7 +218,7 @@ const do_moves = function (move_i, chess_board_0x88, packing_moves, undo) {
     case CAPTURES_PAWN_KNIGHT:
     //break;
     case CAPTURES_PAWN_PAWN:
-      make_simple_move_0x88(move_i, chess_board_0x88, packing_moves);
+      make_simple_move_0x88(chess_board_0x88, from, to);
       // обнуляем взятие на проходе. 
       if (chess_board_0x88[IND_EN_PASSANT_YES] == 1) {
         chess_board_0x88[IND_EN_PASSANT_YES] = 0;
@@ -233,51 +235,51 @@ const do_moves = function (move_i, chess_board_0x88, packing_moves, undo) {
     case CAPTURES_KNIGHT_ROOK:
     //break;
     case CAPTURES_PAWN_ROOK:
-      make_simple_move_0x88(move_i, chess_board_0x88, packing_moves);
+      make_simple_move_0x88(chess_board_0x88, from, to);
       // обнуляем взятие на проходе. 
       if (chess_board_0x88[IND_EN_PASSANT_YES] == 1) {
         chess_board_0x88[IND_EN_PASSANT_YES] = 0;
       }
-      stop_king_castle_captures_rook_0x88(move_i, chess_board_0x88, packing_moves);
+      stop_king_castle_captures_rook_0x88(chess_board_0x88, to);
       break;
 
     // тут особый случай ладья берет ладью. отменяем рокировки с участием обеих фигур. 
     case CAPTURES_ROOK_ROOK:
-      make_simple_move_0x88(move_i, chess_board_0x88, packing_moves);
+      make_simple_move_0x88(chess_board_0x88, from, to);
       // обнуляем взятие на проходе. 
       if (chess_board_0x88[IND_EN_PASSANT_YES] == 1) {
         chess_board_0x88[IND_EN_PASSANT_YES] = 0;
       }
-      stop_king_castle_captures_rook_0x88(move_i, chess_board_0x88, packing_moves);
+      stop_king_castle_captures_rook_0x88(chess_board_0x88, to);
       // если ладья ходила то отменяем зависимые рокировки
-      stop_king_castle_move_rook_0x88(move_i, chess_board_0x88, packing_moves);
+      stop_king_castle_move_rook_0x88(chess_board_0x88, from);
       break;
 
     // еще один особый случай. ладью берет король. отменяем рокировки и для ладьи и для короля. 
     // хотя если король добежал до вражеской ладьи то наверное у него уже нет рокировок но вдруг 
     // ладья сама пришла к королю тогда это у нее уже нет рокировок. как все запутано :))
     case CAPTURES_KING_ROOK:
-      if (packing_moves[IND_PIESE_COLOR] == 1) {
-        chess_board_0x88[IND_KING_FROM_WHITE] = get_to(move_i, packing_moves);
+      if (piece_color == 1) {
+        chess_board_0x88[IND_KING_FROM_WHITE] = to;
       } else {
-        chess_board_0x88[IND_KING_FROM_BLACK] = get_to(move_i, packing_moves);
+        chess_board_0x88[IND_KING_FROM_BLACK] = to;
       }
 
-      make_simple_move_0x88(move_i, chess_board_0x88, packing_moves);
+      make_simple_move_0x88(chess_board_0x88, from, to);
       // обнуляем взятие на проходе. 
       if (chess_board_0x88[IND_EN_PASSANT_YES] == 1) {
         chess_board_0x88[IND_EN_PASSANT_YES] = 0
       }
-      stop_king_castle_captures_rook_0x88(move_i, chess_board_0x88, packing_moves);
+      stop_king_castle_captures_rook_0x88(chess_board_0x88, to);
       // если король ходил то отменяем зависимые рокировки
-      stop_king_castle_move_king_0x88(move_i, chess_board_0x88, packing_moves);
+      stop_king_castle_move_king_0x88(chess_board_0x88, from);
       break;
 
     //////////////////////////////////////////////
     // специальный ходы рокировки. отмена рокировки прописана внутри функций
     // MOVE_KING_CASTLE
     case MOVE_KING_CASTLE:
-      is_moove_legal = make_king_castle_move_0x88(move_i, chess_board_0x88, packing_moves);
+      is_moove_legal = make_king_castle_move_0x88(chess_board_0x88, from, to, piece_color);
       // разрешение взятия на проходе 1/0
       if (is_moove_legal != 2) {
         if (chess_board_0x88[IND_EN_PASSANT_YES] == 1) {
@@ -287,10 +289,10 @@ const do_moves = function (move_i, chess_board_0x88, packing_moves, undo) {
 
       if (is_moove_legal != 2) {
 
-        if (packing_moves[IND_PIESE_COLOR] == 1) {
-          chess_board_0x88[IND_KING_FROM_WHITE] = get_to(move_i, packing_moves);
+        if (piece_color == 1) {
+          chess_board_0x88[IND_KING_FROM_WHITE] = to;
         } else {
-          chess_board_0x88[IND_KING_FROM_BLACK] = get_to(move_i, packing_moves);
+          chess_board_0x88[IND_KING_FROM_BLACK] = to;
         }
       }
 
@@ -299,7 +301,7 @@ const do_moves = function (move_i, chess_board_0x88, packing_moves, undo) {
     // MOVE_KING_QUEEN_CASTLE   
     case MOVE_KING_QUEEN_CASTLE:
 
-      is_moove_legal = make_king_queen_castle_move_0x88(move_i, chess_board_0x88, packing_moves);
+      is_moove_legal = make_king_queen_castle_move_0x88(chess_board_0x88, from, to, piece_color);
       if (is_moove_legal != 2) {
         if (chess_board_0x88[IND_EN_PASSANT_YES] == 1) {
           chess_board_0x88[IND_EN_PASSANT_YES] = 0;
@@ -308,10 +310,10 @@ const do_moves = function (move_i, chess_board_0x88, packing_moves, undo) {
 
       if (is_moove_legal != 2) {
 
-        if (packing_moves[IND_PIESE_COLOR] == 1) {
-          chess_board_0x88[IND_KING_FROM_WHITE] = get_to(move_i, packing_moves);
+        if (piece_color == 1) {
+          chess_board_0x88[IND_KING_FROM_WHITE] = to;
         } else {
-          chess_board_0x88[IND_KING_FROM_BLACK] = get_to(move_i, packing_moves);
+          chess_board_0x88[IND_KING_FROM_BLACK] = to;
         }
       }
 
@@ -321,13 +323,13 @@ const do_moves = function (move_i, chess_board_0x88, packing_moves, undo) {
     // специальный ходы все про пешки 
     // MOVE_DOUBLE_PAWN       
     case MOVE_DOUBLE_PAWN:
-      make_simple_move_0x88(move_i, chess_board_0x88, packing_moves);
+      make_simple_move_0x88(chess_board_0x88, from, to);
       // двойное продвижение пешки открывает возможность взятия на проходе
-      if (packing_moves[IND_PIESE_COLOR] == 1) {
+      if (piece_color == 1) {
         // координата битого поля
-        chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE] = get_from(move_i, packing_moves) - 16;
+        chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE] = from - 16;
       } else {
-        chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE] = get_from(move_i, packing_moves) + 16;
+        chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE] = from + 16;
       }
       if (chess_board_0x88[IND_EN_PASSANT_YES] == 0) {
       }
@@ -342,26 +344,26 @@ const do_moves = function (move_i, chess_board_0x88, packing_moves, undo) {
     // EP_CAPTURES
     case EP_CAPTURES:
       // здесь отмена взятия на проходе есть уже в функции
-      make_en_passant_move_0x88(move_i, chess_board_0x88, packing_moves);
+      make_en_passant_move_0x88(chess_board_0x88, from, to, piece_color);
       break;
 
     // MOVE PAWN PROMO  
     case MOVE_PAWN_PROMO_QUEEN:
-      make_promo_move_0x88(move_i, chess_board_0x88, packing_moves, QUEEN);
+      make_promo_move_0x88(chess_board_0x88, from, to, QUEEN);
       // разрешение взятия на проходе 1/0
       if (chess_board_0x88[IND_EN_PASSANT_YES] == 1) {
         chess_board_0x88[IND_EN_PASSANT_YES] = 0;
       }
       break;
     case MOVE_PAWN_PROMO_ROOK:
-      make_promo_move_0x88(move_i, chess_board_0x88, packing_moves, ROOK);
+      make_promo_move_0x88(chess_board_0x88, from, to, ROOK);
       // разрешение взятия на проходе 1/0
       if (chess_board_0x88[IND_EN_PASSANT_YES] == 1) {
         chess_board_0x88[IND_EN_PASSANT_YES] = 0;
       }
       break;
     case MOVE_PAWN_PROMO_BISHOP:
-      make_promo_move_0x88(move_i, chess_board_0x88, packing_moves, BISHOP);
+      make_promo_move_0x88(chess_board_0x88, from, to, BISHOP);
       // разрешение взятия на проходе 1/0
       if (chess_board_0x88[IND_EN_PASSANT_YES] == 1) {
 
@@ -369,7 +371,7 @@ const do_moves = function (move_i, chess_board_0x88, packing_moves, undo) {
       }
       break;
     case MOVE_PAWN_PROMO_KNIGHT:
-      make_promo_move_0x88(move_i, chess_board_0x88, packing_moves, KNIGHT);
+      make_promo_move_0x88(chess_board_0x88, from, to, KNIGHT);
       // разрешение взятия на проходе 1/0
       if (chess_board_0x88[IND_EN_PASSANT_YES] == 1) {
         chess_board_0x88[IND_EN_PASSANT_YES] = 0;
@@ -383,7 +385,7 @@ const do_moves = function (move_i, chess_board_0x88, packing_moves, undo) {
     case CAPTURES_PAWN_BISHOP_PROMO_QUEEN:
     //break;
     case CAPTURES_PAWN_KNIGHT_PROMO_QUEEN:
-      make_promo_move_0x88(move_i, chess_board_0x88, packing_moves, QUEEN);
+      make_promo_move_0x88(chess_board_0x88, from, to, QUEEN);
       // разрешение взятия на проходе 1/0
       if (chess_board_0x88[IND_EN_PASSANT_YES] == 1) {
         chess_board_0x88[IND_EN_PASSANT_YES] = 0;
@@ -392,12 +394,12 @@ const do_moves = function (move_i, chess_board_0x88, packing_moves, undo) {
 
     // осбый случай. пешка съела ладью и превратилась. отменяем рокировку с этой ладьей  
     case CAPTURES_PAWN_ROOK_PROMO_QUEEN:
-      make_promo_move_0x88(move_i, chess_board_0x88, packing_moves, QUEEN);
+      make_promo_move_0x88(chess_board_0x88, from, to, QUEEN);
       // разрешение взятия на проходе 1/0
       if (chess_board_0x88[IND_EN_PASSANT_YES] == 1) {
         chess_board_0x88[IND_EN_PASSANT_YES] = 0;
       }
-      stop_king_castle_captures_rook_0x88(move_i, chess_board_0x88, packing_moves);
+      stop_king_castle_captures_rook_0x88(chess_board_0x88, to);
       break;
 
     //CAPTURES_PROMO_ROOK
@@ -406,7 +408,7 @@ const do_moves = function (move_i, chess_board_0x88, packing_moves, undo) {
     case CAPTURES_PAWN_BISHOP_PROMO_ROOK:
     //break;
     case CAPTURES_PAWN_KNIGHT_PROMO_ROOK:
-      make_promo_move_0x88(move_i, chess_board_0x88, packing_moves, ROOK);
+      make_promo_move_0x88(chess_board_0x88, from, to, ROOK);
       // разрешение взятия на проходе 1/0
       if (chess_board_0x88[IND_EN_PASSANT_YES] == 1) {
         chess_board_0x88[IND_EN_PASSANT_YES] = 0;
@@ -415,12 +417,12 @@ const do_moves = function (move_i, chess_board_0x88, packing_moves, undo) {
 
     // осбый случай. пешка съела ладью и превратилась. отменяем рокировку с этой ладьей         
     case CAPTURES_PAWN_ROOK_PROMO_ROOK:
-      make_promo_move_0x88(move_i, chess_board_0x88, packing_moves, ROOK);
+      make_promo_move_0x88(chess_board_0x88, from, to, ROOK);
       // разрешение взятия на проходе 1/0
       if (chess_board_0x88[IND_EN_PASSANT_YES] == 1) {
         chess_board_0x88[IND_EN_PASSANT_YES] = 0;
       }
-      stop_king_castle_captures_rook_0x88(move_i, chess_board_0x88, packing_moves);
+      stop_king_castle_captures_rook_0x88(chess_board_0x88, to);
       break;
 
     //CAPTURES_PROMO_BISHOP
@@ -429,7 +431,7 @@ const do_moves = function (move_i, chess_board_0x88, packing_moves, undo) {
     case CAPTURES_PAWN_BISHOP_PROMO_BISHOP:
     //break;
     case CAPTURES_PAWN_KNIGHT_PROMO_BISHOP:
-      make_promo_move_0x88(move_i, chess_board_0x88, packing_moves, BISHOP);
+      make_promo_move_0x88(chess_board_0x88, from, to, BISHOP);
       // разрешение взятия на проходе 1/0
       if (chess_board_0x88[IND_EN_PASSANT_YES] == 1) {
         chess_board_0x88[IND_EN_PASSANT_YES] = 0;
@@ -438,12 +440,12 @@ const do_moves = function (move_i, chess_board_0x88, packing_moves, undo) {
 
     // осбый случай. пешка съела ладью и превратилась. отменяем рокировку с этой ладьей.         
     case CAPTURES_PAWN_ROOK_PROMO_BISHOP:
-      make_promo_move_0x88(move_i, chess_board_0x88, packing_moves, BISHOP);
+      make_promo_move_0x88(chess_board_0x88, from, to, BISHOP);
       // разрешение взятия на проходе 1/0
       if (chess_board_0x88[IND_EN_PASSANT_YES] == 1) {
         chess_board_0x88[IND_EN_PASSANT_YES] = 0;
       }
-      stop_king_castle_captures_rook_0x88(move_i, chess_board_0x88, packing_moves);
+      stop_king_castle_captures_rook_0x88(chess_board_0x88, to);
       break;
 
     // CAPTURES_PROMO_KNIGHT
@@ -452,7 +454,7 @@ const do_moves = function (move_i, chess_board_0x88, packing_moves, undo) {
     case CAPTURES_PAWN_BISHOP_PROMO_KNIGHT:
     //break;
     case CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT:
-      make_promo_move_0x88(move_i, chess_board_0x88, packing_moves, KNIGHT);
+      make_promo_move_0x88(chess_board_0x88, from, to, KNIGHT);
       // разрешение взятия на проходе 1/0
       if (chess_board_0x88[IND_EN_PASSANT_YES] == 1) {
         chess_board_0x88[IND_EN_PASSANT_YES] = 0;
@@ -461,12 +463,12 @@ const do_moves = function (move_i, chess_board_0x88, packing_moves, undo) {
 
     // осбый случай. пешка съела ладью и превратилась. отменяем рокировку с этой ладьей.        
     case CAPTURES_PAWN_ROOK_PROMO_KNIGHT:
-      make_promo_move_0x88(move_i, chess_board_0x88, packing_moves, KNIGHT);
+      make_promo_move_0x88(chess_board_0x88, from, to, KNIGHT);
       // обнуляем взятие на проходе. 
       if (chess_board_0x88[IND_EN_PASSANT_YES] == 1) {
         chess_board_0x88[IND_EN_PASSANT_YES] = 0;
       }
-      stop_king_castle_captures_rook_0x88(move_i, chess_board_0x88, packing_moves);
+      stop_king_castle_captures_rook_0x88(chess_board_0x88, to);
       break;
 
 
@@ -480,9 +482,9 @@ const do_moves = function (move_i, chess_board_0x88, packing_moves, undo) {
 
     let from_king = 0;
 
-    let piece_color_king = packing_moves[IND_PIESE_COLOR];
+    let piece_color_king = piece_color;
 
-    if (packing_moves[IND_PIESE_COLOR] == 1) {
+    if (piece_color == 1) {
       from_king = chess_board_0x88[IND_KING_FROM_WHITE];
     } else {
       from_king = chess_board_0x88[IND_KING_FROM_BLACK];
@@ -504,7 +506,7 @@ const do_moves = function (move_i, chess_board_0x88, packing_moves, undo) {
     //   chess_board_0x88.test_print_0x88();
     // }
 
-    if (from_king != searching_king(chess_board_0x88, piece_color_king)) console.log("from_king  Ошибка положения короля!!! " + from_king);;
+    //if (from_king != searching_king(chess_board_0x88, piece_color_king)) console.log("from_king  Ошибка положения короля!!! " + from_king);;
 
     if (check_detected(from_king, piece_color_king, chess_board_0x88) != 0) {
 
@@ -536,26 +538,26 @@ const do_moves = function (move_i, chess_board_0x88, packing_moves, undo) {
 
 // рисуем фигуру на новом месте и стираем на старом. это и просто ход и взятие. 
 /**
- * @param {number} move_i
  * @param {Uint8Array} chess_board_0x88
- * @param {Uint32Array} packing_moves
+ * @param {number} from
+ * @param {number} to 
  * @returns {void}
  */
-const make_simple_move_0x88 = function (move_i, chess_board_0x88, packing_moves) {
+const make_simple_move_0x88 = function (chess_board_0x88, from, to) {
 
   // записываем имя фигуры на новом месте
-  chess_board_0x88[get_to(move_i, packing_moves)] =
-    chess_board_0x88[get_from(move_i, packing_moves)];
+  chess_board_0x88[to] =
+    chess_board_0x88[from];
 
   // записываем цвет фигуры на новом месте 
-  chess_board_0x88[get_to(move_i, packing_moves) + SHIFT_COLOR] =
-    chess_board_0x88[get_from(move_i, packing_moves) + SHIFT_COLOR];
+  chess_board_0x88[to + SHIFT_COLOR] =
+    chess_board_0x88[from + SHIFT_COLOR];
 
   // стираем имя фигуры на старом месте
-  chess_board_0x88[get_from(move_i, packing_moves)] = PIECE_NO;// 0
+  chess_board_0x88[from] = PIECE_NO;// 0
 
   // стираем цвет фигуры на старом месте 
-  chess_board_0x88[get_from(move_i, packing_moves) + SHIFT_COLOR] = BLACK;// 0
+  chess_board_0x88[from + SHIFT_COLOR] = BLACK;// 0
 
   // цвет хода 0 - черные 1 - белые
   chess_board_0x88[SIDE_TO_MOVE] = 1 - chess_board_0x88[SIDE_TO_MOVE];
@@ -564,16 +566,15 @@ const make_simple_move_0x88 = function (move_i, chess_board_0x88, packing_moves)
 
 // если берется ладья на исходном месте то отменяем флаг возможности связанной с ней рокировки
 /**
- * @param {number} move_i
  * @param {Uint8Array} chess_board_0x88
- * @param {Uint32Array} packing_moves
+ * @param {number} to 
  * @returns {void}
  */
-const stop_king_castle_captures_rook_0x88 = function (move_i, chess_board_0x88, packing_moves) {
+const stop_king_castle_captures_rook_0x88 = function (chess_board_0x88, to) {
 
   if (chess_board_0x88[IND_CASTLING_K] == 1) {
     // если ходит фигура с н1 то это белая ладья. отменяем рокировку в короткую сторону для белых
-    if (get_to(move_i, packing_moves) == H1) {
+    if (to == H1) {
       // рокировка белых в короткую сторону  1/0
       chess_board_0x88[IND_CASTLING_K] = 0;
       // Q, q, K, k,
@@ -582,7 +583,7 @@ const stop_king_castle_captures_rook_0x88 = function (move_i, chess_board_0x88, 
 
   if (chess_board_0x88[IND_CASTLING_Q] == 1) {
     // если ходит фигура с a1 то это белая ладья. отменяем рокировку в длинную сторону для белых
-    if (get_to(move_i, packing_moves) == A1) {
+    if (to == A1) {
       // рокировка белых в короткую сторону  1/0
       chess_board_0x88[IND_CASTLING_Q] = 0;
       // Q, q, K, k,
@@ -591,7 +592,7 @@ const stop_king_castle_captures_rook_0x88 = function (move_i, chess_board_0x88, 
 
   if (chess_board_0x88[IND_CASTLING_k] == 1) {
     // если ходит фигура с н8 то это черная ладья. отменяем рокировку в короткую сторону для черных
-    if (get_to(move_i, packing_moves) == H8) {
+    if (to == H8) {
       // рокировка белых в короткую сторону  1/0
       chess_board_0x88[IND_CASTLING_k] = 0;
       // Q, q, K, k,        
@@ -600,7 +601,7 @@ const stop_king_castle_captures_rook_0x88 = function (move_i, chess_board_0x88, 
 
   if (chess_board_0x88[IND_CASTLING_q] == 1) {
     // если ходит фигура с a8 то это черная ладья. отменяем рокировку в длинную сторону для черных
-    if (get_to(move_i, packing_moves) == A8) {
+    if (to == A8) {
       // рокировка белых в короткую сторону  1/0
       chess_board_0x88[IND_CASTLING_q] = 0;
       // Q, q, K, k,        
@@ -610,16 +611,15 @@ const stop_king_castle_captures_rook_0x88 = function (move_i, chess_board_0x88, 
 
 // отмена флага возможности рокировок из за хода ладьи
 /**
- * @param {number} move_i
  * @param {Uint8Array} chess_board_0x88
- * @param {Uint32Array} packing_moves
+ * @param {number} from
  * @returns {void}
  */
-const stop_king_castle_move_rook_0x88 = function (move_i, chess_board_0x88, packing_moves) {
+const stop_king_castle_move_rook_0x88 = function (chess_board_0x88, from) {
 
   if (chess_board_0x88[IND_CASTLING_K] == 1) {
     // если ходит фигура с н1 то это белая ладья. отменяем рокировку в короткую сторону для белых
-    if (get_from(move_i, packing_moves) == H1) {
+    if (from == H1) {
       // рокировка белых в короткую сторону  1/0
       chess_board_0x88[IND_CASTLING_K] = 0;
       // Q, q, K, k,
@@ -628,7 +628,7 @@ const stop_king_castle_move_rook_0x88 = function (move_i, chess_board_0x88, pack
 
   if (chess_board_0x88[IND_CASTLING_Q] == 1) {
     // если ходит фигура с a1 то это белая ладья. отменяем рокировку в длинную сторону для белых
-    if (get_from(move_i, packing_moves) == A1) {
+    if (from == A1) {
       // рокировка белых в короткую сторону  1/0
       chess_board_0x88[IND_CASTLING_Q] = 0;
       // Q, q, K, k,
@@ -637,7 +637,7 @@ const stop_king_castle_move_rook_0x88 = function (move_i, chess_board_0x88, pack
 
   if (chess_board_0x88[IND_CASTLING_k] == 1) {
     // если ходит фигура с н8 то это черная ладья. отменяем рокировку в короткую сторону для черных
-    if (get_from(move_i, packing_moves) == H8) {
+    if (from == H8) {
       // рокировка белых в короткую сторону  1/0
       chess_board_0x88[IND_CASTLING_k] = 0;
       // Q, q, K, k,
@@ -646,7 +646,7 @@ const stop_king_castle_move_rook_0x88 = function (move_i, chess_board_0x88, pack
 
   if (chess_board_0x88[IND_CASTLING_q] == 1) {
     // если ходит фигура с a8 то это черная ладья. отменяем рокировку в длинную сторону для черных
-    if (get_from(move_i, packing_moves) == A8) {
+    if (from == A8) {
       // рокировка белых в короткую сторону  1/0
       chess_board_0x88[IND_CASTLING_q] = 0;
       // Q, q, K, k,
@@ -656,16 +656,15 @@ const stop_king_castle_move_rook_0x88 = function (move_i, chess_board_0x88, pack
 
 // отмена флагов возможности рокировок из за хода короля
 /**
- * @param {number} move_i
  * @param {Uint8Array} chess_board_0x88
- * @param {Uint32Array} packing_moves
+ * @param {number} from
  * @returns {void}
  */
-const stop_king_castle_move_king_0x88 = function (move_i, chess_board_0x88, packing_moves) {
+const stop_king_castle_move_king_0x88 = function (chess_board_0x88, from) {
 
   if (chess_board_0x88[IND_CASTLING_K] == 1) {
     // если ходит фигура с e1 то это белый король. отменяем все рокировки для белых
-    if (get_from(move_i, packing_moves) == E1) {
+    if (from == E1) {
       chess_board_0x88[IND_CASTLING_K] = 0;
       // Q, q, K, k,
     }
@@ -673,7 +672,7 @@ const stop_king_castle_move_king_0x88 = function (move_i, chess_board_0x88, pack
 
   if (chess_board_0x88[IND_CASTLING_Q] == 1) {
     // если ходит фигура с e1 то это белый король. отменяем все рокировки для белых
-    if (get_from(move_i, packing_moves) == E1) {
+    if (from == E1) {
       chess_board_0x88[IND_CASTLING_Q] = 0;
       // Q, q, K, k,
     }
@@ -681,7 +680,7 @@ const stop_king_castle_move_king_0x88 = function (move_i, chess_board_0x88, pack
 
   if (chess_board_0x88[IND_CASTLING_k] == 1) {
     // если ходит фигура с e8 то это черный король. отменяем все рокировки для черных
-    if (get_from(move_i, packing_moves) == E8) {
+    if (from == E8) {
       chess_board_0x88[IND_CASTLING_k] = 0;
       // Q, q, K, k,
     }
@@ -689,7 +688,7 @@ const stop_king_castle_move_king_0x88 = function (move_i, chess_board_0x88, pack
 
   if (chess_board_0x88[IND_CASTLING_q] == 1) {
     // если ходит фигура с e8 то это черный король. отменяем все рокировки для черных
-    if (get_from(move_i, packing_moves) == E8) {
+    if (from == E8) {
       chess_board_0x88[IND_CASTLING_q] = 0;
       // Q, q, K, k,
     }
@@ -698,16 +697,17 @@ const stop_king_castle_move_king_0x88 = function (move_i, chess_board_0x88, pack
 
 // короткая рокировка
 /**
- * @param {number} move_i
  * @param {Uint8Array} chess_board_0x88
- * @param {Uint32Array} packing_moves
+ * @param {number} from
+ * @param {number} to
+ * @param {number} piece_color  
  * @returns {number}
  */
-const make_king_castle_move_0x88 = function (move_i, chess_board_0x88, packing_moves) {
+const make_king_castle_move_0x88 = function (chess_board_0x88, from, to, piece_color) {
 
   let is_moove_legal = 1;
 
-  let piece_color_sq = chess_board_0x88[get_from(move_i, packing_moves) + SHIFT_COLOR];
+  let piece_color_sq = chess_board_0x88[from + SHIFT_COLOR];
 
   // проверяем не под шахом ли поля
   if (piece_color_sq == 1) {
@@ -724,24 +724,24 @@ const make_king_castle_move_0x88 = function (move_i, chess_board_0x88, packing_m
 
     // перемещаем короля. его ход прописан в списке ходов
     // записываем имя фигуры на новом месте
-    chess_board_0x88[get_to(move_i, packing_moves)] =
-      chess_board_0x88[get_from(move_i, packing_moves)];
+    chess_board_0x88[to] =
+      chess_board_0x88[from];
 
     // записываем цвет фигуры на новом месте 
-    chess_board_0x88[get_to(move_i, packing_moves) + SHIFT_COLOR] =
-      chess_board_0x88[get_from(move_i, packing_moves) + SHIFT_COLOR];
+    chess_board_0x88[to + SHIFT_COLOR] =
+      chess_board_0x88[from + SHIFT_COLOR];
 
     // стираем имя фигуры на старом месте
-    chess_board_0x88[get_from(move_i, packing_moves)] = PIECE_NO;// 0
+    chess_board_0x88[from] = PIECE_NO;// 0
 
     // стираем цвет фигуры на старом месте 
-    chess_board_0x88[get_from(move_i, packing_moves) + SHIFT_COLOR] = BLACK;// 0
+    chess_board_0x88[from + SHIFT_COLOR] = BLACK;// 0
 
     // цвет хода 0 - черные 1 - белые
     chess_board_0x88[SIDE_TO_MOVE] = 1 - chess_board_0x88[SIDE_TO_MOVE];
 
 
-    if (packing_moves[IND_PIESE_COLOR] == 1) {
+    if (piece_color == 1) {
 
       // перемещаем ладью. ее ход не прописан в списке ходов
       // записываем имя фигуры на новом месте
@@ -800,17 +800,17 @@ const make_king_castle_move_0x88 = function (move_i, chess_board_0x88, packing_m
 
 // длинная рокировка
 /**
- * @param {number} move_i
  * @param {Uint8Array} chess_board_0x88
- * @param {Uint32Array} packing_moves
- * @param {void} move_generator_captures_0x88_O
+ * @param {number} from
+ * @param {number} to
+ * @param {number} piece_color  
  * @returns {number}
  */
-const make_king_queen_castle_move_0x88 = function (move_i, chess_board_0x88, packing_moves, move_generator_captures_0x88_O) {
+const make_king_queen_castle_move_0x88 = function (chess_board_0x88, from, to, piece_color) {
 
   let is_moove_legal = 1;
 
-  let piece_color_sq = chess_board_0x88[get_from(move_i, packing_moves) + SHIFT_COLOR];
+  let piece_color_sq = chess_board_0x88[from + SHIFT_COLOR];
 
   if (piece_color_sq == 1) {
     if (check_detected(E1, piece_color_sq, chess_board_0x88) != 0) is_moove_legal = 2;
@@ -828,23 +828,23 @@ const make_king_queen_castle_move_0x88 = function (move_i, chess_board_0x88, pac
 
     // перемещаем короля. его ход прописан в списке ходов
     // записываем имя фигуры на новом месте
-    chess_board_0x88[get_to(move_i, packing_moves)] =
-      chess_board_0x88[get_from(move_i, packing_moves)];
+    chess_board_0x88[to] =
+      chess_board_0x88[from];
 
     // записываем цвет фигуры на новом месте 
-    chess_board_0x88[get_to(move_i, packing_moves) + SHIFT_COLOR] =
-      chess_board_0x88[get_from(move_i, packing_moves) + SHIFT_COLOR];
+    chess_board_0x88[to + SHIFT_COLOR] =
+      chess_board_0x88[from + SHIFT_COLOR];
 
     // стираем имя фигуры на старом месте
-    chess_board_0x88[get_from(move_i, packing_moves)] = PIECE_NO;// 0
+    chess_board_0x88[from] = PIECE_NO;// 0
 
     // стираем цвет фигуры на старом месте 
-    chess_board_0x88[get_from(move_i, packing_moves) + SHIFT_COLOR] = BLACK;// 0
+    chess_board_0x88[from + SHIFT_COLOR] = BLACK;// 0
 
     // цвет хода 0 - черные 1 - белые
     chess_board_0x88[SIDE_TO_MOVE] = 1 - chess_board_0x88[SIDE_TO_MOVE];
 
-    if (packing_moves[IND_PIESE_COLOR] == 1) {
+    if (piece_color == 1) {
 
       // перемещаем ладью. ее ход не прописан в списке ходов
       // записываем имя фигуры на новом месте
@@ -903,39 +903,40 @@ const make_king_queen_castle_move_0x88 = function (move_i, chess_board_0x88, pac
 // остались пешки
 //  взятие на проходе
 /**
- * @param {number} move_i
  * @param {Uint8Array} chess_board_0x88
- * @param {Uint32Array} packing_moves
+ * @param {number} from
+ * @param {number} to
+ * @param {number} piece_color  
  * @returns {void}
  */
-const make_en_passant_move_0x88 = function (move_i, chess_board_0x88, packing_moves) {
+const make_en_passant_move_0x88 = function (chess_board_0x88, from, to, piece_color) {
 
   // записываем имя фигуры на новом месте
-  chess_board_0x88[get_to(move_i, packing_moves)] =
-    chess_board_0x88[get_from(move_i, packing_moves)];
+  chess_board_0x88[to] =
+    chess_board_0x88[from];
 
   // записываем цвет фигуры на новом месте 
-  chess_board_0x88[get_to(move_i, packing_moves) + SHIFT_COLOR] =
-    chess_board_0x88[get_from(move_i, packing_moves) + SHIFT_COLOR];
+  chess_board_0x88[to + SHIFT_COLOR] =
+    chess_board_0x88[from + SHIFT_COLOR];
 
   // стираем имя фигуры на старом месте
-  chess_board_0x88[get_from(move_i, packing_moves)] = PIECE_NO;// 0
+  chess_board_0x88[from] = PIECE_NO;// 0
 
   // стираем цвет фигуры на старом месте 
-  chess_board_0x88[get_from(move_i, packing_moves) + SHIFT_COLOR] = BLACK;// 0
+  chess_board_0x88[from + SHIFT_COLOR] = BLACK;// 0
 
   // цвет хода 0 - черные 1 - белые
   chess_board_0x88[SIDE_TO_MOVE] = 1 - chess_board_0x88[SIDE_TO_MOVE];
   //console.log("Make_move_0x88_C->make_en_passant_move_0x88-> piece_color " + packing_moves.piece_color);
-  //console.log("Make_move_0x88_C->make_en_passant_move_0x88-> get_to(move_i, packing_moves) " + get_to(move_i, packing_moves));
-  if (packing_moves[IND_PIESE_COLOR] == 1) {
+  //console.log("Make_move_0x88_C->make_en_passant_move_0x88-> to " + to);
+  if (piece_color == 1) {
     // стираем имя битой на проходе пешки
-    chess_board_0x88[get_to(move_i, packing_moves) + 16] = PIECE_NO;// 0
+    chess_board_0x88[to + 16] = PIECE_NO;// 0
     // стираем цвет битой на проходе пешки 
-    chess_board_0x88[get_to(move_i, packing_moves) + 16 + SHIFT_COLOR] = BLACK;// 0
+    chess_board_0x88[to + 16 + SHIFT_COLOR] = BLACK;// 0
   } else {
-    chess_board_0x88[get_to(move_i, packing_moves) - 16] = PIECE_NO;// 0
-    chess_board_0x88[get_to(move_i, packing_moves) - 16 + SHIFT_COLOR] = BLACK;// 0
+    chess_board_0x88[to - 16] = PIECE_NO;// 0
+    chess_board_0x88[to - 16 + SHIFT_COLOR] = BLACK;// 0
   }
 
   chess_board_0x88[IND_EN_PASSANT_YES] = 0;
@@ -943,26 +944,26 @@ const make_en_passant_move_0x88 = function (move_i, chess_board_0x88, packing_mo
 
 // ход пешки с превращением
 /**
- * @param {number} move_i
  * @param {Uint8Array} chess_board_0x88
- * @param {Uint32Array} packing_moves
- * @param {number} promo_piece 
+ * @param {number} from
+ * @param {number} to 
+ * @param {number} promo_piece  
  * @returns {void}
  */
-const make_promo_move_0x88 = function (move_i, chess_board_0x88, packing_moves, promo_piece) {
+const make_promo_move_0x88 = function (chess_board_0x88, from, to, promo_piece) {
 
   // записываем имя фигуры на новом месте
-  chess_board_0x88[get_to(move_i, packing_moves)] = promo_piece;
+  chess_board_0x88[to] = promo_piece;
 
   // записываем цвет фигуры на новом месте 
-  chess_board_0x88[get_to(move_i, packing_moves) + SHIFT_COLOR] =
-    chess_board_0x88[get_from(move_i, packing_moves) + SHIFT_COLOR];
+  chess_board_0x88[to + SHIFT_COLOR] =
+    chess_board_0x88[from + SHIFT_COLOR];
 
   // стираем имя фигуры на старом месте
-  chess_board_0x88[get_from(move_i, packing_moves)] = PIECE_NO;// 0
+  chess_board_0x88[from] = PIECE_NO;// 0
 
   // стираем цвет фигуры на старом месте 
-  chess_board_0x88[get_from(move_i, packing_moves) + SHIFT_COLOR] = BLACK;// 0
+  chess_board_0x88[from + SHIFT_COLOR] = BLACK;// 0
 
   // цвет хода 0 - черные 1 - белые
   chess_board_0x88[SIDE_TO_MOVE] = 1 - chess_board_0x88[SIDE_TO_MOVE];

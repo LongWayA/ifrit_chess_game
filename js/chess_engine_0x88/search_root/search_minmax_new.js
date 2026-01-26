@@ -22,23 +22,25 @@ import {
 import { do_moves } from "../move_generator/make_move_new.js";
 import { undo_moves } from "../move_generator/unmake_move_new.js";
 
-import {  set_undo, get_undo, UNDO_MAX } from "../move_generator/undo_new.js";
+import { set_undo, get_undo, UNDO_MAX } from "../move_generator/undo_new.js";
 
-import { clear_list, add_packing_move, get_type_move, get_from, get_to, get_name_capture_piece, set_color, set_number_captures_move,
-     sorting_list, test_compare_list_from, test_print_i_move_list, test_print_list, save_list_from, move_is_found, 
-     return_i_move, move_to_string_uci, return_type_captures_pawn_promo, return_type_simple_move, 
-     return_piece_name_captures_from_type_move, type_move_to_name_piese, type_move_to_name_piese_f, 
-     return_promo_piece_from_type_move,
-        LENGTH_LIST, IND_PIESE_COLOR, IND_NUMBER_CAPTURES_MOVE, IND_NUMBER_MOVE, 
-    IND_PROMO_QUEEN, IND_PROMO_ROOK, IND_PROMO_BISHOP, IND_PROMO_KNIGHT, MOVE_NO } from "../move_generator/move_list_new.js";
+import {
+  clear_list, add_packing_move, get_type_move, get_from, get_to, get_name_capture_piece, set_color, set_number_captures_move,
+  sorting_list, test_compare_list_from, test_print_i_move_list, test_print_list, save_list_from, move_is_found,
+  return_i_move, move_to_string_uci, return_type_captures_pawn_promo, return_type_simple_move,
+  return_piece_name_captures_from_type_move, type_move_to_name_piese, type_move_to_name_piese_f,
+  return_promo_piece_from_type_move,
+  LENGTH_LIST, IND_PIESE_COLOR, IND_NUMBER_CAPTURES_MOVE, IND_NUMBER_MOVE,
+  IND_PROMO_QUEEN, IND_PROMO_ROOK, IND_PROMO_BISHOP, IND_PROMO_KNIGHT, MOVE_NO
+} from "../move_generator/move_list_new.js";
 
 
 //import { Evaluate_0x88_C } from "./evaluate_0x88.js";
 
 import { PV_line_0x88_C } from "../move_generator/pv_line_new.js";
 
-import {generated_pseudo_legal_captures} from "../move_generator/move_generator_captures_new.js";
-import {generated_pseudo_legal_quiet_moves} from "../move_generator/move_generator_quiet_new.js";
+import { generated_pseudo_legal_captures } from "../move_generator/move_generator_captures_new.js";
+import { generated_pseudo_legal_quiet_moves } from "../move_generator/move_generator_quiet_new.js";
 
 //  const evaluate_0x88_O = new Evaluate_0x88_C();
 
@@ -65,6 +67,18 @@ const searching_minmax = function (pv_line_0x88_O, chess_board_0x88, depth, dept
   let score = 0;// текущая оценка позиции
   let found_score;// максимальная оценка позиции
 
+  let is_moove_legal = -1;
+
+  let packing_moves = new Uint32Array(LENGTH_LIST).fill(MOVE_NO);
+
+  let type_move;// тип хода
+  let from;
+  let to;
+  let name_capture_piece;
+  let piece_color;
+
+
+
   // test_print_piese_in_line_0x88(chess_board_0x88);
   // test_print_piese_0x88(chess_board_0x88);
   // test_print_piese_color_0x88(chess_board_0x88);
@@ -80,11 +94,6 @@ const searching_minmax = function (pv_line_0x88_O, chess_board_0x88, depth, dept
 
   } else {
     //console.log("Search_0x88_C->depth " + depth);
-    let is_moove_legal = -1;
-
-    let packing_moves = new Uint32Array(LENGTH_LIST).fill(MOVE_NO);
-
-
 
     if (chess_board_0x88[SIDE_TO_MOVE] == WHITE) {
       found_score = -BEST_VALUE_MOD;// максимальная оценка позиции
@@ -99,10 +108,16 @@ const searching_minmax = function (pv_line_0x88_O, chess_board_0x88, depth, dept
 
     for (let move_i = 0; move_i < packing_moves[IND_NUMBER_MOVE]; move_i++) {
 
-      is_moove_legal = do_moves(move_i, chess_board_0x88, packing_moves, undo);
+      type_move = get_type_move(move_i, packing_moves);// тип хода
+      from = get_from(move_i, packing_moves);
+      to = get_to(move_i, packing_moves);
+      name_capture_piece = get_name_capture_piece(move_i, packing_moves);
+      piece_color = packing_moves[IND_PIESE_COLOR];
+
+      is_moove_legal = do_moves(chess_board_0x88, undo, type_move, from, to, name_capture_piece, piece_color);
 
       if (is_moove_legal == 0) { // король под шахом. отменяем ход и пропускаем этот цикл
-        undo_moves(move_i, chess_board_0x88, packing_moves, undo);
+        undo_moves(chess_board_0x88, undo, type_move, from, to, name_capture_piece, piece_color);
         continue;
       } else if (is_moove_legal == 2) {// нелегальные рокировки не генерируются. просто пропускаем ход
         continue;
@@ -137,7 +152,7 @@ const searching_minmax = function (pv_line_0x88_O, chess_board_0x88, depth, dept
 
       }
 
-      undo_moves(move_i, chess_board_0x88, packing_moves, undo);
+      undo_moves(chess_board_0x88, undo, type_move, from, to, name_capture_piece, piece_color);
 
     }//for (let move_i = 0; move_i < move_list_0x88_O.number_move; move_i++) {
 
@@ -147,7 +162,7 @@ const searching_minmax = function (pv_line_0x88_O, chess_board_0x88, depth, dept
   return found_score;
 }//searching_minmax(pv_line_0x88_O, chess_board_0x88,
 
-export { searching_minmax, chess_board_0x88_end_original, node_mm};
+export { searching_minmax, chess_board_0x88_end_original, node_mm };
 
 /*
 int negaMax( int depth ) {
