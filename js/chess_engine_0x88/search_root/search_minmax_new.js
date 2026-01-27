@@ -77,12 +77,9 @@ const searching_minmax = function (pv_line_0x88_O, chess_board_0x88, depth, dept
   let name_capture_piece;
   let piece_color;
 
-
-
-  // test_print_piese_in_line_0x88(chess_board_0x88);
-  // test_print_piese_0x88(chess_board_0x88);
-  // test_print_piese_color_0x88(chess_board_0x88);
-  // test_print_any_0x88(chess_board_0x88);
+   //TEST
+   //test_print_piese_0x88(chess_board_0x88);
+   //test_print_any_0x88(chess_board_0x88);
 
   if (depth == 0) node_mm = 0;
 

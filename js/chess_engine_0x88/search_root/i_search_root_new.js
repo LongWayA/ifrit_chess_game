@@ -99,7 +99,7 @@ import { Timer_C } from "../../browser/timer.js";
     save_chess_board_0x88( chess_board_0x88_O_save_test, chess_board_0x88_O);
 
     console.log("start_search_minmax ");
-
+    console.log("=========================================================================");
     //
     let node = 0;
 
@@ -109,8 +109,7 @@ import { Timer_C } from "../../browser/timer.js";
 
     test_compare_chess_board_0x88( chess_board_0x88_O_save_test, chess_board_0x88_O);
 
-    //console.log("=========================================================================");
-    //console.log("Search_0x88_C->start_search 22222 =============================================");
+    
 
     //chess_board_0x88_O_save_test.test_compare_chess_board_0x88(chess_board_0x88_O);
     save_chess_board_0x88(chess_board_0x88_O_end, chess_board_0x88_end_original);

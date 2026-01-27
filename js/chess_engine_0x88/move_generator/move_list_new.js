@@ -10,8 +10,8 @@ import {
     x07_y07_to_0x88, s_0x88_to_x07, s_0x88_to_y07,
     test_print_any_0x88, test_print_piese_0x88, test_print_piese_color_0x88, test_print_piese_in_line_0x88, test_compare_chess_board_0x88,
     save_chess_board_0x88, set_board_from_fen_0x88, set_fen_from_0x88, searching_king, iniStartPositionForWhite,
-    IND_MAX, SIDE_TO_MOVE, SHIFT_COLOR,
-    BLACK, WHITE, PIECE_NO, PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING, LET_COOR,
+    IND_MAX, SIDE_TO_MOVE, LET_COOR,
+    BLACK, WHITE, PIECE_NO, W_PAWN, W_KNIGHT, W_BISHOP, W_ROOK, W_QUEEN, W_KING, B_PAWN, B_KNIGHT, B_BISHOP, B_ROOK, B_QUEEN, B_KING,
     IND_CASTLING_Q, IND_CASTLING_q, IND_CASTLING_K, IND_CASTLING_k,
     IND_EN_PASSANT_YES, IND_EN_PASSANT_TARGET_SQUARE, IND_KING_FROM_WHITE, IND_KING_FROM_BLACK
 } from "./chess_board_new.js";
@@ -714,26 +714,28 @@ const return_type_captures_pawn_promo = function (piece_name_captures) {
 
     let out = [0, 0, 0, 0];
 
-    if (piece_name_captures == QUEEN) {
+    if ((piece_name_captures == W_QUEEN) || (piece_name_captures == B_QUEEN)) {
         out[IND_PROMO_QUEEN] = CAPTURES_PAWN_QUEEN_PROMO_QUEEN;
         out[IND_PROMO_ROOK] = CAPTURES_PAWN_QUEEN_PROMO_ROOK;
         out[IND_PROMO_BISHOP] = CAPTURES_PAWN_QUEEN_PROMO_BISHOP;
         out[IND_PROMO_KNIGHT] = CAPTURES_PAWN_QUEEN_PROMO_KNIGHT;
     };
 
-    if (piece_name_captures == ROOK) {
+    if ((piece_name_captures == W_ROOK) || (piece_name_captures == B_ROOK)) {
         out[IND_PROMO_QUEEN] = CAPTURES_PAWN_ROOK_PROMO_QUEEN;
         out[IND_PROMO_ROOK] = CAPTURES_PAWN_ROOK_PROMO_ROOK;
         out[IND_PROMO_BISHOP] = CAPTURES_PAWN_ROOK_PROMO_BISHOP;
         out[IND_PROMO_KNIGHT] = CAPTURES_PAWN_ROOK_PROMO_KNIGHT;
     };
-    if (piece_name_captures == BISHOP) {
+
+    if ((piece_name_captures == W_BISHOP) || (piece_name_captures == B_BISHOP)) {
         out[IND_PROMO_QUEEN] = CAPTURES_PAWN_BISHOP_PROMO_QUEEN;
         out[IND_PROMO_ROOK] = CAPTURES_PAWN_BISHOP_PROMO_ROOK;
         out[IND_PROMO_BISHOP] = CAPTURES_PAWN_BISHOP_PROMO_BISHOP;
         out[IND_PROMO_KNIGHT] = CAPTURES_PAWN_BISHOP_PROMO_KNIGHT;
     };
-    if (piece_name_captures == KNIGHT) {
+
+    if ((piece_name_captures == W_KNIGHT) || (piece_name_captures == B_KNIGHT)) {
         out[IND_PROMO_QUEEN] = CAPTURES_PAWN_KNIGHT_PROMO_QUEEN;
         out[IND_PROMO_ROOK] = CAPTURES_PAWN_KNIGHT_PROMO_ROOK;
         out[IND_PROMO_BISHOP] = CAPTURES_PAWN_KNIGHT_PROMO_BISHOP;
@@ -754,55 +756,107 @@ const return_type_captures_pawn_promo = function (piece_name_captures) {
 */
 const return_type_simple_move = function (piece_name, piece_name_captures) {
     switch (piece_name) {
-        case KING://
+        case W_KING://
             if (piece_name_captures == PIECE_NO) return MOVE_KING;
-            if (piece_name_captures == QUEEN) return CAPTURES_KING_QUEEN;
-            if (piece_name_captures == ROOK) return CAPTURES_KING_ROOK;
-            if (piece_name_captures == BISHOP) return CAPTURES_KING_BISHOP;
-            if (piece_name_captures == KNIGHT) return CAPTURES_KING_KNIGHT;
-            if (piece_name_captures == PAWN) return CAPTURES_KING_PAWN;
+            if (piece_name_captures == B_QUEEN) return CAPTURES_KING_QUEEN;
+            if (piece_name_captures == B_ROOK) return CAPTURES_KING_ROOK;
+            if (piece_name_captures == B_BISHOP) return CAPTURES_KING_BISHOP;
+            if (piece_name_captures == B_KNIGHT) return CAPTURES_KING_KNIGHT;
+            if (piece_name_captures == B_PAWN) return CAPTURES_KING_PAWN;
             break;
-        case QUEEN://
-            if (piece_name_captures == PIECE_NO) return MOVE_QUEEN;
-            if (piece_name_captures == QUEEN) return CAPTURES_QUEEN_QUEEN;
-            if (piece_name_captures == ROOK) return CAPTURES_QUEEN_ROOK;
-            if (piece_name_captures == BISHOP) return CAPTURES_QUEEN_BISHOP;
-            if (piece_name_captures == KNIGHT) return CAPTURES_QUEEN_KNIGHT;
-            if (piece_name_captures == PAWN) return CAPTURES_QUEEN_PAWN;
-            break;
-        case ROOK://
-            if (piece_name_captures == PIECE_NO) return MOVE_ROOK;
-            if (piece_name_captures == QUEEN) return CAPTURES_ROOK_QUEEN;
-            if (piece_name_captures == ROOK) return CAPTURES_ROOK_ROOK;
-            if (piece_name_captures == BISHOP) return CAPTURES_ROOK_BISHOP;
-            if (piece_name_captures == KNIGHT) return CAPTURES_ROOK_KNIGHT;
-            if (piece_name_captures == PAWN) return CAPTURES_ROOK_PAWN;
-            break;
-        case BISHOP://
-            if (piece_name_captures == PIECE_NO) return MOVE_BISHOP;
-            if (piece_name_captures == QUEEN) return CAPTURES_BISHOP_QUEEN;
-            if (piece_name_captures == ROOK) return CAPTURES_BISHOP_ROOK;
-            if (piece_name_captures == BISHOP) return CAPTURES_BISHOP_BISHOP;
-            if (piece_name_captures == KNIGHT) return CAPTURES_BISHOP_KNIGHT;
-            if (piece_name_captures == PAWN) return CAPTURES_BISHOP_PAWN;
-            break;
-        case KNIGHT://
-            if (piece_name_captures == PIECE_NO) return MOVE_KNIGHT;
-            if (piece_name_captures == QUEEN) return CAPTURES_KNIGHT_QUEEN;
-            if (piece_name_captures == ROOK) return CAPTURES_KNIGHT_ROOK;
-            if (piece_name_captures == BISHOP) return CAPTURES_KNIGHT_BISHOP;
-            if (piece_name_captures == KNIGHT) return CAPTURES_KNIGHT_KNIGHT;
-            if (piece_name_captures == PAWN) return CAPTURES_KNIGHT_PAWN;
-            break;
-        case PAWN://
-            if (piece_name_captures == PIECE_NO) return MOVE_PAWN;
-            if (piece_name_captures == QUEEN) return CAPTURES_PAWN_QUEEN;
-            if (piece_name_captures == ROOK) return CAPTURES_PAWN_ROOK;
-            if (piece_name_captures == BISHOP) return CAPTURES_PAWN_BISHOP;
-            if (piece_name_captures == KNIGHT) return CAPTURES_PAWN_KNIGHT;
-            if (piece_name_captures == PAWN) return CAPTURES_PAWN_PAWN;
+        case B_KING://
+            if (piece_name_captures == PIECE_NO) return MOVE_KING;
+            if (piece_name_captures == W_QUEEN) return CAPTURES_KING_QUEEN;
+            if (piece_name_captures == W_ROOK) return CAPTURES_KING_ROOK;
+            if (piece_name_captures == W_BISHOP) return CAPTURES_KING_BISHOP;
+            if (piece_name_captures == W_KNIGHT) return CAPTURES_KING_KNIGHT;
+            if (piece_name_captures == W_PAWN) return CAPTURES_KING_PAWN;
             break;
 
+        case W_QUEEN://
+            if (piece_name_captures == PIECE_NO) return MOVE_QUEEN;
+            if (piece_name_captures == B_QUEEN) return CAPTURES_QUEEN_QUEEN;
+            if (piece_name_captures == B_ROOK) return CAPTURES_QUEEN_ROOK;
+            if (piece_name_captures == B_BISHOP) return CAPTURES_QUEEN_BISHOP;
+            if (piece_name_captures == B_KNIGHT) return CAPTURES_QUEEN_KNIGHT;
+            if (piece_name_captures == B_PAWN) return CAPTURES_QUEEN_PAWN;
+            break;
+        case B_QUEEN://
+            if (piece_name_captures == PIECE_NO) return MOVE_QUEEN;
+            if (piece_name_captures == W_QUEEN) return CAPTURES_QUEEN_QUEEN;
+            if (piece_name_captures == W_ROOK) return CAPTURES_QUEEN_ROOK;
+            if (piece_name_captures == W_BISHOP) return CAPTURES_QUEEN_BISHOP;
+            if (piece_name_captures == W_KNIGHT) return CAPTURES_QUEEN_KNIGHT;
+            if (piece_name_captures == W_PAWN) return CAPTURES_QUEEN_PAWN;
+            break;
+
+        case W_ROOK://
+            if (piece_name_captures == PIECE_NO) return MOVE_ROOK;
+            if (piece_name_captures == B_QUEEN) return CAPTURES_ROOK_QUEEN;
+            if (piece_name_captures == B_ROOK) return CAPTURES_ROOK_ROOK;
+            if (piece_name_captures == B_BISHOP) return CAPTURES_ROOK_BISHOP;
+            if (piece_name_captures == B_KNIGHT) return CAPTURES_ROOK_KNIGHT;
+            if (piece_name_captures == B_PAWN) return CAPTURES_ROOK_PAWN;
+            break;
+        case B_ROOK://
+            if (piece_name_captures == PIECE_NO) return MOVE_ROOK;
+            if (piece_name_captures == W_QUEEN) return CAPTURES_ROOK_QUEEN;
+            if (piece_name_captures == W_ROOK) return CAPTURES_ROOK_ROOK;
+            if (piece_name_captures == W_BISHOP) return CAPTURES_ROOK_BISHOP;
+            if (piece_name_captures == W_KNIGHT) return CAPTURES_ROOK_KNIGHT;
+            if (piece_name_captures == W_PAWN) return CAPTURES_ROOK_PAWN;
+            break;
+
+        case W_BISHOP://
+            if (piece_name_captures == PIECE_NO) return MOVE_BISHOP;
+            if (piece_name_captures == B_QUEEN) return CAPTURES_BISHOP_QUEEN;
+            if (piece_name_captures == B_ROOK) return CAPTURES_BISHOP_ROOK;
+            if (piece_name_captures == B_BISHOP) return CAPTURES_BISHOP_BISHOP;
+            if (piece_name_captures == B_KNIGHT) return CAPTURES_BISHOP_KNIGHT;
+            if (piece_name_captures == B_PAWN) return CAPTURES_BISHOP_PAWN;
+            break;
+        case B_BISHOP://
+            if (piece_name_captures == PIECE_NO) return MOVE_BISHOP;
+            if (piece_name_captures == W_QUEEN) return CAPTURES_BISHOP_QUEEN;
+            if (piece_name_captures == W_ROOK) return CAPTURES_BISHOP_ROOK;
+            if (piece_name_captures == W_BISHOP) return CAPTURES_BISHOP_BISHOP;
+            if (piece_name_captures == W_KNIGHT) return CAPTURES_BISHOP_KNIGHT;
+            if (piece_name_captures == W_PAWN) return CAPTURES_BISHOP_PAWN;
+            break;
+
+        case W_KNIGHT://
+            if (piece_name_captures == PIECE_NO) return MOVE_KNIGHT;
+            if (piece_name_captures == B_QUEEN) return CAPTURES_KNIGHT_QUEEN;
+            if (piece_name_captures == B_ROOK) return CAPTURES_KNIGHT_ROOK;
+            if (piece_name_captures == B_BISHOP) return CAPTURES_KNIGHT_BISHOP;
+            if (piece_name_captures == B_KNIGHT) return CAPTURES_KNIGHT_KNIGHT;
+            if (piece_name_captures == B_PAWN) return CAPTURES_KNIGHT_PAWN;
+            break;
+        case B_KNIGHT://
+            if (piece_name_captures == PIECE_NO) return MOVE_KNIGHT;
+            if (piece_name_captures == W_QUEEN) return CAPTURES_KNIGHT_QUEEN;
+            if (piece_name_captures == W_ROOK) return CAPTURES_KNIGHT_ROOK;
+            if (piece_name_captures == W_BISHOP) return CAPTURES_KNIGHT_BISHOP;
+            if (piece_name_captures == W_KNIGHT) return CAPTURES_KNIGHT_KNIGHT;
+            if (piece_name_captures == W_PAWN) return CAPTURES_KNIGHT_PAWN;
+            break;
+
+        case W_PAWN://
+            if (piece_name_captures == PIECE_NO) return MOVE_PAWN;
+            if (piece_name_captures == B_QUEEN) return CAPTURES_PAWN_QUEEN;
+            if (piece_name_captures == B_ROOK) return CAPTURES_PAWN_ROOK;
+            if (piece_name_captures == B_BISHOP) return CAPTURES_PAWN_BISHOP;
+            if (piece_name_captures == B_KNIGHT) return CAPTURES_PAWN_KNIGHT;
+            if (piece_name_captures == B_PAWN) return CAPTURES_PAWN_PAWN;
+            break;
+        case B_PAWN://
+            if (piece_name_captures == PIECE_NO) return MOVE_PAWN;
+            if (piece_name_captures == W_QUEEN) return CAPTURES_PAWN_QUEEN;
+            if (piece_name_captures == W_ROOK) return CAPTURES_PAWN_ROOK;
+            if (piece_name_captures == W_BISHOP) return CAPTURES_PAWN_BISHOP;
+            if (piece_name_captures == W_KNIGHT) return CAPTURES_PAWN_KNIGHT;
+            if (piece_name_captures == W_PAWN) return CAPTURES_PAWN_PAWN;
+            break;
         default://
         // console.log("default");
     }
@@ -814,57 +868,110 @@ const return_type_simple_move = function (piece_name, piece_name_captures) {
 // например CAPTURES_KING_QUEEN -> QUEEN  
 /**
 * @param {number} type_move
+* @param {number} piece_color
 * @returns {number}
 */
-const return_piece_name_captures_from_type_move = function (type_move) {
+const return_piece_name_captures_from_type_move = function (type_move, piece_color) {
 
-    //KING
-    if (type_move == MOVE_KING) return PIECE_NO;
-    if (type_move == CAPTURES_KING_QUEEN) return QUEEN;
-    if (type_move == CAPTURES_KING_ROOK) return ROOK;
-    if (type_move == CAPTURES_KING_BISHOP) return BISHOP;
-    if (type_move == CAPTURES_KING_KNIGHT) return KNIGHT;
-    if (type_move == CAPTURES_KING_PAWN) return PAWN;
+    if (piece_color == WHITE) {
+        //KING
+        if (type_move == MOVE_KING) return PIECE_NO;
+        if (type_move == CAPTURES_KING_QUEEN) return W_QUEEN;
+        if (type_move == CAPTURES_KING_ROOK) return W_ROOK;
+        if (type_move == CAPTURES_KING_BISHOP) return W_BISHOP;
+        if (type_move == CAPTURES_KING_KNIGHT) return W_KNIGHT;
+        if (type_move == CAPTURES_KING_PAWN) return W_PAWN;
 
-    //QUEEN
-    if (type_move == MOVE_QUEEN) return PIECE_NO;
-    if (type_move == CAPTURES_QUEEN_QUEEN) return QUEEN;
-    if (type_move == CAPTURES_QUEEN_ROOK) return ROOK;
-    if (type_move == CAPTURES_QUEEN_BISHOP) return BISHOP;
-    if (type_move == CAPTURES_QUEEN_KNIGHT) return KNIGHT;
-    if (type_move == CAPTURES_QUEEN_PAWN) return PAWN;
+        //QUEEN
+        if (type_move == MOVE_QUEEN) return PIECE_NO;
+        if (type_move == CAPTURES_QUEEN_QUEEN) return W_QUEEN;
+        if (type_move == CAPTURES_QUEEN_ROOK) return W_ROOK;
+        if (type_move == CAPTURES_QUEEN_BISHOP) return W_BISHOP;
+        if (type_move == CAPTURES_QUEEN_KNIGHT) return W_KNIGHT;
+        if (type_move == CAPTURES_QUEEN_PAWN) return W_PAWN;
 
-    //ROOK
-    if (type_move == MOVE_ROOK) return PIECE_NO;
-    if (type_move == CAPTURES_ROOK_QUEEN) return QUEEN;
-    if (type_move == CAPTURES_ROOK_ROOK) return ROOK;
-    if (type_move == CAPTURES_ROOK_BISHOP) return BISHOP;
-    if (type_move == CAPTURES_ROOK_KNIGHT) return KNIGHT;
-    if (type_move == CAPTURES_ROOK_PAWN) return PAWN;
+        //ROOK
+        if (type_move == MOVE_ROOK) return PIECE_NO;
+        if (type_move == CAPTURES_ROOK_QUEEN) return W_QUEEN;
+        if (type_move == CAPTURES_ROOK_ROOK) return W_ROOK;
+        if (type_move == CAPTURES_ROOK_BISHOP) return W_BISHOP;
+        if (type_move == CAPTURES_ROOK_KNIGHT) return W_KNIGHT;
+        if (type_move == CAPTURES_ROOK_PAWN) return W_PAWN;
 
-    //BISHOP
-    if (type_move == MOVE_BISHOP) return PIECE_NO;
-    if (type_move == CAPTURES_BISHOP_QUEEN) return QUEEN;
-    if (type_move == CAPTURES_BISHOP_ROOK) return ROOK;
-    if (type_move == CAPTURES_BISHOP_BISHOP) return BISHOP;
-    if (type_move == CAPTURES_BISHOP_KNIGHT) return KNIGHT;
-    if (type_move == CAPTURES_BISHOP_PAWN) return PAWN;
+        //BISHOP
+        if (type_move == MOVE_BISHOP) return PIECE_NO;
+        if (type_move == CAPTURES_BISHOP_QUEEN) return W_QUEEN;
+        if (type_move == CAPTURES_BISHOP_ROOK) return W_ROOK;
+        if (type_move == CAPTURES_BISHOP_BISHOP) return W_BISHOP;
+        if (type_move == CAPTURES_BISHOP_KNIGHT) return W_KNIGHT;
+        if (type_move == CAPTURES_BISHOP_PAWN) return W_PAWN;
 
-    //KNIGHT
-    if (type_move == MOVE_KNIGHT) return PIECE_NO;
-    if (type_move == CAPTURES_KNIGHT_QUEEN) return QUEEN;
-    if (type_move == CAPTURES_KNIGHT_ROOK) return ROOK;
-    if (type_move == CAPTURES_KNIGHT_BISHOP) return BISHOP;
-    if (type_move == CAPTURES_KNIGHT_KNIGHT) return KNIGHT;
-    if (type_move == CAPTURES_KNIGHT_PAWN) return PAWN;
+        //KNIGHT
+        if (type_move == MOVE_KNIGHT) return PIECE_NO;
+        if (type_move == CAPTURES_KNIGHT_QUEEN) return W_QUEEN;
+        if (type_move == CAPTURES_KNIGHT_ROOK) return W_ROOK;
+        if (type_move == CAPTURES_KNIGHT_BISHOP) return W_BISHOP;
+        if (type_move == CAPTURES_KNIGHT_KNIGHT) return W_KNIGHT;
+        if (type_move == CAPTURES_KNIGHT_PAWN) return W_PAWN;
 
-    //PAWN
-    if (type_move == MOVE_PAWN) return PIECE_NO;
-    if (type_move == CAPTURES_PAWN_QUEEN) return QUEEN;
-    if (type_move == CAPTURES_PAWN_ROOK) return ROOK;
-    if (type_move == CAPTURES_PAWN_BISHOP) return BISHOP;
-    if (type_move == CAPTURES_PAWN_KNIGHT) return KNIGHT;
-    if (type_move == CAPTURES_PAWN_PAWN) return PAWN;
+        //PAWN
+        if (type_move == MOVE_PAWN) return PIECE_NO;
+        if (type_move == CAPTURES_PAWN_QUEEN) return W_QUEEN;
+        if (type_move == CAPTURES_PAWN_ROOK) return W_ROOK;
+        if (type_move == CAPTURES_PAWN_BISHOP) return W_BISHOP;
+        if (type_move == CAPTURES_PAWN_KNIGHT) return W_KNIGHT;
+        if (type_move == CAPTURES_PAWN_PAWN) return W_PAWN;
+
+    }else{
+        //KING
+        if (type_move == MOVE_KING) return PIECE_NO;
+        if (type_move == CAPTURES_KING_QUEEN) return B_QUEEN;
+        if (type_move == CAPTURES_KING_ROOK) return B_ROOK;
+        if (type_move == CAPTURES_KING_BISHOP) return B_BISHOP;
+        if (type_move == CAPTURES_KING_KNIGHT) return B_KNIGHT;
+        if (type_move == CAPTURES_KING_PAWN) return B_PAWN;
+
+        //QUEEN
+        if (type_move == MOVE_QUEEN) return PIECE_NO;
+        if (type_move == CAPTURES_QUEEN_QUEEN) return B_QUEEN;
+        if (type_move == CAPTURES_QUEEN_ROOK) return B_ROOK;
+        if (type_move == CAPTURES_QUEEN_BISHOP) return B_BISHOP;
+        if (type_move == CAPTURES_QUEEN_KNIGHT) return B_KNIGHT;
+        if (type_move == CAPTURES_QUEEN_PAWN) return B_PAWN;
+
+        //ROOK
+        if (type_move == MOVE_ROOK) return PIECE_NO;
+        if (type_move == CAPTURES_ROOK_QUEEN) return B_QUEEN;
+        if (type_move == CAPTURES_ROOK_ROOK) return B_ROOK;
+        if (type_move == CAPTURES_ROOK_BISHOP) return B_BISHOP;
+        if (type_move == CAPTURES_ROOK_KNIGHT) return B_KNIGHT;
+        if (type_move == CAPTURES_ROOK_PAWN) return B_PAWN;
+
+        //BISHOP
+        if (type_move == MOVE_BISHOP) return PIECE_NO;
+        if (type_move == CAPTURES_BISHOP_QUEEN) return B_QUEEN;
+        if (type_move == CAPTURES_BISHOP_ROOK) return B_ROOK;
+        if (type_move == CAPTURES_BISHOP_BISHOP) return B_BISHOP;
+        if (type_move == CAPTURES_BISHOP_KNIGHT) return B_KNIGHT;
+        if (type_move == CAPTURES_BISHOP_PAWN) return B_PAWN;
+
+        //KNIGHT
+        if (type_move == MOVE_KNIGHT) return PIECE_NO;
+        if (type_move == CAPTURES_KNIGHT_QUEEN) return B_QUEEN;
+        if (type_move == CAPTURES_KNIGHT_ROOK) return B_ROOK;
+        if (type_move == CAPTURES_KNIGHT_BISHOP) return B_BISHOP;
+        if (type_move == CAPTURES_KNIGHT_KNIGHT) return B_KNIGHT;
+        if (type_move == CAPTURES_KNIGHT_PAWN) return B_PAWN;
+
+        //PAWN
+        if (type_move == MOVE_PAWN) return PIECE_NO;
+        if (type_move == CAPTURES_PAWN_QUEEN) return B_QUEEN;
+        if (type_move == CAPTURES_PAWN_ROOK) return B_ROOK;
+        if (type_move == CAPTURES_PAWN_BISHOP) return B_BISHOP;
+        if (type_move == CAPTURES_PAWN_KNIGHT) return B_KNIGHT;
+        if (type_move == CAPTURES_PAWN_PAWN) return B_PAWN;
+    }
+
     return -1;
 }
 
@@ -1230,13 +1337,14 @@ const return_promo_piece_from_type_move = function (type_move) {
 // }//
 
 
-export { clear_list, add_packing_move, get_type_move, get_from, get_to, get_name_capture_piece, set_color, set_number_captures_move,
-     sorting_list, test_compare_list_from, test_print_i_move_list, test_print_list, save_list_from, move_is_found, 
-     return_i_move, move_to_string_uci, return_type_captures_pawn_promo, return_type_simple_move, 
-     return_piece_name_captures_from_type_move, type_move_to_name_piese, type_move_to_name_piese_f, 
-     return_promo_piece_from_type_move,
-    LENGTH_LIST, IND_PIESE_COLOR, IND_NUMBER_CAPTURES_MOVE, IND_NUMBER_MOVE, 
-    IND_PROMO_QUEEN, IND_PROMO_ROOK, IND_PROMO_BISHOP, IND_PROMO_KNIGHT, 
+export {
+    clear_list, add_packing_move, get_type_move, get_from, get_to, get_name_capture_piece, set_color, set_number_captures_move,
+    sorting_list, test_compare_list_from, test_print_i_move_list, test_print_list, save_list_from, move_is_found,
+    return_i_move, move_to_string_uci, return_type_captures_pawn_promo, return_type_simple_move,
+    return_piece_name_captures_from_type_move, type_move_to_name_piese, type_move_to_name_piese_f,
+    return_promo_piece_from_type_move,
+    LENGTH_LIST, IND_PIESE_COLOR, IND_NUMBER_CAPTURES_MOVE, IND_NUMBER_MOVE,
+    IND_PROMO_QUEEN, IND_PROMO_ROOK, IND_PROMO_BISHOP, IND_PROMO_KNIGHT,
     MOVE_NO, CAPTURES_PAWN_QUEEN_PROMO_QUEEN, CAPTURES_PAWN_ROOK_PROMO_QUEEN, CAPTURES_PAWN_BISHOP_PROMO_QUEEN,
     CAPTURES_PAWN_KNIGHT_PROMO_QUEEN, CAPTURES_PAWN_QUEEN_PROMO_ROOK, CAPTURES_PAWN_ROOK_PROMO_ROOK,
     CAPTURES_PAWN_BISHOP_PROMO_ROOK, CAPTURES_PAWN_KNIGHT_PROMO_ROOK, CAPTURES_PAWN_QUEEN_PROMO_BISHOP,
