@@ -95,206 +95,86 @@ const undo_moves = function (chess_board_0x88, undo, type_move, from, to, name_c
     // взятия
     // CAPTURES_KING_...
     case CAPTURES_KING_QUEEN:
-      if (piece_color == 1) {
-       // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-      unmake_captures_move_0x88(chess_board_0x88, from, to, B_QUEEN);
-      } else {
-      unmake_captures_move_0x88(chess_board_0x88, from, to, W_QUEEN);
-      }
+      unmake_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece);
       break;
     case CAPTURES_KING_BISHOP:
-      if (piece_color == 1) {
-       // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-      unmake_captures_move_0x88(chess_board_0x88, from, to, B_BISHOP);
-      } else {
-      unmake_captures_move_0x88(chess_board_0x88, from, to, W_BISHOP);
-      }      
+      unmake_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece);      
       break;
     case CAPTURES_KING_KNIGHT:
-      if (piece_color == 1) {
-       // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-      unmake_captures_move_0x88(chess_board_0x88, from, to, B_KNIGHT);
-      } else {
-      unmake_captures_move_0x88(chess_board_0x88, from, to, W_KNIGHT);
-      }      
+      unmake_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece); 
       break;
     case CAPTURES_KING_PAWN:
-      if (piece_color == 1) {
-       // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-      unmake_captures_move_0x88(chess_board_0x88, from, to, B_PAWN);
-      } else {
-      unmake_captures_move_0x88(chess_board_0x88, from, to, W_PAWN);
-      }      
+      unmake_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece);     
       break;
 
     // CAPTURES_ROOK_...
     case CAPTURES_ROOK_QUEEN:
-      if (piece_color == 1) {
-       // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-      unmake_captures_move_0x88(chess_board_0x88, from, to, B_QUEEN);
-      } else {
-      unmake_captures_move_0x88(chess_board_0x88, from, to, W_QUEEN);
-      }      
+      unmake_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece);    
       break;
     case CAPTURES_ROOK_BISHOP:
-      if (piece_color == 1) {
-       // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-      unmake_captures_move_0x88(chess_board_0x88, from, to, B_BISHOP);
-      } else {
-      unmake_captures_move_0x88(chess_board_0x88, from, to, W_BISHOP);
-      }      
+      unmake_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece);    
       break;
     case CAPTURES_ROOK_KNIGHT:
-      if (piece_color == 1) {
-       // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-      unmake_captures_move_0x88(chess_board_0x88, from, to, B_KNIGHT);
-      } else {
-      unmake_captures_move_0x88(chess_board_0x88, from, to, W_KNIGHT);
-      }      
+      unmake_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece);  
       break;
     case CAPTURES_ROOK_PAWN:
-      if (piece_color == 1) {
-       // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-      unmake_captures_move_0x88(chess_board_0x88, from, to, B_PAWN);
-      } else {
-      unmake_captures_move_0x88(chess_board_0x88, from, to, W_PAWN);
-      }      
+      unmake_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece);  
       break;
 
     // CAPTURES_QUEEN
     case CAPTURES_QUEEN_QUEEN:
-      if (piece_color == 1) {
-       // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-      unmake_captures_move_0x88(chess_board_0x88, from, to, B_QUEEN);
-      } else {
-      unmake_captures_move_0x88(chess_board_0x88, from, to, W_QUEEN);
-      }      
+      unmake_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece);   
       break;
     case CAPTURES_QUEEN_BISHOP:
-      if (piece_color == 1) {
-       // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-      unmake_captures_move_0x88(chess_board_0x88, from, to, B_BISHOP);
-      } else {
-      unmake_captures_move_0x88(chess_board_0x88, from, to, W_BISHOP);
-      }      
+      unmake_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece); 
       break;
     case CAPTURES_QUEEN_KNIGHT:
-      if (piece_color == 1) {
-       // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-      unmake_captures_move_0x88(chess_board_0x88, from, to, B_KNIGHT);
-      } else {
-      unmake_captures_move_0x88(chess_board_0x88, from, to, W_KNIGHT);
-      }      
+      unmake_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece);   
       break;
     case CAPTURES_QUEEN_PAWN:
-      if (piece_color == 1) {
-       // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-      unmake_captures_move_0x88(chess_board_0x88, from, to, B_PAWN);
-      } else {
-      unmake_captures_move_0x88(chess_board_0x88, from, to, W_PAWN);
-      }      
+      unmake_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece); 
       break;
 
     // CAPTURES_BISHOP
     case CAPTURES_BISHOP_QUEEN:
-      if (piece_color == 1) {
-       // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-      unmake_captures_move_0x88(chess_board_0x88, from, to, B_QUEEN);
-      } else {
-      unmake_captures_move_0x88(chess_board_0x88, from, to, W_QUEEN);
-      }      
+      unmake_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece);   
       break;
     case CAPTURES_BISHOP_BISHOP:
-      if (piece_color == 1) {
-       // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-      unmake_captures_move_0x88(chess_board_0x88, from, to, B_BISHOP);
-      } else {
-      unmake_captures_move_0x88(chess_board_0x88, from, to, W_BISHOP);
-      }      
+      unmake_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece);   
       break;
     case CAPTURES_BISHOP_KNIGHT:
-      if (piece_color == 1) {
-       // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-      unmake_captures_move_0x88(chess_board_0x88, from, to, B_KNIGHT);
-      } else {
-      unmake_captures_move_0x88(chess_board_0x88, from, to, W_KNIGHT);
-      }      
+      unmake_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece);   
       break;
     case CAPTURES_BISHOP_PAWN:
-      if (piece_color == 1) {
-       // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-      unmake_captures_move_0x88(chess_board_0x88, from, to, B_PAWN);
-      } else {
-      unmake_captures_move_0x88(chess_board_0x88, from, to, W_PAWN);
-      }      
+      unmake_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece);
       break;
 
     // CAPTURES_KNIGHT
     case CAPTURES_KNIGHT_QUEEN:
-      if (piece_color == 1) {
-       // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-      unmake_captures_move_0x88(chess_board_0x88, from, to, B_QUEEN);
-      } else {
-      unmake_captures_move_0x88(chess_board_0x88, from, to, W_QUEEN);
-      }      
+      unmake_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece);  
       break;
     case CAPTURES_KNIGHT_BISHOP:
-      if (piece_color == 1) {
-       // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-      unmake_captures_move_0x88(chess_board_0x88, from, to, B_BISHOP);
-      } else {
-      unmake_captures_move_0x88(chess_board_0x88, from, to, W_BISHOP);
-      }      
+      unmake_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece); 
       break;
     case CAPTURES_KNIGHT_KNIGHT:
-      if (piece_color == 1) {
-       // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-      unmake_captures_move_0x88(chess_board_0x88, from, to, B_KNIGHT);
-      } else {
-      unmake_captures_move_0x88(chess_board_0x88, from, to, W_KNIGHT);
-      }      
+      unmake_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece); 
       break;
     case CAPTURES_KNIGHT_PAWN:
-      if (piece_color == 1) {
-       // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-      unmake_captures_move_0x88(chess_board_0x88, from, to, B_PAWN);
-      } else {
-      unmake_captures_move_0x88(chess_board_0x88, from, to, W_PAWN);
-      }      
+      unmake_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece);  
       break;
 
     // CAPTURES_PAWN
     case CAPTURES_PAWN_QUEEN:
-      if (piece_color == 1) {
-       // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-      unmake_captures_move_0x88(chess_board_0x88, from, to, B_QUEEN);
-      } else {
-      unmake_captures_move_0x88(chess_board_0x88, from, to, W_QUEEN);
-      }      
+      unmake_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece);  
       break;
     case CAPTURES_PAWN_BISHOP:
-      if (piece_color == 1) {
-       // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-      unmake_captures_move_0x88(chess_board_0x88, from, to, B_BISHOP);
-      } else {
-      unmake_captures_move_0x88(chess_board_0x88, from, to, W_BISHOP);
-      }      
+      unmake_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece);  
       break;
     case CAPTURES_PAWN_KNIGHT:
-      if (piece_color == 1) {
-       // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-      unmake_captures_move_0x88(chess_board_0x88, from, to, B_KNIGHT);
-      } else {
-      unmake_captures_move_0x88(chess_board_0x88, from, to, W_KNIGHT);
-      }      
+      unmake_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece);   
       break;
     case CAPTURES_PAWN_PAWN:
-      if (piece_color == 1) {
-       // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-      unmake_captures_move_0x88(chess_board_0x88, from, to, B_PAWN);
-      } else {
-      unmake_captures_move_0x88(chess_board_0x88, from, to, W_PAWN);
-      }      
+      unmake_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece);  
       break;
 
     // CAPTURES_..._ROOK   
@@ -311,12 +191,7 @@ const undo_moves = function (chess_board_0x88, undo, type_move, from, to, name_c
     case CAPTURES_ROOK_ROOK:
     //break;
     case CAPTURES_KING_ROOK:
-      if (piece_color == 1) {
-       // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-      unmake_captures_move_0x88(chess_board_0x88, from, to, B_ROOK);
-      } else {
-      unmake_captures_move_0x88(chess_board_0x88, from, to, W_ROOK);
-      }      
+      unmake_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece);     
       break;
 
     //////////////////////////////////////////////
@@ -356,138 +231,58 @@ const undo_moves = function (chess_board_0x88, undo, type_move, from, to, name_c
     //CAPTURES PAWN PROMO
     //CAPTURES_PROMO_QUEEN
     case CAPTURES_PAWN_QUEEN_PROMO_QUEEN:
-            if (piece_color == 1) {
-       // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, B_QUEEN, piece_color);
-      } else {
-      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, W_QUEEN, piece_color);
-      }
+      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece, piece_color);
       break;
     case CAPTURES_PAWN_BISHOP_PROMO_QUEEN:
-      if (piece_color == 1) {
-       // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, B_BISHOP, piece_color);
-      } else {
-      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, W_BISHOP, piece_color);
-      }      
+      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece, piece_color); 
       break;
     case CAPTURES_PAWN_KNIGHT_PROMO_QUEEN:
-      if (piece_color == 1) {
-       // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, B_KNIGHT, piece_color);
-      } else {
-      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, W_KNIGHT, piece_color);
-      }      
+      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece, piece_color);   
       break;
     case CAPTURES_PAWN_ROOK_PROMO_QUEEN:
-      if (piece_color == 1) {
-       // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, B_ROOK, piece_color);
-      } else {
-      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, W_ROOK, piece_color);
-      }      
+      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece, piece_color);    
       break;
 
     //CAPTURES_PROMO_ROOK
     case CAPTURES_PAWN_QUEEN_PROMO_ROOK:
-      if (piece_color == 1) {
-       // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, B_QUEEN, piece_color);
-      } else {
-      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, W_QUEEN, piece_color);
-      }      
+      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece, piece_color);    
       break;
     case CAPTURES_PAWN_BISHOP_PROMO_ROOK:
-      if (piece_color == 1) {
-       // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, B_BISHOP, piece_color);
-      } else {
-      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, W_BISHOP, piece_color);
-      }      
+      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece, piece_color);  
       break;
     case CAPTURES_PAWN_KNIGHT_PROMO_ROOK:
-      if (piece_color == 1) {
-       // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, B_KNIGHT, piece_color);
-      } else {
-      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, W_KNIGHT, piece_color);
-      }      
+      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece, piece_color);
       break;
     case CAPTURES_PAWN_ROOK_PROMO_ROOK:
-      if (piece_color == 1) {
-       // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, B_ROOK, piece_color);
-      } else {
-      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, W_ROOK, piece_color);
-      }      
+      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece, piece_color);   
       break;
 
     //CAPTURES_PROMO_BISHOP
     case CAPTURES_PAWN_QUEEN_PROMO_BISHOP:
-       if (piece_color == 1) {
-       // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, B_QUEEN, piece_color);
-      } else {
-      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, W_QUEEN, piece_color);
-      }     
+      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece, piece_color);   
       break;
     case CAPTURES_PAWN_BISHOP_PROMO_BISHOP:
-      if (piece_color == 1) {
-       // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, B_BISHOP, piece_color);
-      } else {
-      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, W_BISHOP, piece_color);
-      }      
+      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece, piece_color);  
       break;
     case CAPTURES_PAWN_KNIGHT_PROMO_BISHOP:
-      if (piece_color == 1) {
-       // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, B_KNIGHT, piece_color);
-      } else {
-      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, W_KNIGHT, piece_color);
-      }      
+      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece, piece_color); 
       break;
     case CAPTURES_PAWN_ROOK_PROMO_BISHOP:
-      if (piece_color == 1) {
-       // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, B_ROOK, piece_color);
-      } else {
-      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, W_ROOK, piece_color);
-      }      
+      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, W_ROOK, piece_color);   
       break;
 
     // CAPTURES_PROMO_KNIGHT
     case CAPTURES_PAWN_QUEEN_PROMO_KNIGHT:
-      if (piece_color == 1) {
-       // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, B_QUEEN, piece_color);
-      } else {
-      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, W_QUEEN, piece_color);
-      }      
+      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece, piece_color);  
       break;
     case CAPTURES_PAWN_BISHOP_PROMO_KNIGHT:
-      if (piece_color == 1) {
-       // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, B_BISHOP, piece_color);
-      } else {
-      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, W_BISHOP, piece_color);
-      }      
+      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece, piece_color); 
       break;
     case CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT:
-      if (piece_color == 1) {
-       // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, B_KNIGHT, piece_color);
-      } else {
-      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, W_KNIGHT, piece_color);
-      }      
+      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece, piece_color);
       break;
     case CAPTURES_PAWN_ROOK_PROMO_KNIGHT:
-      if (piece_color == 1) {
-       // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, B_ROOK, piece_color);
-      } else {
-      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, W_ROOK, piece_color);
-      }      
+      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece, piece_color);
       break;
 
     default://
