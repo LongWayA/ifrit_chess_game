@@ -7,13 +7,6 @@
 */
 
 import {
-  clear_list, add_packing_move, get_type_move, get_from, get_to, get_name_capture_piece, set_color, set_number_captures_move,
-  sorting_list, test_compare_list_from, test_print_i_move_list, test_print_list, save_list_from, move_is_found,
-  return_i_move, move_to_string_uci, return_type_captures_pawn_promo, return_type_simple_move,
-  return_piece_name_captures_from_type_move, type_move_to_name_piese, type_move_to_name_piese_f,
-  return_promo_piece_from_type_move,
-  LENGTH_LIST, IND_PIESE_COLOR, IND_NUMBER_CAPTURES_MOVE, IND_NUMBER_MOVE,
-  IND_PROMO_QUEEN, IND_PROMO_ROOK, IND_PROMO_BISHOP, IND_PROMO_KNIGHT,
   MOVE_NO, CAPTURES_PAWN_QUEEN_PROMO_QUEEN, CAPTURES_PAWN_ROOK_PROMO_QUEEN, CAPTURES_PAWN_BISHOP_PROMO_QUEEN,
   CAPTURES_PAWN_KNIGHT_PROMO_QUEEN, CAPTURES_PAWN_QUEEN_PROMO_ROOK, CAPTURES_PAWN_ROOK_PROMO_ROOK,
   CAPTURES_PAWN_BISHOP_PROMO_ROOK, CAPTURES_PAWN_KNIGHT_PROMO_ROOK, CAPTURES_PAWN_QUEEN_PROMO_BISHOP,
@@ -31,11 +24,8 @@ import {
 } from "./move_list_new.js";
 
 import {
-  x07_y07_to_0x88, s_0x88_to_x07, s_0x88_to_y07,
-  test_print_any_0x88, test_print_piese_0x88, test_print_piese_color_0x88, test_print_piese_in_line_0x88, test_compare_chess_board_0x88,
-  save_chess_board_0x88, set_board_from_fen_0x88, set_fen_from_0x88, searching_king, iniStartPositionForWhite,
-  IND_MAX, SIDE_TO_MOVE, LET_COOR,
-  BLACK, WHITE, PIECE_NO, W_PAWN, W_KNIGHT, W_BISHOP, W_ROOK, W_QUEEN, W_KING, B_PAWN, B_KNIGHT, B_BISHOP, B_ROOK, B_QUEEN, B_KING,
+SIDE_TO_MOVE,
+  BLACK, WHITE, PIECE_NO, W_KNIGHT, W_BISHOP, W_ROOK, W_QUEEN, W_KING, B_KNIGHT, B_BISHOP, B_ROOK, B_QUEEN,
   IND_CASTLING_Q, IND_CASTLING_q, IND_CASTLING_K, IND_CASTLING_k,
   IND_EN_PASSANT_YES, IND_EN_PASSANT_TARGET_SQUARE, IND_KING_FROM_WHITE, IND_KING_FROM_BLACK
 } from "./chess_board_new.js";
@@ -59,24 +49,21 @@ import { set_undo } from "../move_generator/undo_new.js";
 */
 
 
-// делаем ход под номером move_i из списка packing_moves на доске chess_board_0x88
+// делаем ход на доске chess_board_0x88
 /**
 * @param {Uint8Array} chess_board_0x88
 * @param {Uint8Array} undo
 * @param {number} type_move
 * @param {number} from
 * @param {number} to
-* @param {number} name_capture_piece
 * @param {number} piece_color
 * @returns {number}
 */
-const do_moves = function (chess_board_0x88, undo, type_move, from, to, name_capture_piece, piece_color) {
+const do_moves = function (chess_board_0x88, undo, type_move, from, to, piece_color) {
   //console.log("Make_move_0x88_C->do_moves  move_i " + move_i);
   let is_moove_legal = 1;// по умолчанию ход считаем легальным.
   set_undo(undo, chess_board_0x88);// заполняем вспогательную структуру для возврата хода
 
-  //console.log("Make_move_0x88_C king_from_white[" + move_i + "] = " + chess_board_0x88.king_from_white);
-  //console.log("Make_move_0x88_C king_from_white[" + move_i + "] = " + chess_board_0x88.king_from_white);
   // смотрим 
   switch (type_move) {
 
@@ -278,7 +265,7 @@ const do_moves = function (chess_board_0x88, undo, type_move, from, to, name_cap
       break;
 
     //////////////////////////////////////////////
-    // специальный ходы рокировки. отмена рокировки прописана внутри функций
+    // специальные ходы рокировки. отмена рокировки прописана внутри функций
     // MOVE_KING_CASTLE
     case MOVE_KING_CASTLE:
       is_moove_legal = make_king_castle_move_0x88(chess_board_0x88, from, to, piece_color);
@@ -322,7 +309,7 @@ const do_moves = function (chess_board_0x88, undo, type_move, from, to, name_cap
       break;
 
     //////////////////////////////////////////////
-    // специальный ходы все про пешки 
+    // специальные ходы все про пешки 
     // MOVE_DOUBLE_PAWN       
     case MOVE_DOUBLE_PAWN:
       make_simple_move_0x88(chess_board_0x88, from, to);
@@ -336,11 +323,7 @@ const do_moves = function (chess_board_0x88, undo, type_move, from, to, name_cap
       if (chess_board_0x88[IND_EN_PASSANT_YES] == 0) {
       }
       chess_board_0x88[IND_EN_PASSANT_YES] = 1;
-
-      //console.log("PAWN_DOUBLE_PUSH");
-      //console.log("Make_move_0x88_C->make_en_passant_move_0x88-> piece_color " + packing_moves.piece_color);
-      //console.log("Make_move_0x88_C->make_en_passant_move_0x88-> chess_board_0x88.en_passant_target_square "
-      //  + chess_board_0x88.en_passant_target_square);        
+     
       break;
 
     // EP_CAPTURES
@@ -540,24 +523,6 @@ const do_moves = function (chess_board_0x88, undo, type_move, from, to, name_cap
       from_king = chess_board_0x88[IND_KING_FROM_BLACK];
     }
 
-
-    // поиск короля после каждого хода это что то сильно неправильное. надо будет прописать положение короля
-    //  и его отслеживание. но это как нибудь потом. сейчас и других вопросов хватает (19.11м.25) 
-    // прописал положение короля (25.11m.25)
-    //let from_king2 = chess_board_0x88.searching_king(piece_color_king);
-    //console.log("from_king " + from_king);
-    //console.log("piece_color_king " + piece_color_king);      ;
-    //console.log("check_detected " + move_generator_captures_0x88_O.check_detected(from_king, piece_color_king, chess_board_0x88));
-
-    // if (from_king != from_king2) {
-    //   console.log("Make_move_0x88_C NO KING! ");
-    //   console.log("from_king " + from_king);
-    //   console.log("from_king2 " + from_king2);
-    //   chess_board_0x88.test_print_0x88();
-    // }
-
-    //if (from_king != searching_king(chess_board_0x88, piece_color_king)) console.log("from_king  Ошибка положения короля!!! " + from_king);;
-
     if (check_detected(from_king, piece_color_king, chess_board_0x88) != 0) {
 
       //console.log("check_detected " + check_detected(from_king, piece_color_king, chess_board_0x88));
@@ -565,18 +530,6 @@ const do_moves = function (chess_board_0x88, undo, type_move, from, to, name_cap
       is_moove_legal = 0;
     }
   }
-
-  // TEST key_64
-  // // генерируем ключ текущей позиции.
-  // let key_64_board = transposition_table_0x88_O.set_key_from_board_0x88(chess_board_0x88);
-
-  // if (chess_board_0x88.key_64 != key_64_board) {
-  //   console.log("Make_move_0x88_C -> NOT key_64 !");
-  //   console.log("Make_move_0x88_C -> type_move " + TYPE_MOVE_NAME[type_move]);
-  //   console.log("Make_move_0x88_C -> chess_board_0x88.key_64 " + chess_board_0x88.key_64);
-  //   console.log("Make_move_0x88_C -> key_64_board " + key_64_board);
-  //  chess_board_0x88.test_print_0x88();
-  //}
 
   // есть три случая: 
   // 1 - ход легальный. мы сделали ход и король не под шахом 
@@ -925,8 +878,7 @@ const make_en_passant_move_0x88 = function (chess_board_0x88, from, to, piece_co
 
   // цвет хода 0 - черные 1 - белые
   chess_board_0x88[SIDE_TO_MOVE] = 1 - chess_board_0x88[SIDE_TO_MOVE];
-  //console.log("Make_move_0x88_C->make_en_passant_move_0x88-> piece_color " + packing_moves.piece_color);
-  //console.log("Make_move_0x88_C->make_en_passant_move_0x88-> to " + to);
+
   if (piece_color == 1) {
     // стираем имя битой на проходе пешки
     chess_board_0x88[to + 16] = PIECE_NO;// 0

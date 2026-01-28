@@ -7,21 +7,14 @@
 */
 
 import {
-    x07_y07_to_0x88, s_0x88_to_x07, s_0x88_to_y07,
-    test_print_any_0x88, test_print_piese_0x88, test_print_piese_color_0x88, test_print_piese_in_line_0x88, test_compare_chess_board_0x88,
-    save_chess_board_0x88, set_board_from_fen_0x88, set_fen_from_0x88, searching_king, iniStartPositionForWhite,
-    IND_MAX, SIDE_TO_MOVE, LET_COOR,
-    BLACK, WHITE, PIECE_NO, W_PAWN, W_KNIGHT, W_BISHOP, W_ROOK, W_QUEEN, W_KING, B_PAWN, B_KNIGHT, B_BISHOP, B_ROOK, B_QUEEN, B_KING,
-    IND_CASTLING_Q, IND_CASTLING_q, IND_CASTLING_K, IND_CASTLING_k,
-    IND_EN_PASSANT_YES, IND_EN_PASSANT_TARGET_SQUARE, IND_KING_FROM_WHITE, IND_KING_FROM_BLACK
+ SIDE_TO_MOVE,
+    BLACK, WHITE, W_PAWN, W_KNIGHT, W_BISHOP, W_ROOK, W_QUEEN, W_KING, B_PAWN, B_KNIGHT, B_BISHOP, B_ROOK, B_QUEEN, B_KING,
+    IND_EN_PASSANT_YES, IND_EN_PASSANT_TARGET_SQUARE
 } from "./chess_board_new.js";
 
 import {
-    clear_list, add_packing_move, get_type_move, get_from, get_to, get_name_capture_piece, set_color, set_number_captures_move,
-    sorting_list, test_compare_list_from, test_print_i_move_list, test_print_list, save_list_from, move_is_found,
-    return_i_move, move_to_string_uci, return_type_captures_pawn_promo, return_type_simple_move,
-    return_piece_name_captures_from_type_move, type_move_to_name_piese, type_move_to_name_piese_f,
-    return_promo_piece_from_type_move,
+    clear_list, add_packing_move,  get_name_capture_piece, 
+    return_type_captures_pawn_promo, return_type_simple_move,
     LENGTH_LIST, IND_PIESE_COLOR, IND_NUMBER_CAPTURES_MOVE, IND_NUMBER_MOVE,
     IND_PROMO_QUEEN, IND_PROMO_ROOK, IND_PROMO_BISHOP, IND_PROMO_KNIGHT, MOVE_NO,
     EP_CAPTURES
@@ -207,12 +200,15 @@ const generated_pseudo_legal_moves_one_piece = function (from, side_to_move, che
 const add_captures_move = function (piece_name, piece_color, from, to, chess_board_0x88, packing_moves) {
 
     let piece_captures = chess_board_0x88[to];// имя взятой фигуры
-    let piece_color_captures = (chess_board_0x88[to] > W_KING) ? BLACK : WHITE;// цвет взятой фигуры
+    let piece_color_captures;// цвет взятой фигуры
     let type_move;// тип хода
 
     if (piece_captures == 0) {// проверяем клетку куда ходим. Если там нет фигур то можно ходить
         return 0;// можно продолжать луч
-    } else if (piece_color != piece_color_captures) {// мы уже знаем что тут есть фигура и если цвет отличен, то это взятие  
+    } 
+    piece_color_captures = (chess_board_0x88[to] > W_KING) ? BLACK : WHITE;// цвет взятой фигуры
+
+    if (piece_color != piece_color_captures) {// мы уже знаем что тут есть фигура и если цвет отличен, то это взятие  
         // определяем тип простых взятий по имени фигуры и имени взятой фигуры
         type_move = return_type_simple_move(piece_name, piece_captures);
         // добавляем взятие в список
@@ -233,18 +229,13 @@ const add_captures_move = function (piece_name, piece_color, from, to, chess_boa
 * @returns {void}
 */
 const generated_captures_moves_king = function (piece_name, piece_color, from, chess_board_0x88, packing_moves) {
-    //console.log("king " + piece + " c " + piece_color + " f " + from);
-    //console.log("king");
-    //console.log("from = " + from);
-    //console.log("piece = " + piece);
-    //console.log("piece_color = " + piece_color);
     //moves_king  = [-16, -15, 1, 17, 16, 15, -1, -17];
-    let to = -1;
-    let bre_ak = -1;
+    let to;
+    let stop_beam;
     for (let j = 0; j < 8; j++) {
         to = from + moves_king[j];
         if ((to & 136) == 0) {// если мы не вышли за пределы доски
-            bre_ak = add_captures_move(piece_name, piece_color, from, to, chess_board_0x88, packing_moves);
+            stop_beam = add_captures_move(piece_name, piece_color, from, to, chess_board_0x88, packing_moves);
         }
     }
 }
@@ -259,16 +250,10 @@ const generated_captures_moves_king = function (piece_name, piece_color, from, c
 * @returns {void}
 */
 const generated_captures_moves_queen = function (piece_name, piece_color, from, chess_board_0x88, packing_moves) {
-    //console.log("queen " + piece + " c " + piece_color + " f " + from);
-    //console.log("queen");
-    //console.log("from = " + from);
-    //console.log("piece = " + piece);
-    //console.log("piece_color = " + piece_color);
-
     //    moves_king = [-16, -15, 1, 17, 16, 15, -1, -17];
     //    moves_queen = this.moves_king;
-    let to = -1;
-    let bre_ak = -1;
+    let to;
+    let stop_beam;
 
     for (let j = 0; j < 8; j++) {
         to = from + moves_queen[j];
@@ -276,8 +261,8 @@ const generated_captures_moves_queen = function (piece_name, piece_color, from, 
             while (true) {
                 // проверяем каждую клетку хода на фигуру. если есть фигура противника то добавляем взятие
                 // в список, если это наша фигура то прерываем поиск на этом луче иначе идем дальше
-                bre_ak = add_captures_move(piece_name, piece_color, from, to, chess_board_0x88, packing_moves);
-                if (bre_ak == 1) break;// уперлись в фигуру
+                stop_beam = add_captures_move(piece_name, piece_color, from, to, chess_board_0x88, packing_moves);
+                if (stop_beam == 1) break;// уперлись в фигуру
                 to = to + moves_queen[j];
                 if ((to & 136) != 0) break;// конец доски прерываем поиск на этом луче
             }
@@ -295,22 +280,16 @@ const generated_captures_moves_queen = function (piece_name, piece_color, from, 
 * @returns {void}
 */
 const generated_captures_moves_rook = function (piece_name, piece_color, from, chess_board_0x88, packing_moves) {
-    //console.log("rook " + piece + " c " + piece_color + " f " + from);
-    //console.log("rook");
-    //console.log("from = " + from);
-    //console.log("piece = " + piece);
-    //console.log("piece_color = " + piece_color);
-
     //moves_rook = [-16, 1, 16, -1];
-    let to = -1;
-    let bre_ak = -1;
+    let to;
+    let stop_beam;
 
     for (let j = 0; j < 4; j++) {
         to = from + moves_rook[j];
         if ((to & 136) == 0) {// если мы не вышли за пределы доски
             while (true) {
-                bre_ak = add_captures_move(piece_name, piece_color, from, to, chess_board_0x88, packing_moves);
-                if (bre_ak == 1) break;
+                stop_beam = add_captures_move(piece_name, piece_color, from, to, chess_board_0x88, packing_moves);
+                if (stop_beam == 1) break;
                 to = to + moves_rook[j];
                 if ((to & 136) != 0) break;
             }
@@ -328,22 +307,16 @@ const generated_captures_moves_rook = function (piece_name, piece_color, from, c
 * @returns {void}
 */
 const generated_captures_moves_bishop = function (piece_name, piece_color, from, chess_board_0x88, packing_moves) {
-    //console.log("bishop " + piece + " c " + piece_color + " f " + from);
-    //console.log("bishop");
-    //console.log("from = " + from);
-    //console.log("piece = " + piece);
-    //console.log("piece_color = " + piece_color);
-
     //moves_bishop = [-15, 17, 15, -17];
-    let to = -1;
-    let bre_ak = -1;
+    let to;
+    let stop_beam;
 
     for (let j = 0; j < 4; j++) {
         to = from + moves_bishop[j];
         if ((to & 136) == 0) {// если мы не вышли за пределы доски
             while (true) {
-                bre_ak = add_captures_move(piece_name, piece_color, from, to, chess_board_0x88, packing_moves);
-                if (bre_ak == 1) break;
+                stop_beam = add_captures_move(piece_name, piece_color, from, to, chess_board_0x88, packing_moves);
+                if (stop_beam == 1) break;
                 to = to + moves_bishop[j];
                 if ((to & 136) != 0) break;
             }
@@ -362,19 +335,14 @@ const generated_captures_moves_bishop = function (piece_name, piece_color, from,
 * @returns {void}
 */
 const generated_captures_moves_knight = function (piece_name, piece_color, from, chess_board_0x88, packing_moves) {
-    //console.log("knight " + piece + " c " + piece_color + " f " + from);
-    //console.log("knight");
-    //console.log("from = " + from);
-    //console.log("piece = " + piece);
-    //console.log("piece_color = " + piece_color);
     //moves_knight = [-33, -31, -14, 18, 33, 31, 14, -18];
-    let to = -1;
-    let bre_ak = -1;
+    let to;
+    let stop_beam;
 
     for (let j = 0; j < 8; j++) {
         to = from + moves_knight[j];
         if ((to & 136) == 0) {// если мы не вышли за пределы доски
-            bre_ak = add_captures_move(piece_name, piece_color, from, to, chess_board_0x88, packing_moves);
+            stop_beam = add_captures_move(piece_name, piece_color, from, to, chess_board_0x88, packing_moves);
         }
     }
 }
@@ -389,16 +357,11 @@ const generated_captures_moves_knight = function (piece_name, piece_color, from,
 * @returns {void}
 */
 const generated_captures_moves_pawn = function (piece_name, piece_color, from, chess_board_0x88, packing_moves) {
-    //console.log("generated_captures_moves_pawn->piece_name " + piece_name + " c " + piece_color + " from " + from);
-    //console.log("pawn");
-    //console.log("from = " + from);
-    //console.log("piece = " + piece);
-    //console.log("piece_color = " + piece_color);
-
+    
     if (piece_color == 1) {// белая пешка
         // взятие белой пешкой
         generated_captures_moves_pawn_white(piece_name, piece_color, from, chess_board_0x88, packing_moves);
-    } else if (piece_color == 0) {
+    } else {
         // взятие черной пешкой
         generated_captures_moves_pawn_black(piece_name, piece_color, from, chess_board_0x88, packing_moves);
     }
@@ -458,9 +421,9 @@ const generated_captures_moves_pawn_black = function (piece_name, piece_color, f
 * @returns {void}
 */
 const generated_moves_pawn_captures = function (piece_name, from, to_left, to_right, piece_color, chess_board_0x88, packing_moves) {
-    let piece_color_captures = -1;
-    let piece_captures = -1;
-    let type_move = -1;
+    let piece_color_captures;
+    let piece_captures;
+    let type_move;
 
     if ((to_left & 136) == 0) {// взятия налево если мы на доске
         piece_captures = chess_board_0x88[to_left];
@@ -499,9 +462,9 @@ const generated_moves_pawn_captures = function (piece_name, from, to_left, to_ri
 * @returns {void}
 */
 const generated_captures_moves_pawn_promo = function (piece_name, from, to_left, to_right, piece_color, chess_board_0x88, packing_moves) {
-    let piece_color_captures = -1;
-    let piece_captures = -1;
-    let type_move = -1;
+    let piece_color_captures;
+    let piece_captures;
+    let type_move;
 
     // взятие пешкой влево с превращением
     if ((to_left & 136) == 0) {// 136 0x88                
@@ -549,7 +512,7 @@ const generated_captures_moves_pawn_promo = function (piece_name, from, to_left,
 * @returns {number}
 */
 const check_detected_generated_moves_king = function (from, piece_color, chess_board_0x88) {
-    let to = -1;
+    let to;
     let check = -1;
 
     for (let j = 0; j < 8; j++) {
@@ -580,7 +543,6 @@ const check_detected = function (from, piece_color, chess_board_0x88) {
 
     let check = -1;
     let packing_moves_in = new Uint32Array(LENGTH_LIST).fill(MOVE_NO);
-    let type_move_i;
     let number_move;
 
     if (piece_color == WHITE) {
@@ -600,8 +562,9 @@ const check_detected = function (from, piece_color, chess_board_0x88) {
         number_move = packing_moves_in[IND_NUMBER_MOVE];
 
         for (let i = 0; i < number_move; i++) {
-            type_move_i = get_type_move(i, packing_moves_in);
-            if (return_piece_name_captures_from_type_move(type_move_i, BLACK) == B_KNIGHT) {
+            
+            
+            if (get_name_capture_piece(i, packing_moves_in) == B_KNIGHT) {
                 check = B_KNIGHT;
                 return check;
             }
@@ -614,12 +577,12 @@ const check_detected = function (from, piece_color, chess_board_0x88) {
         number_move = packing_moves_in[IND_NUMBER_MOVE];
 
         for (let i = 0; i < number_move; i++) {
-            type_move_i = get_type_move(i, packing_moves_in);
-            if (return_piece_name_captures_from_type_move(type_move_i, BLACK) == B_BISHOP) {
+            
+            if (get_name_capture_piece(i, packing_moves_in) == B_BISHOP) {
                 check = B_BISHOP;
                 return check;
             }
-            if (return_piece_name_captures_from_type_move(type_move_i, BLACK) == B_QUEEN) {
+            if (get_name_capture_piece(i, packing_moves_in) == B_QUEEN) {
                 check = B_QUEEN;
                 return check;
             }
@@ -632,12 +595,12 @@ const check_detected = function (from, piece_color, chess_board_0x88) {
         number_move = packing_moves_in[IND_NUMBER_MOVE];
 
         for (let i = 0; i < number_move; i++) {
-            type_move_i = get_type_move(i, packing_moves_in);
-            if (return_piece_name_captures_from_type_move(type_move_i, BLACK) == B_ROOK) {
+            
+            if (get_name_capture_piece(i, packing_moves_in) == B_ROOK) {
                 check = B_ROOK;
                 return check;
             }
-            if (return_piece_name_captures_from_type_move(type_move_i, BLACK) == B_QUEEN) {
+            if (get_name_capture_piece(i, packing_moves_in) == B_QUEEN) {
                 check = B_QUEEN;
                 return check;
             }
@@ -650,8 +613,8 @@ const check_detected = function (from, piece_color, chess_board_0x88) {
         number_move = packing_moves_in[IND_NUMBER_MOVE];
 
         for (let i = 0; i < number_move; i++) {
-            type_move_i = get_type_move(i, packing_moves_in);
-            if (return_piece_name_captures_from_type_move(type_move_i, BLACK) == B_PAWN) {
+            
+            if (get_name_capture_piece(i, packing_moves_in) == B_PAWN) {
                 check = B_PAWN;
                 return check;
             }
@@ -672,8 +635,8 @@ const check_detected = function (from, piece_color, chess_board_0x88) {
         number_move = packing_moves_in[IND_NUMBER_MOVE];
 
         for (let i = 0; i < number_move; i++) {
-            type_move_i = get_type_move(i, packing_moves_in);
-            if (return_piece_name_captures_from_type_move(type_move_i, WHITE) == W_KNIGHT) {
+            
+            if (get_name_capture_piece(i, packing_moves_in) == W_KNIGHT) {
                 check = W_KNIGHT;
                 return check;
             }
@@ -686,12 +649,12 @@ const check_detected = function (from, piece_color, chess_board_0x88) {
         number_move = packing_moves_in[IND_NUMBER_MOVE];
 
         for (let i = 0; i < number_move; i++) {
-            type_move_i = get_type_move(i, packing_moves_in);
-            if (return_piece_name_captures_from_type_move(type_move_i, WHITE) == W_BISHOP) {
+            
+            if (get_name_capture_piece(i, packing_moves_in) == W_BISHOP) {
                 check = W_BISHOP;
                 return check;
             }
-            if (return_piece_name_captures_from_type_move(type_move_i, WHITE) == W_QUEEN) {
+            if (get_name_capture_piece(i, packing_moves_in) == W_QUEEN) {
                 check = W_QUEEN;
                 return check;
             }
@@ -704,12 +667,12 @@ const check_detected = function (from, piece_color, chess_board_0x88) {
         number_move = packing_moves_in[IND_NUMBER_MOVE];
 
         for (let i = 0; i < number_move; i++) {
-            type_move_i = get_type_move(i, packing_moves_in);
-            if (return_piece_name_captures_from_type_move(type_move_i, WHITE) == W_ROOK) {
+            
+            if (get_name_capture_piece(i, packing_moves_in) == W_ROOK) {
                 check = W_ROOK;
                 return check;
             }
-            if (return_piece_name_captures_from_type_move(type_move_i, WHITE) == W_QUEEN) {
+            if (get_name_capture_piece(i, packing_moves_in) == W_QUEEN) {
                 check = W_QUEEN;
                 return check;
             }
@@ -722,8 +685,8 @@ const check_detected = function (from, piece_color, chess_board_0x88) {
         number_move = packing_moves_in[IND_NUMBER_MOVE];
 
         for (let i = 0; i < number_move; i++) {
-            type_move_i = get_type_move(i, packing_moves_in);
-            if (return_piece_name_captures_from_type_move(type_move_i, WHITE) == W_PAWN) {
+
+            if (get_name_capture_piece(i, packing_moves_in) == W_PAWN) {
                 check = W_PAWN;
                 return check;
             }

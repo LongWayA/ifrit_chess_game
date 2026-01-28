@@ -28,7 +28,7 @@ import {
   clear_list, add_packing_move, get_type_move, get_from, get_to, get_name_capture_piece, set_color, set_number_captures_move,
   sorting_list, test_compare_list_from, test_print_i_move_list, test_print_list, save_list_from, move_is_found,
   return_i_move, move_to_string_uci, return_type_captures_pawn_promo, return_type_simple_move,
-  return_piece_name_captures_from_type_move, type_move_to_name_piese, type_move_to_name_piese_f,
+  type_move_to_name_piese, type_move_to_name_piese_f,
   return_promo_piece_from_type_move,
   LENGTH_LIST, IND_PIESE_COLOR, IND_NUMBER_CAPTURES_MOVE, IND_NUMBER_MOVE,
   IND_PROMO_QUEEN, IND_PROMO_ROOK, IND_PROMO_BISHOP, IND_PROMO_KNIGHT, MOVE_NO
@@ -111,7 +111,7 @@ const searching_minmax = function (pv_line_0x88_O, chess_board_0x88, depth, dept
       name_capture_piece = get_name_capture_piece(move_i, packing_moves);
       piece_color = packing_moves[IND_PIESE_COLOR];
 
-      is_moove_legal = do_moves(chess_board_0x88, undo, type_move, from, to, name_capture_piece, piece_color);
+      is_moove_legal = do_moves(chess_board_0x88, undo, type_move, from, to, piece_color);
 
       if (is_moove_legal == 0) { // король под шахом. отменяем ход и пропускаем этот цикл
         undo_moves(chess_board_0x88, undo, type_move, from, to, name_capture_piece, piece_color);

@@ -7,13 +7,8 @@
 */
 
 import {
-    x07_y07_to_0x88, s_0x88_to_x07, s_0x88_to_y07,
-    test_print_any_0x88, test_print_piese_0x88, test_print_piese_color_0x88, test_print_piese_in_line_0x88, test_compare_chess_board_0x88,
-    save_chess_board_0x88, set_board_from_fen_0x88, set_fen_from_0x88, searching_king, iniStartPositionForWhite,
-    IND_MAX, SIDE_TO_MOVE, LET_COOR,
-    BLACK, WHITE, PIECE_NO, W_PAWN, W_KNIGHT, W_BISHOP, W_ROOK, W_QUEEN, W_KING, B_PAWN, B_KNIGHT, B_BISHOP, B_ROOK, B_QUEEN, B_KING,
-    IND_CASTLING_Q, IND_CASTLING_q, IND_CASTLING_K, IND_CASTLING_k,
-    IND_EN_PASSANT_YES, IND_EN_PASSANT_TARGET_SQUARE, IND_KING_FROM_WHITE, IND_KING_FROM_BLACK
+s_0x88_to_x07, s_0x88_to_y07,
+  LET_COOR, PIECE_NO, W_PAWN, W_KNIGHT, W_BISHOP, W_ROOK, W_QUEEN, W_KING, B_PAWN, B_KNIGHT, B_BISHOP, B_ROOK, B_QUEEN, B_KING,
 } from "./chess_board_new.js";
 
 
@@ -22,10 +17,6 @@ import {
 
  Список содержит псевдолегальные ходы, т.е. есть ходы под шах, открывающие шах
  и рокировки через битые поля.
-
-255 это 8 бит   11111111
-127 это 7 бит в 1111111
-63  это 6 бит в 111111
 
  Ход содержит:
 
@@ -55,11 +46,6 @@ const LENGTH_LIST = 260;// максимально возможная длина 
 const IND_PIESE_COLOR = 257; //
 const IND_NUMBER_CAPTURES_MOVE = 258; //
 const IND_NUMBER_MOVE = 259; //
-
-const IND_U_TYPE_MOVE = 0; //
-const IND_U_FROM = 1; //
-const IND_U_TO = 2; //    
-const IND_U_SIDE_TO_MOVE = 3; //
 
 const IND_PROMO_QUEEN = 0;
 const IND_PROMO_ROOK = 1;
@@ -221,23 +207,20 @@ const TYPE_MOVE_NAME = [
     "MOVE_KING_QUEEN_CASTLE",
 ];
 
-
-// очищаем список ходов
 /**
-* выводим дополнительную информацию по позиции на консоль браузера (для тестирования)
+* очищаем список ходов
 * @param {Uint32Array} packing_moves
 * @returns {void}
 */
 const clear_list = function (packing_moves) {
     for (let i = 0; i < LENGTH_LIST; i++) {
         packing_moves[i] = MOVE_NO;
-
     }
 }
 
-// добавляем ход в список 
-// количество ходов увеличиваем на один
 /**
+* добавляем ход в список
+* количество ходов увеличиваем на один
 * @param {Uint32Array} packing_moves
 * @param {number} type_move
 * @param {number} from
@@ -272,7 +255,6 @@ const add_packing_move = function (packing_moves, type_move, from, to, name_capt
     packing_moves[IND_NUMBER_MOVE] = i + 1;
 }
 
-// 
 /**
  * @param {number} i
  * @param {Uint32Array} packing_moves
@@ -285,7 +267,6 @@ const get_type_move = function (i, packing_moves) {
     return type_move;
 }
 
-// 
 /**
  * @param {number} i
  * @param {Uint32Array} packing_moves
@@ -299,7 +280,6 @@ const get_from = function (i, packing_moves) {
     return from;
 }
 
-// 
 /**
  * @param {number} i
  * @param {Uint32Array} packing_moves
@@ -313,7 +293,6 @@ const get_to = function (i, packing_moves) {
     return to;
 }
 
-// 
 /**
  * @param {number} i
  * @param {Uint32Array} packing_moves
@@ -327,8 +306,8 @@ const get_name_capture_piece = function (i, packing_moves) {
     return name_capture_piece;
 }
 
-// присвоить списку цвет фигуры он же цвет ходящей стороны
 /**
+ * присвоить списку цвет фигуры он же цвет ходящей стороны
  * @param {Uint32Array} packing_moves
  * @param {number} piece_color
  * @returns {void}
@@ -337,8 +316,8 @@ const set_color = function (packing_moves, piece_color) {
     packing_moves[IND_PIESE_COLOR] = piece_color;
 }
 
-// присвоить количество взятий в списке
 /**
+ * присвоить количество взятий в списке
  * @param {Uint32Array} packing_moves
  * @param {number} number_captures_move
  * @returns {void}
@@ -363,6 +342,7 @@ const set_number_captures_move = function (packing_moves, number_captures_move) 
 // и самые последние рокировки 
 // взятия раньше других ходов для удобства поиска и сортировки тихих ходов
 /**
+ * сортировка по типу хода
  * @param {Uint32Array} packing_moves
  * @returns {void}
  */
@@ -374,7 +354,6 @@ const sorting_list = function (packing_moves) {
     let type_move_j;
 
     let save_packing_move;
-
 
     //console.log("Move_list_0x88_С-> SORTING -----------------------------------");
     // 
@@ -402,9 +381,9 @@ const sorting_list = function (packing_moves) {
 ///////////////////////////////////////////////////////////////////
 // TEST
 
-// сравнение двух списков ходов. 
-// если есть отличия то печатем в консоль предупреждение
 /**
+* сравнение двух списков ходов.
+* если есть отличия то печатем в консоль предупреждение
 * @param {Uint32Array} packing_moves_original
 * @param {Uint32Array} packing_moves
 * @returns {void}
@@ -455,9 +434,6 @@ const test_compare_list_from = function (packing_moves_original, packing_moves) 
                 (to_i == to_j) && (name_capture_piece_i == name_capture_piece_j)
             ) {
                 number_move_equal = number_move_equal + 1;
-                // console.log('Move_list_0x88_С->i ' + i + " j " + j);
-                // console.log('Move_list_0x88_С->this.from[i] ' + this.from[i] +
-                //     " this.to[i] " + this.to[i]);
 
             } else {
                 number_move_not_equal = number_move_not_equal + 1;
@@ -471,7 +447,6 @@ const test_compare_list_from = function (packing_moves_original, packing_moves) 
             "test_compare_list_from->piece_color  " + piece_color);
     }
 
-    //console.log('Move_list_0x88_С-> test_compare_list_from');
     if (number_captures_move_original != number_captures_move) {
         console.log("test_compare_list_from->number_captures_move original" + number_captures_move_original +
             "test_compare_list_from->number_captures_move  " + number_captures_move);
@@ -489,8 +464,8 @@ const test_compare_list_from = function (packing_moves_original, packing_moves) 
     }
 }
 
-// печатаем в консоль ход из списка под заданным номером
 /**
+ * печатаем в консоль ход из списка под заданным номером
  * @param {number} i
  * @param {Uint32Array} packing_moves
  * @returns {void}
@@ -526,8 +501,8 @@ const test_print_i_move_list = function (i, packing_moves) {
     console.log("*********** test_print_i_move_list");
 }
 
-// печатаем в консоль весь список ходов
 /**
+ * печатаем в консоль весь список ходов
  * @param {Uint32Array} packing_moves
  * @returns {void}
  */
@@ -572,9 +547,9 @@ const test_print_list = function (packing_moves) {
 
 //////////////////////////////////////////////////
 
-// копируем в наш список список из параметров функции 
-// т.е. тот что задан в скобках тот и копируем
 /**
+ * копируем в наш список список из параметров функции
+ * т.е. тот что задан в скобках тот и копируем
 * @param {Uint32Array} packing_moves_to
 * @param {Uint32Array} packing_moves_from
 * @returns {void}
@@ -588,10 +563,10 @@ const save_list_from = function (packing_moves_to, packing_moves_from) {
     }
 }
 
-// если ход from, to 
-// нашли в списке ходов 
-// в случае превращений это первое попавшееся
 /**
+ * если ход from, to 
+ * нашли в списке ходов
+ * в случае превращений это первое попавшееся
 * @param {Uint32Array} packing_moves
 * @param {number} from
 * @param {number} to
@@ -617,16 +592,13 @@ const move_is_found = function (packing_moves, from, to) {
         }
     }
 
-    //console.log("Move_list_det_0x88_С-> from " + from + " to " + to);
-    //console.log("Move_list_det_0x88_С-> ret " + ret);
-
     return found;
 }
-
-// находим и возвращаем порядковый номер хода 
-// по ходу from, to, promo
-// в том числе и в случае превращений 
+  
 /**
+* находим и возвращаем порядковый номер хода
+* по ходу from, to, promo
+* в том числе и в случае превращений
 * @param {Uint32Array} packing_moves
 * @param {number} from
 * @param {number} to
@@ -664,15 +636,12 @@ const return_i_move = function (packing_moves, from, to, promo = "") {
         }
     }
 
-    //console.log("Move_list_det_0x88_С-> from " + from + " to " + to);
-    //console.log("Move_list_det_0x88_С-> ret " + ret);
-
     return i_move;
 }
-
-// возвращем ход из списка на заданной позиции 
-// в виде строки вида e2e4, e7e8q 
+ 
 /**
+* возвращем ход из списка на заданной позиции
+* в виде строки вида e2e4, e7e8q
 * @param {number} i
 * @param {Uint32Array} packing_moves
 * @returns {string}
@@ -708,9 +677,8 @@ const move_to_string_uci = function (i, packing_moves) {
 * @param {number} piece_name_captures
 * @returns {out}
 */
+//+
 const return_type_captures_pawn_promo = function (piece_name_captures) {
-
-    //console.log("Move_list_0x88_С->return_type_captures_pawn_promo piece_name_captures " + piece_name_captures);
 
     let out = [0, 0, 0, 0];
 
@@ -742,7 +710,6 @@ const return_type_captures_pawn_promo = function (piece_name_captures) {
         out[IND_PROMO_KNIGHT] = CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT;
     };
 
-    //console.log("Move_list_0x88_С->return_type_captures_pawn_promo out[IND_PROMO_QUEEN] " + out[IND_PROMO_QUEEN]);
     return out;
 }
 
@@ -754,6 +721,7 @@ const return_type_captures_pawn_promo = function (piece_name_captures) {
 * @param {number} piece_name_captures
 * @returns {number}
 */
+//+
 const return_type_simple_move = function (piece_name, piece_name_captures) {
     switch (piece_name) {
         case W_KING://
@@ -863,124 +831,12 @@ const return_type_simple_move = function (piece_name, piece_name_captures) {
     return -1;
 }
 
-// используем в генераторе взятий для детектора шахов. незаменимая, в данный момент, функция
-// возвращем имя взятой фигуры по типу хода
-// например CAPTURES_KING_QUEEN -> QUEEN  
-/**
-* @param {number} type_move
-* @param {number} piece_color
-* @returns {number}
-*/
-const return_piece_name_captures_from_type_move = function (type_move, piece_color) {
-
-    if (piece_color == WHITE) {
-        //KING
-        if (type_move == MOVE_KING) return PIECE_NO;
-        if (type_move == CAPTURES_KING_QUEEN) return W_QUEEN;
-        if (type_move == CAPTURES_KING_ROOK) return W_ROOK;
-        if (type_move == CAPTURES_KING_BISHOP) return W_BISHOP;
-        if (type_move == CAPTURES_KING_KNIGHT) return W_KNIGHT;
-        if (type_move == CAPTURES_KING_PAWN) return W_PAWN;
-
-        //QUEEN
-        if (type_move == MOVE_QUEEN) return PIECE_NO;
-        if (type_move == CAPTURES_QUEEN_QUEEN) return W_QUEEN;
-        if (type_move == CAPTURES_QUEEN_ROOK) return W_ROOK;
-        if (type_move == CAPTURES_QUEEN_BISHOP) return W_BISHOP;
-        if (type_move == CAPTURES_QUEEN_KNIGHT) return W_KNIGHT;
-        if (type_move == CAPTURES_QUEEN_PAWN) return W_PAWN;
-
-        //ROOK
-        if (type_move == MOVE_ROOK) return PIECE_NO;
-        if (type_move == CAPTURES_ROOK_QUEEN) return W_QUEEN;
-        if (type_move == CAPTURES_ROOK_ROOK) return W_ROOK;
-        if (type_move == CAPTURES_ROOK_BISHOP) return W_BISHOP;
-        if (type_move == CAPTURES_ROOK_KNIGHT) return W_KNIGHT;
-        if (type_move == CAPTURES_ROOK_PAWN) return W_PAWN;
-
-        //BISHOP
-        if (type_move == MOVE_BISHOP) return PIECE_NO;
-        if (type_move == CAPTURES_BISHOP_QUEEN) return W_QUEEN;
-        if (type_move == CAPTURES_BISHOP_ROOK) return W_ROOK;
-        if (type_move == CAPTURES_BISHOP_BISHOP) return W_BISHOP;
-        if (type_move == CAPTURES_BISHOP_KNIGHT) return W_KNIGHT;
-        if (type_move == CAPTURES_BISHOP_PAWN) return W_PAWN;
-
-        //KNIGHT
-        if (type_move == MOVE_KNIGHT) return PIECE_NO;
-        if (type_move == CAPTURES_KNIGHT_QUEEN) return W_QUEEN;
-        if (type_move == CAPTURES_KNIGHT_ROOK) return W_ROOK;
-        if (type_move == CAPTURES_KNIGHT_BISHOP) return W_BISHOP;
-        if (type_move == CAPTURES_KNIGHT_KNIGHT) return W_KNIGHT;
-        if (type_move == CAPTURES_KNIGHT_PAWN) return W_PAWN;
-
-        //PAWN
-        if (type_move == MOVE_PAWN) return PIECE_NO;
-        if (type_move == CAPTURES_PAWN_QUEEN) return W_QUEEN;
-        if (type_move == CAPTURES_PAWN_ROOK) return W_ROOK;
-        if (type_move == CAPTURES_PAWN_BISHOP) return W_BISHOP;
-        if (type_move == CAPTURES_PAWN_KNIGHT) return W_KNIGHT;
-        if (type_move == CAPTURES_PAWN_PAWN) return W_PAWN;
-
-    }else{
-        //KING
-        if (type_move == MOVE_KING) return PIECE_NO;
-        if (type_move == CAPTURES_KING_QUEEN) return B_QUEEN;
-        if (type_move == CAPTURES_KING_ROOK) return B_ROOK;
-        if (type_move == CAPTURES_KING_BISHOP) return B_BISHOP;
-        if (type_move == CAPTURES_KING_KNIGHT) return B_KNIGHT;
-        if (type_move == CAPTURES_KING_PAWN) return B_PAWN;
-
-        //QUEEN
-        if (type_move == MOVE_QUEEN) return PIECE_NO;
-        if (type_move == CAPTURES_QUEEN_QUEEN) return B_QUEEN;
-        if (type_move == CAPTURES_QUEEN_ROOK) return B_ROOK;
-        if (type_move == CAPTURES_QUEEN_BISHOP) return B_BISHOP;
-        if (type_move == CAPTURES_QUEEN_KNIGHT) return B_KNIGHT;
-        if (type_move == CAPTURES_QUEEN_PAWN) return B_PAWN;
-
-        //ROOK
-        if (type_move == MOVE_ROOK) return PIECE_NO;
-        if (type_move == CAPTURES_ROOK_QUEEN) return B_QUEEN;
-        if (type_move == CAPTURES_ROOK_ROOK) return B_ROOK;
-        if (type_move == CAPTURES_ROOK_BISHOP) return B_BISHOP;
-        if (type_move == CAPTURES_ROOK_KNIGHT) return B_KNIGHT;
-        if (type_move == CAPTURES_ROOK_PAWN) return B_PAWN;
-
-        //BISHOP
-        if (type_move == MOVE_BISHOP) return PIECE_NO;
-        if (type_move == CAPTURES_BISHOP_QUEEN) return B_QUEEN;
-        if (type_move == CAPTURES_BISHOP_ROOK) return B_ROOK;
-        if (type_move == CAPTURES_BISHOP_BISHOP) return B_BISHOP;
-        if (type_move == CAPTURES_BISHOP_KNIGHT) return B_KNIGHT;
-        if (type_move == CAPTURES_BISHOP_PAWN) return B_PAWN;
-
-        //KNIGHT
-        if (type_move == MOVE_KNIGHT) return PIECE_NO;
-        if (type_move == CAPTURES_KNIGHT_QUEEN) return B_QUEEN;
-        if (type_move == CAPTURES_KNIGHT_ROOK) return B_ROOK;
-        if (type_move == CAPTURES_KNIGHT_BISHOP) return B_BISHOP;
-        if (type_move == CAPTURES_KNIGHT_KNIGHT) return B_KNIGHT;
-        if (type_move == CAPTURES_KNIGHT_PAWN) return B_PAWN;
-
-        //PAWN
-        if (type_move == MOVE_PAWN) return PIECE_NO;
-        if (type_move == CAPTURES_PAWN_QUEEN) return B_QUEEN;
-        if (type_move == CAPTURES_PAWN_ROOK) return B_ROOK;
-        if (type_move == CAPTURES_PAWN_BISHOP) return B_BISHOP;
-        if (type_move == CAPTURES_PAWN_KNIGHT) return B_KNIGHT;
-        if (type_move == CAPTURES_PAWN_PAWN) return B_PAWN;
-    }
-
-    return -1;
-}
-
-
 // используем для строкового представления фигуры в ходах
 /**
 * @param {number} type_move
 * @returns {string}
 */
+//+
 const type_move_to_name_piese = function (type_move) {
     if (type_move == MOVE_NO) return "NO";
     if (type_move == CAPTURES_PAWN_QUEEN_PROMO_QUEEN) return "P";
@@ -1050,6 +906,7 @@ const type_move_to_name_piese = function (type_move) {
 * @param {number} type_move
 * @returns {string}
 */
+//+
 const type_move_to_name_piese_f = function (type_move) {
     if (type_move == MOVE_NO) return "NO";
     if (type_move == CAPTURES_PAWN_QUEEN_PROMO_QUEEN) return "PAWN";
@@ -1120,6 +977,7 @@ const type_move_to_name_piese_f = function (type_move) {
 * @param {number} type_move
 * @returns {string}
 */
+//+
 const return_promo_piece_from_type_move = function (type_move) {
 
     if (type_move == MOVE_PAWN_PROMO_QUEEN) return "q";
@@ -1149,200 +1007,12 @@ const return_promo_piece_from_type_move = function (type_move) {
     return "";
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////
-
-// SORTING
-
-// это для хеш-ходов
-// ставим ход найденный по type_move(искать так быстрее всего) 
-// и подтвержденный по from, to ход на первую позицию. индекс 0 
-// подтверждение нужно потому что допустим два коня ходят на одинаковую клетку 
-// или один конь ходит на разные клетки и непонятно какой из ходов имелся в виду, 
-// а просто откуда и куда для случаев превращения недостаточно
-// остальные сдвигаем вниз 
-
-/*
-* @param {number} from
-* @param {number} to
-* @returns {number}
-*/
-// const set_tt_move_in_0 = function (from, to) {
-
-//     let save_type_move = -1;
-//     let save_from = -1;
-//     let save_to = -1;
-
-//     let s_m;// save move - индекс найденного и записанного хода
-
-//     if (this.from[0] == from) return -1;
-
-//     //console.log("Move_list_0x88_С-> UP -----------------------------------");
-//     // 1 ищем ход в списке
-//     for (s_m = 0; s_m < this.number_move; s_m++) {//
-//         if ((this.from[s_m] == from) && (this.to[s_m] == to)) {
-//             // ход нашли и записали
-//             save_type_move = this.type_move[s_m];
-//             save_from = this.from[s_m];
-//             save_to = this.to[s_m];
-//             break;// нашли ход. идем дальше
-//         }
-//     }
-
-//     // ход не нашли
-//     if (save_from == -1) return -1;
-
-//     //console.log("Move_list_0x88_С-> UP 2 s_m " + s_m);        
-
-//     // 2 сдвигаем позиции выше найденной вниз
-//     for (let i = s_m; i > 0; i--) {
-//         // если на позиции есть взятая фигура
-//         // пишем на позицию
-//         this.type_move[i] = this.type_move[i - 1];
-//         this.from[i] = this.from[i - 1];
-//         this.to[i] = this.to[i - 1];
-
-//     }
-
-//     // сюда пишем начальную позицию. т.о. две позиции меняются местами
-//     this.type_move[0] = save_type_move;
-//     this.from[0] = save_from;
-//     this.to[0] = save_to;
-
-//     return 0;
-// }//
-
-// это для сортировки по истории
-// сортируем все не взятия по оценке присвоенной в массиве истории. 
-// чем больше оценка тем выше ход но не выше всех взятий, даже плохих 
-// потому что так быстрее и движуху смотрим в первую очередь.
-// что такое эвристика истории смотреть в файле с этой эвристикой.
-/*
-* @param {History_heuristic_0x88_C} history_heuristic_0x88_O
-* @returns {void}
-*/
-// const sorting_list_history_heuristic = function (history_heuristic_0x88_O) {
-
-//     let save_type_move;
-
-//     let save_from;
-//     let save_to;
-
-//     let start = this.number_captures_move;
-
-//     let from_64_i;
-//     let to_64_i;
-
-//     let from_64_j;
-//     let to_64_j;
-
-//     //console.log("Move_list_0x88_С-> SORTING -----------------------------------");
-//     // выводим в начало списка тихих ходов ходы с максимальной оценкой по истории. 
-//     // т.е. отсортированные тихие ходы идут после взятий
-//     for (let i = start; i < this.number_move; i++) {
-
-//         from_64_i = SQUARE_128_to_64[this.from[i]];
-//         to_64_i = SQUARE_128_to_64[this.to[i]];
-//         // console.log("Move_list_0x88_С-> SORTING from_64_i " + from_64_i + " to_64_i " + to_64_i);
-//         // console.log("Move_list_0x88_С-> SORTING history i " +
-//         //     history_heuristic_0x88_O.history[this.piece_color][from_64_i][to_64_i]);
-
-//         for (let j = i + 1; j < this.number_move; j++) {//
-//             // 
-//             from_64_j = SQUARE_128_to_64[this.from[j]];
-//             to_64_j = SQUARE_128_to_64[this.to[j]];
-
-
-//             // console.log("Move_list_0x88_С-> SORTING from_64_j " + from_64_j + " to_64_j " + to_64_j);                
-//             // console.log("Move_list_0x88_С-> SORTING history j " +
-//             //     history_heuristic_0x88_O.history[this.piece_color][from_64_j][to_64_j]);                    
-
-//             if (history_heuristic_0x88_O.history[this.piece_color][from_64_i][to_64_i] <
-//                 history_heuristic_0x88_O.history[this.piece_color][from_64_j][to_64_j]) {
-
-//                 //                    console.log("Move_list_0x88_С-> SORTING -----------------------------------");     
-//                 // сохраняем позицию на которую будем писать
-//                 save_type_move = this.type_move[i];
-//                 save_from = this.from[i];
-//                 save_to = this.to[i];
-
-//                 // пишем на позицию
-//                 this.type_move[i] = this.type_move[j];
-//                 this.from[i] = this.from[j];
-//                 this.to[i] = this.to[j];
-
-//                 // сюда пишем начальную позицию. т.о. две позиции меняются местами
-//                 this.type_move[j] = save_type_move;
-//                 this.from[j] = save_from;
-//                 this.to[j] = save_to;
-//             }
-//         }
-//     }
-// }
-
-// это для киллеров. 
-// находм ход по from, to
-// и ставим сразу после взятий. 
-/*
-* @param {number} from
-* @param {number} to
-* @returns {number}
-*/
-// const set_move_after_the_captures = function (from, to) {
-
-//     let save_type_move = -1;
-
-//     let save_from = -1;
-//     let save_to = -1;
-
-//     let s_m;
-//     let start = this.number_captures_move;
-
-
-//     if (this.from[start] == from) return -1;// ход и так на первом месте(после всех взятий)
-
-//     //console.log("Move_list_0x88_С-> UP -----------------------------------");
-//     // 1 ищем ход в списке
-//     for (s_m = start; s_m < this.number_move; s_m++) {// 
-//         if ((this.from[s_m] == from) && (this.to[s_m] == to)) {
-//             // ход нашли и записали
-//             save_type_move = this.type_move[s_m];
-//             save_from = this.from[s_m];
-//             save_to = this.to[s_m];
-//             break;
-//         }
-//     }
-//     // console.log("Move_list_0x88_С-> UP 2 start " + start);
-//     //console.log("Move_list_0x88_С-> UP 2 s_m " + s_m);
-
-//     // ход не нашли
-//     if (save_from == -1) return -1;
-
-//     // 2 сдвигаем позиции выше найденной вниз
-//     for (let i = s_m; i > start; i--) {
-//         // если на позиции есть взятая фигура
-//         // пишем на позицию
-//         this.type_move[i] = this.type_move[i - 1];
-//         this.from[i] = this.from[i - 1];
-//         this.to[i] = this.to[i - 1];
-
-//     }
-
-//     // сюда пишем начальную позицию. т.о. две позиции меняются местами
-//     this.type_move[start] = save_type_move;
-//     this.from[start] = save_from;
-//     this.to[start] = save_to;
-
-//     return 0;
-// }//
-
-
+//return_piece_name_captures_from_type_move, 
 export {
     clear_list, add_packing_move, get_type_move, get_from, get_to, get_name_capture_piece, set_color, set_number_captures_move,
     sorting_list, test_compare_list_from, test_print_i_move_list, test_print_list, save_list_from, move_is_found,
     return_i_move, move_to_string_uci, return_type_captures_pawn_promo, return_type_simple_move,
-    return_piece_name_captures_from_type_move, type_move_to_name_piese, type_move_to_name_piese_f,
-    return_promo_piece_from_type_move,
+    type_move_to_name_piese, type_move_to_name_piese_f, return_promo_piece_from_type_move,
     LENGTH_LIST, IND_PIESE_COLOR, IND_NUMBER_CAPTURES_MOVE, IND_NUMBER_MOVE,
     IND_PROMO_QUEEN, IND_PROMO_ROOK, IND_PROMO_BISHOP, IND_PROMO_KNIGHT,
     MOVE_NO, CAPTURES_PAWN_QUEEN_PROMO_QUEEN, CAPTURES_PAWN_ROOK_PROMO_QUEEN, CAPTURES_PAWN_BISHOP_PROMO_QUEEN,
@@ -1360,109 +1030,3 @@ export {
     CAPTURES_QUEEN_PAWN, CAPTURES_KING_PAWN, MOVE_QUEEN, MOVE_ROOK, MOVE_BISHOP, MOVE_KNIGHT, MOVE_KING, MOVE_PAWN,
     MOVE_DOUBLE_PAWN, MOVE_KING_CASTLE, MOVE_KING_QUEEN_CASTLE
 };
-
-
-/*
-
-// возвращем ход из списка на заданной позиции 
-// в виде строки вида Pe2-e4, Pe7-e8q 
-// move_to_string(i_move, chess_board_0x88_O) {
-
-//     let promo = this.return_promo_piece_from_type_move(this.type_move[i_move]);
-
-//     let move_str = "" + this.type_move_to_name_piese(this.type_move[i_move]) +
-//         LET_COOR[chess_board_0x88_O.s_0x88_to_x07(this.from[i_move])] +
-//         (8 - chess_board_0x88_O.s_0x88_to_y07(this.from[i_move]));
-
-//     let l1 = (this.type_move[i_move] > 0) && (this.type_move[i_move] < 17);
-//     let l2 = (this.type_move[i_move] > 20) && (this.type_move[i_move] < 52);
-
-//     if (l1 || l2) {// это взятия
-//         move_str = move_str + "x";
-//     } else {
-//         move_str = move_str + "-";
-//     }
-
-//     move_str = move_str + LET_COOR[chess_board_0x88_O.s_0x88_to_x07(this.to[i_move])] +
-//         (8 - chess_board_0x88_O.s_0x88_to_y07(this.to[i_move])) + promo + " ";
-
-//     return move_str;
-// }
-
-
-Помните, что Int32 принимает значения от -2,147,483,648 до 2,147,483,647.
-
- 7 бит (\(0\dots 127\) или \(-64\dots 63\)), 
- 8 бит (\(0\dots 255\) или \(-128\dots 127\)) 
- 16 бит (\(0\dots 65535\) или \(-32768\dots 32767\)).
-
-255 это 8 бит   11111111
-127 это 7 бит в 1111111
-63  это 6 бит в 111111
-
- 60 это 6 бит 111100
- 63 это 6 бит в  1
- 127 это 7 бит в 1
- 128 это уже 8 бит
-
-    packing_to_move(index_key_64_board, type_nodes, type_move, from_128, to_128, delta_depth) {
-
-        //if (type_nodes == 0) console.log("Transposition_table_0x88_C->*****packing_to_move type_nodes == 0 !!!! delta_depth " + delta_depth);
-
-        let move_p = 0; // 
-
-        // type_nodes
-        move_p = move_p | type_nodes;
-        move_p = move_p << 7;
-
-        // type_move
-        move_p = move_p | type_move;
-        move_p = move_p << 7;
-
-        // from_64
-        let from_64 = SQUARE_128_to_64[from_128];
-        move_p = move_p | from_64;
-        move_p = move_p << 7;
-
-        // to_64
-        let to_64 = SQUARE_128_to_64[to_128];
-        move_p = move_p | to_64;
-        move_p = move_p << 7;
-
-        // delta_depth
-        move_p = move_p | delta_depth;
-
-        this.move[Number(index_key_64_board)] = move_p;
-    }
-
-    // распаковываем ход
-    
-    unpacking_from_move(index_key_64_board) {
-
-        let move_u = this.move[Number(index_key_64_board)];
-
-        // delta_depth
-        this.out.dd = move_u & 127; //
-
-        // to_64
-        move_u = move_u >> 7;
-        let to_64 = move_u & 127;
-        this.out.to = SQUARE_64_to_128[to_64];
-
-        // from_64
-        move_u = move_u >> 7;
-        let from_64 = move_u & 127;
-        this.out.from = SQUARE_64_to_128[from_64];
-
-        // type_move
-        move_u = move_u >> 7;
-        this.out.tm = move_u & 127;
-
-        // type_nodes
-        move_u = move_u >> 7;
-        this.out.tn = move_u & 127;
-
-        //test
-        //if (this.out.tn == 0) console.log("unpacking_from_move Transposition_table_0x88_C-> tn == 0 !!!! dd " + this.out.dd);
-    }
-*/

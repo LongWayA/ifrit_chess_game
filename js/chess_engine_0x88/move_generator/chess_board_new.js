@@ -134,9 +134,6 @@ const SQUARE_128_to_64 = [
     56, 57, 58, 59, 60, 61, 62, 63, 0, 0, 0, 0, 0, 0, 0, 0
 ];
 
-//
-//let chess_board_0x88 = new Uint8Array(128).fill(0);// доска 0x88 с фигурами 
-
 /**
 * переводим координаты х и у в линейную координату доски 128(0x88)
 * @param {number} x07
@@ -714,8 +711,6 @@ const fen_piece_to_char = function (chess_board_0x88, z) {
  * @returns {number}
 */
 const searching_king = function (chess_board_0x88, piece_color) {
-
-    let color;
 
     for (let i = 0; i < 128; i++) {
         if ((i & 136) == 0) {// 136 0x88
