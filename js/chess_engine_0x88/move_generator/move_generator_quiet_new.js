@@ -2,14 +2,14 @@
 /** 
  * @copyright Copyright (c) 2026, AnBr75 and/or its affiliates. All rights reserved.
  * @author AnBr75
- * @name move_gen_2_quiet_0x88.js
+ * @name move_generator_quiet_new.js
  * @version created 24.01m.2026 
 */
 
 import {
     SIDE_TO_MOVE,
     BLACK, WHITE, PIECE_NO, W_PAWN, W_KNIGHT, W_BISHOP, W_ROOK, W_QUEEN, W_KING, B_PAWN, B_KNIGHT, B_BISHOP, B_ROOK, B_QUEEN, B_KING,
-    IND_CASTLING_Q, IND_CASTLING_q, IND_CASTLING_K, IND_CASTLING_k,
+    IND_CASTLING_Q, IND_CASTLING_q, IND_CASTLING_K, IND_CASTLING_k
 } from "./chess_board_new.js";
 
 import {

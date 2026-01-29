@@ -6,17 +6,15 @@
  * @version created 24.01m.2026 
 */
 
-import { Chess_board_0x88_C } from "../move_generator/chess_board_0x88.js";
 
+import { MOVE_NO} from "../move_generator/move_list_new.js";
 
 import { test_print_any_0x88, test_print_piese_0x88, test_print_piese_color_0x88, test_print_piese_in_line_0x88,
 test_compare_chess_board_0x88, save_chess_board_0x88, set_board_from_fen_0x88, set_fen_from_0x88, 
 searching_king, iniStartPositionForWhite, IND_MAX, SIDE_TO_MOVE, WHITE  } from "../move_generator/chess_board_new.js";
 
-//import { Move_list_0x88_С } from "../move_generator/move_list_new.js";
-import { Move_list_0x88_С } from "../move_generator/move_list_0x88.js";
-
-import { PV_line_0x88_C } from "../move_generator/pv_line_new.js";
+import { clear_pv_line, add_move_to_pv_line, save_pv_line, test_print_pv_line, pv_line_to_uci_string,
+MAX_DEPTH, IND_TYPE_VARIANT, IND_SCORE_VARIANT, IND_DEPTH } from "../move_generator/pv_line_new.js";
 
 import { searching_minmax, chess_board_0x88_end_original, node_mm} from "./search_minmax_new.js";
 
@@ -74,16 +72,12 @@ import { Timer_C } from "../../browser/timer.js";
   const start_search_minmax = function(fen_start, depth_max) {
     let depth = 0;
 
-    let chess_board_0x88_test = new Chess_board_0x88_C();
-
     let chess_board_0x88_O = new Uint8Array(IND_MAX).fill(0);// доска 0x88 с фигурами;
     let chess_board_0x88_O_start = new Uint8Array(IND_MAX).fill(0);// доска 0x88 с фигурами
     let chess_board_0x88_O_end = new Uint8Array(IND_MAX).fill(0);// доска 0x88 с фигурами
     let chess_board_0x88_O_save_test = new Uint8Array(IND_MAX).fill(0);// доска 0x88 с фигурами
 
-    let move_list_0x88_O_for_pv_line = new Move_list_0x88_С();
-
-    let pv_line_0x88_O = new PV_line_0x88_C();
+    let packing_pv_line = new Uint32Array(MAX_DEPTH).fill(MOVE_NO);
 
     let time_start = 0;
     let time_end = 0;
@@ -103,7 +97,7 @@ import { Timer_C } from "../../browser/timer.js";
     //
     let node = 0;
 
-    let best_score = searching_minmax(pv_line_0x88_O, chess_board_0x88_O, depth, depth_max);
+    let best_score = searching_minmax(packing_pv_line, chess_board_0x88_O, depth, depth_max);
 
     node = node + node_mm;
 
@@ -127,7 +121,7 @@ import { Timer_C } from "../../browser/timer.js";
     let score_cp = String(w * best_score);
     let nodes = String(node);
     let nps = String(Math.round(node / time_delta));
-    let pv = pv_line_0x88_O.pv_line_to_uci_string(chess_board_0x88_test, move_list_0x88_O_for_pv_line);
+    let pv = pv_line_to_uci_string(packing_pv_line);
 
     //info depth 3 seldepth 4 multipv 1 score cp 42 nodes 72 nps 36000 hashfull 0 tbhits 0 time 2 pv e2e4
     //info depth 3 score cp 42 nodes 72 nps 36000 pv e2e4        

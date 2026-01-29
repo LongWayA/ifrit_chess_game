@@ -2,7 +2,7 @@
 /** 
  * @copyright Copyright (c) 2026, AnBr75 and/or its affiliates. All rights reserved.
  * @author AnBr75
- * @name move_gen_1_captures_0x88.js
+ * @name move_generator_captures_new.js
  * @version created 24.01m.2026 
 */
 

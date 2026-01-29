@@ -11,7 +11,6 @@
 
 */
 
-import { Chess_board_0x88_C } from "../move_generator/chess_board_0x88.js";
 
 import {
   test_print_any_0x88, test_print_piese_0x88, test_print_piese_color_0x88, test_print_piese_in_line_0x88,
@@ -34,15 +33,14 @@ import {
   IND_PROMO_QUEEN, IND_PROMO_ROOK, IND_PROMO_BISHOP, IND_PROMO_KNIGHT, MOVE_NO
 } from "../move_generator/move_list_new.js";
 
-
-//import { Evaluate_0x88_C } from "./evaluate_0x88.js";
-
-import { PV_line_0x88_C } from "../move_generator/pv_line_new.js";
+import { clear_pv_line, add_move_to_pv_line, save_pv_line, test_print_pv_line, pv_line_to_uci_string,
+MAX_DEPTH, IND_TYPE_VARIANT, IND_SCORE_VARIANT, IND_DEPTH } from "../move_generator/pv_line_new.js";
 
 import { generated_pseudo_legal_captures } from "../move_generator/move_generator_captures_new.js";
 import { generated_pseudo_legal_quiet_moves } from "../move_generator/move_generator_quiet_new.js";
 
-//  const evaluate_0x88_O = new Evaluate_0x88_C();
+import { score_position } from "./evaluate_new.js";
+
 
 
 const BEST_VALUE_MOD = 20000;
@@ -52,17 +50,17 @@ let node_mm = 0;
 let chess_board_0x88_end_original = new Uint8Array(IND_MAX).fill(0);// доска 0x88 с фигурами;
 
 /**
- * @param {PV_line_0x88_C} pv_line_0x88_O 
+ * @param {Uint32Array} packing_pv_line
  * @param {Uint8Array} chess_board_0x88 
  * @param {number} depth
  * @param {number} depth_max
  * @returns {number}
  */
-const searching_minmax = function (pv_line_0x88_O, chess_board_0x88, depth, depth_max) {
+const searching_minmax = function (packing_pv_line, chess_board_0x88, depth, depth_max) {
 
   let undo = new Uint8Array(UNDO_MAX).fill(0);
 
-  let best_node_line_0x88_O = new PV_line_0x88_C();
+  let best_packing_pv_line = new Uint32Array(MAX_DEPTH).fill(MOVE_NO);
 
   let score = 0;// текущая оценка позиции
   let found_score;// максимальная оценка позиции
@@ -76,6 +74,7 @@ const searching_minmax = function (pv_line_0x88_O, chess_board_0x88, depth, dept
   let to;
   let name_capture_piece;
   let piece_color;
+  let i_move = -1;
 
    //TEST
    //test_print_piese_0x88(chess_board_0x88);
@@ -84,13 +83,13 @@ const searching_minmax = function (pv_line_0x88_O, chess_board_0x88, depth, dept
   if (depth == 0) node_mm = 0;
 
   if (depth >= depth_max) {
-    //found_score = evaluate_0x88_O.score_position(chess_board_0x88);
-    found_score = 0;
+    found_score = score_position(chess_board_0x88);
+    //console.log("searching_minmax->found_score " + found_score);
+    //found_score = 0;
     node_mm = node_mm + 1;
-    pv_line_0x88_O.score_depth_max = found_score;
 
   } else {
-    //console.log("Search_0x88_C->depth " + depth);
+    //console.log("searching_minmax->depth " + depth);
 
     if (chess_board_0x88[SIDE_TO_MOVE] == WHITE) {
       found_score = -BEST_VALUE_MOD;// максимальная оценка позиции
@@ -120,18 +119,19 @@ const searching_minmax = function (pv_line_0x88_O, chess_board_0x88, depth, dept
         continue;
       }
 
-      //pv_line_0x88_O.add_move(move_i, packing_moves, depth);
-      pv_line_0x88_O.type_variant[depth] = "nm";
+      add_move_to_pv_line (move_i, packing_moves, packing_pv_line, depth);
 
-      score = searching_minmax(pv_line_0x88_O, chess_board_0x88, (depth + 1), depth_max);
+      //pv_line_0x88_O.add_move(move_i, packing_moves, depth);
+      if (depth == 0) packing_pv_line[IND_TYPE_VARIANT] = 1;
+
+      score = searching_minmax(packing_pv_line, chess_board_0x88, (depth + 1), depth_max);
 
       if (packing_moves[IND_PIESE_COLOR] == WHITE) {
 
         if (score > found_score) {
           found_score = score;
-          best_node_line_0x88_O.save_list(pv_line_0x88_O);
-          best_node_line_0x88_O.type_variant[depth] = "mm_M";
-
+          i_move = move_i;
+          save_pv_line(best_packing_pv_line, packing_pv_line);
           if (depth == 0) save_chess_board_0x88(chess_board_0x88_end_original, chess_board_0x88);
           //console.log("Search_0x88_C->score > max_score depth " + depth + " found_score " + found_score);
         }//if (score > found_score) {
@@ -140,9 +140,8 @@ const searching_minmax = function (pv_line_0x88_O, chess_board_0x88, depth, dept
 
         if (score < found_score) {
           found_score = score;
-          best_node_line_0x88_O.save_list(pv_line_0x88_O);
-          best_node_line_0x88_O.type_variant[depth] = "mm_B";
-
+          i_move = move_i;
+          save_pv_line(best_packing_pv_line, packing_pv_line);
           if (depth == 0) save_chess_board_0x88(chess_board_0x88_end_original, chess_board_0x88);
           //console.log("Search_0x88_C->score > max_score depth " + depth + " found_score " + found_score);
         }//if (score > found_score) {
@@ -153,7 +152,7 @@ const searching_minmax = function (pv_line_0x88_O, chess_board_0x88, depth, dept
 
     }//for (let move_i = 0; move_i < move_list_0x88_O.number_move; move_i++) {
 
-    pv_line_0x88_O.save_list(best_node_line_0x88_O);
+   if(i_move != -1) save_pv_line(packing_pv_line, best_packing_pv_line);
   }//if (depth >= depth_max) {
 
   return found_score;
