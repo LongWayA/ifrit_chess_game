@@ -11,30 +11,24 @@
 
 */
 
-
 import {
-  test_print_any_0x88, test_print_piese_0x88, test_print_piese_color_0x88, test_print_piese_in_line_0x88,
-  test_compare_chess_board_0x88, save_chess_board_0x88, set_board_from_fen_0x88, set_fen_from_0x88,
-  searching_king, iniStartPositionForWhite, IND_MAX, SIDE_TO_MOVE, WHITE
+   save_chess_board_0x88, 
+   IND_MAX, SIDE_TO_MOVE, WHITE
 } from "../move_generator/chess_board_new.js";
 
 import { do_moves } from "../move_generator/make_move_new.js";
 import { undo_moves } from "../move_generator/unmake_move_new.js";
 
-import { set_undo, get_undo, UNDO_MAX } from "../move_generator/undo_new.js";
+import { UNDO_MAX } from "../move_generator/undo_new.js";
 
 import {
-  clear_list, add_packing_move, get_type_move, get_from, get_to, get_name_capture_piece, set_color, set_number_captures_move,
-  sorting_list, test_compare_list_from, test_print_i_move_list, test_print_list, save_list_from, move_is_found,
-  return_i_move, move_to_string_uci, return_type_captures_pawn_promo, return_type_simple_move,
-  type_move_to_name_piese, type_move_to_name_piese_f,
-  return_promo_piece_from_type_move,
-  LENGTH_LIST, IND_PIESE_COLOR, IND_NUMBER_CAPTURES_MOVE, IND_NUMBER_MOVE,
-  IND_PROMO_QUEEN, IND_PROMO_ROOK, IND_PROMO_BISHOP, IND_PROMO_KNIGHT, MOVE_NO
+   get_type_move, get_from, get_to, get_name_capture_piece,
+  LENGTH_LIST, IND_PIESE_COLOR, IND_NUMBER_MOVE,
+  MOVE_NO
 } from "../move_generator/move_list_new.js";
 
-import { clear_pv_line, add_move_to_pv_line, save_pv_line, test_print_pv_line, pv_line_to_uci_string,
-MAX_DEPTH, IND_TYPE_VARIANT, IND_SCORE_VARIANT, IND_DEPTH } from "../move_generator/pv_line_new.js";
+import { add_move_to_pv_line, save_pv_line,
+MAX_DEPTH, IND_TYPE_VARIANT } from "../move_generator/pv_line_new.js";
 
 import { generated_pseudo_legal_captures } from "../move_generator/move_generator_captures_new.js";
 import { generated_pseudo_legal_quiet_moves } from "../move_generator/move_generator_quiet_new.js";

@@ -1,0 +1,812 @@
+// @ts-check
+/** 
+ * @copyright Copyright (c) 2025, AnBr75 and/or its affiliates. All rights reserved.
+ * @author AnBr75
+ * @name search_0x88.js
+ * @version created 11.10m.2025 
+*/
+
+import {
+  x07_y07_to_0x88, s_0x88_to_x07, s_0x88_to_y07,
+  test_print_any_0x88, test_print_piese_0x88, test_print_piese_color_0x88, test_print_piese_in_line_0x88, test_compare_chess_board_0x88,
+  save_chess_board_0x88, set_board_from_fen_0x88, set_fen_from_0x88, searching_king, iniStartPositionForWhite,
+  IND_MAX, SIDE_TO_MOVE, LET_COOR,
+  BLACK, WHITE, PIECE_NO, W_PAWN, W_KNIGHT, W_BISHOP, W_ROOK, W_QUEEN, W_KING, B_PAWN, B_KNIGHT, B_BISHOP, B_ROOK, B_QUEEN, B_KING,
+  IND_CASTLING_Q, IND_CASTLING_q, IND_CASTLING_K, IND_CASTLING_k,
+  IND_EN_PASSANT_YES, IND_EN_PASSANT_TARGET_SQUARE, IND_KING_FROM_WHITE, IND_KING_FROM_BLACK
+} from "../move_generator/chess_board_new.js";
+
+import {
+  clear_list, add_packing_move, get_type_move, get_from, get_to, get_name_capture_piece, set_color, set_number_captures_move,
+  sorting_list, test_compare_list_from, test_print_i_move_list, test_print_list, save_list_from, move_is_found,
+  return_i_move, move_to_string_uci, return_type_captures_pawn_promo, return_type_simple_move,
+  type_move_to_name_piese, type_move_to_name_piese_f, return_promo_piece_from_type_move,
+  LENGTH_LIST, IND_PIESE_COLOR, IND_NUMBER_CAPTURES_MOVE, IND_NUMBER_MOVE,
+  IND_PROMO_QUEEN, IND_PROMO_ROOK, IND_PROMO_BISHOP, IND_PROMO_KNIGHT,
+  MOVE_NO, CAPTURES_PAWN_QUEEN_PROMO_QUEEN, CAPTURES_PAWN_ROOK_PROMO_QUEEN, CAPTURES_PAWN_BISHOP_PROMO_QUEEN,
+  CAPTURES_PAWN_KNIGHT_PROMO_QUEEN, CAPTURES_PAWN_QUEEN_PROMO_ROOK, CAPTURES_PAWN_ROOK_PROMO_ROOK,
+  CAPTURES_PAWN_BISHOP_PROMO_ROOK, CAPTURES_PAWN_KNIGHT_PROMO_ROOK, CAPTURES_PAWN_QUEEN_PROMO_BISHOP,
+  CAPTURES_PAWN_ROOK_PROMO_BISHOP, CAPTURES_PAWN_BISHOP_PROMO_BISHOP, CAPTURES_PAWN_KNIGHT_PROMO_BISHOP,
+  CAPTURES_PAWN_QUEEN_PROMO_KNIGHT, CAPTURES_PAWN_ROOK_PROMO_KNIGHT, CAPTURES_PAWN_BISHOP_PROMO_KNIGHT,
+  CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT, MOVE_PAWN_PROMO_QUEEN, MOVE_PAWN_PROMO_ROOK, MOVE_PAWN_PROMO_BISHOP,
+  MOVE_PAWN_PROMO_KNIGHT, CAPTURES_PAWN_QUEEN, CAPTURES_PAWN_ROOK, CAPTURES_PAWN_BISHOP, CAPTURES_PAWN_KNIGHT,
+  CAPTURES_KNIGHT_QUEEN, CAPTURES_KNIGHT_ROOK, CAPTURES_BISHOP_QUEEN, CAPTURES_BISHOP_ROOK, CAPTURES_ROOK_QUEEN,
+  CAPTURES_KNIGHT_BISHOP, CAPTURES_KNIGHT_KNIGHT, CAPTURES_BISHOP_BISHOP, CAPTURES_BISHOP_KNIGHT, CAPTURES_ROOK_ROOK,
+  CAPTURES_QUEEN_QUEEN, CAPTURES_ROOK_BISHOP, CAPTURES_ROOK_KNIGHT, CAPTURES_QUEEN_ROOK, CAPTURES_QUEEN_BISHOP,
+  CAPTURES_QUEEN_KNIGHT, CAPTURES_KING_QUEEN, CAPTURES_KING_ROOK, CAPTURES_KING_BISHOP, CAPTURES_KING_KNIGHT,
+  CAPTURES_PAWN_PAWN, EP_CAPTURES, CAPTURES_KNIGHT_PAWN, CAPTURES_BISHOP_PAWN, CAPTURES_ROOK_PAWN,
+  CAPTURES_QUEEN_PAWN, CAPTURES_KING_PAWN, MOVE_QUEEN, MOVE_ROOK, MOVE_BISHOP, MOVE_KNIGHT, MOVE_KING, MOVE_PAWN,
+  MOVE_DOUBLE_PAWN, MOVE_KING_CASTLE, MOVE_KING_QUEEN_CASTLE, TYPE_MOVE_NAME
+} from "../move_generator/move_list_new.js";
+
+import {
+  clear_pv_line, add_move_to_pv_line, save_pv_line, test_print_pv_line, pv_line_to_uci_string,
+  MAX_DEPTH, IND_TYPE_VARIANT, IND_SCORE_VARIANT, IND_DEPTH
+} from "../move_generator/pv_line_new.js";
+
+import {
+  generated_pseudo_legal_captures, check_detected,
+  H1, H8, A1, A8, E1, E8, F1, F8, G1, G8, D1, D8, C1, C8
+} from "../move_generator/move_generator_captures_new.js";
+
+import { generated_pseudo_legal_quiet_moves } from "../move_generator/move_generator_quiet_new.js";
+
+import { do_moves } from "../move_generator/make_move_new.js";
+import { undo_moves } from "../move_generator/unmake_move_new.js";
+
+import { UNDO_MAX } from "../move_generator/undo_new.js";
+
+import { score_position } from "./evaluate_new.js";
+
+
+
+
+/**
+* НАЗНАЧЕНИЕ
+
+
+*/
+
+const MAT_SCORE_MOD = 10000;
+const BEST_SCORE_MOD = 20000;
+
+let node_ab = 0;// считаем узлы
+
+///////////////////////////////////////
+let is_quiescence_use = 0;// используем просмотр выгодных взятий до конца
+let is_ab_use = 0;// используем альфа-бета оптимизацию
+
+let is_PVS_use = 0;// использование полного поиска в основном варианте
+
+// sorting
+let is_TT_use = 0;// сортировка и отсечка по таблице перестановок(хеш-таблице)
+let is_killer_heuristic_use = 0;// использование двух киллеров, т.е. лучших ходов на этой глубине
+let is_history_heuristic_use = 0;// использование сортировки по частоте отсечений. 
+
+// pruning
+let is_lmr_use = 0;// уменьшаем глубину поиска ходов после всех взятий и двух киллеров, но не меньше 4 полухода 
+let is_razoring_use = 0;// не смотрим очень плохие для нас позиции. отключаем если нашли мат.
+let is_futility_pruning_use = 0;// not working
+
+let stop_search = 0;
+
+const set_stop_search_in_1_ab = function () {
+  stop_search = 1;
+}
+
+const set_stop_search_in_0_ab = function () {
+  stop_search = 0;
+}
+
+const set_node_ab_in_0 = function () {
+  node_ab = 0;
+}
+
+
+
+// searching_alpha_beta_fail_soft
+/**
+ * @param {number} alpha
+ * @param {number} beta
+ * @param {Uint8Array} chess_board_0x88
+ * @param {Uint32Array} packing_pv_line 
+ * @param {number} depth
+ * @param {number} depth_max
+ * @param {number} isPV
+ * @returns {number}
+ */
+
+const searching_alpha_beta_id = function (alpha, beta, chess_board_0x88, packing_pv_line, depth, depth_max, isPV) {
+
+  let packing_moves = new Uint32Array(LENGTH_LIST).fill(MOVE_NO);// список ходов. ход упакован в одно число Uint32
+  let best_packing_pv_line = new Uint32Array(MAX_DEPTH).fill(MOVE_NO);// линия лучших ходов для конкретного узла
+  let undo = new Uint8Array(UNDO_MAX).fill(0);// для отмены хода
+
+  let number_move_legal = 0;
+
+  let score = 0;// текущая оценка позиции
+  let best_score = 0;// лучшая оценка позиции
+
+  let type_move;// тип хода
+  let from;// откуда ход
+  let to;// куда ход
+  let name_capture_piece;// имя взятой фигуры
+  let piece_color;// цвет хода
+
+  let is_moove_legal = -1;// является ли ход легальным
+  let is_update_pv_line = 0;// максимальная оценка позиции    
+  let isPV_node = 1;// является ли узел основным вариантом
+
+
+  // экстренный выход
+  if (stop_search == 1) return 0;
+
+  // поиск на максимальной глубине-----------------------------------
+  if (depth >= depth_max) {
+
+    if (is_quiescence_use == 0) {
+      best_score = score_position(chess_board_0x88);
+    } else {
+      //this.quiescence_search_0x88_O.node = 0;
+      //best_score = quiescence_search(alpha, beta, chess_board_0x88, depth);
+      //node_ab = node_ab + node_qs;
+    }
+    node_ab = node_ab + 1;
+
+    return best_score;
+  }
+  // -----------------------------------поиск на максимальной глубине
+
+  if (chess_board_0x88[SIDE_TO_MOVE] == 1) {
+    best_score = -BEST_SCORE_MOD;// максимальная оценка позиции
+  } else {
+    best_score = BEST_SCORE_MOD;// максимальная оценка позиции
+  }
+
+  is_moove_legal = -1;
+
+  //TEST
+  //test_print_piese_0x88(chess_board_0x88);
+  //test_print_any_0x88(chess_board_0x88);
+  //out = out + 1;
+  //console.log("in searching_alpha_beta_id->depth " + depth + " out " + out);
+
+  generated_pseudo_legal_captures(chess_board_0x88, packing_moves);
+  generated_pseudo_legal_quiet_moves(chess_board_0x88, packing_moves);
+
+ 
+  // сортировка по взятиям и типу других ходов
+  sorting_list(packing_moves);
+
+
+  for (let move_i = 0; move_i < packing_moves[IND_NUMBER_MOVE]; move_i++) {
+
+    type_move = get_type_move(move_i, packing_moves);// тип хода
+    from = get_from(move_i, packing_moves);
+    to = get_to(move_i, packing_moves);
+    name_capture_piece = get_name_capture_piece(move_i, packing_moves);
+    piece_color = packing_moves[IND_PIESE_COLOR];
+
+    is_moove_legal = do_moves(chess_board_0x88, undo, type_move, from, to, piece_color);
+
+    if (is_moove_legal == 0) { // король под шахом. отменяем ход и пропускаем этот цикл
+      undo_moves(chess_board_0x88, undo, type_move, from, to, name_capture_piece, piece_color);
+      continue;
+    } else if (is_moove_legal == 2) {// нелегальные рокировки не генерируются. просто пропускаем ход
+      continue;
+    }
+
+    add_move_to_pv_line(move_i, packing_moves, packing_pv_line, depth);
+
+    number_move_legal = number_move_legal + 1;
+
+    if (is_PVS_use == 0) {
+      isPV_node = 1;
+      score = searching_alpha_beta_id(alpha, beta, chess_board_0x88, packing_pv_line, (depth + 1), depth_max, isPV_node);
+    }
+
+    // восстановили доску
+    undo_moves(chess_board_0x88, undo, type_move, from, to, name_capture_piece, piece_color);;
+
+    if (packing_moves[IND_PIESE_COLOR] == WHITE) {
+
+      // alpha < value < beta => exact value
+      if (score > best_score) {
+
+        best_score = score;
+
+        if (is_ab_use == 1) {
+
+          // lower bound
+          if (score >= beta) {
+            return score;   // 
+          }//
+
+          if (score > alpha) {
+            alpha = score; //
+
+            if (isPV == 1) {
+              save_pv_line(best_packing_pv_line, packing_pv_line);
+              is_update_pv_line = 1;
+            }
+          }
+
+        } else {//if (this.is_ab_use == 1) {
+          if (isPV == 1) {
+            save_pv_line(best_packing_pv_line, packing_pv_line);
+            is_update_pv_line = 1;
+          }
+        }//if (this.is_ab_use == 1) {
+
+      }//if (score > best_score) {
+
+    } else {// if (packing_moves[IND_PIESE_COLOR] == WHITE) {
+
+      if (score < best_score) {
+
+        best_score = score;
+
+        if (is_ab_use == 1) {
+
+          // upper bound
+          if (score <= alpha) {
+            return score;   // 
+          }//
+
+          if (score < beta) {
+            beta = score; //
+
+            if (isPV == 1) {
+              save_pv_line(best_packing_pv_line, packing_pv_line);
+              is_update_pv_line = 1;
+            }
+          }
+
+        } else {//if (is_ab_use == 1) {
+          if (isPV == 1) {
+            save_pv_line(best_packing_pv_line, packing_pv_line);
+            is_update_pv_line = 1;
+          }
+        }//if (is_ab_use == 1) {
+
+      }// 
+
+    }//if (chess_board_0x88_O.side_to_move == 1) {
+
+  }//for (let move_i = 0; move_i < move_list_0x88_O.number_move; move_i++) {
+
+  if (is_update_pv_line == 1) save_pv_line(packing_pv_line, best_packing_pv_line);
+
+  //это мат или пат
+  if (number_move_legal == 0) {
+
+    let mat = MAT_SCORE_MOD - depth;
+
+    if (chess_board_0x88[SIDE_TO_MOVE] == WHITE) {//
+
+      // ход белых. а ходов нет. это 0 пат, если же белый король под шахом это мат
+      if (check_detected(chess_board_0x88[IND_KING_FROM_WHITE], 1, chess_board_0x88) != 0) {
+
+        //console.log("Search_0x88_C-> W chek ");
+
+        // тут ход белых, но они выставляют минус. Потому что мат это максимально плохое событие 
+        // для белых и оно должно быть с минимально возможной оценкой         
+        mat = -1 * mat;
+
+        packing_pv_line[MAX_DEPTH] = depth - 1;
+
+        return mat;
+      }
+
+      packing_pv_line[MAX_DEPTH] = depth - 1;
+
+      return 0;
+
+    } else {//if (chess_board_0x88_O.side_to_move == 1) {
+      //  console.log("Search_0x88_C-> B pat ");
+      if (check_detected(chess_board_0x88[IND_KING_FROM_BLACK], 1, chess_board_0x88) != 0) {
+
+        //console.log("Search_0x88_C-> B chek ");
+        packing_pv_line[MAX_DEPTH] = depth - 1;
+
+        return mat;
+      }
+
+      packing_pv_line[MAX_DEPTH] = depth - 1;
+
+      return 0;
+    }//if (chess_board_0x88_O.side_to_move == 1) {
+  }// if (number_move_legal == 0) {
+
+  return best_score;//best_score
+}
+
+export { searching_alpha_beta_id, set_stop_search_in_1_ab, set_stop_search_in_0_ab, set_node_ab_in_0, node_ab, BEST_SCORE_MOD };
+
+/*
+  // используем хеш таблицу ====================================================
+  if (is_TT_use == 1) {
+
+    // // ищем позицию в хеш таблице
+    // is_save_position = transposition_table_0x88_O.is_save_position(chess_board_0x88_O, depth, depth_max);
+
+    // //test
+    // //if (is_save_position.tn == 0) console.log("Search_0x88_C-> tn == 0 !!!! depth " + depth);
+
+    // if ((is_save_position.tn == Transposition_table_0x88_C.ALPHA_CUT) && (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.BLACK)) {
+
+    //   if (is_save_position.sc <= alpha) {
+    //     //test
+    //     //this.test_tt.use_alpha_cut = this.test_tt.use_alpha_cut + 1;
+    //     return is_save_position.sc;
+    //   }
+    // }
+
+    // if ((is_save_position.tn == Transposition_table_0x88_C.BETA_CUT) && (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.WHITE)) {
+
+    //   if (is_save_position.sc >= beta) {
+    //     //test
+    //     //this.test_tt.use_beta_cut = this.test_tt.use_beta_cut + 1;
+    //     return is_save_position.sc;
+    //   }
+    // }
+
+    // // if ((is_save_position.tn == Transposition_table_0x88_C.MAX_SCORE_UPDATE) && (isPV == 0)) {
+
+    // //   //test
+    // //   //this.test_tt.use_score = this.test_tt.use_score + 1;
+    // //   return is_save_position.sc;
+    // // }
+  }
+  // ==================================================== используем хеш таблицу
+
+  // razoring ====================================================
+  if (is_razoring_use == 1) {
+
+    if ((isPV == 0) && ((depth_max - depth) <= 5)) {
+
+      score = score_position(chess_board_0x88);
+
+      let raz = PAWN_SCORE * (depth_max - depth);
+
+      if (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.WHITE) {
+
+        // если нашли мат то альфа настолько большая, что любые ходы режутся
+        // и вместо матовой оценки получаем обычную
+        // что бы это предотвратить добавил условие 5000 > alpha.
+        if (((score + raz) < alpha) && (5000 > alpha)) {
+
+          score = this.quiescence_search_0x88_O.quiescence_search(alpha, beta, chess_board_0x88_O,
+            move_generator_captures_0x88_O, depth, transposition_table_0x88_O);
+
+          if (score <= alpha) return score;
+        }
+      } else {
+
+        if (((score - raz) > beta) && (-5000 < beta)) {
+
+          score = this.quiescence_search_0x88_O.quiescence_search(alpha, beta, chess_board_0x88_O,
+            move_generator_captures_0x88_O, depth, transposition_table_0x88_O);
+
+          if (score >= beta) return score;
+        }
+      }
+    }
+  }
+  // ==================================================== razoring
+
+  // используем историю ====================================================
+  // сортировка по истории
+  if (is_history_heuristic_use == 1) {
+    // console.log("1 Search_0x88_C->NOT SORTING HIS depth " + depth);
+    //  move_list_0x88_O.test_print_list(chess_board_0x88_O);
+    //move_list_0x88_O.sorting_list_history_heuristic(history_heuristic_0x88_O);
+    // console.log("1 Search_0x88_C->SORTING HIS depth " + depth);
+    // move_list_0x88_O.test_print_list(chess_board_0x88_O);
+  }
+  //==================================================== используем историю
+
+  // используем киллеры ====================================================
+  if (this.is_killer_heuristic_use == 1) {
+    // если второй киллер записан то выводим его на позицию после взятий
+    if (killer_heuristic_0x88_O.killer_moves_from_2[depth] != -1) {
+      // console.log("Search_0x88_C->killer_moves_2");
+      // console.log("Search_0x88_C->killer_heuristic_0x88_O.killer_moves_2[" + depth + "] " + killer_heuristic_0x88_O.killer_moves_2[depth]);
+      // console.log("Search_0x88_C->type_move[0] до " + move_list_0x88_O.type_move[0]);
+      move_list_0x88_O.set_move_after_the_captures(killer_heuristic_0x88_O.killer_moves_from_2[depth],
+        killer_heuristic_0x88_O.killer_moves_to_2[depth]);
+      //console.log("Search_0x88_C->type_move[0] после " + move_list_0x88_O.type_move[0]);
+    };
+
+    // если первый киллер записан то выводим его на позицию после взятий и перед вторым
+    if (killer_heuristic_0x88_O.killer_moves_from_1[depth] != -1) {
+      // console.log("Search_0x88_C->killer_moves_1");
+      // console.log("Search_0x88_C->killer_heuristic_0x88_O.killer_moves_1[" + depth + "] " + killer_heuristic_0x88_O.killer_moves_1[depth]);
+      // console.log("Search_0x88_C->type_move[0] до " + move_list_0x88_O.type_move[0]);
+      move_list_0x88_O.set_move_after_the_captures(killer_heuristic_0x88_O.killer_moves_from_1[depth],
+        killer_heuristic_0x88_O.killer_moves_to_1[depth]);
+      //console.log("Search_0x88_C->type_move[0] после " + move_list_0x88_O.type_move[0]);
+    };
+  }
+  //==================================================== используем киллеры
+
+  // используем хеш таблицу ====================================================
+  //
+  if (this.is_TT_use == 1) {
+    if ((is_save_position?.tn == Transposition_table_0x88_C.ALPHA_UPDATE) && (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.WHITE)) {
+      move_list_0x88_O.set_tt_move_in_0(is_save_position.from, is_save_position.to);
+      //test
+      //console.log("Search_0x88_C->use ALPHA_UPDATE side_to_move " + chess_board_0x88_O.side_to_move);
+      //console.log("Search_0x88_C->use ALPHA_UPDATE piece_color " + move_list_0x88_O.piece_color);
+      //this.test_tt.use_alpha_up = this.test_tt.use_alpha_up + 1;
+    } else if ((is_save_position?.tn == Transposition_table_0x88_C.BETA_UPDATE) && (chess_board_0x88_O.side_to_move == Chess_board_0x88_C.BLACK)) {
+      move_list_0x88_O.set_tt_move_in_0(is_save_position.from, is_save_position.to);
+      //test
+      //console.log("Search_0x88_C->use BETA_UPDATE side_to_move " + chess_board_0x88_O.side_to_move);
+      //console.log("Search_0x88_C->use BETA_UPDATE piece_color " + move_list_0x88_O.piece_color);
+      //this.test_tt.use_beta_up = this.test_tt.use_beta_up + 1;
+    }
+  }
+  //==================================================== используем хеш таблицу
+
+  // test+++++++++++++++++++++++++++
+  // test_save_move_list_0x88_O.test_compare_list_from(move_list_0x88_O);
+  // console.log("2 Search_0x88_C->depth " + depth);
+  // move_list_0x88_O.test_print_list(chess_board_0x88_O);
+  // console.log("--------------------------------------------- ");
+
+    if (packing_moves[IND_PIESE_COLOR] == WHITE) {
+
+      // alpha < value < beta => exact value
+      if (score > best_score) {
+
+        best_score = score;
+
+        if (is_ab_use == 1) {
+          // lower bound
+          if (score >= beta) {
+
+            // записываем ход в историю color, from_128, to_128, depth, depth_max
+            if (this.is_history_heuristic_use == 1) {
+              if (move_list_0x88_O.type_move[move_i] > Move_list_0x88_С.CAPTURES_KING_PAWN) {// ход не взятие
+
+                history_heuristic_0x88_O.history_good_save(move_list_0x88_O.piece_color,
+                  move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], depth, depth_max);
+
+                //this.test_hh.add_b_cnt_h_move = this.test_hh.add_b_cnt_h_move + 1;
+              }
+            }
+
+            // записываем ход в киллер
+            if (this.is_killer_heuristic_use == 1) {
+              if (move_list_0x88_O.type_move[move_i] > Move_list_0x88_С.CAPTURES_KING_PAWN) {// ход не взятие
+                killer_heuristic_0x88_O.add_move(move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], depth);
+              }
+            }
+
+            // записываем ход в хеш
+            if (this.is_TT_use == 1) {
+              transposition_table_0x88_O.add_position(Transposition_table_0x88_C.BETA_CUT, move_list_0x88_O.type_move[move_i],
+                score, move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], depth, depth_max, chess_board_0x88_O);
+              //test
+              //this.test_tt.save_beta_cut = this.test_tt.save_beta_cut + 1;
+            }
+
+            return score;   //
+          }//
+
+          //tt_type_node = Transposition_table_0x88_C.MAX_SCORE_UPDATE;
+
+          if (score > alpha) {
+            alpha = score; //
+            //tt_type_node = Transposition_table_0x88_C.ALPHA_UPDATE;
+            if (this.is_TT_use == 1) {
+              // записываем ход в хеш
+              transposition_table_0x88_O.add_position(Transposition_table_0x88_C.ALPHA_UPDATE, move_list_0x88_O.type_move[move_i],
+                score, move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], depth, depth_max, chess_board_0x88_O);
+
+              //test
+              if (tt_type_node == Transposition_table_0x88_C.MAX_SCORE_UPDATE) {
+                //this.test_tt.save_score_up = this.test_tt.save_score_up + 1;
+              } else if (tt_type_node == Transposition_table_0x88_C.ALPHA_UPDATE) {
+                //this.test_tt.save_alpha_up = this.test_tt.save_alpha_up + 1;
+              }
+            }
+            if (isPV == 1) {
+              best_node_line_0x88_O.save_list(pv_line_0x88_O);
+              best_node_line_0x88_O.type_variant[depth] = "ab_W";
+              is_update_pv_line = 1;
+            }
+          }
+          // else {//if (score > alpha) {
+          //   // записываем ход в историю color, from_128, to_128, depth, depth_max
+          //   if (this.is_history_heuristic_use == 1) {
+          //     if (move_list_0x88_O.type_move[move_i] > Move_list_0x88_С.CAPTURES_KING_PAWN) {// ход не взятие
+
+          //       history_heuristic_0x88_O.history_bad_save(move_list_0x88_O.piece_color,
+          //         move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], depth, depth_max);
+
+          //       //this.test_hh.add_b_cnt_h_move = this.test_hh.add_b_cnt_h_move + 1;
+          //     }
+          //   }
+          // }
+
+        } else {//if (this.is_ab_use == 1) {
+          if (isPV == 1) {
+            best_node_line_0x88_O.save_list(pv_line_0x88_O);
+            best_node_line_0x88_O.type_variant[depth] = "ab_B";
+            is_update_pv_line = 1;
+          }
+        }//if (this.is_ab_use == 1) {
+      }
+
+    } else {// if (move_list_0x88_O.piece_color == Chess_board_0x88_C.WHITE)
+
+      if (score < best_score) {
+
+        best_score = score;
+
+        if (this.is_ab_use == 1) {
+
+          // upper bound
+          if (score <= alpha) {
+
+            // записываем ход в историю color, from_128, to_128, depth, depth_max
+            if (this.is_history_heuristic_use == 1) {
+              if (move_list_0x88_O.type_move[move_i] > Move_list_0x88_С.CAPTURES_KING_PAWN) {// ход не взятие
+
+                history_heuristic_0x88_O.history_good_save(move_list_0x88_O.piece_color,
+                  move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], depth, depth_max);
+
+                //this.test_hh.add_a_cnt_h_move = this.test_hh.add_a_cnt_h_move + 1;
+              }
+            }
+
+            // записываем ход в киллер
+            if (this.is_killer_heuristic_use == 1) {
+              if (move_list_0x88_O.type_move[move_i] > Move_list_0x88_С.CAPTURES_KING_PAWN) {// ход не взятие
+                killer_heuristic_0x88_O.add_move(move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], depth);
+              }
+            }
+
+            // записываем ход в хеш
+            if (this.is_TT_use == 1) {
+              transposition_table_0x88_O.add_position(Transposition_table_0x88_C.ALPHA_CUT, move_list_0x88_O.type_move[move_i],
+                score, move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], depth, depth_max, chess_board_0x88_O);
+              //test
+              //this.test_tt.save_alpha_cut = this.test_tt.save_alpha_cut + 1;
+            }
+            return score;//
+          }//
+
+          //tt_type_node = Transposition_table_0x88_C.MAX_SCORE_UPDATE;
+
+          if (score < beta) {
+            beta = score; //
+            //tt_type_node = Transposition_table_0x88_C.BETA_UPDATE;
+            if (this.is_TT_use == 1) {
+              // записываем ход в хеш
+              transposition_table_0x88_O.add_position(Transposition_table_0x88_C.BETA_UPDATE, move_list_0x88_O.type_move[move_i],
+                score, move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], depth, depth_max, chess_board_0x88_O);
+
+              //test
+              // if (tt_type_node == Transposition_table_0x88_C.MAX_SCORE_UPDATE) {
+              //   //this.test_tt.save_score_up = this.test_tt.save_score_up + 1;
+              // } else if (tt_type_node == Transposition_table_0x88_C.ALPHA_UPDATE) {
+              //   //this.test_tt.save_alpha_up = this.test_tt.save_alpha_up + 1;
+              // }
+            }
+            if (isPV == 1) {
+              best_node_line_0x88_O.save_list(pv_line_0x88_O);
+              best_node_line_0x88_O.type_variant[depth] = "ab_B";
+              is_update_pv_line = 1;
+            }
+          }
+          // else {//if (score < beta) {
+          //   // записываем ход в историю color, from_128, to_128, depth, depth_max
+          //   if (this.is_history_heuristic_use == 1) {
+          //     if (move_list_0x88_O.type_move[move_i] > Move_list_0x88_С.CAPTURES_KING_PAWN) {// ход не взятие
+
+          //       history_heuristic_0x88_O.history_bad_save(move_list_0x88_O.piece_color,
+          //         move_list_0x88_O.from[move_i], move_list_0x88_O.to[move_i], depth, depth_max);
+
+          //       //this.test_hh.add_b_cnt_h_move = this.test_hh.add_b_cnt_h_move + 1;
+          //     }
+          //   }
+          // }
+
+        } else {//
+          if (isPV == 1) {
+            best_node_line_0x88_O.save_list(pv_line_0x88_O);
+            best_node_line_0x88_O.type_variant[depth] = "ab_B";
+            is_update_pv_line = 1;
+          }
+        }
+      }
+
+*/
+
+
+
+// from Alexandria_src=====================
+// Reverse futility pruning -> (eval - futilityMargin) >= beta return (eval - futilityMargin)
+
+// Razoring
+//        if (depth <= 5 && eval + razoringCoeff() * depth < alpha){
+//            const int razorScore = Quiescence<false>(alpha, beta, 0, td, ss);
+//            if (razorScore <= alpha)
+//                return razorScore; }
+
+// Conditions to consider LMR. Calculate how much we should reduce the search depth.
+//if (totalMoves > 1 && depth >= 3 && (isQuiet || !ttPv)) {
+
+// =====================from Alexandria_src 
+
+// from Stockfish_src=====================
+// Step 4. Transposition table lookup
+// Step 5. Tablebases probe
+// Step 6. const evaluation of the position
+// Step 7. Razoring
+// If eval is really low, skip search entirely and return the qsearch value.
+// For PvNodes, we must have a guard against mates being returned.
+// if (!PvNode && eval < alpha - 514 - 294 * depth * depth)
+//    return qsearch<NonPV>(pos, ss, alpha, beta);
+// Step 8. Futility pruning: child node
+// The depth condition is important for mate finding.
+// if (!ss->ttPv && depth < 14 && eval - futility_margin(depth) >= beta && eval >= beta
+//   && (!ttData.move || ttCapture) && !is_loss(beta) && !is_win(eval))
+//    return (2 * beta + eval) / 3;
+// Step 9. Null move search with verification search
+// Step 10. Internal iterative reductions
+// At sufficient depth, reduce depth for PV/Cut nodes without a TTMove.
+// (*Scaler) Especially if they make IIR less aggressive.
+// if (!allNode && depth >= 6 && !ttData.move && priorReduction <= 3)
+// depth--;
+// Step 11. ProbCut
+// If we have a good enough capture (or queen promotion) and a reduced search
+// returns a value much above beta, we can (almost) safely prune the previous move.
+// Step 12. A small Probcut idea
+// Step 13. Loop through all pseudo-legal moves until no moves remain
+// or a beta cutoff occurs.
+// Step 14. Pruning at shallow depth.
+// Depth conditions are important for mate finding.
+// Step 15. Extensions
+// Singular extension search. If all moves but one
+// fail low on a search of (alpha-s, beta-s), and just one fails high on
+// (alpha, beta), then that move is singular and should be extended. To
+// verify this we do a reduced search on the position excluding the ttMove
+// and if the result is lower than ttValue minus a margin, then we will
+// extend the ttMove. Recursive singular search is avoided.
+
+// (*Scaler) Generally, higher singularBeta (i.e closer to ttValue)
+// and lower extension margins scale well.
+// Step 16. Make the move
+// Step 17. Late moves reduction / extension (LMR)
+//if (depth >= 2 && moveCount > 1)
+//{
+// In general we want to cap the LMR depth search at newDepth, but when
+// reduction is negative, we allow this move a limited search extension
+// beyond the first move depth.
+// To prevent problems when the max value is less than the min value,
+// std::clamp has been replaced by a more robust implementation.
+// Step 18. Full-depth search when LMR is skipped
+// Step 19. Undo move
+// Step 20. Check for a new best move
+// Finished searching the move. If a stop occurred, the return value of
+// the search cannot be trusted, and we return immediately without updating
+// best move, principal variation nor transposition table.
+// Step 21. Check for mate and stalemate
+// All legal moves have been searched and if there are no legal moves, it
+// must be a mate or a stalemate. If we are in a singular extension search then
+// return a fail low score.
+
+// =====================from Stockfish_src 
+
+//for tactical and quiet moves
+
+/*
+  // searching_alpha_beta_fail_hard
+  ////////////////////////////////////////
+https://www.chessprogramming.org/Alpha-Beta
+
+  PVS
+  value = PVS(-(alpha+1),-alpha)
+  if(value > alpha && value < beta) {
+  value = PVS(-beta,-alpha);
+
+
+number of leaves with depth n and b = 40
+depth n	    bn	                b⌈n/2⌉ + b⌊n/2⌋ - 1
+      0	    1	                  1
+      1	    40	                40
+      2	    1,600	              79
+      3	    64,000	            1,639
+      4	    2,560,000	          3,199
+      5	    102,400,000	        65,569
+      6	    4,096,000,000	      127,999
+      7	    163,840,000,000	    2,623,999
+      8	    6,553,600,000,000	  5,119,999
+
+Fail soft
+
+int alphaBetaMax( int alpha, int beta, int depthleft ) {
+   if ( depthleft == 0 ) return evaluate();
+   bestValue = -infinity;
+   for ( all moves) {
+      score = alphaBetaMin( alpha, beta, depthleft - 1 );
+      if( score > bestValue )
+      {
+         bestValue = score;
+         if( score > alpha )
+            alpha = score; // alpha acts like max in MiniMax
+      }
+      if( score >= beta )
+         return score;   // fail soft beta-cutoff
+   }
+   return bestValue;
+}
+
+int alphaBetaMin( int alpha, int beta, int depthleft ) {
+   if ( depthleft == 0 ) return -evaluate();
+   bestValue = infinity;
+   for ( all moves) {
+      score = alphaBetaMax( alpha, beta, depthleft - 1 );
+      if( score < bestValue)
+      {
+         bestValue = score;
+         if( score < beta )
+            beta = score; // beta acts like min in MiniMax
+      }
+      if( score <= alpha )
+         return score; // fail soft alpha-cutoff, break can also be used here
+   }
+   return bestValue;
+}
+
+
+Negamax
+int alphaBeta( int alpha, int beta, int depthleft ) {
+   if( depthleft == 0 ) return quiesce( alpha, beta );
+   bestValue = -infinity;
+   for ( all moves)  {
+      score = -alphaBeta( -beta, -alpha, depthleft - 1 );
+      if( score > bestValue )
+      {
+         bestValue = score;
+         if( score > alpha )
+            alpha = score; // alpha acts like max in MiniMax
+      }
+      if( score >= beta )
+         return bestValue;   //  fail soft beta-cutoff, existing the loop here is also fine
+   }
+   return bestValue;
+}
+
+Fail hard
+Negamax
+
+int alphaBeta( int alpha, int beta, int depthleft ) {
+   if( depthleft == 0 ) return quiesce( alpha, beta );
+   for ( all moves)  {
+      score = -alphaBeta( -beta, -alpha, depthleft - 1 );
+      if( score >= beta )
+         return beta;   //  fail hard beta-cutoff
+      if( score > alpha )
+         alpha = score; // alpha acts like max in MiniMax
+   }
+   return alpha;
+}
+
+ что выгоднее в chess engine alpha beta fail soft или alpha beta fail_hard ?
+  ответ от  Google AI:
+  В современных шахматных движках, которые активно используют PVS и таблицы перестановок, 
+  fail-soft является стандартом де-факто, так как он обеспечивает 
+  более быструю и точную работу алгоритма.
+  ----------------------
+  
+  ответ от  Google AI:
+  Примерная оценка: В реальных тестах, при хорошем упорядочивании ходов, 
+  PVS может потребовать примерно на 10% меньше вычислений (или узлов для поиска), 
+  чем стандартный альфа-бета алгоритм. В некоторых случаях сообщалось о 
+  сокращении общего числа узлов и времени примерно на 33%.
+*/

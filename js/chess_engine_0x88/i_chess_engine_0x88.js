@@ -7,7 +7,7 @@
 */
 
 import { Search_root_0x88_C } from "./search_root/i_search_root_0x88.js";
-import { start_search_minmax } from "./search_root/i_search_root_new.js";
+import { start_search_minmax, searching_iterative_deepening } from "./search_root/i_search_root_new.js";
 
 import { Uci_C } from "../uci/uci.js";
 //import { Worker_ChessEngine_0x88_С } from "../worker/worker_chess_engine_0x88.js";
@@ -94,21 +94,6 @@ class ChessEngine_0x88_С {
     this.worker_chessEngine_0x88_O?.message_chessEngine_0x88_to_worker_chessEngine_0x88_O(message);
   }
 
-  // запуск полного перебора minmax
-  // тут можно проверить корректность игрового движка с помощью perf_t. как правильно он генерирует позиции.
-  /**
-   * @param {string} fen_start
-   * @param {number} depth_max
-   * @returns {uci_return_search}
-   */
-  go_depth_minmax(fen_start, depth_max) {
-    //console.log("ChessEngine_0x88_С->test_go_depth_nm --------");
-    //let uci_return_search = this.search_root_0x88_O.start_search_minmax(fen_start, depth_max);
-    let uci_return_search = go_depth_minmax(fen_start, depth_max);    
-
-    return uci_return_search;
-  }
-
   // iterative deepening
    /**
    * @param {string} fen_start
@@ -116,26 +101,31 @@ class ChessEngine_0x88_С {
    * @returns {uci_return_search}
    */ 
   go_depth_id(fen_start, depth_max) {
-    //console.log("ChessEngine_0x88_С->go_depth_id depth_max " + depth_max);
-    let uci_return_search = this.search_root_0x88_O.searching_iterative_deepening(fen_start, depth_max);
+    console.log("ChessEngine_0x88_С->go_depth_id depth_max " + depth_max);
+
+    //let uci_return_search = this.search_root_0x88_O.searching_iterative_deepening(fen_start, depth_max);
+    let uci_return_search = searching_iterative_deepening(this, fen_start, depth_max);
 
     return uci_return_search;
   }
-}
 
-  // запуск полного перебора minmax
+ // запуск полного перебора minmax
   // тут можно проверить корректность игрового движка с помощью perf_t. как правильно он генерирует позиции.
   /**
    * @param {string} fen_start
    * @param {number} depth_max
    * @returns {uci_return_search}
    */
-  const go_depth_minmax = function(fen_start, depth_max) {
-    //console.log("ChessEngine_0x88_С->test_go_depth_nm --------");
+  go_depth_minmax(fen_start, depth_max) {
+    console.log("ChessEngine_0x88_С->go_depth_minmax");
     let uci_return_search = start_search_minmax(fen_start, depth_max);
 
     return uci_return_search;
   }
 
+}
 
-export { ChessEngine_0x88_С, go_depth_minmax };
+ 
+
+
+export { ChessEngine_0x88_С };

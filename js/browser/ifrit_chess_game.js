@@ -93,8 +93,8 @@ let IfritChessGame_R = {
 
         IfritChessGame_R.position_fen = IfritChessGame_R.INITIAL_POSITION_FEN;
 
-        IfritChessGame_R.gui_chess_O.mode_game = Gui_chess_C.MINMAX;// полный перебор        
-        //IfritChessGame_R.gui_chess_O.mode_game = Gui_chess_C.ID;// циклическое погружение со всеми эвристиками      
+        //IfritChessGame_R.gui_chess_O.mode_game = Gui_chess_C.MINMAX;// полный перебор        
+        IfritChessGame_R.gui_chess_O.mode_game = Gui_chess_C.ID;// циклическое погружение со всеми эвристиками      
 
         // задаем глубину перебора во время игры
         IfritChessGame_R.gui_chess_O.depth_max = 4;
