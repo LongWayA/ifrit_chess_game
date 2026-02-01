@@ -394,7 +394,7 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
       let nodes = String(node_root);
       let nps = String(Math.round(node_root / time_delta));packing_pv_line
 
-      console.log("packing_pv_line[IND_DEPTH_PV] = " + packing_pv_line[IND_DEPTH_PV]);
+      //console.log("packing_pv_line[IND_DEPTH_PV] = " + packing_pv_line[IND_DEPTH_PV]);
 
       let pv = pv_line_to_uci_string_pv(packing_pv_line);
 

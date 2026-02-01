@@ -367,7 +367,7 @@ const searching_alpha_beta_id_ab = function (alpha, beta, chess_board_0x88, pack
       if (check_detected(chess_board_0x88[IND_KING_FROM_BLACK], BLACK, chess_board_0x88) != 0) {
 
         //console.log("Search_0x88_C-> B chek ");
-        packing_pv_line[IND_DEPTH_MAT_PV] = depth - 1 + 500;
+        packing_pv_line[IND_DEPTH_MAT_PV] = depth - 1 + 500;// обхожу ноль. так как на 1 глубине -> depth - 1 = 0
 
         return mat;
       }
