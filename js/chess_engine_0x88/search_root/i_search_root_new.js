@@ -308,7 +308,7 @@ const searching_iterative_deepening = function (chessEngine_0x88_O, fen_start, d
       if (is_moove_legal == 0) { // король под шахом. отменяем ход и пропускаем этот цикл
         undo_moves(chess_board_0x88, undo, type_move, from, to, name_capture_piece, piece_color);
         continue;
-      } else if (is_moove_legal == 2) {// нелегальные рокировки не генерируются. просто пропускаем ход
+      } else if (is_moove_legal == 2) {// нелегальные рокировки и взятия короля не генерируются. просто пропускаем ход
         continue;
       }
       number_move_legal = number_move_legal + 1;

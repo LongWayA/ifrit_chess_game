@@ -109,7 +109,7 @@ const searching_minmax = function (packing_pv_line, chess_board_0x88, depth, dep
       if (is_moove_legal == 0) { // король под шахом. отменяем ход и пропускаем этот цикл
         undo_moves(chess_board_0x88, undo, type_move, from, to, name_capture_piece, piece_color);
         continue;
-      } else if (is_moove_legal == 2) {// нелегальные рокировки не генерируются. просто пропускаем ход
+      } else if (is_moove_legal == 2) {// нелегальные рокировки и взятия короля не генерируются. просто пропускаем ход
         continue;
       }
 

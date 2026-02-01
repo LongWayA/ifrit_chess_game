@@ -109,11 +109,17 @@ const quiescence_search = function (alpha, beta, chess_board_0x88, depth) {
     if (best_value < beta) alpha = best_value;
   }
   // ===================================== Stand Pat
-
   //clear_list(packing_moves);
   generated_pseudo_legal_captures(chess_board_0x88, packing_moves);
+
+  if (packing_moves[IND_NUMBER_MOVE] == 0) {
+    //console.log("quiescence_search-> moves = 0 depth " + depth);
+    return best_value;
+  }
+
   sorting_list(packing_moves);
 
+  //console.log("quiescence_search-> moves = " + packing_moves[IND_NUMBER_MOVE] + " depth " + depth);
 
   for (let move_i = 0; move_i < packing_moves[IND_NUMBER_MOVE]; move_i++) {
 
@@ -122,6 +128,23 @@ const quiescence_search = function (alpha, beta, chess_board_0x88, depth) {
     to = get_to(move_i, packing_moves);
     name_capture_piece = get_name_capture_piece(move_i, packing_moves);
     piece_color = packing_moves[IND_PIESE_COLOR];
+
+    // TEST 
+    // if ((type_move == MOVE_NO) || (type_move < MOVE_NO) || (type_move > MOVE_KING_QUEEN_CASTLE)) {
+    //   console.log("quiescence_search-> type_move !!!! depth " + depth + " type_move " + type_move);
+    //   console.log("quiescence_search-> depth " + depth + " packing_moves[" + move_i + "] = " + packing_moves[move_i]);
+
+    //   //test_print_piese_0x88(chess_board_0x88);
+    //   //test_print_any_0x88(chess_board_0x88);
+    // }
+    // if (name_capture_piece == 0) {
+    //   console.log("quiescence_search-> name_capture_piece == 0 depth " + depth);
+    // }
+
+    // if (from == to) {
+    //   console.log("quiescence_search-> from == to depth " + depth + " type_move " + type_move + " from " + from);
+    // }
+
 
     is_moove_legal = do_moves(chess_board_0x88, undo, type_move, from, to, piece_color);
 

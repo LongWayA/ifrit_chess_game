@@ -878,7 +878,7 @@ const return_type_simple_move = function (piece_name, piece_name_captures) {
         default://
         // console.log("default");
     }
-    return -1;
+    return MOVE_NO;
 }
 
 // используем для строкового представления фигуры в ходах

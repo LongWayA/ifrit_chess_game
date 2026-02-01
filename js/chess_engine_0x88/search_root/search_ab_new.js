@@ -108,6 +108,8 @@ const set_node_ab_in_0 = function () {
 let packing_moves_k1 = new Uint32Array(MAX_DEPTH_K).fill(MOVE_NO);// список ходов. ход упакован в одно число Uint32
 let packing_moves_k2 = new Uint32Array(MAX_DEPTH_K).fill(MOVE_NO);// список ходов. ход упакован в одно число Uint32
 
+  let chess_board_0x88_test = new Uint8Array(IND_MAX).fill(0);// записываем доску с ходом
+
 // searching_alpha_beta_fail_soft
 /**
  * @param {number} alpha
@@ -152,7 +154,9 @@ const searching_alpha_beta_id = function (alpha, beta, chess_board_0x88, packing
       best_score = score_position(chess_board_0x88);
     } else {
       //this.quiescence_search_0x88_O.node = 0;
+      save_chess_board_0x88(chess_board_0x88_test, chess_board_0x88);
       best_score = quiescence_search(alpha, beta, chess_board_0x88, depth);
+      test_compare_chess_board_0x88(chess_board_0x88_test, chess_board_0x88);
       //node_ab = node_ab + node_qs;
     }
     node_ab = node_ab + 1;
@@ -220,7 +224,7 @@ const searching_alpha_beta_id = function (alpha, beta, chess_board_0x88, packing
     if (is_moove_legal == 0) { // король под шахом. отменяем ход и пропускаем этот цикл
       undo_moves(chess_board_0x88, undo, type_move, from, to, name_capture_piece, piece_color);
       continue;
-    } else if (is_moove_legal == 2) {// нелегальные рокировки не генерируются. просто пропускаем ход
+    } else if (is_moove_legal == 2) {// нелегальные рокировки и взятия короля не генерируются. просто пропускаем ход
       continue;
     }
 

@@ -68,6 +68,8 @@ const do_moves = function (chess_board_0x88, undo, type_move, from, to, piece_co
   switch (type_move) {
 
     case MOVE_NO:
+
+      is_moove_legal = 2;
       break;
     // взятие на проходе обнуляю вообще везде, кроме регистрации при двойном ходе пешки. как по другому пока не знаю
 

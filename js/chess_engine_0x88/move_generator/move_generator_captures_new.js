@@ -7,17 +7,17 @@
 */
 
 import {
- SIDE_TO_MOVE,
+    SIDE_TO_MOVE,
     BLACK, WHITE, W_PAWN, W_KNIGHT, W_BISHOP, W_ROOK, W_QUEEN, W_KING, B_PAWN, B_KNIGHT, B_BISHOP, B_ROOK, B_QUEEN, B_KING,
     IND_EN_PASSANT_YES, IND_EN_PASSANT_TARGET_SQUARE
 } from "./chess_board_new.js";
 
 import {
-    clear_list, add_packing_move,  get_name_capture_piece, 
+    clear_list, add_packing_move, get_name_capture_piece,
     return_type_captures_pawn_promo, return_type_simple_move,
     LENGTH_LIST, IND_PIESE_COLOR, IND_NUMBER_CAPTURES_MOVE, IND_NUMBER_MOVE,
     IND_PROMO_QUEEN, IND_PROMO_ROOK, IND_PROMO_BISHOP, IND_PROMO_KNIGHT, MOVE_NO,
-    EP_CAPTURES
+    EP_CAPTURES, MOVE_KING_QUEEN_CASTLE
 } from "../move_generator/move_list_new.js";
 
 /**
@@ -205,12 +205,21 @@ const add_captures_move = function (piece_name, piece_color, from, to, chess_boa
 
     if (piece_captures == 0) {// проверяем клетку куда ходим. Если там нет фигур то можно ходить
         return 0;// можно продолжать луч
-    } 
+    }
     piece_color_captures = (chess_board_0x88[to] > W_KING) ? BLACK : WHITE;// цвет взятой фигуры
 
     if (piece_color != piece_color_captures) {// мы уже знаем что тут есть фигура и если цвет отличен, то это взятие  
         // определяем тип простых взятий по имени фигуры и имени взятой фигуры
         type_move = return_type_simple_move(piece_name, piece_captures);
+
+        // TEST
+        // if ((type_move == MOVE_NO) || (type_move < MOVE_NO) || (type_move > MOVE_KING_QUEEN_CASTLE)) {
+        //     console.log("add_captures_move-> type_move !!!! type_move " + type_move);
+        //     console.log("add_captures_move-> type_move !!!! piece_name " + piece_name +" piece_captures "+ piece_captures);
+        //     //test_print_piese_0x88(chess_board_0x88);
+        //     //test_print_any_0x88(chess_board_0x88);
+        // }
+
         // добавляем взятие в список
         add_packing_move(packing_moves, type_move, from, to, piece_captures);
         return 1;// луч прерываем на вражеской фигуре включительно
@@ -357,7 +366,7 @@ const generated_captures_moves_knight = function (piece_name, piece_color, from,
 * @returns {void}
 */
 const generated_captures_moves_pawn = function (piece_name, piece_color, from, chess_board_0x88, packing_moves) {
-    
+
     if (piece_color == 1) {// белая пешка
         // взятие белой пешкой
         generated_captures_moves_pawn_white(piece_name, piece_color, from, chess_board_0x88, packing_moves);
@@ -547,12 +556,12 @@ const check_detected = function (from, piece_color, chess_board_0x88) {
 
     if (piece_color == WHITE) {
 
-    clear_list(packing_moves_in);
-    // 1 шах от короля это если подошли к королю противника вплотную
-    if (check_detected_generated_moves_king(from, piece_color, chess_board_0x88) == B_KING) {
-        check = B_KING;
-        return check;
-    }
+        clear_list(packing_moves_in);
+        // 1 шах от короля это если подошли к королю противника вплотную
+        if (check_detected_generated_moves_king(from, piece_color, chess_board_0x88) == B_KING) {
+            check = B_KING;
+            return check;
+        }
 
 
         clear_list(packing_moves_in);
@@ -562,8 +571,8 @@ const check_detected = function (from, piece_color, chess_board_0x88) {
         number_move = packing_moves_in[IND_NUMBER_MOVE];
 
         for (let i = 0; i < number_move; i++) {
-            
-            
+
+
             if (get_name_capture_piece(i, packing_moves_in) == B_KNIGHT) {
                 check = B_KNIGHT;
                 return check;
@@ -577,7 +586,7 @@ const check_detected = function (from, piece_color, chess_board_0x88) {
         number_move = packing_moves_in[IND_NUMBER_MOVE];
 
         for (let i = 0; i < number_move; i++) {
-            
+
             if (get_name_capture_piece(i, packing_moves_in) == B_BISHOP) {
                 check = B_BISHOP;
                 return check;
@@ -595,7 +604,7 @@ const check_detected = function (from, piece_color, chess_board_0x88) {
         number_move = packing_moves_in[IND_NUMBER_MOVE];
 
         for (let i = 0; i < number_move; i++) {
-            
+
             if (get_name_capture_piece(i, packing_moves_in) == B_ROOK) {
                 check = B_ROOK;
                 return check;
@@ -613,7 +622,7 @@ const check_detected = function (from, piece_color, chess_board_0x88) {
         number_move = packing_moves_in[IND_NUMBER_MOVE];
 
         for (let i = 0; i < number_move; i++) {
-            
+
             if (get_name_capture_piece(i, packing_moves_in) == B_PAWN) {
                 check = B_PAWN;
                 return check;
@@ -621,12 +630,12 @@ const check_detected = function (from, piece_color, chess_board_0x88) {
         }
     } else {
 
-    clear_list(packing_moves_in);
-    // 1 шах от короля это если подошли к королю противника вплотную
-    if (check_detected_generated_moves_king(from, piece_color, chess_board_0x88) == W_KING) {
-        check = W_KING;
-        return check;
-    }
+        clear_list(packing_moves_in);
+        // 1 шах от короля это если подошли к королю противника вплотную
+        if (check_detected_generated_moves_king(from, piece_color, chess_board_0x88) == W_KING) {
+            check = W_KING;
+            return check;
+        }
 
         clear_list(packing_moves_in);
         // 2 шах от коня
@@ -635,7 +644,7 @@ const check_detected = function (from, piece_color, chess_board_0x88) {
         number_move = packing_moves_in[IND_NUMBER_MOVE];
 
         for (let i = 0; i < number_move; i++) {
-            
+
             if (get_name_capture_piece(i, packing_moves_in) == W_KNIGHT) {
                 check = W_KNIGHT;
                 return check;
@@ -649,7 +658,7 @@ const check_detected = function (from, piece_color, chess_board_0x88) {
         number_move = packing_moves_in[IND_NUMBER_MOVE];
 
         for (let i = 0; i < number_move; i++) {
-            
+
             if (get_name_capture_piece(i, packing_moves_in) == W_BISHOP) {
                 check = W_BISHOP;
                 return check;
@@ -667,7 +676,7 @@ const check_detected = function (from, piece_color, chess_board_0x88) {
         number_move = packing_moves_in[IND_NUMBER_MOVE];
 
         for (let i = 0; i < number_move; i++) {
-            
+
             if (get_name_capture_piece(i, packing_moves_in) == W_ROOK) {
                 check = W_ROOK;
                 return check;
