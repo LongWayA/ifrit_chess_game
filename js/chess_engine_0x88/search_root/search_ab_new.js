@@ -1,9 +1,9 @@
 // @ts-check
 /** 
- * @copyright Copyright (c) 2025, AnBr75 and/or its affiliates. All rights reserved.
+ * @copyright Copyright (c) 2026, AnBr75 and/or its affiliates. All rights reserved.
  * @author AnBr75
  * @name search_0x88.js
- * @version created 11.10m.2025 
+ * @version created 31.01m.2026 
 */
 
 import {
@@ -20,7 +20,7 @@ import {
   clear_list, add_packing_move, get_type_move, get_from, get_to, get_name_capture_piece, set_color, set_number_captures_move,
   sorting_list, test_compare_list_from, test_print_i_move_list, test_print_list, save_list_from, move_is_found,
   return_i_move, move_to_string_uci, return_type_captures_pawn_promo, return_type_simple_move,
-  type_move_to_name_piese, type_move_to_name_piese_f, return_promo_piece_from_type_move,
+  type_move_to_name_piese, type_move_to_name_piese_f, return_promo_piece_from_type_move, set_move_after_the_captures,
   LENGTH_LIST, IND_PIESE_COLOR, IND_NUMBER_CAPTURES_MOVE, IND_NUMBER_MOVE,
   IND_PROMO_QUEEN, IND_PROMO_ROOK, IND_PROMO_BISHOP, IND_PROMO_KNIGHT,
   MOVE_NO, CAPTURES_PAWN_QUEEN_PROMO_QUEEN, CAPTURES_PAWN_ROOK_PROMO_QUEEN, CAPTURES_PAWN_BISHOP_PROMO_QUEEN,
@@ -58,7 +58,10 @@ import { UNDO_MAX } from "../move_generator/undo_new.js";
 
 import { score_position } from "./evaluate_new.js";
 
+import { quiescence_search } from "./quiescence_search_new.js";
 
+import { clear_packing_moves_k, add_move_k, MAX_DEPTH_K, IND_DEPTH_K } from "../for_sorting_move/killer_heuristic_new.js";
+import { History_heuristic_0x88_C } from "../for_sorting_move/history_heuristic_new.js";
 
 
 /**
@@ -73,15 +76,15 @@ const BEST_SCORE_MOD = 20000;
 let node_ab = 0;// считаем узлы
 
 ///////////////////////////////////////
-let is_quiescence_use = 0;// используем просмотр выгодных взятий до конца
-let is_ab_use = 0;// используем альфа-бета оптимизацию
+let is_quiescence_use = 1;// используем просмотр выгодных взятий до конца
+let is_ab_use = 1;// используем альфа-бета оптимизацию
 
 let is_PVS_use = 0;// использование полного поиска в основном варианте
 
 // sorting
-let is_TT_use = 0;// сортировка и отсечка по таблице перестановок(хеш-таблице)
-let is_killer_heuristic_use = 0;// использование двух киллеров, т.е. лучших ходов на этой глубине
+let is_killer_heuristic_use = 1;// использование двух киллеров, т.е. лучших ходов на этой глубине
 let is_history_heuristic_use = 0;// использование сортировки по частоте отсечений. 
+let is_TT_use = 0;// сортировка и отсечка по таблице перестановок(хеш-таблице)
 
 // pruning
 let is_lmr_use = 0;// уменьшаем глубину поиска ходов после всех взятий и двух киллеров, но не меньше 4 полухода 
@@ -102,7 +105,8 @@ const set_node_ab_in_0 = function () {
   node_ab = 0;
 }
 
-
+let packing_moves_k1 = new Uint32Array(MAX_DEPTH_K).fill(MOVE_NO);// список ходов. ход упакован в одно число Uint32
+let packing_moves_k2 = new Uint32Array(MAX_DEPTH_K).fill(MOVE_NO);// список ходов. ход упакован в одно число Uint32
 
 // searching_alpha_beta_fail_soft
 /**
@@ -136,7 +140,7 @@ const searching_alpha_beta_id = function (alpha, beta, chess_board_0x88, packing
   let is_moove_legal = -1;// является ли ход легальным
   let is_update_pv_line = 0;// максимальная оценка позиции    
   let isPV_node = 1;// является ли узел основным вариантом
-
+  let type_move_k;
 
   // экстренный выход
   if (stop_search == 1) return 0;
@@ -148,7 +152,7 @@ const searching_alpha_beta_id = function (alpha, beta, chess_board_0x88, packing
       best_score = score_position(chess_board_0x88);
     } else {
       //this.quiescence_search_0x88_O.node = 0;
-      //best_score = quiescence_search(alpha, beta, chess_board_0x88, depth);
+      best_score = quiescence_search(alpha, beta, chess_board_0x88, depth);
       //node_ab = node_ab + node_qs;
     }
     node_ab = node_ab + 1;
@@ -157,7 +161,7 @@ const searching_alpha_beta_id = function (alpha, beta, chess_board_0x88, packing
   }
   // -----------------------------------поиск на максимальной глубине
 
-  if (chess_board_0x88[SIDE_TO_MOVE] == 1) {
+  if (chess_board_0x88[SIDE_TO_MOVE] == WHITE) {
     best_score = -BEST_SCORE_MOD;// максимальная оценка позиции
   } else {
     best_score = BEST_SCORE_MOD;// максимальная оценка позиции
@@ -174,10 +178,34 @@ const searching_alpha_beta_id = function (alpha, beta, chess_board_0x88, packing
   generated_pseudo_legal_captures(chess_board_0x88, packing_moves);
   generated_pseudo_legal_quiet_moves(chess_board_0x88, packing_moves);
 
- 
+
   // сортировка по взятиям и типу других ходов
   sorting_list(packing_moves);
 
+  // используем киллеры ====================================================
+  if (is_killer_heuristic_use == 1) {
+    // если второй киллер записан то выводим его на позицию после взятий
+    if (packing_moves_k2[depth] != 0) {
+
+      set_move_after_the_captures(packing_moves, packing_moves_k2, depth);
+      //test_print_list(packing_moves);
+      //console.log("Search_0x88_C->type_move[0] после " + move_list_0x88_O.type_move[0]);
+    };
+
+    // если первый киллер записан то выводим его на позицию после взятий и перед вторым   
+    if (packing_moves_k1[depth] != 0) {
+      // console.log(" киллер depth " + depth + " k1= " + packing_moves_k1[depth]);
+      // console.log(" киллер depth " + depth + " k2= " + packing_moves_k2[depth]);
+      // test_print_i_move_list(depth, packing_moves_k1);
+      // console.log("до вставки киллера depth " + depth);
+      // test_print_list(packing_moves);
+      set_move_after_the_captures(packing_moves, packing_moves_k1, depth);
+      // console.log("после вставки киллера depth " + depth);
+      // test_print_list(packing_moves);
+      //console.log("Search_0x88_C->type_move[0] после " + move_list_0x88_O.type_move[0]);
+    };
+  }
+  //==================================================== используем киллеры
 
   for (let move_i = 0; move_i < packing_moves[IND_NUMBER_MOVE]; move_i++) {
 
@@ -206,7 +234,7 @@ const searching_alpha_beta_id = function (alpha, beta, chess_board_0x88, packing
     }
 
     // восстановили доску
-    undo_moves(chess_board_0x88, undo, type_move, from, to, name_capture_piece, piece_color);;
+    undo_moves(chess_board_0x88, undo, type_move, from, to, name_capture_piece, piece_color);
 
     if (packing_moves[IND_PIESE_COLOR] == WHITE) {
 
@@ -219,6 +247,20 @@ const searching_alpha_beta_id = function (alpha, beta, chess_board_0x88, packing
 
           // lower bound
           if (score >= beta) {
+
+            // записываем ход в киллер 
+            if (is_killer_heuristic_use == 1) {
+
+              type_move_k = get_type_move(move_i, packing_moves)
+              if (type_move_k > CAPTURES_KING_PAWN) {// ход не взятие
+                add_move_k(packing_moves, packing_moves_k1, packing_moves_k2, move_i, depth);
+
+              // console.log(" вставили киллер для белых depth " + depth + " k= " + packing_moves[move_i]);
+              // console.log(" киллер depth " + depth + " k1= " + packing_moves_k1[depth]);
+              // console.log(" киллер depth " + depth + " k2= " + packing_moves_k2[depth]);
+              // test_print_i_move_list(move_i, packing_moves);                
+              }
+            }
             return score;   // 
           }//
 
@@ -250,6 +292,20 @@ const searching_alpha_beta_id = function (alpha, beta, chess_board_0x88, packing
 
           // upper bound
           if (score <= alpha) {
+
+            // записываем ход в киллер 
+            if (is_killer_heuristic_use == 1) {
+              type_move_k = get_type_move(move_i, packing_moves)
+              if (type_move_k > CAPTURES_KING_PAWN) {// ход не взятие
+                add_move_k(packing_moves, packing_moves_k1, packing_moves_k2, move_i, depth);
+
+                // console.log(" вставили киллер для черных depth " + depth + " k= " + packing_moves[move_i]);
+                // console.log(" киллер depth " + depth + " k1= " + packing_moves_k1[depth]);
+                // console.log(" киллер depth " + depth + " k2= " + packing_moves_k2[depth]);
+                // test_print_i_move_list(move_i, packing_moves);
+              }
+            }
+
             return score;   // 
           }//
 

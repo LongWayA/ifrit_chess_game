@@ -62,6 +62,11 @@ import { Timer_C } from "../../browser/timer.js";
 
 import { ChessEngine_0x88_С } from "../i_chess_engine_0x88.js";
 
+import {
+  sorting_list_top_max_score, sorting_list_top_min_score, add_score_r,  clear_list_r, 
+    LENGTH_LIST_R, IND_NUMBER_MOVE_R 
+} from "../move_generator/move_list_root_new.js";
+
 /**
 * НАЗНАЧЕНИЕ
 * Есть два режима поиска: 
@@ -244,6 +249,7 @@ const searching_iterative_deepening = function (chessEngine_0x88_O, fen_start, d
   set_stop_search_in_0_ab();// сбрасываем флаг экстренного выхода в поиске
   stop_search_root = 0;// флаг эсктренного выхода в корне
 
+  console.log("searching_iterative_deepening->========================================================== ");
   //console.log("searching_iterative_deepening->fen_start " + fen_start);
   set_board_from_fen_0x88(fen_start, chess_board_0x88_start);// доска из фен
 
@@ -321,7 +327,7 @@ const searching_iterative_deepening = function (chessEngine_0x88_O, fen_start, d
       node_root = node_root + node_ab;
       //console.log("--searching_iterative_deepening ->  move_i " + move_i + " score " + score);
 
-      list_score_move[move_i] = score;
+      add_score_r(move_i, list_score_move, score);
 
       //console.log("Search_0x88_C-> должны смотреть за черных, а вот реально что " + move_list_0x88_O.piece_color);
       // белые ищут максимум
@@ -374,11 +380,11 @@ const searching_iterative_deepening = function (chessEngine_0x88_O, fen_start, d
 
     if (number_move_legal != 0) {
 
-      // if (chess_board_0x88_start[SIDE_TO_MOVE] == WHITE) {
-      //   move_list_root_0x88_O.sorting_list_top_max_score(move_list_0x88_O);
-      // } else {
-      //   move_list_root_0x88_O.sorting_list_top_min_score(move_list_0x88_O);
-      // }
+      if (chess_board_0x88_start[SIDE_TO_MOVE] == WHITE) {
+        sorting_list_top_max_score(list_score_move);
+      } else {
+        sorting_list_top_min_score(list_score_move);
+      }
 
       w = (chess_board_0x88_start[SIDE_TO_MOVE] == WHITE) ? 1 : -1;
 

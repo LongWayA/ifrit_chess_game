@@ -7,8 +7,8 @@
 */
 
 import {
-s_0x88_to_x07, s_0x88_to_y07,
-  LET_COOR, PIECE_NO, W_PAWN, W_KNIGHT, W_BISHOP, W_ROOK, W_QUEEN, W_KING, B_PAWN, B_KNIGHT, B_BISHOP, B_ROOK, B_QUEEN, B_KING,
+    s_0x88_to_x07, s_0x88_to_y07,
+    LET_COOR, PIECE_NO, W_PAWN, W_KNIGHT, W_BISHOP, W_ROOK, W_QUEEN, W_KING, B_PAWN, B_KNIGHT, B_BISHOP, B_ROOK, B_QUEEN, B_KING,
 } from "./chess_board_new.js";
 
 
@@ -378,6 +378,56 @@ const sorting_list = function (packing_moves) {
     }
 }
 
+// это для киллеров. 
+// находм ход по from, to
+// и ставим сразу после взятий. 
+/**
+ * это для киллеров
+ * @param {Uint32Array} packing_moves
+ * @param {Uint32Array} packing_moves_k
+ * @param {number} depth
+ * @returns {number}
+ */
+const set_move_after_the_captures = function (packing_moves, packing_moves_k, depth) {
+
+    let save_move = -1;
+    let s_m;
+
+    let number_move = packing_moves[IND_NUMBER_MOVE];   
+    let start = packing_moves[IND_NUMBER_CAPTURES_MOVE];
+    let move_k = packing_moves_k[depth];
+
+    if (packing_moves[start] == move_k) return -1;// ход и так на первом месте(после всех взятий)
+
+    //console.log("Move_list_0x88_С-> UP -----------------------------------");
+    // 1 ищем ход в списке
+    for (s_m = start; s_m < number_move; s_m++) {// 
+        if (packing_moves[s_m] == move_k) {
+            // ход нашли и записали
+            save_move = packing_moves[s_m];
+            break;
+        }
+    }
+    // console.log("Move_list_0x88_С-> UP 2 start " + start);
+    //console.log("Move_list_0x88_С-> UP 2 s_m " + s_m);
+
+    // ход не нашли
+    if (save_move == -1) return -1;
+
+    // 2 сдвигаем позиции выше найденной вниз
+    for (let i = s_m; i > start; i--) {
+        // если на позиции есть взятая фигура
+        // пишем на позицию
+        packing_moves[i] = packing_moves[i - 1];
+    }
+
+    // сюда пишем начальную позицию. т.о. две позиции меняются местами
+    packing_moves[start] = save_move;
+
+    return 0;
+}//
+
+
 ///////////////////////////////////////////////////////////////////
 // TEST
 
@@ -594,7 +644,7 @@ const move_is_found = function (packing_moves, from, to) {
 
     return found;
 }
-  
+
 /**
 * находим и возвращаем порядковый номер хода
 * по ходу from, to, promo
@@ -638,7 +688,7 @@ const return_i_move = function (packing_moves, from, to, promo = "") {
 
     return i_move;
 }
- 
+
 /**
 * возвращем ход из списка на заданной позиции
 * в виде строки вида e2e4, e7e8q
@@ -1012,7 +1062,7 @@ export {
     clear_list, add_packing_move, get_type_move, get_from, get_to, get_name_capture_piece, set_color, set_number_captures_move,
     sorting_list, test_compare_list_from, test_print_i_move_list, test_print_list, save_list_from, move_is_found,
     return_i_move, move_to_string_uci, return_type_captures_pawn_promo, return_type_simple_move,
-    type_move_to_name_piese, type_move_to_name_piese_f, return_promo_piece_from_type_move,
+    type_move_to_name_piese, type_move_to_name_piese_f, return_promo_piece_from_type_move, set_move_after_the_captures,
     LENGTH_LIST, IND_PIESE_COLOR, IND_NUMBER_CAPTURES_MOVE, IND_NUMBER_MOVE,
     IND_PROMO_QUEEN, IND_PROMO_ROOK, IND_PROMO_BISHOP, IND_PROMO_KNIGHT,
     MOVE_NO, CAPTURES_PAWN_QUEEN_PROMO_QUEEN, CAPTURES_PAWN_ROOK_PROMO_QUEEN, CAPTURES_PAWN_BISHOP_PROMO_QUEEN,
@@ -1028,5 +1078,5 @@ export {
     CAPTURES_QUEEN_KNIGHT, CAPTURES_KING_QUEEN, CAPTURES_KING_ROOK, CAPTURES_KING_BISHOP, CAPTURES_KING_KNIGHT,
     CAPTURES_PAWN_PAWN, EP_CAPTURES, CAPTURES_KNIGHT_PAWN, CAPTURES_BISHOP_PAWN, CAPTURES_ROOK_PAWN,
     CAPTURES_QUEEN_PAWN, CAPTURES_KING_PAWN, MOVE_QUEEN, MOVE_ROOK, MOVE_BISHOP, MOVE_KNIGHT, MOVE_KING, MOVE_PAWN,
-    MOVE_DOUBLE_PAWN, MOVE_KING_CASTLE, MOVE_KING_QUEEN_CASTLE,TYPE_MOVE_NAME
+    MOVE_DOUBLE_PAWN, MOVE_KING_CASTLE, MOVE_KING_QUEEN_CASTLE, TYPE_MOVE_NAME
 };
