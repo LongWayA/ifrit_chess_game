@@ -37,15 +37,15 @@ import {
 } from "../move_generator/chess_board_new.js";
 
 import {
-  clear_pv_line, add_move_to_pv_line, save_pv_line, test_print_pv_line, pv_line_to_uci_string,
-  MAX_DEPTH, IND_TYPE_VARIANT, IND_SCORE_VARIANT, IND_DEPTH
+  clear_pv_line_pv, add_move_to_pv_line_pv, save_pv_line_pv, test_print_pv_line_pv, pv_line_to_uci_string_pv,
+  MAX_DEPTH_PV, IND_TYPE_VARIANT_PV, IND_DEPTH_MAT_PV, IND_DEPTH_PV
 } from "../move_generator/pv_line_new.js";
 
 import { generated_pseudo_legal_captures } from "../move_generator/move_generator_captures_new.js";
 import { generated_pseudo_legal_quiet_moves } from "../move_generator/move_generator_quiet_new.js";
 
-import { do_moves } from "../move_generator/make_move_new.js";
-import { undo_moves } from "../move_generator/unmake_move_new.js";
+import { do_moves_mm } from "../move_generator/make_move_new.js";
+import { undo_moves_um } from "../move_generator/unmake_move_new.js";
 
 import { UNDO_MAX } from "../move_generator/undo_new.js";
 
@@ -54,7 +54,8 @@ import {
 } from "./search_minmax_new.js";
 
 import {
-  searching_alpha_beta_id, set_stop_search_in_1_ab, set_stop_search_in_0_ab, set_node_ab_in_0, node_ab, BEST_SCORE_MOD
+   searching_alpha_beta_id_ab, set_stop_search_in_1_ab, set_stop_search_in_0_ab, set_node_in_0_ab, node_ab, 
+  BEST_SCORE_MOD_AB 
 
 } from "./search_ab_new.js";
 
@@ -63,8 +64,8 @@ import { Timer_C } from "../../browser/timer.js";
 import { ChessEngine_0x88_С } from "../i_chess_engine_0x88.js";
 
 import {
-  sorting_list_top_max_score, sorting_list_top_min_score, add_score_r,  clear_list_r, 
-    LENGTH_LIST_R, IND_NUMBER_MOVE_R 
+sorting_list_top_max_score_lr, sorting_list_top_min_score_lr, add_score_lr,  clear_list_lr, 
+    LENGTH_LIST_LR, IND_NUMBER_MOVE_LR
 } from "../move_generator/move_list_root_new.js";
 
 /**
@@ -100,8 +101,8 @@ import {
     * @property {string} best_move - bestmove e2e4 ponder e7e6
     */
 
-const ALPHA_SCORE = -30000;
-const BETA_SCORE = 30000;
+const ALPHA_SCORE_R = -30000;
+const BETA_SCORE_R = 30000;
 
 
 const timer_O = new Timer_C();
@@ -115,12 +116,12 @@ const uci_return_search = {
 
 let stop_search_root = 0;// флаг эсктренного выхода в корне
 
-const set_stop_search_in_1_root = function () {
+const set_stop_search_in_1_r = function () {
   set_stop_search_in_1_ab();
   stop_search_root = 1;
 }
 
-const set_stop_search_in_0_root = function () {
+const set_stop_search_in_0_r = function () {
   set_stop_search_in_0_ab();
   stop_search_root = 0;
 }
@@ -130,7 +131,7 @@ const set_stop_search_in_0_root = function () {
  * @param {number} depth_max
  * @returns {uci_return_search}
  */
-const start_search_minmax = function (fen_start, depth_max) {
+const start_search_minmax_r = function (fen_start, depth_max) {
   let depth = 0;
 
   let chess_board_0x88 = new Uint8Array(IND_MAX).fill(0);// текущая доска с фигурами 0x88 
@@ -139,7 +140,7 @@ const start_search_minmax = function (fen_start, depth_max) {
 
   let chess_board_0x88_save_test = new Uint8Array(IND_MAX).fill(0);// доска 0x88 с фигурами
 
-  let packing_pv_line = new Uint32Array(MAX_DEPTH).fill(MOVE_NO);
+  let packing_pv_line = new Uint32Array(MAX_DEPTH_PV).fill(MOVE_NO);
 
   let time_start = 0;// запускаем таймер
   let time_end = 0;// останавливаем таймер
@@ -181,7 +182,7 @@ const start_search_minmax = function (fen_start, depth_max) {
   let score_cp = String(w * best_score);
   let nodes = String(node);
   let nps = String(Math.round(node / time_delta));
-  let pv = pv_line_to_uci_string(packing_pv_line);
+  let pv = pv_line_to_uci_string_pv(packing_pv_line);
 
   //info depth 3 seldepth 4 multipv 1 score cp 42 nodes 72 nps 36000 hashfull 0 tbhits 0 time 2 pv e2e4
   //info depth 3 score cp 42 nodes 72 nps 36000 pv e2e4        
@@ -210,7 +211,7 @@ const start_search_minmax = function (fen_start, depth_max) {
  * @param {number} depth_max
  * @returns {uci_return_search}
  */
-const searching_iterative_deepening = function (chessEngine_0x88_O, fen_start, depth_max) {
+const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start, depth_max) {
 
   let chess_board_0x88 = new Uint8Array(IND_MAX).fill(0);// текущая доска с фигурами 0x88 
   let chess_board_0x88_start = new Uint8Array(IND_MAX).fill(0);// записываем стартовую доску
@@ -222,8 +223,8 @@ const searching_iterative_deepening = function (chessEngine_0x88_O, fen_start, d
 
   let undo = new Uint8Array(UNDO_MAX).fill(0);// для отмены хода
 
-  let packing_pv_line = new Uint32Array(MAX_DEPTH).fill(MOVE_NO);// линия лучших ходов
-  let best_packing_pv_line = new Uint32Array(MAX_DEPTH).fill(MOVE_NO);// линия лучших ходов для конкретного узла
+  let packing_pv_line = new Uint32Array(MAX_DEPTH_PV).fill(MOVE_NO);// линия лучших ходов
+  let best_packing_pv_line = new Uint32Array(MAX_DEPTH_PV).fill(MOVE_NO);// линия лучших ходов для конкретного узла
 
   let alpha;
   let beta;
@@ -278,15 +279,15 @@ const searching_iterative_deepening = function (chessEngine_0x88_O, fen_start, d
     time_start = timer_O.getCurrentTimeMs();
 
     if (packing_moves[IND_PIESE_COLOR] == 1) {
-      best_score = -BEST_SCORE_MOD;// максимальная оценка позиции
+      best_score = -BEST_SCORE_MOD_AB;// максимальная оценка позиции
     } else {
-      best_score = BEST_SCORE_MOD;// максимальная оценка позиции
+      best_score = BEST_SCORE_MOD_AB;// максимальная оценка позиции
     }
 
-    alpha = ALPHA_SCORE;
-    beta = BETA_SCORE;
+    alpha = ALPHA_SCORE_R;
+    beta = BETA_SCORE_R;
 
-    clear_pv_line(packing_pv_line);
+    clear_pv_line_pv(packing_pv_line);
 
     number_move_legal = 0;
 
@@ -303,10 +304,10 @@ const searching_iterative_deepening = function (chessEngine_0x88_O, fen_start, d
       name_capture_piece = get_name_capture_piece(move_i, packing_moves);
       piece_color = packing_moves[IND_PIESE_COLOR];
 
-      is_moove_legal = do_moves(chess_board_0x88, undo, type_move, from, to, piece_color);
+      is_moove_legal = do_moves_mm(chess_board_0x88, undo, type_move, from, to, piece_color);
 
       if (is_moove_legal == 0) { // король под шахом. отменяем ход и пропускаем этот цикл
-        undo_moves(chess_board_0x88, undo, type_move, from, to, name_capture_piece, piece_color);
+        undo_moves_um(chess_board_0x88, undo, type_move, from, to, name_capture_piece, piece_color);
         continue;
       } else if (is_moove_legal == 2) {// нелегальные рокировки и взятия короля не генерируются. просто пропускаем ход
         continue;
@@ -316,18 +317,18 @@ const searching_iterative_deepening = function (chessEngine_0x88_O, fen_start, d
       //gggggggggggggggggggggggggggggggggg
       //this.chessEngine_0x88_O?.info_currmove_uci(move_list_0x88_O.move_to_string_uci(move_i, chess_board_0x88_O), move_i, String(depth_max_current));
 
-      add_move_to_pv_line(move_i, packing_moves, packing_pv_line, depth);
-      packing_pv_line[IND_TYPE_VARIANT] = 1;
+      add_move_to_pv_line_pv(move_i, packing_moves, packing_pv_line, depth);
+      packing_pv_line[IND_TYPE_VARIANT_PV] = 1;
 
       // console.log("searching_iterative_deepening ->  move_i " + move_i + " depth_max_current " + depth_max_current + " ==========");
-      set_node_ab_in_0();
+      set_node_in_0_ab();
 
-      score = searching_alpha_beta_id(alpha, beta, chess_board_0x88, packing_pv_line, (depth + 1), depth_max_current, isPV_node);
+      score = searching_alpha_beta_id_ab(alpha, beta, chess_board_0x88, packing_pv_line, (depth + 1), depth_max_current, isPV_node);
 
       node_root = node_root + node_ab;
       //console.log("--searching_iterative_deepening ->  move_i " + move_i + " score " + score);
 
-      add_score_r(move_i, list_score_move, score);
+      add_score_lr(move_i, list_score_move, score);
 
       //console.log("Search_0x88_C-> должны смотреть за черных, а вот реально что " + move_list_0x88_O.piece_color);
       // белые ищут максимум
@@ -338,7 +339,7 @@ const searching_iterative_deepening = function (chessEngine_0x88_O, fen_start, d
           best_score = score;
           best_move_i = move_i;
 
-          save_pv_line(best_packing_pv_line, packing_pv_line);
+          save_pv_line_pv(best_packing_pv_line, packing_pv_line);
           save_chess_board_0x88(chess_board_0x88_get_move, chess_board_0x88);
 
 
@@ -355,7 +356,7 @@ const searching_iterative_deepening = function (chessEngine_0x88_O, fen_start, d
           best_score = score;
           best_move_i = move_i;
 
-          save_pv_line(best_packing_pv_line, packing_pv_line);
+          save_pv_line_pv(best_packing_pv_line, packing_pv_line);
           save_chess_board_0x88(chess_board_0x88_get_move, chess_board_0x88);
 
           if (score < beta) {
@@ -365,11 +366,11 @@ const searching_iterative_deepening = function (chessEngine_0x88_O, fen_start, d
       }
 
       // восстановили доску
-      undo_moves(chess_board_0x88, undo, type_move, from, to, name_capture_piece, piece_color);
+      undo_moves_um(chess_board_0x88, undo, type_move, from, to, name_capture_piece, piece_color);
 
     }//for (let move_i = 0; move_i < move_list_0x88_O.number_move; move_i++) {
 
-    if (best_move_i != -1) save_pv_line(packing_pv_line, best_packing_pv_line);
+    if (best_move_i != -1) save_pv_line_pv(packing_pv_line, best_packing_pv_line);
 
     time_end = timer_O.getCurrentTimeMs();
     time_delta = (time_end - time_start) / 1000;
@@ -381,9 +382,9 @@ const searching_iterative_deepening = function (chessEngine_0x88_O, fen_start, d
     if (number_move_legal != 0) {
 
       if (chess_board_0x88_start[SIDE_TO_MOVE] == WHITE) {
-        sorting_list_top_max_score(list_score_move);
+        sorting_list_top_max_score_lr(list_score_move);
       } else {
-        sorting_list_top_min_score(list_score_move);
+        sorting_list_top_min_score_lr(list_score_move);
       }
 
       w = (chess_board_0x88_start[SIDE_TO_MOVE] == WHITE) ? 1 : -1;
@@ -391,8 +392,11 @@ const searching_iterative_deepening = function (chessEngine_0x88_O, fen_start, d
       let depth_uci = String(depth_max);
       let score_cp = String(w * best_score);
       let nodes = String(node_root);
-      let nps = String(Math.round(node_root / time_delta));
-      let pv = pv_line_to_uci_string(packing_pv_line);
+      let nps = String(Math.round(node_root / time_delta));packing_pv_line
+
+      console.log("packing_pv_line[IND_DEPTH_PV] = " + packing_pv_line[IND_DEPTH_PV]);
+
+      let pv = pv_line_to_uci_string_pv(packing_pv_line);
 
       //info depth 3 seldepth 4 multipv 1 score cp 42 nodes 72 nps 36000 hashfull 0 tbhits 0 time 2 pv e2e4
       //info depth 3 score cp 42 nodes 72 nps 36000 pv e2e4        
@@ -435,4 +439,4 @@ const searching_iterative_deepening = function (chessEngine_0x88_O, fen_start, d
 /////////////////////////////////////////////////////////
 
 
-export { start_search_minmax, searching_iterative_deepening, set_stop_search_in_1_root, set_stop_search_in_0_root };
+export { start_search_minmax_r, searching_iterative_deepening_r, set_stop_search_in_1_r, set_stop_search_in_0_r };

@@ -49,7 +49,7 @@ import { get_undo } from "../move_generator/undo_new.js";
 * @param {number} piece_color
 * @returns {void}
 */
-const undo_moves = function (chess_board_0x88, undo, type_move, from, to, name_capture_piece, piece_color) {
+const undo_moves_um = function (chess_board_0x88, undo, type_move, from, to, name_capture_piece, piece_color) {
   //console.log("Make_move_0x88_C->do_moves  move_i " + move_i);
 
   get_undo(chess_board_0x88, undo);
@@ -369,4 +369,4 @@ const unmake_promo_captures_move_0x88 = function (chess_board_0x88, from, to, ca
   chess_board_0x88[to] = captures_piece;//
 }
 
-export { undo_moves };
+export { undo_moves_um };

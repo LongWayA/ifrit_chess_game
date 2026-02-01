@@ -17,21 +17,21 @@
 
 
 
-    const LENGTH_LIST_R = 256;//
-    const IND_NUMBER_MOVE_R = 255; //
+    const LENGTH_LIST_LR = 256;//
+    const IND_NUMBER_MOVE_LR = 255; //
 
     /** SORTING W
      * @param {Int32Array} list_score_move
      * @returns {void}
      */
-    const sorting_list_top_max_score = function (list_score_move) {
+    const sorting_list_top_max_score_lr = function (list_score_move) {
 
         let save_score_move;
 
         //console.log("Move_list_0x88_С-> SORTING -----------------------------------");
         // выводим в начало списка ходы с максимальной оценкой. нужно белым
-        for (let i = 0; i < list_score_move[IND_NUMBER_MOVE_R]; i++) {
-            for (let j = i + 1; j < list_score_move[IND_NUMBER_MOVE_R]; j++) {// перебираем оставшийся список
+        for (let i = 0; i < list_score_move[IND_NUMBER_MOVE_LR]; i++) {
+            for (let j = i + 1; j < list_score_move[IND_NUMBER_MOVE_LR]; j++) {// перебираем оставшийся список
                 // если на позиции есть взятая фигура
                 if (list_score_move[i] < list_score_move[j]) {
                     // сохраняем позицию на которую будем писать
@@ -51,14 +51,14 @@
      * @param {Int32Array} list_score_move
      * @returns {void}
      */
-    const sorting_list_top_min_score = function (list_score_move) {
+    const sorting_list_top_min_score_lr = function (list_score_move) {
 
         let save_score_move;
 
         //console.log("Move_list_0x88_С-> SORTING -----------------------------------");
         // выводим в начало списка ходы с максимальной оценкой. нужно белым
-        for (let i = 0; i < list_score_move[IND_NUMBER_MOVE_R]; i++) {
-            for (let j = i + 1; j < list_score_move[IND_NUMBER_MOVE_R]; j++) {// перебираем оставшийся список
+        for (let i = 0; i < list_score_move[IND_NUMBER_MOVE_LR]; i++) {
+            for (let j = i + 1; j < list_score_move[IND_NUMBER_MOVE_LR]; j++) {// перебираем оставшийся список
                 // если на позиции есть взятая фигура
                 if (list_score_move[i] > list_score_move[j]) {
                     // сохраняем позицию на которую будем писать
@@ -80,23 +80,23 @@
    * @param {number} score_move
    * @returns {void}
    */
-    const add_score_r = function (move_i, list_score_move, score_move) {
+    const add_score_lr = function (move_i, list_score_move, score_move) {
         //console.log('Move_list_0x88_С->add_move');
         list_score_move[move_i] = score_move;
 
-        if(move_i > list_score_move[IND_NUMBER_MOVE_R]) list_score_move[IND_NUMBER_MOVE_R] = move_i;
+        if(move_i > list_score_move[IND_NUMBER_MOVE_LR]) list_score_move[IND_NUMBER_MOVE_LR] = move_i;
     }
 
      /**
      * @param {Int32Array} list_score_move
      * @returns {void}
      */   
-    const clear_list_r = function (list_score_move) {
-        for (let i = 0; i < LENGTH_LIST_R; i++) {
+    const clear_list_lr = function (list_score_move) {
+        for (let i = 0; i < LENGTH_LIST_LR; i++) {
             list_score_move[i] = 0;
         }
     }
 
-export {sorting_list_top_max_score, sorting_list_top_min_score, add_score_r,  clear_list_r, 
-    LENGTH_LIST_R, IND_NUMBER_MOVE_R  
+export {sorting_list_top_max_score_lr, sorting_list_top_min_score_lr, add_score_lr,  clear_list_lr, 
+    LENGTH_LIST_LR, IND_NUMBER_MOVE_LR  
 };

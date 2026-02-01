@@ -59,7 +59,7 @@ import { set_undo } from "../move_generator/undo_new.js";
 * @param {number} piece_color
 * @returns {number}
 */
-const do_moves = function (chess_board_0x88, undo, type_move, from, to, piece_color) {
+const do_moves_mm = function (chess_board_0x88, undo, type_move, from, to, piece_color) {
   //console.log("Make_move_0x88_C->do_moves  move_i " + move_i);
   let is_moove_legal = 1;// по умолчанию ход считаем легальным.
   set_undo(undo, chess_board_0x88);// заполняем вспогательную структуру для возврата хода
@@ -912,4 +912,4 @@ const make_promo_move_0x88 = function (chess_board_0x88, from, to, promo_piece) 
 
 }
 
-export { do_moves };
+export { do_moves_mm };

@@ -40,8 +40,8 @@ import {
 } from "../move_generator/move_list_new.js";
 
 import {
-  clear_pv_line, add_move_to_pv_line, save_pv_line, test_print_pv_line, pv_line_to_uci_string,
-  MAX_DEPTH, IND_TYPE_VARIANT, IND_SCORE_VARIANT, IND_DEPTH
+  clear_pv_line_pv, add_move_to_pv_line_pv, save_pv_line_pv, test_print_pv_line_pv, pv_line_to_uci_string_pv,
+  MAX_DEPTH_PV, IND_TYPE_VARIANT_PV, IND_DEPTH_MAT_PV, IND_DEPTH_PV
 } from "../move_generator/pv_line_new.js";
 
 import {
@@ -51,8 +51,8 @@ import {
 
 import { generated_pseudo_legal_quiet_moves } from "../move_generator/move_generator_quiet_new.js";
 
-import { do_moves } from "../move_generator/make_move_new.js";
-import { undo_moves } from "../move_generator/unmake_move_new.js";
+import { do_moves_mm } from "../move_generator/make_move_new.js";
+import { undo_moves_um } from "../move_generator/unmake_move_new.js";
 
 import { UNDO_MAX } from "../move_generator/undo_new.js";
 
@@ -146,10 +146,10 @@ const quiescence_search = function (alpha, beta, chess_board_0x88, depth) {
     // }
 
 
-    is_moove_legal = do_moves(chess_board_0x88, undo, type_move, from, to, piece_color);
+    is_moove_legal = do_moves_mm(chess_board_0x88, undo, type_move, from, to, piece_color);
 
     if (is_moove_legal == 0) { // король под шахом. отменяем ход и пропускаем этот цикл
-      undo_moves(chess_board_0x88, undo, type_move, from, to, name_capture_piece, piece_color);
+      undo_moves_um(chess_board_0x88, undo, type_move, from, to, name_capture_piece, piece_color);
       continue;
     } else if (is_moove_legal == 2) {// нелегальные рокировки не генерируются. просто пропускаем ход
       continue;
@@ -159,7 +159,7 @@ const quiescence_search = function (alpha, beta, chess_board_0x88, depth) {
 
     if (packing_moves[IND_PIESE_COLOR] == WHITE) {
       if (score >= beta) {
-        undo_moves(chess_board_0x88, undo, type_move, from, to, name_capture_piece, piece_color);
+        undo_moves_um(chess_board_0x88, undo, type_move, from, to, name_capture_piece, piece_color);
         return score;
       }
       if (score > best_value) best_value = score;
@@ -167,14 +167,14 @@ const quiescence_search = function (alpha, beta, chess_board_0x88, depth) {
     } else {
 
       if (score <= alpha) {
-        undo_moves(chess_board_0x88, undo, type_move, from, to, name_capture_piece, piece_color);
+        undo_moves_um(chess_board_0x88, undo, type_move, from, to, name_capture_piece, piece_color);
         return score;
       }
       if (score < best_value) best_value = score;
       if (score < beta) alpha = score;
     }
 
-    undo_moves(chess_board_0x88, undo, type_move, from, to, name_capture_piece, piece_color);
+    undo_moves_um(chess_board_0x88, undo, type_move, from, to, name_capture_piece, piece_color);
   }
 
   return best_value;

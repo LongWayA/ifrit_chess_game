@@ -7,7 +7,9 @@
 */
 
 import { Search_root_0x88_C } from "./search_root/i_search_root_0x88.js";
-import { start_search_minmax, searching_iterative_deepening } from "./search_root/i_search_root_new.js";
+import { 
+  start_search_minmax_r, searching_iterative_deepening_r, set_stop_search_in_1_r, set_stop_search_in_0_r 
+} from "./search_root/i_search_root_new.js";
 
 import { Uci_C } from "../uci/uci.js";
 //import { Worker_ChessEngine_0x88_С } from "../worker/worker_chess_engine_0x88.js";
@@ -104,7 +106,7 @@ class ChessEngine_0x88_С {
     console.log("ChessEngine_0x88_С->go_depth_id depth_max " + depth_max);
 
     //let uci_return_search = this.search_root_0x88_O.searching_iterative_deepening(fen_start, depth_max);
-    let uci_return_search = searching_iterative_deepening(this, fen_start, depth_max);
+    let uci_return_search = searching_iterative_deepening_r(this, fen_start, depth_max);
 
     return uci_return_search;
   }
@@ -118,7 +120,7 @@ class ChessEngine_0x88_С {
    */
   go_depth_minmax(fen_start, depth_max) {
     console.log("ChessEngine_0x88_С->go_depth_minmax");
-    let uci_return_search = start_search_minmax(fen_start, depth_max);
+    let uci_return_search = start_search_minmax_r(fen_start, depth_max);
 
     return uci_return_search;
   }

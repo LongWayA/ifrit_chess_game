@@ -13,8 +13,8 @@ import {
 
 import {
   get_type_move, get_from, get_to, get_name_capture_piece,
-   return_promo_piece_from_type_move,
-   TYPE_MOVE_NAME
+  return_promo_piece_from_type_move,
+  TYPE_MOVE_NAME
 } from "../move_generator/move_list_new.js";
 
 /**
@@ -28,21 +28,20 @@ let packing_pv_line = new Uint32Array(MAX_DEPTH = 103).fill(MOVE_NO);
 */
 
 
-const MAX_DEPTH = 104;
+const MAX_DEPTH_PV = 104;
 
-const IND_TYPE_VARIANT = 101;
-const IND_SCORE_VARIANT = 102;
-const IND_DEPTH = 103;
+const IND_TYPE_VARIANT_PV = 101;
+const IND_DEPTH_MAT_PV = 102;
+const IND_DEPTH_PV = 103;
 
 /**
 * очищаем список ходов
 * @param {Uint32Array} packing_pv_line
 * @returns {void}
 */
-const clear_pv_line = function (packing_pv_line) {
-  for (let i = 0; i < MAX_DEPTH; i++) {
+const clear_pv_line_pv = function (packing_pv_line) {
+  for (let i = 0; i < MAX_DEPTH_PV; i++) {
     packing_pv_line[i] = 0;
-
   }
 }
 
@@ -53,10 +52,10 @@ const clear_pv_line = function (packing_pv_line) {
 * @param {number} depth
 * @returns {void}
 */
-const add_move_to_pv_line = function (i_move, packing_moves, packing_pv_line, depth) {
+const add_move_to_pv_line_pv = function (i_move, packing_moves, packing_pv_line, depth) {
   //console.log('Move_list_0x88_С->add_move');
   packing_pv_line[depth] = packing_moves[i_move];
-  if (depth > packing_pv_line[IND_DEPTH]) packing_pv_line[IND_DEPTH] = depth;
+  if (depth > packing_pv_line[IND_DEPTH_PV]) packing_pv_line[IND_DEPTH_PV] = depth;
 }
 
 /**
@@ -64,26 +63,32 @@ const add_move_to_pv_line = function (i_move, packing_moves, packing_pv_line, de
 * @param {Uint32Array} packing_pv_line_from
  * @returns {void}
  */
-const save_pv_line = function (packing_pv_line_to, packing_pv_line_from) {
+const save_pv_line_pv = function (packing_pv_line_to, packing_pv_line_from) {
 
-  for (let i = 0; i <= MAX_DEPTH; i++) {
+  let depth_max = packing_pv_line_from[IND_DEPTH_PV];
+
+  for (let i = 0; i <= depth_max; i++) {
     packing_pv_line_to[i] = packing_pv_line_from[i];
   }
+
+  packing_pv_line_to[IND_DEPTH_PV] = packing_pv_line_from[IND_DEPTH_PV];
+  packing_pv_line_to[IND_TYPE_VARIANT_PV] = packing_pv_line_from[IND_TYPE_VARIANT_PV];
+  packing_pv_line_to[IND_DEPTH_MAT_PV] = packing_pv_line_from[IND_DEPTH_MAT_PV];
 }
 
 /**
  * @param {Uint32Array} packing_pv_line
  * @returns {void}
  */
-const test_print_pv_line = function (packing_pv_line) {
+const test_print_pv_line_pv = function (packing_pv_line) {
   let type_move_i;
   let from_i;
   let to_i;
   let name_capture_piece_i;
 
-  let type_variant = packing_pv_line[IND_TYPE_VARIANT];
-  let score_variant = packing_pv_line[IND_SCORE_VARIANT];
-  let depth_max = packing_pv_line[IND_DEPTH];
+  let type_variant = packing_pv_line[IND_TYPE_VARIANT_PV];
+  let score_variant = packing_pv_line[IND_DEPTH_MAT_PV];
+  let depth_max = packing_pv_line[IND_DEPTH_PV];
 
 
   console.log("test_print_list ********");
@@ -117,7 +122,7 @@ const test_print_pv_line = function (packing_pv_line) {
  * @param {Uint32Array} packing_pv_line
  * @returns {string}
  */
-const pv_line_to_uci_string = function (packing_pv_line) {
+const pv_line_to_uci_string_pv = function (packing_pv_line) {
 
   let pv_line_str = "";
   let promo;
@@ -127,9 +132,11 @@ const pv_line_to_uci_string = function (packing_pv_line) {
   let to_i;
   let name_capture_piece_i;
 
-  let type_variant = packing_pv_line[IND_TYPE_VARIANT];
-  let score_variant = packing_pv_line[IND_SCORE_VARIANT];
-  let depth_max = packing_pv_line[IND_DEPTH];
+  let type_variant = packing_pv_line[IND_TYPE_VARIANT_PV];
+  let depth_mat = packing_pv_line[IND_DEPTH_MAT_PV];
+  let depth_max = packing_pv_line[IND_DEPTH_PV];
+
+  if (depth_mat != 0) depth_max = depth_mat - 500;// обхожу ноль. так как на 1 глубине -> depth - 1 = 0
 
   for (let i = 0; i <= depth_max; i++) {
 
@@ -148,5 +155,7 @@ const pv_line_to_uci_string = function (packing_pv_line) {
 }
 
 
-export {clear_pv_line, add_move_to_pv_line, save_pv_line, test_print_pv_line, pv_line_to_uci_string,
-MAX_DEPTH, IND_TYPE_VARIANT, IND_SCORE_VARIANT, IND_DEPTH};
+export {
+  clear_pv_line_pv, add_move_to_pv_line_pv, save_pv_line_pv, test_print_pv_line_pv, pv_line_to_uci_string_pv,
+  MAX_DEPTH_PV, IND_TYPE_VARIANT_PV, IND_DEPTH_MAT_PV, IND_DEPTH_PV
+};
