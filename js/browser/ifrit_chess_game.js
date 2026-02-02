@@ -97,7 +97,7 @@ let IfritChessGame_R = {
         IfritChessGame_R.gui_chess_O.mode_game = Gui_chess_C.ID;// циклическое погружение со всеми эвристиками      
 
         // задаем глубину перебора во время игры
-        IfritChessGame_R.gui_chess_O.depth_max = 4;
+        IfritChessGame_R.gui_chess_O.depth_max = 6;
         
         // @ts-ignore
         IfritChessGame_R.checkbox_O.set_input_max_depth_value(IfritChessGame_R.gui_chess_O.depth_max);

@@ -7,8 +7,14 @@
 */
 
 import {
-    s_0x88_to_x07, s_0x88_to_y07,
-    LET_COOR, PIECE_NO, W_PAWN, W_KNIGHT, W_BISHOP, W_ROOK, W_QUEEN, W_KING, B_PAWN, B_KNIGHT, B_BISHOP, B_ROOK, B_QUEEN, B_KING,
+    x07_y07_to_0x88, s_0x88_to_x07, s_0x88_to_y07,
+    test_print_any_0x88, test_print_piese_0x88, test_print_piese_color_0x88, test_print_piese_in_line_0x88, test_compare_chess_board_0x88,
+    save_chess_board_0x88, set_board_from_fen_0x88, set_fen_from_0x88, searching_king, iniStartPositionForWhite,
+    IND_MAX, SIDE_TO_MOVE, LET_COOR,
+    BLACK, WHITE, PIECE_NO, W_PAWN, W_KNIGHT, W_BISHOP, W_ROOK, W_QUEEN, W_KING, B_PAWN, B_KNIGHT, B_BISHOP, B_ROOK, B_QUEEN, B_KING,
+    IND_CASTLING_Q, IND_CASTLING_q, IND_CASTLING_K, IND_CASTLING_k,
+    IND_EN_PASSANT_YES, IND_EN_PASSANT_TARGET_SQUARE, IND_KING_FROM_WHITE, IND_KING_FROM_BLACK,
+    SQUARE_64_to_128_CB, SQUARE_128_to_64_CB
 } from "./chess_board_new.js";
 
 
@@ -346,7 +352,7 @@ const set_number_captures_move = function (packing_moves, number_captures_move) 
  * @param {Uint32Array} packing_moves
  * @returns {void}
  */
-const sorting_list = function (packing_moves) {
+const sorting_list_ml = function (packing_moves) {
 
     let number_move = packing_moves[IND_NUMBER_MOVE];
 
@@ -388,12 +394,12 @@ const sorting_list = function (packing_moves) {
  * @param {number} depth
  * @returns {number}
  */
-const set_move_after_the_captures = function (packing_moves, packing_moves_k, depth) {
+const set_move_after_the_captures_ml = function (packing_moves, packing_moves_k, depth) {
 
     let save_move = -1;
     let s_m;
 
-    let number_move = packing_moves[IND_NUMBER_MOVE];   
+    let number_move = packing_moves[IND_NUMBER_MOVE];
     let start = packing_moves[IND_NUMBER_CAPTURES_MOVE];
     let move_k = packing_moves_k[depth];
 
@@ -427,6 +433,82 @@ const set_move_after_the_captures = function (packing_moves, packing_moves_k, de
     return 0;
 }//
 
+// это для сортировки по истории
+// сортируем все не взятия по оценке присвоенной в массиве истории. 
+// чем больше оценка тем выше ход но не выше всех взятий, даже плохих 
+// потому что так быстрее и движуху смотрим в первую очередь.
+// что такое эвристика истории смотреть в файле с этой эвристикой.
+/**
+* @param {Uint32Array} packing_moves
+* @param {Int32Array[][]} history
+* @returns {void}
+*/
+const sorting_list_history_heuristic_ml = function (packing_moves, history) {
+
+    let save_type_move;
+
+    let save_from;
+    let save_to;
+
+    let piece_color = packing_moves[IND_PIESE_COLOR];
+    let number_move = packing_moves[IND_NUMBER_MOVE];
+    let start = packing_moves[IND_NUMBER_CAPTURES_MOVE];
+
+    let from_128_i;
+    let to_128_i;
+
+    let from_128_j;
+    let to_128_j;
+
+    let from_64_i;
+    let to_64_i;
+
+    let from_64_j;
+    let to_64_j;
+
+    //console.log("Move_list_0x88_С-> SORTING -----------------------------------");
+    // выводим в начало списка тихих ходов ходы с максимальной оценкой по истории. 
+    // т.е. отсортированные тихие ходы идут после взятий
+    for (let i = start; i < number_move; i++) {
+
+        from_128_i = get_from(i, packing_moves);
+        to_128_i = get_to(i, packing_moves);
+
+        from_64_i = SQUARE_128_to_64_CB[from_128_i];
+        to_64_i = SQUARE_128_to_64_CB[to_128_i];
+        // console.log("Move_list_0x88_С-> SORTING from_64_i " + from_64_i + " to_64_i " + to_64_i);
+        // console.log("Move_list_0x88_С-> SORTING history i " +
+        //     history_heuristic_0x88_O.history[this.piece_color][from_64_i][to_64_i]);
+
+        for (let j = i + 1; j < number_move; j++) {//
+
+            from_128_j = get_from(j, packing_moves);
+            to_128_j = get_to(j, packing_moves);
+
+            from_64_j = SQUARE_128_to_64_CB[from_128_j];
+            to_64_j = SQUARE_128_to_64_CB[to_128_j];
+
+
+            // console.log("Move_list_0x88_С-> SORTING from_64_j " + from_64_j + " to_64_j " + to_64_j);                
+            // console.log("Move_list_0x88_С-> SORTING history j " +
+            //     history_heuristic_0x88_O.history[this.piece_color][from_64_j][to_64_j]);                    
+
+            if (history[piece_color][from_64_i][to_64_i] <
+                history[piece_color][from_64_j][to_64_j]) {
+
+                // console.log("Move_list_0x88_С-> SORTING -----------------------------------");     
+                // сохраняем позицию на которую будем писать
+                save_type_move = packing_moves[i];
+
+                // пишем на позицию
+                packing_moves[i] = packing_moves[j];
+
+                // сюда пишем начальную позицию. т.о. две позиции меняются местами
+                packing_moves[j] = save_type_move;
+            }
+        }
+    }
+}
 
 ///////////////////////////////////////////////////////////////////
 // TEST
@@ -1060,9 +1142,10 @@ const return_promo_piece_from_type_move = function (type_move) {
 //return_piece_name_captures_from_type_move, 
 export {
     clear_list, add_packing_move, get_type_move, get_from, get_to, get_name_capture_piece, set_color, set_number_captures_move,
-    sorting_list, test_compare_list_from, test_print_i_move_list, test_print_list, save_list_from, move_is_found,
+    sorting_list_ml, test_compare_list_from, test_print_i_move_list, test_print_list, save_list_from, move_is_found,
     return_i_move, move_to_string_uci, return_type_captures_pawn_promo, return_type_simple_move,
-    type_move_to_name_piese, type_move_to_name_piese_f, return_promo_piece_from_type_move, set_move_after_the_captures,
+    type_move_to_name_piese, type_move_to_name_piese_f, return_promo_piece_from_type_move, set_move_after_the_captures_ml,
+    sorting_list_history_heuristic_ml,
     LENGTH_LIST, IND_PIESE_COLOR, IND_NUMBER_CAPTURES_MOVE, IND_NUMBER_MOVE,
     IND_PROMO_QUEEN, IND_PROMO_ROOK, IND_PROMO_BISHOP, IND_PROMO_KNIGHT,
     MOVE_NO, CAPTURES_PAWN_QUEEN_PROMO_QUEEN, CAPTURES_PAWN_ROOK_PROMO_QUEEN, CAPTURES_PAWN_BISHOP_PROMO_QUEEN,

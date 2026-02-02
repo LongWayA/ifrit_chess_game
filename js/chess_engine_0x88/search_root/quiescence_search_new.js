@@ -18,7 +18,7 @@ import {
 
 import {
   clear_list, add_packing_move, get_type_move, get_from, get_to, get_name_capture_piece, set_color, set_number_captures_move,
-  sorting_list, test_compare_list_from, test_print_i_move_list, test_print_list, save_list_from, move_is_found,
+  sorting_list_ml, test_compare_list_from, test_print_i_move_list, test_print_list, save_list_from, move_is_found,
   return_i_move, move_to_string_uci, return_type_captures_pawn_promo, return_type_simple_move,
   type_move_to_name_piese, type_move_to_name_piese_f, return_promo_piece_from_type_move,
   LENGTH_LIST, IND_PIESE_COLOR, IND_NUMBER_CAPTURES_MOVE, IND_NUMBER_MOVE,
@@ -117,7 +117,7 @@ const quiescence_search = function (alpha, beta, chess_board_0x88, depth) {
     return best_value;
   }
 
-  sorting_list(packing_moves);
+  sorting_list_ml(packing_moves);
 
   //console.log("quiescence_search-> moves = " + packing_moves[IND_NUMBER_MOVE] + " depth " + depth);
 

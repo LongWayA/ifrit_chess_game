@@ -9,9 +9,10 @@
 
 import {
   clear_list, add_packing_move, get_type_move, get_from, get_to, get_name_capture_piece, set_color, set_number_captures_move,
-  sorting_list, test_compare_list_from, test_print_i_move_list, test_print_list, save_list_from, move_is_found,
+  sorting_list_ml, test_compare_list_from, test_print_i_move_list, test_print_list, save_list_from, move_is_found,
   return_i_move, move_to_string_uci, return_type_captures_pawn_promo, return_type_simple_move,
-  type_move_to_name_piese, type_move_to_name_piese_f, return_promo_piece_from_type_move,
+  type_move_to_name_piese, type_move_to_name_piese_f, return_promo_piece_from_type_move, set_move_after_the_captures_ml,
+  sorting_list_history_heuristic_ml,
   LENGTH_LIST, IND_PIESE_COLOR, IND_NUMBER_CAPTURES_MOVE, IND_NUMBER_MOVE,
   IND_PROMO_QUEEN, IND_PROMO_ROOK, IND_PROMO_BISHOP, IND_PROMO_KNIGHT,
   MOVE_NO, CAPTURES_PAWN_QUEEN_PROMO_QUEEN, CAPTURES_PAWN_ROOK_PROMO_QUEEN, CAPTURES_PAWN_BISHOP_PROMO_QUEEN,
@@ -54,8 +55,9 @@ import {
 } from "./search_minmax_new.js";
 
 import {
-   searching_alpha_beta_id_ab, set_stop_search_in_1_ab, set_stop_search_in_0_ab, set_node_in_0_ab, node_ab, 
-  BEST_SCORE_MOD_AB 
+  searching_alpha_beta_id_ab, set_stop_search_in_1_ab, set_stop_search_in_0_ab, set_node_in_0_ab, 
+  node_ab, is_history_heuristic_use_ab,
+  BEST_SCORE_MOD_AB
 
 } from "./search_ab_new.js";
 
@@ -64,9 +66,14 @@ import { Timer_C } from "../../browser/timer.js";
 import { ChessEngine_0x88_С } from "../i_chess_engine_0x88.js";
 
 import {
-sorting_list_top_max_score_lr, sorting_list_top_min_score_lr, add_score_lr,  clear_list_lr, 
-    LENGTH_LIST_LR, IND_NUMBER_MOVE_LR
+  sorting_list_top_max_score_lr, sorting_list_top_min_score_lr, add_score_lr, clear_list_lr,
+  LENGTH_LIST_LR, IND_NUMBER_MOVE_LR
 } from "../move_generator/move_list_root_new.js";
+
+import {
+  ini_Array_hh, clear_history_hh, ini_test_history_hh, history_good_save_hh, history_bad_save_hh, get_history_hh,
+  MAX_COLOR_HH, MAX_COORDINATE_HH, MAX_HISTORY_HH
+} from "../for_sorting_move/history_heuristic_new.js";
 
 /**
 * НАЗНАЧЕНИЕ
@@ -247,6 +254,10 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
   let piece_color;// цвет хода
   let w;// цвет хода
 
+  if (is_history_heuristic_use_ab == 1) {
+    ini_Array_hh();
+  }
+
   set_stop_search_in_0_ab();// сбрасываем флаг экстренного выхода в поиске
   stop_search_root = 0;// флаг эсктренного выхода в корне
 
@@ -265,7 +276,7 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
 
   //test_print_list(packing_moves);
 
-  sorting_list(packing_moves);// сортировка списка ходов по типу хода
+  sorting_list_ml(packing_moves);// сортировка списка ходов по типу хода
 
   //console.log("searching_iterative_deepening -> after sorting_list");
   //test_print_list(packing_moves);
@@ -392,7 +403,7 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
       let depth_uci = String(depth_max);
       let score_cp = String(w * best_score);
       let nodes = String(node_root);
-      let nps = String(Math.round(node_root / time_delta));packing_pv_line
+      let nps = String(Math.round(node_root / time_delta)); packing_pv_line
 
       //console.log("packing_pv_line[IND_DEPTH_PV] = " + packing_pv_line[IND_DEPTH_PV]);
 

@@ -111,7 +111,7 @@ const LET_COOR = [
 ];
 
 // перевод 64 позиций в 127
-const SQUARE_64_to_128 = [
+const SQUARE_64_to_128_CB = [
     0, 1, 2, 3, 4, 5, 6, 7,
     16, 17, 18, 19, 20, 21, 22, 23,
     32, 33, 34, 35, 36, 37, 38, 39,
@@ -123,7 +123,7 @@ const SQUARE_64_to_128 = [
 ];
 
 // перевод 128 позиции в 64
-const SQUARE_128_to_64 = [
+const SQUARE_128_to_64_CB = [
     0, 1, 2, 3, 4, 5, 6, 7, 0, 0, 0, 0, 0, 0, 0, 0,
     8, 9, 10, 11, 12, 13, 14, 15, 0, 0, 0, 0, 0, 0, 0, 0,
     16, 17, 18, 19, 20, 21, 22, 23, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -817,5 +817,6 @@ export {
     IND_MAX, SIDE_TO_MOVE, LET_COOR,
     BLACK, WHITE, PIECE_NO, W_PAWN, W_KNIGHT, W_BISHOP, W_ROOK, W_QUEEN, W_KING, B_PAWN, B_KNIGHT, B_BISHOP, B_ROOK, B_QUEEN, B_KING,
     IND_CASTLING_Q, IND_CASTLING_q, IND_CASTLING_K, IND_CASTLING_k,
-    IND_EN_PASSANT_YES, IND_EN_PASSANT_TARGET_SQUARE, IND_KING_FROM_WHITE, IND_KING_FROM_BLACK
+    IND_EN_PASSANT_YES, IND_EN_PASSANT_TARGET_SQUARE, IND_KING_FROM_WHITE, IND_KING_FROM_BLACK,
+    SQUARE_64_to_128_CB,  SQUARE_128_to_64_CB
 };
