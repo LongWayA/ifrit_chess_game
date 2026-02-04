@@ -57,7 +57,7 @@ import { undo_moves_um } from "../move_generator/unmake_move_new.js";
 
 import { UNDO_MAX } from "../move_generator/undo_new.js";
 
-import { score_position } from "./evaluate_new.js";
+import { score_position, PAWN_SCORE_E} from "./evaluate_new.js";
 
 import { quiescence_search } from "./quiescence_search_new.js";
 
@@ -84,17 +84,17 @@ let node_ab = 0;// считаем узлы
 let is_quiescence_use = 1;// используем просмотр выгодных взятий до конца
 let is_ab_use = 1;// используем альфа-бета оптимизацию
 
-let is_PVS_use = 0;// использование полного поиска в основном варианте
+let is_PVS_use = 1;// использование полного поиска в основном варианте
 
 // sorting
 let is_killer_heuristic_use_ab = 1;// использование двух киллеров, т.е. лучших ходов на этой глубине
 let is_history_heuristic_use_ab = 1;// использование сортировки по частоте отсечений. 
-let is_TT_use = 0;// сортировка и отсечка по таблице перестановок(хеш-таблице)
+//let is_TT_use = 0;// сортировка и отсечка по таблице перестановок(хеш-таблице)
 
 // pruning
-let is_lmr_use = 0;// уменьшаем глубину поиска ходов после всех взятий и двух киллеров, но не меньше 4 полухода 
-let is_razoring_use = 0;// не смотрим очень плохие для нас позиции. отключаем если нашли мат.
-let is_futility_pruning_use = 0;// not working
+let is_lmr_use = 1;// уменьшаем глубину поиска ходов после всех взятий и двух киллеров, но не меньше 4 полухода 
+let is_razoring_use = 1;// не смотрим очень плохие для нас позиции. отключаем если нашли мат.
+//let is_futility_pruning_use = 0;// not working
 
 let stop_search = 0;
 
@@ -114,6 +114,10 @@ let packing_moves_k1 = new Uint32Array(MAX_DEPTH_K).fill(MOVE_NO);// списо�
 let packing_moves_k2 = new Uint32Array(MAX_DEPTH_K).fill(MOVE_NO);// список ходов. ход упакован в одно число Uint32
 
 let chess_board_0x88_test = new Uint8Array(IND_MAX).fill(0);// записываем доску с ходом
+
+let new_depth_max = 0;
+let i_lmr = 0;
+
 
 // searching_alpha_beta_fail_soft
 /**
@@ -169,6 +173,39 @@ const searching_alpha_beta_id_ab = function (alpha, beta, chess_board_0x88, pack
     return best_score;
   }
   // -----------------------------------поиск на максимальной глубине
+
+  // razoring ====================================================    
+    if (is_razoring_use == 1) {
+
+      if ((isPV == 0) && ((depth_max - depth) <= 5)) {
+
+        score = score_position(chess_board_0x88);
+
+        let raz = PAWN_SCORE_E * (depth_max - depth);
+
+        if (chess_board_0x88[SIDE_TO_MOVE] == WHITE) {
+
+          // если нашли мат то альфа настолько большая, что любые ходы режутся 
+          // и вместо матовой оценки получаем обычную
+          // что бы это предотвратить добавил условие 5000 > alpha.
+          if (((score + raz) < alpha) && (5000 > alpha)) {
+
+            score = quiescence_search(alpha, beta, chess_board_0x88, depth);
+
+            if (score <= alpha) return score;
+          }
+        } else {
+
+          if (((score - raz) > beta) && (-5000 < beta)) {
+
+            score = quiescence_search(alpha, beta, chess_board_0x88, depth);
+
+            if (score >= beta) return score;
+          }
+        }
+      }
+    }
+    // ==================================================== razoring
 
   if (chess_board_0x88[SIDE_TO_MOVE] == WHITE) {
     best_score = -BEST_SCORE_MOD_AB;// максимальная оценка позиции
@@ -228,6 +265,13 @@ const searching_alpha_beta_id_ab = function (alpha, beta, chess_board_0x88, pack
   }
   //==================================================== используем киллеры
 
+    new_depth_max = depth_max;
+
+    if (is_lmr_use == 1) {
+      i_lmr = packing_moves[IND_NUMBER_CAPTURES_MOVE] + 2;//(3) взятия два киллера и тт ход не сокращаем 
+    }
+
+
   for (let move_i = 0; move_i < packing_moves[IND_NUMBER_MOVE]; move_i++) {
 
     type_move = get_type_move(move_i, packing_moves);// тип хода
@@ -254,6 +298,35 @@ const searching_alpha_beta_id_ab = function (alpha, beta, chess_board_0x88, pack
       score = searching_alpha_beta_id_ab(alpha, beta, chess_board_0x88, packing_pv_line, (depth + 1), depth_max, isPV_node);
     }
 
+    if (is_PVS_use == 1) {
+
+      if ((move_i == 0) && (isPV == 1)) {
+        isPV_node = 1;
+        score = searching_alpha_beta_id_ab(alpha, beta, chess_board_0x88, packing_pv_line, (depth + 1), depth_max, isPV_node);
+
+      } else {
+
+        if (is_lmr_use == 1) {
+          if ((move_i > i_lmr) && ((depth_max - depth) > 4)) new_depth_max = depth_max - 1;
+        }
+
+        if (packing_moves[IND_PIESE_COLOR] == WHITE) {
+          isPV_node = 0;
+          score = searching_alpha_beta_id_ab(alpha, (alpha + 1), chess_board_0x88, packing_pv_line, (depth + 1), new_depth_max, isPV_node);
+        } else {
+          isPV_node = 0;
+          score = searching_alpha_beta_id_ab((beta - 1), beta, chess_board_0x88, packing_pv_line, (depth + 1), new_depth_max, isPV_node);
+        }
+
+        if ((score > alpha) && (score < beta)) {
+          isPV_node = 1;
+          //console.log("Search_0x88_C->depth " + depth + " пересчет ");
+          score = searching_alpha_beta_id_ab(alpha, beta, chess_board_0x88, packing_pv_line, (depth + 1), depth_max, isPV_node);
+        }
+      }
+    }
+
+
     // восстановили доску
     undo_moves_um(chess_board_0x88, undo, type_move, from, to, name_capture_piece, piece_color);
 
@@ -269,16 +342,16 @@ const searching_alpha_beta_id_ab = function (alpha, beta, chess_board_0x88, pack
           // lower bound
           if (score >= beta) {
 
-              // записываем ход в историю color, from_128, to_128, depth, depth_max
-              if (is_history_heuristic_use_ab == 1) {
-                type_move_k = get_type_move(move_i, packing_moves);
-                if (type_move_k > CAPTURES_KING_PAWN) {// ход не взятие
+            // записываем ход в историю color, from_128, to_128, depth, depth_max
+            if (is_history_heuristic_use_ab == 1) {
+              type_move_k = get_type_move(move_i, packing_moves);
+              if (type_move_k > CAPTURES_KING_PAWN) {// ход не взятие
 
-                  history_good_save_hh(move_i, packing_moves, depth, depth_max);
+                history_good_save_hh(move_i, packing_moves, depth, depth_max);
 
-                  //this.test_hh.add_b_cnt_h_move = this.test_hh.add_b_cnt_h_move + 1;
-                }
+                //this.test_hh.add_b_cnt_h_move = this.test_hh.add_b_cnt_h_move + 1;
               }
+            }
 
             // записываем ход в киллер 
             if (is_killer_heuristic_use_ab == 1) {
@@ -376,7 +449,7 @@ const searching_alpha_beta_id_ab = function (alpha, beta, chess_board_0x88, pack
       // ход белых. а ходов нет. это 0 пат, если же белый король под шахом это мат
       if (check_detected(chess_board_0x88[IND_KING_FROM_WHITE], WHITE, chess_board_0x88) != 0) {
 
-        //console.log("Search_0x88_C-> W chek ");
+        //console.log("searching_alpha_beta_id_ab-> W chek ");
 
         // тут ход белых, но они выставляют минус. Потому что мат это максимально плохое событие 
         // для белых и оно должно быть с минимально возможной оценкой         
@@ -395,7 +468,8 @@ const searching_alpha_beta_id_ab = function (alpha, beta, chess_board_0x88, pack
       //  console.log("Search_0x88_C-> B pat ");
       if (check_detected(chess_board_0x88[IND_KING_FROM_BLACK], BLACK, chess_board_0x88) != 0) {
 
-        //console.log("Search_0x88_C-> B chek ");
+        //console.log("searching_alpha_beta_id_ab-> B chek ");
+
         packing_pv_line[IND_DEPTH_MAT_PV] = depth - 1 + 500;// обхожу ноль. так как на 1 глубине -> depth - 1 = 0
 
         return mat;
@@ -411,7 +485,7 @@ const searching_alpha_beta_id_ab = function (alpha, beta, chess_board_0x88, pack
 }
 
 export {
-  searching_alpha_beta_id_ab, set_stop_search_in_1_ab, set_stop_search_in_0_ab, set_node_in_0_ab, 
+  searching_alpha_beta_id_ab, set_stop_search_in_1_ab, set_stop_search_in_0_ab, set_node_in_0_ab,
   node_ab, is_history_heuristic_use_ab,
   BEST_SCORE_MOD_AB
 };

@@ -18,12 +18,12 @@ import {
 
 */
 
-const PAWN_SCORE = 100;  // пешка 
-const KNIGHT_SCORE = 400;  // конь
-const BISHOP_SCORE = 400;  // слон
-const ROOK_SCORE = 600;  // ладья
-const QUEEN_SCORE = 1200; // ферзь
-const KING_SCORE = 10000;// король
+const PAWN_SCORE_E = 100;  // пешка 
+const KNIGHT_SCORE_E = 400;  // конь
+const BISHOP_SCORE_E = 400;  // слон
+const ROOK_SCORE_E = 600;  // ладья
+const QUEEN_SCORE_E = 1200; // ферзь
+const KING_SCORE_E = 10000;// король
 
 const PIECE_SCORE = [0, 100, 400, 400, 600, 1200, 10000, 100, 400, 400, 600, 1200, 10000];
 
@@ -209,4 +209,4 @@ const test_fen = function (chess_board_0x88) {
 
 }
 
-export { score_position };
+export { score_position, PAWN_SCORE_E };

@@ -120,9 +120,10 @@ const test_print_pv_line_pv = function (packing_pv_line) {
 
 /**
  * @param {Uint32Array} packing_pv_line
+ * @param {number} mat
  * @returns {string}
  */
-const pv_line_to_uci_string_pv = function (packing_pv_line) {
+const pv_line_to_uci_string_pv = function (packing_pv_line, mat) {
 
   let pv_line_str = "";
   let promo;
@@ -136,7 +137,11 @@ const pv_line_to_uci_string_pv = function (packing_pv_line) {
   let depth_mat = packing_pv_line[IND_DEPTH_MAT_PV];
   let depth_max = packing_pv_line[IND_DEPTH_PV];
 
-  if (depth_mat != 0) depth_max = depth_mat - 500;// обхожу ноль. так как на 1 глубине -> depth - 1 = 0
+  if (depth_mat != 0) {
+    if ((mat > 9000) || (mat < -9000)) {
+      depth_max = depth_mat - 500;// обхожу ноль. так как на 1 глубине -> depth - 1 = 0
+    }
+  }
 
   for (let i = 0; i <= depth_max; i++) {
 

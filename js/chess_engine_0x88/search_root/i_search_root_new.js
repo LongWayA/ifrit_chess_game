@@ -189,7 +189,7 @@ const start_search_minmax_r = function (fen_start, depth_max) {
   let score_cp = String(w * best_score);
   let nodes = String(node);
   let nps = String(Math.round(node / time_delta));
-  let pv = pv_line_to_uci_string_pv(packing_pv_line);
+  let pv = pv_line_to_uci_string_pv(packing_pv_line, best_score);
 
   //info depth 3 seldepth 4 multipv 1 score cp 42 nodes 72 nps 36000 hashfull 0 tbhits 0 time 2 pv e2e4
   //info depth 3 score cp 42 nodes 72 nps 36000 pv e2e4        
@@ -334,6 +334,7 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
       // console.log("searching_iterative_deepening ->  move_i " + move_i + " depth_max_current " + depth_max_current + " ==========");
       set_node_in_0_ab();
 
+      isPV_node = 1;
       score = searching_alpha_beta_id_ab(alpha, beta, chess_board_0x88, packing_pv_line, (depth + 1), depth_max_current, isPV_node);
 
       node_root = node_root + node_ab;
@@ -407,7 +408,7 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
 
       //console.log("packing_pv_line[IND_DEPTH_PV] = " + packing_pv_line[IND_DEPTH_PV]);
 
-      let pv = pv_line_to_uci_string_pv(packing_pv_line);
+      let pv = pv_line_to_uci_string_pv(packing_pv_line, best_score);
 
       //info depth 3 seldepth 4 multipv 1 score cp 42 nodes 72 nps 36000 hashfull 0 tbhits 0 time 2 pv e2e4
       //info depth 3 score cp 42 nodes 72 nps 36000 pv e2e4        
