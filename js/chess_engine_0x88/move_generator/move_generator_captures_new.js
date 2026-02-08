@@ -528,12 +528,12 @@ const check_detected_generated_moves_king = function (from, piece_color, chess_b
         to = from + moves_king[j];
         if ((to & 136) == 0) {// если мы не вышли за пределы доски
             // если на клетке хода обнаружили короля проверим цвет, так как детектором и рокировки проверяем, а там свой король тусуется :)
-            if ((chess_board_0x88[to] == W_KING) && (piece_color == 1)) {
-                check = W_KING;
+            if ((chess_board_0x88[to] == B_KING) && (piece_color == 1)) {
+                check = B_KING;
                 return check;
             }
-            if ((chess_board_0x88[to] == B_KING) && (piece_color == 0)) {
-                check = B_KING;
+            if ((chess_board_0x88[to] == W_KING) && (piece_color == 0)) {
+                check = W_KING;
                 return check;
             }
         }

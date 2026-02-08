@@ -13,6 +13,13 @@ import {
   BLACK, WHITE, W_PAWN, W_KNIGHT, W_BISHOP, W_ROOK, W_QUEEN, W_KING, B_PAWN, B_KNIGHT, B_BISHOP, B_ROOK, B_QUEEN, B_KING,
 } from "../move_generator/chess_board_new.js";
 
+import {
+  ini_random_key_array_64_tk, ini_key_array_64_tk, set_key_from_board_0x88_tk, test_chess_board_key_64_tk,
+  key_update_do_move_0x88_tk, key_update_ep_move_0x88_tk, key_update_promo_move_0x88_tk,
+  key_update_castle_move_0x88_tk, key_update_ep_0x88_tk, key_update_ep2_0x88_tk, key_update_QqKk_0x88_tk,
+  test_generation_key_64_tk
+} from "../for_sorting_move/transposition_key_new.js";
+
 /**
 * НАЗНАЧЕНИЕ
 
@@ -96,14 +103,27 @@ const black_pawn_0x88 = [
 
 /**
 * @param {Uint8Array} chess_board_0x88 
+* @param {BigUint64Array} chess_board_key_64
 * @returns {number}
 */
-const score_position = function (chess_board_0x88) {
+const score_position = function (chess_board_0x88, chess_board_key_64) {
 
   let color_piece = 0;
   let score_piece = 0;
   let index_piece = 0;
   let score = 0;
+
+  const chess_board_key_64_save = new BigUint64Array(1);
+
+  set_key_from_board_0x88_tk(chess_board_0x88, chess_board_key_64_save);
+
+    if(chess_board_key_64_save[0] != chess_board_key_64[0]) {
+
+        console.log("score_position -> chess_board_key_64_save != chess_board_key_64");
+        console.log("score_position -> chess_board_key_64_save[0] " + chess_board_key_64_save[0]); 
+        console.log("score_position ->      chess_board_key_64[0] " + chess_board_key_64[0]);
+    }
+
 
   for (let sq = 0; sq < 128; sq++) {
     if ((sq & 136) == 0) {// 136 0x88

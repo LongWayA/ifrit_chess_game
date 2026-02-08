@@ -83,6 +83,8 @@ let IfritChessGame_R = {
     POSITION_FEN_CASTLE_1: "r3k2r/8/p6p/8/8/P6P/8/R3K2R w KQkq - 0 1",
     POSITION_FEN_CASTLE_2: "r3k2r/8/p6p/8/3BB3/P6P/8/R3K2R w KQkq - 0 1",
     POSITION_FEN_CASTLE_3: "r3k2r/8/p6p/8/3bb3/P6P/8/R3K2R b KQkq - 0 1",
+    POSITION_FEN_CASTLE_4: "r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1",
+
     POSITION_FEN_MAT: "7Q/8/8/1R6/R7/4k3/8/8 b - - 0 1",
 
     iniM() {

@@ -61,10 +61,6 @@ import {
 
 } from "./search_ab_new.js";
 
-import { Timer_C } from "../../browser/timer.js";
-
-import { ChessEngine_0x88_С } from "../i_chess_engine_0x88.js";
-
 import {
   sorting_list_top_max_score_lr, sorting_list_top_min_score_lr, add_score_lr, clear_list_lr,
   LENGTH_LIST_LR, IND_NUMBER_MOVE_LR
@@ -74,6 +70,18 @@ import {
   ini_Array_hh, clear_history_hh, ini_test_history_hh, history_good_save_hh, history_bad_save_hh, get_history_hh,
   MAX_COLOR_HH, MAX_COORDINATE_HH, MAX_HISTORY_HH
 } from "../for_sorting_move/history_heuristic_new.js";
+
+import {
+  ini_random_key_array_64_tk, ini_key_array_64_tk, set_key_from_board_0x88_tk, test_chess_board_key_64_tk,
+  key_update_do_move_0x88_tk, key_update_ep_move_0x88_tk, key_update_promo_move_0x88_tk, 
+  key_update_castle_move_0x88_tk,key_update_ep_0x88_tk, key_update_ep2_0x88_tk, key_update_QqKk_0x88_tk,
+  test_generation_key_64_tk
+} from "../for_sorting_move/transposition_key_new.js";
+
+
+import { Timer_C } from "../../browser/timer.js";
+
+import { ChessEngine_0x88_С } from "../i_chess_engine_0x88.js";
 
 /**
 * НАЗНАЧЕНИЕ
@@ -132,6 +140,7 @@ const set_stop_search_in_0_r = function () {
   set_stop_search_in_0_ab();
   stop_search_root = 0;
 }
+
 
 /** minmax
  * @param {string} fen_start
@@ -224,6 +233,17 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
   let chess_board_0x88_start = new Uint8Array(IND_MAX).fill(0);// записываем стартовую доску
   let chess_board_0x88_get_move = new Uint8Array(IND_MAX).fill(0);// записываем доску с ходом
 
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  const chess_board_key_64 = new BigUint64Array(1);
+  const chess_board_key_64_save = new BigUint64Array(1);
+  const chess_board_key_64_save_test = new BigUint64Array(1);
+  const chess_board_key_64_test = new BigUint64Array(1);
+
+
+  chess_board_key_64[0] = 0n;
+
+  ini_key_array_64_tk();// инициируем внтуренний массив случайных чисел.
+
   let packing_moves = new Uint32Array(LENGTH_LIST).fill(MOVE_NO);// список ходов. ход упакован в одно число Uint32
 
   let list_score_move = new Int32Array(LENGTH_LIST).fill(MOVE_NO);// список оценок ходов. нужно для сортировки по оценке в корне
@@ -268,6 +288,10 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
   save_chess_board_0x88(chess_board_0x88, chess_board_0x88_start);
   // копируем доску чтобы когда у движка не будет ходов не получить пустую доску.
   save_chess_board_0x88(chess_board_0x88_get_move, chess_board_0x88);
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // по позиции генерируем ключ
+  set_key_from_board_0x88_tk(chess_board_0x88, chess_board_key_64);
 
   let node_root = 0;// количество финальных позиций
 
@@ -315,10 +339,15 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
       name_capture_piece = get_name_capture_piece(move_i, packing_moves);
       piece_color = packing_moves[IND_PIESE_COLOR];
 
-      is_moove_legal = do_moves_mm(chess_board_0x88, undo, type_move, from, to, piece_color);
+      is_moove_legal = do_moves_mm(chess_board_0x88, chess_board_key_64, chess_board_key_64_save, undo, type_move, from, to, piece_color);
+
+      /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      set_key_from_board_0x88_tk(chess_board_0x88, chess_board_key_64_test);
+      test_generation_key_64_tk(chess_board_key_64_test, chess_board_key_64, packing_moves, move_i, "root");
 
       if (is_moove_legal == 0) { // король под шахом. отменяем ход и пропускаем этот цикл
-        undo_moves_um(chess_board_0x88, undo, type_move, from, to, name_capture_piece, piece_color);
+        undo_moves_um(chess_board_0x88, chess_board_key_64, chess_board_key_64_save, undo, type_move, 
+          from, to, name_capture_piece, piece_color);
         continue;
       } else if (is_moove_legal == 2) {// нелегальные рокировки и взятия короля не генерируются. просто пропускаем ход
         continue;
@@ -335,7 +364,15 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
       set_node_in_0_ab();
 
       isPV_node = 1;
-      score = searching_alpha_beta_id_ab(alpha, beta, chess_board_0x88, packing_pv_line, (depth + 1), depth_max_current, isPV_node);
+
+      // сохраняем ключ доски для последующего сравнения
+      chess_board_key_64_save_test[0] = chess_board_key_64[0];
+
+      score = searching_alpha_beta_id_ab(alpha, beta, chess_board_0x88, chess_board_key_64, packing_pv_line, 
+        (depth + 1), depth_max_current, isPV_node);
+
+      // сравниваем ключи сохраненный и измененный
+      test_chess_board_key_64_tk(chess_board_key_64_save_test, chess_board_key_64);
 
       node_root = node_root + node_ab;
       //console.log("--searching_iterative_deepening ->  move_i " + move_i + " score " + score);
@@ -378,7 +415,8 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
       }
 
       // восстановили доску
-      undo_moves_um(chess_board_0x88, undo, type_move, from, to, name_capture_piece, piece_color);
+      undo_moves_um(chess_board_0x88, chess_board_key_64, chess_board_key_64_save, undo, type_move, 
+        from, to, name_capture_piece, piece_color);
 
     }//for (let move_i = 0; move_i < move_list_0x88_O.number_move; move_i++) {
 

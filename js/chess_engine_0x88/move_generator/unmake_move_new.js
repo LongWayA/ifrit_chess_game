@@ -41,6 +41,8 @@ import { get_undo } from "../move_generator/undo_new.js";
 // возврат хода
 /**
 * @param {Uint8Array} chess_board_0x88
+* @param {BigUint64Array} chess_board_key_64
+* @param {BigUint64Array} chess_board_key_64_save
 * @param {Uint8Array} undo
 * @param {number} type_move
 * @param {number} from
@@ -49,10 +51,13 @@ import { get_undo } from "../move_generator/undo_new.js";
 * @param {number} piece_color
 * @returns {void}
 */
-const undo_moves_um = function (chess_board_0x88, undo, type_move, from, to, name_capture_piece, piece_color) {
+const undo_moves_um = function (chess_board_0x88, chess_board_key_64, chess_board_key_64_save, undo, type_move, 
+  from, to, name_capture_piece, piece_color) {
   //console.log("Make_move_0x88_C->do_moves  move_i " + move_i);
 
   get_undo(chess_board_0x88, undo);
+
+  chess_board_key_64[0] = chess_board_key_64_save[0];
 
   // смотрим 
   switch (type_move) {

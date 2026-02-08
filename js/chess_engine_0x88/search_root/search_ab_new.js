@@ -57,7 +57,7 @@ import { undo_moves_um } from "../move_generator/unmake_move_new.js";
 
 import { UNDO_MAX } from "../move_generator/undo_new.js";
 
-import { score_position, PAWN_SCORE_E} from "./evaluate_new.js";
+import { score_position, PAWN_SCORE_E } from "./evaluate_new.js";
 
 import { quiescence_search } from "./quiescence_search_new.js";
 
@@ -67,6 +67,13 @@ import {
   ini_Array_hh, clear_history_hh, ini_test_history_hh, history_good_save_hh, history_bad_save_hh, get_history_hh,
   MAX_COLOR_HH, MAX_COORDINATE_HH, MAX_HISTORY_HH
 } from "../for_sorting_move/history_heuristic_new.js";
+
+import {
+  ini_random_key_array_64_tk, ini_key_array_64_tk, set_key_from_board_0x88_tk, test_chess_board_key_64_tk,
+  key_update_do_move_0x88_tk, key_update_ep_move_0x88_tk, key_update_promo_move_0x88_tk, 
+  key_update_castle_move_0x88_tk,key_update_ep_0x88_tk, key_update_ep2_0x88_tk, key_update_QqKk_0x88_tk,
+  test_generation_key_64_tk
+} from "../for_sorting_move/transposition_key_new.js";
 
 
 /**
@@ -89,10 +96,13 @@ let is_PVS_use = 1;// использование полного поиска в 
 // sorting
 let is_killer_heuristic_use_ab = 1;// использование двух киллеров, т.е. лучших ходов на этой глубине
 let is_history_heuristic_use_ab = 1;// использование сортировки по частоте отсечений. 
+
 //let is_TT_use = 0;// сортировка и отсечка по таблице перестановок(хеш-таблице)
 
 // pruning
-let is_razoring_use = 1;// не смотрим очень плохие для нас позиции. отключаем если нашли мат.
+let is_razoring_use = 0;// не смотрим очень плохие для нас позиции. отключаем если нашли мат.
+
+// надо думать. ухудшают игру
 let is_lmr_use = 0;// уменьшаем глубину поиска ходов после всех взятий и двух киллеров, но не меньше 4 полухода 
 //let is_futility_pruning_use = 0;// not working
 
@@ -118,12 +128,15 @@ let chess_board_0x88_test = new Uint8Array(IND_MAX).fill(0);// записыва�
 let new_depth_max = 0;
 let i_lmr = 0;
 
+const chess_board_key_64_testab = new BigUint64Array(1);
+
 
 // searching_alpha_beta_fail_soft
 /**
  * @param {number} alpha
  * @param {number} beta
  * @param {Uint8Array} chess_board_0x88
+ * @param {BigUint64Array} chess_board_key_64
  * @param {Uint32Array} packing_pv_line 
  * @param {number} depth
  * @param {number} depth_max
@@ -131,11 +144,13 @@ let i_lmr = 0;
  * @returns {number}
  */
 
-const searching_alpha_beta_id_ab = function (alpha, beta, chess_board_0x88, packing_pv_line, depth, depth_max, isPV) {
+const searching_alpha_beta_id_ab = function (alpha, beta, chess_board_0x88, chess_board_key_64, packing_pv_line, depth, depth_max, isPV) {
 
   let packing_moves = new Uint32Array(LENGTH_LIST).fill(MOVE_NO);// список ходов. ход упакован в одно число Uint32
   let best_packing_pv_line = new Uint32Array(MAX_DEPTH_PV).fill(MOVE_NO);// линия лучших ходов для конкретного узла
   let undo = new Uint8Array(UNDO_MAX).fill(0);// для отмены хода
+
+  const chess_board_key_64_save = new BigUint64Array(1);
 
   let number_move_legal = 0;
 
@@ -160,11 +175,11 @@ const searching_alpha_beta_id_ab = function (alpha, beta, chess_board_0x88, pack
   if (depth >= depth_max) {
 
     if (is_quiescence_use == 0) {
-      best_score = score_position(chess_board_0x88);
+      best_score = score_position(chess_board_0x88, chess_board_key_64);
     } else {
       //this.quiescence_search_0x88_O.node = 0;
       save_chess_board_0x88(chess_board_0x88_test, chess_board_0x88);
-      best_score = quiescence_search(alpha, beta, chess_board_0x88, depth);
+      best_score = quiescence_search(alpha, beta, chess_board_0x88, chess_board_key_64, depth);
       test_compare_chess_board_0x88(chess_board_0x88_test, chess_board_0x88);
       //node_ab = node_ab + node_qs;
     }
@@ -175,37 +190,37 @@ const searching_alpha_beta_id_ab = function (alpha, beta, chess_board_0x88, pack
   // -----------------------------------поиск на максимальной глубине
 
   // razoring ====================================================    
-    if (is_razoring_use == 1) {
+  if (is_razoring_use == 1) {
 
-      if ((isPV == 0) && ((depth_max - depth) <= 5)) {
+    if ((isPV == 0) && ((depth_max - depth) <= 5)) {
 
-        score = score_position(chess_board_0x88);
+      score = score_position(chess_board_0x88, chess_board_key_64);
 
-        let raz = PAWN_SCORE_E * (depth_max - depth);
+      let raz = PAWN_SCORE_E * (depth_max - depth);
 
-        if (chess_board_0x88[SIDE_TO_MOVE] == WHITE) {
+      if (chess_board_0x88[SIDE_TO_MOVE] == WHITE) {
 
-          // если нашли мат то альфа настолько большая, что любые ходы режутся 
-          // и вместо матовой оценки получаем обычную
-          // что бы это предотвратить добавил условие 5000 > alpha.
-          if (((score + raz) < alpha) && (5000 > alpha)) {
+        // если нашли мат то альфа настолько большая, что любые ходы режутся 
+        // и вместо матовой оценки получаем обычную
+        // что бы это предотвратить добавил условие 5000 > alpha.
+        if (((score + raz) < alpha) && (5000 > alpha)) {
 
-            score = quiescence_search(alpha, beta, chess_board_0x88, depth);
+          score = quiescence_search(alpha, beta, chess_board_0x88, chess_board_key_64, depth);
 
-            if (score <= alpha) return score;
-          }
-        } else {
+          if (score <= alpha) return score;
+        }
+      } else {
 
-          if (((score - raz) > beta) && (-5000 < beta)) {
+        if (((score - raz) > beta) && (-5000 < beta)) {
 
-            score = quiescence_search(alpha, beta, chess_board_0x88, depth);
+          score = quiescence_search(alpha, beta, chess_board_0x88, chess_board_key_64, depth);
 
-            if (score >= beta) return score;
-          }
+          if (score >= beta) return score;
         }
       }
     }
-    // ==================================================== razoring
+  }
+  // ==================================================== razoring
 
   if (chess_board_0x88[SIDE_TO_MOVE] == WHITE) {
     best_score = -BEST_SCORE_MOD_AB;// максимальная оценка позиции
@@ -265,11 +280,11 @@ const searching_alpha_beta_id_ab = function (alpha, beta, chess_board_0x88, pack
   }
   //==================================================== используем киллеры
 
-    new_depth_max = depth_max;
+  new_depth_max = depth_max;
 
-    if (is_lmr_use == 1) {
-      i_lmr = packing_moves[IND_NUMBER_CAPTURES_MOVE] + 2;//(3) взятия два киллера и тт ход не сокращаем 
-    }
+  if (is_lmr_use == 1) {
+    i_lmr = packing_moves[IND_NUMBER_CAPTURES_MOVE] + 2;//(3) взятия два киллера и тт ход не сокращаем 
+  }
 
 
   for (let move_i = 0; move_i < packing_moves[IND_NUMBER_MOVE]; move_i++) {
@@ -280,10 +295,16 @@ const searching_alpha_beta_id_ab = function (alpha, beta, chess_board_0x88, pack
     name_capture_piece = get_name_capture_piece(move_i, packing_moves);
     piece_color = packing_moves[IND_PIESE_COLOR];
 
-    is_moove_legal = do_moves_mm(chess_board_0x88, undo, type_move, from, to, piece_color);
+    is_moove_legal = do_moves_mm(chess_board_0x88, chess_board_key_64, chess_board_key_64_save, undo, type_move, from, to, piece_color);
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    set_key_from_board_0x88_tk(chess_board_0x88, chess_board_key_64_testab);
+    test_generation_key_64_tk(chess_board_key_64_testab, chess_board_key_64, packing_moves, move_i, "AB");
+
 
     if (is_moove_legal == 0) { // король под шахом. отменяем ход и пропускаем этот цикл
-      undo_moves_um(chess_board_0x88, undo, type_move, from, to, name_capture_piece, piece_color);
+      undo_moves_um(chess_board_0x88, chess_board_key_64, chess_board_key_64_save, undo,
+        type_move, from, to, name_capture_piece, piece_color);
       continue;
     } else if (is_moove_legal == 2) {// нелегальные рокировки и взятия короля не генерируются. просто пропускаем ход
       continue;
@@ -295,14 +316,16 @@ const searching_alpha_beta_id_ab = function (alpha, beta, chess_board_0x88, pack
 
     if (is_PVS_use == 0) {
       isPV_node = 1;
-      score = searching_alpha_beta_id_ab(alpha, beta, chess_board_0x88, packing_pv_line, (depth + 1), depth_max, isPV_node);
+      score = searching_alpha_beta_id_ab(alpha, beta, chess_board_0x88, chess_board_key_64, packing_pv_line,
+        (depth + 1), depth_max, isPV_node);
     }
 
     if (is_PVS_use == 1) {
 
       if ((move_i == 0) && (isPV == 1)) {
         isPV_node = 1;
-        score = searching_alpha_beta_id_ab(alpha, beta, chess_board_0x88, packing_pv_line, (depth + 1), depth_max, isPV_node);
+        score = searching_alpha_beta_id_ab(alpha, beta, chess_board_0x88, chess_board_key_64, packing_pv_line,
+          (depth + 1), depth_max, isPV_node);
 
       } else {
 
@@ -312,23 +335,26 @@ const searching_alpha_beta_id_ab = function (alpha, beta, chess_board_0x88, pack
 
         if (packing_moves[IND_PIESE_COLOR] == WHITE) {
           isPV_node = 0;
-          score = searching_alpha_beta_id_ab(alpha, (alpha + 1), chess_board_0x88, packing_pv_line, (depth + 1), new_depth_max, isPV_node);
+          score = searching_alpha_beta_id_ab(alpha, (alpha + 1), chess_board_0x88, chess_board_key_64, packing_pv_line,
+            (depth + 1), new_depth_max, isPV_node);
         } else {
           isPV_node = 0;
-          score = searching_alpha_beta_id_ab((beta - 1), beta, chess_board_0x88, packing_pv_line, (depth + 1), new_depth_max, isPV_node);
+          score = searching_alpha_beta_id_ab((beta - 1), beta, chess_board_0x88, chess_board_key_64, packing_pv_line,
+            (depth + 1), new_depth_max, isPV_node);
         }
 
         if ((score > alpha) && (score < beta)) {
           isPV_node = 1;
           //console.log("Search_0x88_C->depth " + depth + " пересчет ");
-          score = searching_alpha_beta_id_ab(alpha, beta, chess_board_0x88, packing_pv_line, (depth + 1), depth_max, isPV_node);
+          score = searching_alpha_beta_id_ab(alpha, beta, chess_board_0x88, chess_board_key_64, packing_pv_line,
+            (depth + 1), depth_max, isPV_node);
         }
       }
     }
 
 
     // восстановили доску
-    undo_moves_um(chess_board_0x88, undo, type_move, from, to, name_capture_piece, piece_color);
+    undo_moves_um(chess_board_0x88, chess_board_key_64, chess_board_key_64_save, undo, type_move, from, to, name_capture_piece, piece_color);
 
     if (packing_moves[IND_PIESE_COLOR] == WHITE) {
 
