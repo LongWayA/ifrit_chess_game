@@ -235,7 +235,7 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
   const chess_board_key_64 = new BigUint64Array(1);
-  const chess_board_key_64_save = new BigUint64Array(1);
+  const chess_board_key_64_undo = new BigUint64Array(1);
   const chess_board_key_64_save_test = new BigUint64Array(1);
   const chess_board_key_64_test = new BigUint64Array(1);
 
@@ -339,14 +339,10 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
       name_capture_piece = get_name_capture_piece(move_i, packing_moves);
       piece_color = packing_moves[IND_PIESE_COLOR];
 
-      is_moove_legal = do_moves_mm(chess_board_0x88, chess_board_key_64, chess_board_key_64_save, undo, type_move, from, to, piece_color);
-
-      /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      set_key_from_board_0x88_tk(chess_board_0x88, chess_board_key_64_test);
-      test_generation_key_64_tk(chess_board_key_64_test, chess_board_key_64, packing_moves, move_i, "root");
+      is_moove_legal = do_moves_mm(chess_board_0x88, chess_board_key_64, chess_board_key_64_undo, undo, type_move, from, to, piece_color);
 
       if (is_moove_legal == 0) { // король под шахом. отменяем ход и пропускаем этот цикл
-        undo_moves_um(chess_board_0x88, chess_board_key_64, chess_board_key_64_save, undo, type_move, 
+        undo_moves_um(chess_board_0x88, chess_board_key_64, chess_board_key_64_undo, undo, type_move, 
           from, to, name_capture_piece, piece_color);
         continue;
       } else if (is_moove_legal == 2) {// нелегальные рокировки и взятия короля не генерируются. просто пропускаем ход
@@ -373,6 +369,10 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
 
       // сравниваем ключи сохраненный и измененный
       test_chess_board_key_64_tk(chess_board_key_64_save_test, chess_board_key_64);
+
+      /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      set_key_from_board_0x88_tk(chess_board_0x88, chess_board_key_64_test);
+      test_generation_key_64_tk(chess_board_key_64_test, chess_board_key_64, packing_moves, move_i, "root");
 
       node_root = node_root + node_ab;
       //console.log("--searching_iterative_deepening ->  move_i " + move_i + " score " + score);
@@ -415,7 +415,7 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
       }
 
       // восстановили доску
-      undo_moves_um(chess_board_0x88, chess_board_key_64, chess_board_key_64_save, undo, type_move, 
+      undo_moves_um(chess_board_0x88, chess_board_key_64, chess_board_key_64_undo, undo, type_move, 
         from, to, name_capture_piece, piece_color);
 
     }//for (let move_i = 0; move_i < move_list_0x88_O.number_move; move_i++) {

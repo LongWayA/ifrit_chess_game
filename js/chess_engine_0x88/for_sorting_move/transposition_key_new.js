@@ -370,10 +370,10 @@ const test_generation_key_64_tk = function (chess_board_key_64_test, chess_board
 
     if (chess_board_key_64_test[0] != chess_board_key_64[0]) {
 
-        console.log("test_chess_board_key_64_tk -> This is " + is);
-        console.log("test_chess_board_key_64_tk -> chess_board_key_64_save != chess_board_key_64");
-        console.log("test_chess_board_key_64_tk -> chess_board_key_64_test[0] " + chess_board_key_64_test[0]);
-        console.log("test_chess_board_key_64_tk ->      chess_board_key_64[0] " + chess_board_key_64[0]);
+        console.log("test_generation_key_64_tk -> This is " + is);
+        console.log("test_generation_key_64_tk -> chess_board_key_64_save != chess_board_key_64");
+        console.log("test_generation_key_64_tk -> chess_board_key_64_test[0] " + chess_board_key_64_test[0]);
+        console.log("test_generation_key_64_tk ->      chess_board_key_64[0] " + chess_board_key_64[0]);
         test_print_i_move_list(move_i, packing_moves);
     }
 

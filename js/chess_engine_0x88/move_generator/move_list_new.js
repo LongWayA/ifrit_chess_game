@@ -510,6 +510,53 @@ const sorting_list_history_heuristic_ml = function (packing_moves, history) {
     }
 }
 
+/**
+ * это для киллеров
+ * @param {Uint32Array} packing_moves
+ * @param {Uint32Array} packing_moves_1_tt
+ * @returns {number}
+ */
+
+const set_move_in_0_ml = function (packing_moves, packing_moves_1_tt) {
+
+    let save_move = -1;
+    let s_m;
+
+    let number_move = packing_moves[IND_NUMBER_MOVE];
+    let start = 0;
+    let move_tt = packing_moves_1_tt[0];
+
+    if (packing_moves[start] == move_tt) return -1;// ход и так на первом месте(после всех взятий)
+
+    //console.log("Move_list_0x88_С-> UP -----------------------------------");
+    // 1 ищем ход в списке
+    for (s_m = start; s_m < number_move; s_m++) {// 
+        if (packing_moves[s_m] == move_tt) {
+            // ход нашли и записали
+            save_move = packing_moves[s_m];
+            break;
+        }
+    }
+    // console.log("Move_list_0x88_С-> UP 2 start " + start);
+    //console.log("Move_list_0x88_С-> UP 2 s_m " + s_m);
+
+    // ход не нашли
+    if (save_move == -1) return -1;
+
+    // 2 сдвигаем позиции выше найденной вниз
+    for (let i = s_m; i > start; i--) {
+        // если на позиции есть взятая фигура
+        // пишем на позицию
+        packing_moves[i] = packing_moves[i - 1];
+    }
+
+    // сюда пишем начальную позицию. т.о. две позиции меняются местами
+    packing_moves[start] = save_move;
+
+    return 0;
+}//
+
+
 ///////////////////////////////////////////////////////////////////
 // TEST
 
@@ -1145,7 +1192,7 @@ export {
     sorting_list_ml, test_compare_list_from, test_print_i_move_list, test_print_list, save_list_from, move_is_found,
     return_i_move, move_to_string_uci, return_type_captures_pawn_promo, return_type_simple_move,
     type_move_to_name_piese, type_move_to_name_piese_f, return_promo_piece_from_type_move, set_move_after_the_captures_ml,
-    sorting_list_history_heuristic_ml,
+    sorting_list_history_heuristic_ml, set_move_in_0_ml,
     LENGTH_LIST, IND_PIESE_COLOR, IND_NUMBER_CAPTURES_MOVE, IND_NUMBER_MOVE,
     IND_PROMO_QUEEN, IND_PROMO_ROOK, IND_PROMO_BISHOP, IND_PROMO_KNIGHT,
     MOVE_NO, CAPTURES_PAWN_QUEEN_PROMO_QUEEN, CAPTURES_PAWN_ROOK_PROMO_QUEEN, CAPTURES_PAWN_BISHOP_PROMO_QUEEN,

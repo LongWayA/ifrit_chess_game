@@ -113,16 +113,16 @@ const score_position = function (chess_board_0x88, chess_board_key_64) {
   let index_piece = 0;
   let score = 0;
 
-  const chess_board_key_64_save = new BigUint64Array(1);
+  // const chess_board_key_64_save = new BigUint64Array(1);
 
-  set_key_from_board_0x88_tk(chess_board_0x88, chess_board_key_64_save);
+  // set_key_from_board_0x88_tk(chess_board_0x88, chess_board_key_64_save);
 
-    if(chess_board_key_64_save[0] != chess_board_key_64[0]) {
+  //   if(chess_board_key_64_save[0] != chess_board_key_64[0]) {
 
-        console.log("score_position -> chess_board_key_64_save != chess_board_key_64");
-        console.log("score_position -> chess_board_key_64_save[0] " + chess_board_key_64_save[0]); 
-        console.log("score_position ->      chess_board_key_64[0] " + chess_board_key_64[0]);
-    }
+  //       console.log("score_position -> chess_board_key_64_save != chess_board_key_64");
+  //       console.log("score_position -> chess_board_key_64_save[0] " + chess_board_key_64_save[0]); 
+  //       console.log("score_position ->      chess_board_key_64[0] " + chess_board_key_64[0]);
+  //   }
 
 
   for (let sq = 0; sq < 128; sq++) {

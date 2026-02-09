@@ -85,7 +85,7 @@ const quiescence_search = function (alpha, beta, chess_board_0x88, chess_board_k
   let packing_moves = new Uint32Array(LENGTH_LIST).fill(MOVE_NO);// список ходов. ход упакован в одно число Uint32
   let undo = new Uint8Array(UNDO_MAX).fill(0);// для отмены хода
 
-  const chess_board_key_64_save = new BigUint64Array(1);
+  const chess_board_key_64_undo = new BigUint64Array(1);
 
   let score = 0;// текущая оценка позиции
   let best_value;// максимальная оценка позиции
@@ -149,10 +149,10 @@ const quiescence_search = function (alpha, beta, chess_board_0x88, chess_board_k
     // }
 
 
-    is_moove_legal = do_moves_mm(chess_board_0x88, chess_board_key_64, chess_board_key_64_save, undo, type_move, from, to, piece_color);
+    is_moove_legal = do_moves_mm(chess_board_0x88, chess_board_key_64, chess_board_key_64_undo, undo, type_move, from, to, piece_color);
 
     if (is_moove_legal == 0) { // король под шахом. отменяем ход и пропускаем этот цикл
-      undo_moves_um(chess_board_0x88, chess_board_key_64, chess_board_key_64_save, undo, type_move, from, to, name_capture_piece, piece_color);
+      undo_moves_um(chess_board_0x88, chess_board_key_64, chess_board_key_64_undo, undo, type_move, from, to, name_capture_piece, piece_color);
       continue;
     } else if (is_moove_legal == 2) {// нелегальные рокировки не генерируются. просто пропускаем ход
       continue;
@@ -162,7 +162,7 @@ const quiescence_search = function (alpha, beta, chess_board_0x88, chess_board_k
 
     if (packing_moves[IND_PIESE_COLOR] == WHITE) {
       if (score >= beta) {
-        undo_moves_um(chess_board_0x88, chess_board_key_64, chess_board_key_64_save, undo, type_move, from, to, name_capture_piece, piece_color);
+        undo_moves_um(chess_board_0x88, chess_board_key_64, chess_board_key_64_undo, undo, type_move, from, to, name_capture_piece, piece_color);
         return score;
       }
       if (score > best_value) best_value = score;
@@ -170,14 +170,14 @@ const quiescence_search = function (alpha, beta, chess_board_0x88, chess_board_k
     } else {
 
       if (score <= alpha) {
-        undo_moves_um(chess_board_0x88, chess_board_key_64, chess_board_key_64_save, undo, type_move, from, to, name_capture_piece, piece_color);
+        undo_moves_um(chess_board_0x88, chess_board_key_64, chess_board_key_64_undo, undo, type_move, from, to, name_capture_piece, piece_color);
         return score;
       }
       if (score < best_value) best_value = score;
       if (score < beta) alpha = score;
     }
 
-    undo_moves_um(chess_board_0x88, chess_board_key_64, chess_board_key_64_save, undo, type_move, from, to, name_capture_piece, piece_color);
+    undo_moves_um(chess_board_0x88, chess_board_key_64, chess_board_key_64_undo, undo, type_move, from, to, name_capture_piece, piece_color);
   }
 
   return best_value;

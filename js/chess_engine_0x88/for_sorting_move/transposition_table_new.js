@@ -228,7 +228,7 @@ const test_uses_hash_tt = function () {
 
 // добавляем ход в таблицу
 /**
-* @param {BigUint64Array} key_64_tt
+* @param {BigUint64Array} chess_board_key_64
 * @param {Uint32Array} packing_moves
 * @param {number} type_nodes
 * @param {number} score
@@ -237,7 +237,7 @@ const test_uses_hash_tt = function () {
 * @param {number} i
 * @returns {void}
 */
-const add_position_tt = function (key_64_tt, packing_moves, type_nodes, score, depth, max_depth, i) {
+const add_position_tt = function (chess_board_key_64, packing_moves, type_nodes, score, depth, max_depth, i) {
 
     //add_position_p = add_position_p + 1;// зашли что бы попытаться добавить позицию
 
@@ -248,7 +248,7 @@ const add_position_tt = function (key_64_tt, packing_moves, type_nodes, score, d
     //if (to_128 == -1) console.log("Transposition_table_0x88_C-> to_128 == -1 !!!! depth " + depth);                     
 
     // определяем по ключу индекс для доступа к таблице
-    let index_key_64 = key_64_tt[0] & BigInt(MAX_TABLE_LENTH_TT - 1);//
+    let index_key_64 = chess_board_key_64[0] & BigInt(MAX_TABLE_LENTH_TT - 1);//
 
     //console.log("Transposition_table_0x88_C -> index_key_64_board " + index_key_64_board);  
     //console.log("Transposition_table_0x88_C -> MAX_TABLE_LENTH - 1 " + (MAX_TABLE_LENTH - 1).toString(2));              
@@ -260,7 +260,7 @@ const add_position_tt = function (key_64_tt, packing_moves, type_nodes, score, d
 
     /////////////////////////////////////////////////// 
     // ключ совпал значит мы видимо эту позицию когда то смотрели      
-    if (key_64_tt[0] == key_64_chess_board_tt[Number(index_key_64)]) {
+    if (chess_board_key_64[0] == key_64_chess_board_tt[Number(index_key_64)]) {
 
         //add_position_key_64_true = add_position_key_64_true + 1;// ключ при добавлении позиции уже есть
 
@@ -290,7 +290,7 @@ const add_position_tt = function (key_64_tt, packing_moves, type_nodes, score, d
 
         //add_position_new = add_position_new + 1;// добавили позицию по новой
 
-        key_64_chess_board_tt[Number(index_key_64)] = key_64_tt[0];
+        key_64_chess_board_tt[Number(index_key_64)] = chess_board_key_64[0];
         packing_move_tt[Number(index_key_64)] = packing_moves[i];
         score_tt[Number(index_key_64)] = score;
         type_save_node_tt[Number(index_key_64)] = type_nodes;
@@ -311,19 +311,19 @@ const add_position_tt = function (key_64_tt, packing_moves, type_nodes, score, d
 
 // смотрим есть ли у нас в таблице такая позиция и если есть извлекаем ход
 /**
-* @param {BigUint64Array} key_64_tt
+* @param {BigUint64Array} chess_board_key_64
 * @param {Uint32Array} packing_moves_1
 * @param {number} depth
 * @param {number} max_depth
 * @returns {number[]}
 */
-const is_save_position_tt = function (key_64_tt, packing_moves_1, depth, max_depth) {
+const is_save_position_tt = function (chess_board_key_64, packing_moves_1, depth, max_depth) {
 
     // всего было обращений в запись
     //is_save_position_p = is_save_position_p + 1;
 
     // определяем по ключу индекс для доступа к таблице
-    let index_key_64 = key_64_tt[0] & BigInt(MAX_TABLE_LENTH_TT - 1);//
+    let index_key_64 = chess_board_key_64[0] & BigInt(MAX_TABLE_LENTH_TT - 1);//
 
     // test
     // let key_64_board2 = set_key_from_board_0x88(chess_board_0x88_O);               
@@ -335,7 +335,7 @@ const is_save_position_tt = function (key_64_tt, packing_moves_1, depth, max_dep
     // }
 
     // если ключ совпал
-    if (key_64_tt[0] == key_64_chess_board_tt[Number(index_key_64)]) {
+    if (chess_board_key_64[0] == key_64_chess_board_tt[Number(index_key_64)]) {
 
         // зашли по индексу и ключ совпал
         //is_save_key_64_true = is_save_key_64_true + 1;
