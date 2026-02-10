@@ -78,6 +78,11 @@ import {
   test_generation_key_64_tk
 } from "../for_sorting_move/transposition_key_new.js";
 
+import {
+  clear_out_tt, ini_tt, clear_hash_tt, test_uses_hash_tt, add_position_tt, is_save_position_tt, print_test_set_get_position_tt,
+  MAX_TABLE_LENTH_TT, MAX_SCORE_UPDATE_TT, ALPHA_UPDATE_TT, BETA_UPDATE_TT, ALPHA_CUT_TT, BETA_CUT_TT,
+  IND_TN_TT, IND_SC_TT, IND_DD_TT
+} from "../for_sorting_move/transposition_table_new.js";
 
 import { Timer_C } from "../../browser/timer.js";
 
@@ -478,10 +483,16 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
       chessEngine_0x88_O?.info_from_depth_uci(uci_return_search);
     }
 
+    //print_test_set_get_position_tt();
+    //test_uses_hash_tt();
+    
     // экстренный выход 
     if (stop_search_root == 1) return uci_return_search;
 
   }// for (let depth_max_current = 1; depth_max_current < depth_max_search; depth_max_current++) {
+
+    print_test_set_get_position_tt();
+    test_uses_hash_tt();
 
   return uci_return_search;
 }

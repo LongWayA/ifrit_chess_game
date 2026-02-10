@@ -14,7 +14,7 @@ import {
     BLACK, WHITE, PIECE_NO, W_PAWN, W_KNIGHT, W_BISHOP, W_ROOK, W_QUEEN, W_KING, B_PAWN, B_KNIGHT, B_BISHOP, B_ROOK, B_QUEEN, B_KING,
     IND_CASTLING_Q, IND_CASTLING_q, IND_CASTLING_K, IND_CASTLING_k,
     IND_EN_PASSANT_YES, IND_EN_PASSANT_TARGET_SQUARE, IND_KING_FROM_WHITE, IND_KING_FROM_BLACK,
-    SQUARE_64_to_128_CB,  SQUARE_128_to_64_CB
+    SQUARE_64_to_128_CB, SQUARE_128_to_64_CB
 } from "../move_generator/chess_board_new.js";
 
 // nnnnnnnnnnnnnnnnnnnnnn
@@ -136,29 +136,45 @@ const delta_depth_tt = new Int32Array(MAX_TABLE_LENTH_TT);
 
 // test_fen_board ----------------------------------------------------------------------------------
 // тестовый фен позиции. смотрим насколько адекватный получается ключ позиции
-//test_fen = new Array(MAX_TABLE_LENTH); // тип хода в записанной позиции
+const test_fen_tt = new Array(MAX_TABLE_LENTH_TT); // тип хода в записанной позиции
 
 //
 let max_lenth_tt = MAX_TABLE_LENTH_TT - 1;
 
 
-//add_position_p = 0;// зашли чтобы попытаться добавить позицию
+let input_to_add_position_tt = 0;// зашли чтобы попытаться добавить позицию
+let input_to_is_save_position_tt = 0;// зашли чтобы попытаться считать позицию
+//-----------------
+let key_64_found__add_position_tt = 0;// ключ при добавлении позиции уже есть
 
-//add_position_key_64_true = 0;// ключ при добавлении позиции уже есть
+let key_64_new_save__add_position_tt = 0;// добавили позицию по новой
+let key_64_rewrite__add_position_tt = 0;// добавили позицию перезаписав старую   
+//-----------------
 
-//add_position_new = 0;// добавили позицию по новой
-//add_position_rew = 0;// добавили позицию перезаписав старую   
+let key_64_found__is_save_position_tt = 0;// зашли по индексу но ключ не совпал
+let key_64_not_found__is_save_position_tt = 0;// зашли по индексу и ключ совпал
+let delta_depth_use__is_save_position_tt = 0;// глубина поиска из таблицы больше чем в узле
+//-----------------
 
-//is_save_position_p = 0;
+let yes_collision_fen = 0;// зашли по индексу но фен не совпал
+let no_collision_fen = 0;// зашли по индексу и фен совпал
 
-//is_save_key_64_true = 0;// зашли по индексу но ключ не совпал
-//is_save_key_64_false = 0;// зашли по индексу и ключ совпал
 
-//is_save_delta_depth_ok = 0;// глубина поиска из таблицы больше чем в узле
+const print_test_set_get_position_tt = function () {
 
-//collision_fen = 0;// зашли по индексу но фен не совпал
-//no_collision_fen = 0;// зашли по индексу и фен совпал
+    console.log("input_to_add_position_tt " + input_to_add_position_tt);// зашли чтобы попытаться добавить позицию
+    console.log("input_to_is_save_position_tt " + input_to_is_save_position_tt);
 
+    console.log("key_64_found__add_position_tt " + key_64_found__add_position_tt);// ключ при добавлении позиции уже есть
+    console.log("key_64_new_save__add_position_tt " + key_64_new_save__add_position_tt);// добавили позицию по новой
+    console.log("key_64_rewrite__add_position_tt " + key_64_rewrite__add_position_tt);// добавили позицию перезаписав старую 
+
+    console.log("key_64_found__is_save_position_tt " + key_64_found__is_save_position_tt)// зашли по индексу но ключ не совпал
+    console.log("key_64_not_found__is_save_position_tt " + key_64_not_found__is_save_position_tt)// зашли по индексу и ключ совпал
+    console.log("delta_depth_use__is_save_position_tt " + delta_depth_use__is_save_position_tt)// глубина поиска из таблицы больше чем в узле
+    console.log("yes collision_fen " + yes_collision_fen)// зашли по индексу но фен не совпал
+    console.log("no_collision_fen " + no_collision_fen)// зашли по индексу и фен совпал
+}
 
 const clear_out_tt = function () {
 
@@ -175,9 +191,9 @@ const clear_hash_tt = function () {
         score_tt[i] = 0; // 
         type_save_node_tt[i] = 0; //
         delta_depth_tt[i] = 0; //
-        
+
         // test_fen_board ----------------------------------------------------------------------------------
-        //test_fen[i] = ""; //  
+        test_fen_tt[i] = ""; //  
     }
     //max_lenth = 0;
 }
@@ -194,16 +210,18 @@ const ini_tt = function () {
     clear_out_tt();
 
     // test
-    //add_position_p = 0;// зашли чтобы попытаться добавить позицию
-    //add_position_key_64_true = 0;// ключ при добавлении позиции уже есть
-    //add_position_new = 0;// добавили позицию по новой
-    //add_position_rew = 0;// добавили позицию перезаписав старую  
-    //is_save_position_p = 0;
-    //is_save_key_64_true = 0;// зашли по индексу но ключ не совпал
-    //is_save_key_64_false = 0;// зашли по индексу и ключ совпал
-    //is_save_delta_depth_ok = 0;// глубина поиска из таблицы больше чем в узле
-    //collision_fen = 0;// зашли по индексу но фен не совпал
-    //no_collision_fen = 0;// зашли по индексу и фен совпал
+    input_to_add_position_tt = 0;// зашли чтобы попытаться добавить позицию
+    input_to_is_save_position_tt = 0;
+
+    key_64_found__add_position_tt = 0;// ключ при добавлении позиции уже есть
+    key_64_new_save__add_position_tt = 0;// добавили позицию по новой
+    key_64_rewrite__add_position_tt = 0;// добавили позицию перезаписав старую  
+
+    key_64_found__is_save_position_tt = 0;// зашли по индексу но ключ не совпал
+    key_64_not_found__is_save_position_tt = 0;// зашли по индексу и ключ совпал
+    delta_depth_use__is_save_position_tt = 0;// глубина поиска из таблицы больше чем в узле
+    yes_collision_fen = 0;// зашли по индексу но фен не совпал
+    no_collision_fen = 0;// зашли по индексу и фен совпал
 }
 
 // сколько позиций записано
@@ -235,11 +253,12 @@ const test_uses_hash_tt = function () {
 * @param {number} depth
 * @param {number} max_depth
 * @param {number} i
+* @param {string} fen
 * @returns {void}
 */
-const add_position_tt = function (chess_board_key_64, packing_moves, type_nodes, score, depth, max_depth, i) {
+const add_position_tt = function (chess_board_key_64, packing_moves, type_nodes, score, depth, max_depth, i, fen) {
 
-    //add_position_p = add_position_p + 1;// зашли что бы попытаться добавить позицию
+    input_to_add_position_tt = input_to_add_position_tt + 1;// зашли что бы попытаться добавить позицию
 
     //test
     //if (type_nodes == 0) console.log("Transposition_table_0x88_C-> type_nodes == 0 !!!! depth " + depth);
@@ -255,14 +274,11 @@ const add_position_tt = function (chess_board_key_64, packing_moves, type_nodes,
 
     let delta_depth = max_depth - depth;
 
-    //test      
-    //test(index_key_64_board, type_nodes, type_move, from_128, to_128, delta_depth_board);
-
     /////////////////////////////////////////////////// 
     // ключ совпал значит мы видимо эту позицию когда то смотрели      
     if (chess_board_key_64[0] == key_64_chess_board_tt[Number(index_key_64)]) {
 
-        //add_position_key_64_true = add_position_key_64_true + 1;// ключ при добавлении позиции уже есть
+        key_64_found__add_position_tt = key_64_found__add_position_tt + 1;// ключ при добавлении позиции уже есть
 
         // распаковываем move выделяя delta_depth_move
         let delta_depth_tt_ = delta_depth_tt[Number(index_key_64)]; //
@@ -270,43 +286,25 @@ const add_position_tt = function (chess_board_key_64, packing_moves, type_nodes,
         // место уже было записано. надо проверить глубину записи
         if (delta_depth_tt_ <= delta_depth) {
 
-            //add_position_rew = add_position_rew + 1;// добавили позицию перезаписав старую
+            key_64_rewrite__add_position_tt = key_64_rewrite__add_position_tt + 1;// добавили позицию перезаписав старую
+
             packing_move_tt[Number(index_key_64)] = packing_moves[i];
             score_tt[Number(index_key_64)] = score;
             type_save_node_tt[Number(index_key_64)] = type_nodes;
             delta_depth_tt[Number(index_key_64)] = delta_depth;
-
-            //test     out = { tn: -1, tm: -1, sc: -1, from: -1, to: -1, dd: -1 };
-            // unpacking_from_move(index_key_64_board);
-            // if (out.tn == 0) console.log("add res Transposition_table_0x88_C-> tn == 0 !!!! dd " + out.dd);
-            // if (out.tm == -1) console.log("add res Transposition_table_0x88_C-> tm == -1 !!!! dd " + out.dd);
-            // if (out.from == -1) console.log("add res Transposition_table_0x88_C-> from == -1 !!!! dd " + out.dd);
-            // if (out.to == -1) console.log("add res Transposition_table_0x88_C-> to == -1 !!!! dd " + out.dd);
-
-            // test_fen_board ----------------------------------------------------------------------------------                
-            //test_fen[index_key_64_board] = chess_board_0x88_O.set_fen_from_0x88();
+            test_fen_tt[Number(index_key_64)] = fen;
         }
     } else {
 
-        //add_position_new = add_position_new + 1;// добавили позицию по новой
+        key_64_new_save__add_position_tt = key_64_new_save__add_position_tt + 1;// добавили позицию по новой
 
         key_64_chess_board_tt[Number(index_key_64)] = chess_board_key_64[0];
         packing_move_tt[Number(index_key_64)] = packing_moves[i];
         score_tt[Number(index_key_64)] = score;
         type_save_node_tt[Number(index_key_64)] = type_nodes;
         delta_depth_tt[Number(index_key_64)] = delta_depth;
-
-        //test     out = { tn: -1, tm: -1, sc: -1, from: -1, to: -1, dd: -1 };
-        // unpacking_from_move(index_key_64_board);
-        // if (out.tn == 0) console.log("add Transposition_table_0x88_C-> tn == 0 !!!! dd " + out.dd);
-        // if (out.tm == -1) console.log("add Transposition_table_0x88_C-> tm == -1 !!!! dd " + out.dd);
-        // if (out.from == -1) console.log("add Transposition_table_0x88_C-> from == -1 !!!! dd " + out.dd);
-        // if (out.to == -1) console.log("add Transposition_table_0x88_C-> to == -1 !!!! dd " + out.dd);
-
-        // test_fen_board ----------------------------------------------------------------------------------            
-        //test_fen[index_key_64_board] = chess_board_0x88_O.set_fen_from_0x88();
+        test_fen_tt[Number(index_key_64)] = fen;
     }
-
 }
 
 // смотрим есть ли у нас в таблице такая позиция и если есть извлекаем ход
@@ -315,30 +313,29 @@ const add_position_tt = function (chess_board_key_64, packing_moves, type_nodes,
 * @param {Uint32Array} packing_moves_1
 * @param {number} depth
 * @param {number} max_depth
+* @param {string} fen
 * @returns {number[]}
 */
-const is_save_position_tt = function (chess_board_key_64, packing_moves_1, depth, max_depth) {
+const is_save_position_tt = function (chess_board_key_64, packing_moves_1, depth, max_depth, fen) {
 
     // всего было обращений в запись
-    //is_save_position_p = is_save_position_p + 1;
+    input_to_is_save_position_tt = input_to_is_save_position_tt + 1;
 
     // определяем по ключу индекс для доступа к таблице
     let index_key_64 = chess_board_key_64[0] & BigInt(MAX_TABLE_LENTH_TT - 1);//
 
-    // test
-    // let key_64_board2 = set_key_from_board_0x88(chess_board_0x88_O);               
-    // if (key_64_board != key_64_board2) {
-    //     console.log("Transposition_table_0x88_C -> NOT key_64 !");
-    //     console.log("Transposition_table_0x88_C -> chess_board_0x88_O.key_64 " + chess_board_0x88_O.key_64);
-    //     console.log("Transposition_table_0x88_C -> key_64_board " + key_64_board);
-    //     chess_board_0x88_O.test_print_0x88();
-    // }
 
     // если ключ совпал
     if (chess_board_key_64[0] == key_64_chess_board_tt[Number(index_key_64)]) {
 
+        if (fen === test_fen_tt[Number(index_key_64)]) {
+            no_collision_fen = no_collision_fen + 1;// зашли по индексу и фен совпал
+        } else {//if (fen === fen_test) {
+            yes_collision_fen = yes_collision_fen + 1;// зашли по индексу но фен не совпал
+        }//if (fen === fen_test) {
+
         // зашли по индексу и ключ совпал
-        //is_save_key_64_true = is_save_key_64_true + 1;
+        key_64_found__is_save_position_tt = key_64_found__is_save_position_tt + 1;
 
         let delta_depth = max_depth - depth;
 
@@ -355,24 +352,7 @@ const is_save_position_tt = function (chess_board_key_64, packing_moves_1, depth
         if (delta_depth_tt_ >= delta_depth) {
 
             // прошли тест по глубине поиска
-            //is_save_delta_depth_ok = is_save_delta_depth_ok + 1;
-
-            // // test_fen_board ----------------------------------------------------------------------------------   
-            // let test_fen_board = chess_board_0x88_O.set_fen_from_0x88();
-            // let test_fen = test_fen[index_key_64_board];
-
-            // if (test_fen === test_fen_board) {
-            //     no_collision_fen = no_collision_fen + 1;// зашли по индексу и фен совпал
-            // } else {//if (fen === fen_test) {
-            //     collision_fen = collision_fen + 1;// зашли по индексу но фен не совпал
-            // }//if (fen === fen_test) {
-
-            //test     out = { tn: -1, tm: -1, sc: -1, from: -1, to: -1, dd: -1 };
-            // if (out.tn == 0) console.log("Transposition_table_0x88_C-> tn == 0 !!!! dd " + out.dd);
-            // if (out.tm == -1) console.log("Transposition_table_0x88_C-> tm == -1 !!!! dd " + out.dd);
-            // if (out.from == -1) console.log("Transposition_table_0x88_C-> from == -1 !!!! dd " + out.dd);
-            // if (out.to == -1) console.log("Transposition_table_0x88_C-> to == -1 !!!! dd " + out.dd);
-
+            delta_depth_use__is_save_position_tt = delta_depth_use__is_save_position_tt + 1;
 
             return out_tt;
 
@@ -383,18 +363,6 @@ const is_save_position_tt = function (chess_board_key_64, packing_moves_1, depth
 
             if ((out_tt[IND_TN_TT] == ALPHA_UPDATE_TT) || (out_tt[IND_TN_TT] == BETA_UPDATE_TT)) {
 
-                // // test_fen_board ----------------------------------------------------------------------------------   
-                // let test_fen_board = chess_board_0x88_O.set_fen_from_0x88();
-                // let test_fen = test_fen[index_key_64_board];
-
-                // if (test_fen === test_fen_board) {
-                //     no_collision_fen = no_collision_fen + 1;// зашли по индексу и фен совпал
-                // } else {//if (fen === fen_test) {
-                //     collision_fen = collision_fen + 1;// зашли по индексу но фен не совпал
-                // }//if (fen === fen_test) {
-
-                //console.log("AB----Transposition_table_0x88_C -> out.tn " + out.tn);
-
             } else {
                 clear_out_tt();
             }
@@ -404,7 +372,7 @@ const is_save_position_tt = function (chess_board_key_64, packing_moves_1, depth
 
     } else {//if (lo_key === lo_key_board_0x88) {
         // зашли по индексу но ключ не совпал
-        //is_save_key_64_false = is_save_key_64_false + 1;
+        key_64_not_found__is_save_position_tt = key_64_not_found__is_save_position_tt + 1;
         // такой позиции нет
         clear_out_tt();
 
@@ -413,7 +381,7 @@ const is_save_position_tt = function (chess_board_key_64, packing_moves_1, depth
 }
 
 export {
-    clear_out_tt, ini_tt, clear_hash_tt, test_uses_hash_tt, add_position_tt, is_save_position_tt, 
+    clear_out_tt, ini_tt, clear_hash_tt, test_uses_hash_tt, add_position_tt, is_save_position_tt, print_test_set_get_position_tt,
     MAX_TABLE_LENTH_TT, MAX_SCORE_UPDATE_TT, ALPHA_UPDATE_TT, BETA_UPDATE_TT, ALPHA_CUT_TT, BETA_CUT_TT,
     IND_TN_TT, IND_SC_TT, IND_DD_TT
 };
