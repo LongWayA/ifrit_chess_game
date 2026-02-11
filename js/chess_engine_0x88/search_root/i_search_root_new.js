@@ -55,10 +55,12 @@ import {
 } from "./search_minmax_new.js";
 
 import {
-  searching_alpha_beta_id_ab, set_stop_search_in_1_ab, set_stop_search_in_0_ab, set_node_in_0_ab, 
+  searching_alpha_beta_id_ab, set_stop_search_in_1_ab, set_stop_search_in_0_ab, set_node_in_0_ab,
   node_ab, is_history_heuristic_use_ab,
-  BEST_SCORE_MOD_AB
-
+  BEST_SCORE_MOD_AB,
+  save_alpha_up_test_tt, save_alpha_cut_test_tt, save_beta_up_test_tt, save_beta_cut_test_tt,
+  use_alpha_up_test_tt, use_alpha_cut_test_tt, use_beta_up_test_tt, use_beta_cut_test_tt,
+  clear_test_tt
 } from "./search_ab_new.js";
 
 import {
@@ -73,13 +75,13 @@ import {
 
 import {
   ini_random_key_array_64_tk, ini_key_array_64_tk, set_key_from_board_0x88_tk, test_chess_board_key_64_tk,
-  key_update_do_move_0x88_tk, key_update_ep_move_0x88_tk, key_update_promo_move_0x88_tk, 
-  key_update_castle_move_0x88_tk,key_update_ep_0x88_tk, key_update_ep2_0x88_tk, key_update_QqKk_0x88_tk,
+  key_update_do_move_0x88_tk, key_update_ep_move_0x88_tk, key_update_promo_move_0x88_tk,
+  key_update_castle_move_0x88_tk, key_update_ep_0x88_tk, key_update_ep2_0x88_tk, key_update_QqKk_0x88_tk,
   test_generation_key_64_tk
 } from "../for_sorting_move/transposition_key_new.js";
 
 import {
-  clear_out_tt, ini_tt, clear_hash_tt, test_uses_hash_tt, add_position_tt, is_save_position_tt, print_test_set_get_position_tt,
+  clear_out_tt, ini_tt, clear_hash_tt, test_uses_hash_tt, set_position_in_tt, get_position_from_tt, print_test_set_get_position_tt,
   MAX_TABLE_LENTH_TT, MAX_SCORE_UPDATE_TT, ALPHA_UPDATE_TT, BETA_UPDATE_TT, ALPHA_CUT_TT, BETA_CUT_TT,
   IND_TN_TT, IND_SC_TT, IND_DD_TT
 } from "../for_sorting_move/transposition_table_new.js";
@@ -146,6 +148,19 @@ const set_stop_search_in_0_r = function () {
   stop_search_root = 0;
 }
 
+const test_tt = function () {
+  console.log("save-------------------------------------- ");
+  console.log("save_alpha_cut_test_tt " + save_alpha_cut_test_tt);
+  console.log("save_beta_cut_test_tt " + save_beta_cut_test_tt);
+  console.log("save_alpha_up_test_tt " + save_alpha_up_test_tt);
+  console.log("save_beta_up_test_tt " + save_beta_up_test_tt);
+
+  console.log("use-------------------------------------- ");
+  console.log("use_alpha_cut_test_tt " + use_alpha_cut_test_tt);
+  console.log("use_beta_cut_test_tt " + use_beta_cut_test_tt);  
+  console.log("use_beta_up_test_tt " + use_beta_up_test_tt);
+  console.log("use_alpha_up_test_tt " + use_alpha_up_test_tt);    
+}
 
 /** minmax
  * @param {string} fen_start
@@ -247,7 +262,9 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
 
   chess_board_key_64[0] = 0n;
 
-  ini_key_array_64_tk();// инициируем внтуренний массив случайных чисел.
+  ini_random_key_array_64_tk();// инициируем внтуренний массив случайных чисел.
+  ini_tt();
+  clear_test_tt();
 
   let packing_moves = new Uint32Array(LENGTH_LIST).fill(MOVE_NO);// список ходов. ход упакован в одно число Uint32
 
@@ -347,7 +364,7 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
       is_moove_legal = do_moves_mm(chess_board_0x88, chess_board_key_64, chess_board_key_64_undo, undo, type_move, from, to, piece_color);
 
       if (is_moove_legal == 0) { // король под шахом. отменяем ход и пропускаем этот цикл
-        undo_moves_um(chess_board_0x88, chess_board_key_64, chess_board_key_64_undo, undo, type_move, 
+        undo_moves_um(chess_board_0x88, chess_board_key_64, chess_board_key_64_undo, undo, type_move,
           from, to, name_capture_piece, piece_color);
         continue;
       } else if (is_moove_legal == 2) {// нелегальные рокировки и взятия короля не генерируются. просто пропускаем ход
@@ -369,13 +386,14 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
       // сохраняем ключ доски для последующего сравнения
       chess_board_key_64_save_test[0] = chess_board_key_64[0];
 
-      score = searching_alpha_beta_id_ab(alpha, beta, chess_board_0x88, chess_board_key_64, packing_pv_line, 
+      score = searching_alpha_beta_id_ab(alpha, beta, chess_board_0x88, chess_board_key_64, packing_pv_line,
         (depth + 1), depth_max_current, isPV_node);
 
       // сравниваем ключи сохраненный и измененный
       test_chess_board_key_64_tk(chess_board_key_64_save_test, chess_board_key_64);
 
       /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      // генерируем ключ по позиции и сравниваем его с вышедшим из поиска
       set_key_from_board_0x88_tk(chess_board_0x88, chess_board_key_64_test);
       test_generation_key_64_tk(chess_board_key_64_test, chess_board_key_64, packing_moves, move_i, "root");
 
@@ -420,7 +438,7 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
       }
 
       // восстановили доску
-      undo_moves_um(chess_board_0x88, chess_board_key_64, chess_board_key_64_undo, undo, type_move, 
+      undo_moves_um(chess_board_0x88, chess_board_key_64, chess_board_key_64_undo, undo, type_move,
         from, to, name_capture_piece, piece_color);
 
     }//for (let move_i = 0; move_i < move_list_0x88_O.number_move; move_i++) {
@@ -485,14 +503,16 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
 
     //print_test_set_get_position_tt();
     //test_uses_hash_tt();
-    
+
     // экстренный выход 
     if (stop_search_root == 1) return uci_return_search;
 
   }// for (let depth_max_current = 1; depth_max_current < depth_max_search; depth_max_current++) {
 
-    print_test_set_get_position_tt();
-    test_uses_hash_tt();
+  print_test_set_get_position_tt();
+  test_uses_hash_tt();
+
+  test_tt();
 
   return uci_return_search;
 }
@@ -500,4 +520,4 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
 /////////////////////////////////////////////////////////
 
 
-export { start_search_minmax_r, searching_iterative_deepening_r, set_stop_search_in_1_r, set_stop_search_in_0_r };
+export { start_search_minmax_r, searching_iterative_deepening_r, set_stop_search_in_1_r, set_stop_search_in_0_r, test_tt };

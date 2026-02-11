@@ -59,14 +59,29 @@ let key_64_not_equal = 0;
 // трехмерный массив ключей положения разных 
 const key_array_64_tk = new Array(13);// положений фигур на разных полях 2 * 7 * 64 = 896
 
+const ini_key_array_64_tk = function () {
+
+    //console.log("Transposition_table_0x88_C -> iniM");
+
+    // инициализируем трехмерный массив 13*64 = 896 ячеек
+
+    for (let name = 0; name < 13; name++) {// по количеству имен фигур
+
+        key_array_64_tk[name] = new BigUint64Array(64);
+    }
+}
+
+
 // здесь каждому положению каждой фигуры каждого цвета присваивается случайное число 
 const ini_random_key_array_64_tk = function () {
     //console.log("Transposition_table_0x88_C -> ini_random_key_array_32");
     let uint_a_64 = new BigUint64Array(1);
     let uint64 = 0n;
 
+    ini_key_array_64_tk();
+
     // заполняем трехмерный массив 13*64 = 768 состояний.
-    for (let name = PIECE_NO; name < (B_KING + 1); name++) {// 0;13
+    for (let name = 0; name < 13; name++) {// 0;13
         for (let sq = 0; sq < 64; sq++) {
 
             // nnnnnnnnnnnnnnnnnnnnnn
@@ -80,12 +95,12 @@ const ini_random_key_array_64_tk = function () {
     }
 
     // поищем совпадение ключей
-    for (let name1 = PIECE_NO; name1 < (B_KING + 1); name1++) {
+    for (let name1 = 0; name1 < 13; name1++) {
         for (let sq1 = 0; sq1 < 64; sq1++) {
 
             //key_64_not_equal = key_64_not_equal + 1;
 
-            for (let name2 = PIECE_NO; name2 < (B_KING + 1); name2++) {
+            for (let name2 = 0; name2 < (13); name2++) {
                 for (let sq2 = 0; sq2 < 64; sq2++) {
                     //768
                     if ((name1 == name2) && (sq1 == sq2)) {
@@ -105,21 +120,6 @@ const ini_random_key_array_64_tk = function () {
 
 }
 
-
-const ini_key_array_64_tk = function () {
-
-    //console.log("Transposition_table_0x88_C -> iniM");
-
-    // инициализируем трехмерный массив 13*64 = 896 ячеек
-
-    for (let name = PIECE_NO; name < (B_KING + 1); name++) {
-
-        key_array_64_tk[name] = new BigUint64Array(64);
-    }
-
-    ini_random_key_array_64_tk();
-}
-
 // 
 /**
  * по позиции генерируем ключ
@@ -131,7 +131,6 @@ const set_key_from_board_0x88_tk = function (chess_board_0x88, chess_board_key_6
 
     let sq_0x88;
     let piece;
-    let piece_color;
     let key_64 = 0n;
 
     // бежим по шахматной доске

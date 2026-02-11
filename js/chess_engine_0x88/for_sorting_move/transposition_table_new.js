@@ -138,22 +138,19 @@ const delta_depth_tt = new Int32Array(MAX_TABLE_LENTH_TT);
 // тестовый фен позиции. смотрим насколько адекватный получается ключ позиции
 const test_fen_tt = new Array(MAX_TABLE_LENTH_TT); // тип хода в записанной позиции
 
-//
-let max_lenth_tt = MAX_TABLE_LENTH_TT - 1;
 
-
-let input_to_add_position_tt = 0;// зашли чтобы попытаться добавить позицию
-let input_to_is_save_position_tt = 0;// зашли чтобы попытаться считать позицию
+let input_to__set_position_in_tt = 0;// зашли чтобы попытаться добавить позицию
+let input_to__get_position_from_tt = 0;// зашли чтобы попытаться считать позицию
 //-----------------
-let key_64_found__add_position_tt = 0;// ключ при добавлении позиции уже есть
+let key_64_found__set_position_in_tt = 0;// ключ при добавлении позиции уже есть
 
-let key_64_new_save__add_position_tt = 0;// добавили позицию по новой
-let key_64_rewrite__add_position_tt = 0;// добавили позицию перезаписав старую   
+let key_64_new_save__set_position_in_tt = 0;// добавили позицию по новой
+let key_64_rewrite__set_position_in_tt = 0;// добавили позицию перезаписав старую   
 //-----------------
 
-let key_64_found__is_save_position_tt = 0;// зашли по индексу но ключ не совпал
-let key_64_not_found__is_save_position_tt = 0;// зашли по индексу и ключ совпал
-let delta_depth_use__is_save_position_tt = 0;// глубина поиска из таблицы больше чем в узле
+let key_64_found__get_position_from_tt = 0;// зашли по индексу но ключ не совпал
+let key_64_not_found__get_position_from_tt = 0;// зашли по индексу и ключ совпал
+let delta_depth_use__get_position_from_tt = 0;// глубина поиска из таблицы больше чем в узле
 //-----------------
 
 let yes_collision_fen = 0;// зашли по индексу но фен не совпал
@@ -162,16 +159,17 @@ let no_collision_fen = 0;// зашли по индексу и фен совпа�
 
 const print_test_set_get_position_tt = function () {
 
-    console.log("input_to_add_position_tt " + input_to_add_position_tt);// зашли чтобы попытаться добавить позицию
-    console.log("input_to_is_save_position_tt " + input_to_is_save_position_tt);
+    console.log("set---------------------");
+    console.log("input_to__set_position_in_tt " + input_to__set_position_in_tt);// зашли чтобы попытаться добавить позицию
+    console.log("key_64_found__set_position_in_tt " + key_64_found__set_position_in_tt);// ключ при добавлении позиции уже есть
+    console.log("key_64_new_save__set_position_in_tt " + key_64_new_save__set_position_in_tt);// добавили позицию по новой
+    console.log("key_64_rewrite__set_position_in_tt " + key_64_rewrite__set_position_in_tt);// добавили позицию перезаписав старую 
 
-    console.log("key_64_found__add_position_tt " + key_64_found__add_position_tt);// ключ при добавлении позиции уже есть
-    console.log("key_64_new_save__add_position_tt " + key_64_new_save__add_position_tt);// добавили позицию по новой
-    console.log("key_64_rewrite__add_position_tt " + key_64_rewrite__add_position_tt);// добавили позицию перезаписав старую 
-
-    console.log("key_64_found__is_save_position_tt " + key_64_found__is_save_position_tt)// зашли по индексу но ключ не совпал
-    console.log("key_64_not_found__is_save_position_tt " + key_64_not_found__is_save_position_tt)// зашли по индексу и ключ совпал
-    console.log("delta_depth_use__is_save_position_tt " + delta_depth_use__is_save_position_tt)// глубина поиска из таблицы больше чем в узле
+    console.log("get---------------------");
+    console.log("input_to__get_position_from_tt " + input_to__get_position_from_tt);
+    console.log("key_64_found__get_position_from_tt " + key_64_found__get_position_from_tt)// зашли по индексу но ключ не совпал
+    console.log("key_64_not_found__get_position_from_tt " + key_64_not_found__get_position_from_tt)// зашли по индексу и ключ совпал
+    console.log("delta_depth_use__get_position_from_tt " + delta_depth_use__get_position_from_tt)// глубина поиска из таблицы больше чем в узле
     console.log("yes collision_fen " + yes_collision_fen)// зашли по индексу но фен не совпал
     console.log("no_collision_fen " + no_collision_fen)// зашли по индексу и фен совпал
 }
@@ -195,31 +193,28 @@ const clear_hash_tt = function () {
         // test_fen_board ----------------------------------------------------------------------------------
         test_fen_tt[i] = ""; //  
     }
-    //max_lenth = 0;
 }
 
 
 const ini_tt = function () {
 
-    //console.log("Transposition_table_0x88_C -> iniM");
+    //console.log("ini_tt -> " + MAX_TABLE_LENTH_TT.toString(2));
 
     clear_hash_tt();
-
-    max_lenth_tt = MAX_TABLE_LENTH_TT - 1;
 
     clear_out_tt();
 
     // test
-    input_to_add_position_tt = 0;// зашли чтобы попытаться добавить позицию
-    input_to_is_save_position_tt = 0;
+    input_to__set_position_in_tt = 0;// зашли чтобы попытаться добавить позицию
+    input_to__get_position_from_tt = 0;
 
-    key_64_found__add_position_tt = 0;// ключ при добавлении позиции уже есть
-    key_64_new_save__add_position_tt = 0;// добавили позицию по новой
-    key_64_rewrite__add_position_tt = 0;// добавили позицию перезаписав старую  
+    key_64_found__set_position_in_tt = 0;// ключ при добавлении позиции уже есть
+    key_64_new_save__set_position_in_tt = 0;// добавили позицию по новой
+    key_64_rewrite__set_position_in_tt = 0;// добавили позицию перезаписав старую  
 
-    key_64_found__is_save_position_tt = 0;// зашли по индексу но ключ не совпал
-    key_64_not_found__is_save_position_tt = 0;// зашли по индексу и ключ совпал
-    delta_depth_use__is_save_position_tt = 0;// глубина поиска из таблицы больше чем в узле
+    key_64_found__get_position_from_tt = 0;// зашли по индексу но ключ не совпал
+    key_64_not_found__get_position_from_tt = 0;// зашли по индексу и ключ совпал
+    delta_depth_use__get_position_from_tt = 0;// глубина поиска из таблицы больше чем в узле
     yes_collision_fen = 0;// зашли по индексу но фен не совпал
     no_collision_fen = 0;// зашли по индексу и фен совпал
 }
@@ -256,21 +251,13 @@ const test_uses_hash_tt = function () {
 * @param {string} fen
 * @returns {void}
 */
-const add_position_tt = function (chess_board_key_64, packing_moves, type_nodes, score, depth, max_depth, i, fen) {
+const set_position_in_tt = function (chess_board_key_64, packing_moves, type_nodes, score, depth, max_depth, i, fen) {
 
-    input_to_add_position_tt = input_to_add_position_tt + 1;// зашли что бы попытаться добавить позицию
+    input_to__set_position_in_tt = input_to__set_position_in_tt + 1;// зашли что бы попытаться добавить позицию
 
-    //test
-    //if (type_nodes == 0) console.log("Transposition_table_0x88_C-> type_nodes == 0 !!!! depth " + depth);
-    //if (type_move == -1) console.log("Transposition_table_0x88_C-> type_move == -1 !!!! depth " + depth);
-    //if (from_128 == -1) console.log("Transposition_table_0x88_C-> from_128 == -1 !!!! depth " + depth);
-    //if (to_128 == -1) console.log("Transposition_table_0x88_C-> to_128 == -1 !!!! depth " + depth);                     
 
     // определяем по ключу индекс для доступа к таблице
-    let index_key_64 = chess_board_key_64[0] & BigInt(MAX_TABLE_LENTH_TT - 1);//
-
-    //console.log("Transposition_table_0x88_C -> index_key_64_board " + index_key_64_board);  
-    //console.log("Transposition_table_0x88_C -> MAX_TABLE_LENTH - 1 " + (MAX_TABLE_LENTH - 1).toString(2));              
+    let index_key_64 = chess_board_key_64[0] & BigInt(MAX_TABLE_LENTH_TT - 1);//          
 
     let delta_depth = max_depth - depth;
 
@@ -278,15 +265,15 @@ const add_position_tt = function (chess_board_key_64, packing_moves, type_nodes,
     // ключ совпал значит мы видимо эту позицию когда то смотрели      
     if (chess_board_key_64[0] == key_64_chess_board_tt[Number(index_key_64)]) {
 
-        key_64_found__add_position_tt = key_64_found__add_position_tt + 1;// ключ при добавлении позиции уже есть
+        key_64_found__set_position_in_tt = key_64_found__set_position_in_tt + 1;// ключ при добавлении позиции уже есть
 
         // распаковываем move выделяя delta_depth_move
         let delta_depth_tt_ = delta_depth_tt[Number(index_key_64)]; //
 
         // место уже было записано. надо проверить глубину записи
-        if (delta_depth_tt_ <= delta_depth) {
+        if (delta_depth_tt_ < delta_depth) {
 
-            key_64_rewrite__add_position_tt = key_64_rewrite__add_position_tt + 1;// добавили позицию перезаписав старую
+            key_64_rewrite__set_position_in_tt = key_64_rewrite__set_position_in_tt + 1;// добавили позицию перезаписав старую
 
             packing_move_tt[Number(index_key_64)] = packing_moves[i];
             score_tt[Number(index_key_64)] = score;
@@ -296,7 +283,7 @@ const add_position_tt = function (chess_board_key_64, packing_moves, type_nodes,
         }
     } else {
 
-        key_64_new_save__add_position_tt = key_64_new_save__add_position_tt + 1;// добавили позицию по новой
+        key_64_new_save__set_position_in_tt = key_64_new_save__set_position_in_tt + 1;// добавили позицию по новой
 
         key_64_chess_board_tt[Number(index_key_64)] = chess_board_key_64[0];
         packing_move_tt[Number(index_key_64)] = packing_moves[i];
@@ -316,10 +303,10 @@ const add_position_tt = function (chess_board_key_64, packing_moves, type_nodes,
 * @param {string} fen
 * @returns {number[]}
 */
-const is_save_position_tt = function (chess_board_key_64, packing_moves_1, depth, max_depth, fen) {
+const get_position_from_tt = function (chess_board_key_64, packing_moves_1, depth, max_depth, fen) {
 
     // всего было обращений в запись
-    input_to_is_save_position_tt = input_to_is_save_position_tt + 1;
+    input_to__get_position_from_tt = input_to__get_position_from_tt + 1;
 
     // определяем по ключу индекс для доступа к таблице
     let index_key_64 = chess_board_key_64[0] & BigInt(MAX_TABLE_LENTH_TT - 1);//
@@ -328,14 +315,14 @@ const is_save_position_tt = function (chess_board_key_64, packing_moves_1, depth
     // если ключ совпал
     if (chess_board_key_64[0] == key_64_chess_board_tt[Number(index_key_64)]) {
 
+        // зашли по индексу и ключ совпал
+        key_64_found__get_position_from_tt = key_64_found__get_position_from_tt + 1;
+
         if (fen === test_fen_tt[Number(index_key_64)]) {
             no_collision_fen = no_collision_fen + 1;// зашли по индексу и фен совпал
         } else {//if (fen === fen_test) {
             yes_collision_fen = yes_collision_fen + 1;// зашли по индексу но фен не совпал
         }//if (fen === fen_test) {
-
-        // зашли по индексу и ключ совпал
-        key_64_found__is_save_position_tt = key_64_found__is_save_position_tt + 1;
 
         let delta_depth = max_depth - depth;
 
@@ -352,14 +339,11 @@ const is_save_position_tt = function (chess_board_key_64, packing_moves_1, depth
         if (delta_depth_tt_ >= delta_depth) {
 
             // прошли тест по глубине поиска
-            delta_depth_use__is_save_position_tt = delta_depth_use__is_save_position_tt + 1;
+            delta_depth_use__get_position_from_tt = delta_depth_use__get_position_from_tt + 1;
 
             return out_tt;
 
-        } else {//if (delta_depth <= (max_depth - depth)) {
-
-
-            //console.log("----Transposition_table_0x88_C -> out.tn " + out.tn);
+        } else {//if (delta_depth_tt_ >= delta_depth) {
 
             if ((out_tt[IND_TN_TT] == ALPHA_UPDATE_TT) || (out_tt[IND_TN_TT] == BETA_UPDATE_TT)) {
 
@@ -368,20 +352,20 @@ const is_save_position_tt = function (chess_board_key_64, packing_moves_1, depth
             }
 
             return out_tt;
-        }//if (delta_depth <= (max_depth - depth)) {
+        }//if (delta_depth_tt_ >= delta_depth) {
 
-    } else {//if (lo_key === lo_key_board_0x88) {
+    } else {//if (chess_board_key_64[0] == key_64_chess_board_tt[Number(index_key_64)]) {
         // зашли по индексу но ключ не совпал
-        key_64_not_found__is_save_position_tt = key_64_not_found__is_save_position_tt + 1;
+        key_64_not_found__get_position_from_tt = key_64_not_found__get_position_from_tt + 1;
         // такой позиции нет
         clear_out_tt();
 
         return out_tt;
-    }//if (lo_key === lo_key_board_0x88) {
+    }//if (chess_board_key_64[0] == key_64_chess_board_tt[Number(index_key_64)]) {
 }
 
 export {
-    clear_out_tt, ini_tt, clear_hash_tt, test_uses_hash_tt, add_position_tt, is_save_position_tt, print_test_set_get_position_tt,
+    clear_out_tt, ini_tt, clear_hash_tt, test_uses_hash_tt, set_position_in_tt, get_position_from_tt, print_test_set_get_position_tt,
     MAX_TABLE_LENTH_TT, MAX_SCORE_UPDATE_TT, ALPHA_UPDATE_TT, BETA_UPDATE_TT, ALPHA_CUT_TT, BETA_CUT_TT,
     IND_TN_TT, IND_SC_TT, IND_DD_TT
 };
