@@ -149,17 +149,20 @@ const set_stop_search_in_0_r = function () {
 }
 
 const test_tt = function () {
-  console.log("save-------------------------------------- ");
+  console.log("-------------------------------------- ");
   console.log("save_alpha_cut_test_tt " + save_alpha_cut_test_tt);
-  console.log("save_beta_cut_test_tt " + save_beta_cut_test_tt);
-  console.log("save_alpha_up_test_tt " + save_alpha_up_test_tt);
-  console.log("save_beta_up_test_tt " + save_beta_up_test_tt);
-
-  console.log("use-------------------------------------- ");
   console.log("use_alpha_cut_test_tt " + use_alpha_cut_test_tt);
-  console.log("use_beta_cut_test_tt " + use_beta_cut_test_tt);  
+  console.log("----- ");
+  console.log("save_alpha_up_test_tt " + save_alpha_up_test_tt);
+  console.log("use_alpha_up_test_tt " + use_alpha_up_test_tt);
+  console.log("----- ");
+  console.log("save_beta_cut_test_tt " + save_beta_cut_test_tt);
+  console.log("use_beta_cut_test_tt " + use_beta_cut_test_tt);
+  console.log("----- ");
+  console.log("save_beta_up_test_tt " + save_beta_up_test_tt);
   console.log("use_beta_up_test_tt " + use_beta_up_test_tt);
-  console.log("use_alpha_up_test_tt " + use_alpha_up_test_tt);    
+  console.log("-------------------------------------- ");
+
 }
 
 /** minmax
