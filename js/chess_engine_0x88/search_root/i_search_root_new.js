@@ -32,9 +32,14 @@ import {
 } from "../move_generator/move_list_new.js";
 
 import {
-  test_print_any_0x88, test_print_piese_0x88, test_print_piese_color_0x88, test_print_piese_in_line_0x88,
-  test_compare_chess_board_0x88, save_chess_board_0x88, set_board_from_fen_0x88, set_fen_from_0x88,
-  searching_king, iniStartPositionForWhite, IND_MAX, SIDE_TO_MOVE, WHITE
+    x07_y07_to_0x88, s_0x88_to_x07, s_0x88_to_y07,
+    test_print_any_0x88, test_print_piese_0x88, test_print_piese_color_0x88, test_print_piese_in_line_0x88, test_compare_chess_board_0x88,
+    save_chess_board_0x88, set_board_from_fen_0x88, set_fen_from_0x88, searching_king, iniStartPositionForWhite, letter_to_x_coordinate,
+    IND_MAX, SIDE_TO_MOVE, LET_COOR,
+    BLACK, WHITE, PIECE_NO, W_PAWN, W_KNIGHT, W_BISHOP, W_ROOK, W_QUEEN, W_KING, B_PAWN, B_KNIGHT, B_BISHOP, B_ROOK, B_QUEEN, B_KING,
+    IND_CASTLING_Q, IND_CASTLING_q, IND_CASTLING_K, IND_CASTLING_k,
+    IND_EN_PASSANT_YES, IND_EN_PASSANT_TARGET_SQUARE, IND_KING_FROM_WHITE, IND_KING_FROM_BLACK,
+    SQUARE_64_to_128_CB,  SQUARE_128_to_64_CB
 } from "../move_generator/chess_board_new.js";
 
 import {
@@ -522,5 +527,117 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
 
 /////////////////////////////////////////////////////////
 
+/** moves e2e4 e7e5 g1f3 b8c6 f1b5
+ * @param {string} fen_start
+ * @param {string} move_str
+ * @returns {string}
+ */
+const move_str_to_board_r = function (fen_start, move_str) {
 
-export { start_search_minmax_r, searching_iterative_deepening_r, set_stop_search_in_1_r, set_stop_search_in_0_r, test_tt };
+  // эта доска используется что бы перевести уки команду в позицию 
+  // потом провести ходы, если есть, а потом опять перевести в фен. 
+  // т.е. к счету внутри движка эта доска отношения не имеет.
+  let chess_board_0x88_uci = new Uint8Array(IND_MAX).fill(0);// текущая доска с фигурами 0x88 
+  let packing_moves = new Uint32Array(LENGTH_LIST).fill(MOVE_NO);// список ходов. ход упакован в одно число Uint32
+  let undo = new Uint8Array(UNDO_MAX).fill(0);// для отмены хода
+
+  const chess_board_key_64 = new BigUint64Array(1);
+  const chess_board_key_64_undo = new BigUint64Array(1);
+
+  chess_board_key_64[0] = 0n;
+
+  let type_move;
+  let name_capture_piece;
+  let piece_color;
+
+  let from;
+  let to;
+  let promo;
+
+  let x07;
+  let y07;
+
+  let i_move;
+  let is_moove_legal;
+
+  let pos_start = 6;
+
+  ini_random_key_array_64_tk();// инициируем внтуренний массив случайных чисел.
+
+  set_board_from_fen_0x88(fen_start, chess_board_0x88_uci);// доска из фен;
+
+  //console.log("Search_0x88_C-> " + move_str);
+
+  for (let pos = pos_start; pos < move_str.length; pos++) {
+
+    //console.log("Search_0x88_C-> " + move_str[pos] + move_str[pos + 1] +
+    //  move_str[pos + 2] + move_str[pos + 3] + move_str[pos + 4]);
+
+    generated_pseudo_legal_captures(chess_board_0x88_uci, packing_moves);
+    generated_pseudo_legal_quiet_moves(chess_board_0x88_uci, packing_moves);
+
+
+    //console.log("1 Search_0x88_C-> move_str[" + pos + "] " + move_str[pos]);      
+    x07 = letter_to_x_coordinate(move_str[pos]);
+    pos = pos + 1;
+
+    //console.log("1 Search_0x88_C-> move_str[" + pos + "] " + move_str[pos]);       
+    y07 = 8 - Number(move_str[pos]);
+    pos = pos + 1;
+    from = x07_y07_to_0x88(x07, y07);
+    //console.log("1 Search_0x88_C-> from " + from);
+
+    //console.log("2 Search_0x88_C-> move_str[" + pos + "] " + move_str[pos]);      
+    x07 = letter_to_x_coordinate(move_str[pos]);
+    pos = pos + 1;
+    //console.log("2 Search_0x88_C-> move_str[" + pos + "] " + move_str[pos]);      
+    y07 = 8 - Number(move_str[pos]);
+
+    to = x07_y07_to_0x88(x07, y07);
+
+    //console.log("2 Search_0x88_C-> to " + to);      
+
+    pos = pos + 1;
+
+    promo = "";
+    //console.log("3 Search_0x88_C-> move_str[" + pos + "] " + move_str[pos]); 
+    if (move_str[pos] != " ") {
+      promo = move_str[pos];
+      pos = pos + 1;
+    }
+
+    i_move = return_i_move(packing_moves, from, to, promo);
+
+    //console.log("Search_0x88_C-> from " + from + " to " + to + " promo " + promo + " i_move " + i_move);
+
+    type_move = get_type_move(i_move, packing_moves);
+    from = get_from(i_move, packing_moves);
+    to = get_to(i_move, packing_moves);
+    name_capture_piece = get_name_capture_piece(i_move, packing_moves);
+    piece_color = packing_moves[IND_PIESE_COLOR];
+
+    is_moove_legal = do_moves_mm(chess_board_0x88_uci, chess_board_key_64, chess_board_key_64_undo, undo, type_move, from, to, piece_color);
+
+    if (is_moove_legal == 0) { // король под шахом. отменяем ход и пропускаем этот цикл
+      //console.log("Search_0x88_C->ошибка хода");
+      return "-1";
+    } else if (is_moove_legal == 2) {// нелегальные рокировки не генерируются. просто пропускаем ход
+      //console.log("Search_0x88_C->ошибка рокировки");
+      return "-1";
+    }
+  }//for (let pos = pos_start; pos < move_str.length; pos++) {
+
+  //chess_board_0x88_O_uci.test_print_0x88();
+  //chess_board_0x88_O_uci.test_print_0x88_color();    
+  //chess_board_0x88_O_uci.test_print_any_0x88();
+  let fen = set_fen_from_0x88(chess_board_0x88_uci);
+  //console.log("Search_0x88_C-> fen " + fen);
+  return fen;
+
+}//move_str_to_board(chess_board_0x88_O_uci, move_str) {
+
+
+export {
+  start_search_minmax_r, searching_iterative_deepening_r, set_stop_search_in_1_r, set_stop_search_in_0_r, test_tt,
+  move_str_to_board_r
+};

@@ -6,13 +6,10 @@
  * @version created 27.09m.2025 
 */
 
-import { Search_root_0x88_C } from "./search_root/i_search_root_0x88.js";
-import { 
-  start_search_minmax_r, searching_iterative_deepening_r, set_stop_search_in_1_r, set_stop_search_in_0_r 
+import {
+  start_search_minmax_r, searching_iterative_deepening_r, set_stop_search_in_1_r, set_stop_search_in_0_r, test_tt,
+  move_str_to_board_r
 } from "./search_root/i_search_root_new.js";
-
-import { Uci_C } from "../uci/uci.js";
-//import { Worker_ChessEngine_0x88_С } from "../worker/worker_chess_engine_0x88.js";
 
 /**
 * НАЗНАЧЕНИЕ
@@ -37,9 +34,6 @@ class ChessEngine_0x88_С {
   /* @type {Worker_ChessEngine_0x88_С | null} */
   worker_chessEngine_0x88_O = null;
 
-  search_root_0x88_O = new Search_root_0x88_C();
-  uci_O = new Uci_C();
-
   //---------
 
   score = 0;
@@ -58,12 +52,20 @@ class ChessEngine_0x88_С {
 
     this.worker_chessEngine_0x88_O = worker_chessEngine_0x88_O;
 
-    this.search_root_0x88_O.iniM(this);
-    this.uci_O.iniM();
+  }
+
+  /** moves e2e4 e7e5 g1f3 b8c6 f1b5
+   * @param {string} fen_start
+   * @param {string} move_str
+   * @returns {string}
+   */
+  move_str_to_board(fen_start, move_str) {
+    let fen = move_str_to_board_r(fen_start, move_str);
+    return fen;
   }
 
   set_stop_search_in_1() {
-    this.search_root_0x88_O.set_stop_search_in_1();
+    set_stop_search_in_1_r();
   }
 
   /**
@@ -97,11 +99,11 @@ class ChessEngine_0x88_С {
   }
 
   // iterative deepening
-   /**
-   * @param {string} fen_start
-   * @param {number} depth_max
-   * @returns {uci_return_search}
-   */ 
+  /**
+  * @param {string} fen_start
+  * @param {number} depth_max
+  * @returns {uci_return_search}
+  */
   go_depth_id(fen_start, depth_max) {
     console.log("ChessEngine_0x88_С->go_depth_id depth_max " + depth_max);
 
@@ -111,7 +113,7 @@ class ChessEngine_0x88_С {
     return uci_return_search;
   }
 
- // запуск полного перебора minmax
+  // запуск полного перебора minmax
   // тут можно проверить корректность игрового движка с помощью perf_t. как правильно он генерирует позиции.
   /**
    * @param {string} fen_start
@@ -126,8 +128,5 @@ class ChessEngine_0x88_С {
   }
 
 }
-
- 
-
 
 export { ChessEngine_0x88_С };

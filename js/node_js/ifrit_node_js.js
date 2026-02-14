@@ -62,7 +62,7 @@ rl.on('line', (line) => {
   save_command(command);
 
   if (command === 'uci') {
-    console.log('id name Ifrit_js_3112m25');
+    console.log('id name Ifrit_js_1302m26');
     console.log('id author AnBr75');
     console.log('uciok');
   }
@@ -73,12 +73,15 @@ rl.on('line', (line) => {
   }
 
   else if (command.startsWith('position startpos')) {
+
+    const START_POSITION_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+
     // Здесь обычно парсят позицию (например, "position startpos moves e2e4")
     let move_str = command.slice(18);
 
-    fen_start = chessEngine_0x88_O.search_root_0x88_O.START_POSITION_FEN;
+    fen_start = START_POSITION_FEN;
 
-    fen_start = chessEngine_0x88_O.search_root_0x88_O.move_str_to_board(fen_start, move_str);
+    fen_start = chessEngine_0x88_O.move_str_to_board(fen_start, move_str);
   }
 
   else if (command.startsWith('position fen')) {
@@ -94,7 +97,7 @@ rl.on('line', (line) => {
       fen_start = command.slice(13, firstIndex - 1);
       let move_str = command.slice(firstIndex);
 
-      fen_start = chessEngine_0x88_O.search_root_0x88_O.move_str_to_board(fen_start, move_str);
+      fen_start = chessEngine_0x88_O.move_str_to_board(fen_start, move_str);
     }
   }
 
