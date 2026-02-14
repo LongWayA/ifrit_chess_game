@@ -189,13 +189,13 @@ let GuiStartWorker_R = {
             if (not_go == 1) {
 
                   if (side_to_move != Gui_chess_C.WHITE) {
-                        // GuiStartWorker_R.IfritChessGame_O.gui_chess_O.number_move = GuiStartWorker_R.IfritChessGame_O.gui_chess_O.number_move + 1;
-                        GuiStartWorker_R.IfritChessGame_O.gui_chess_O.number_move = GuiStartWorker_R.IfritChessGame_O.gui_chess_O.number_move + 1;
+                        // GuiStartWorker_R.IfritChessGame_O.gui_chess_O.number_move = GuiStartWorker_R.IfritChessGame_O.
+                        // gui_chess_O.number_move + 1;
+                        GuiStartWorker_R.IfritChessGame_O.gui_chess_O.number_move = GuiStartWorker_R.IfritChessGame_O.
+                        gui_chess_O.number_move + 1;
 
                         move_str = GuiStartWorker_R.IfritChessGame_O.gui_chess_O.number_move + "." +
-                              GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.move_list_0x88_O_gui.move_to_string_uci(
-                                    GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.i_move,
-                                    GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.chess_board_0x88_O_gui) +
+                              GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.move_to_string_uci() +
                               " ";
 
                         GuiStartWorker_R.IfritChessGame_O.checkbox_O.add_text_chess_game(move_str);
@@ -206,9 +206,7 @@ let GuiStartWorker_R = {
                   } else {
 
                         move_str =
-                              GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.move_list_0x88_O_gui.move_to_string_uci(
-                                    GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.i_move,
-                                    GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.chess_board_0x88_O_gui) +
+                              GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.move_to_string_uci() +
                               " ";
 
                         GuiStartWorker_R.IfritChessGame_O.checkbox_O.add_text_chess_game(move_str);

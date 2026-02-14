@@ -32,14 +32,14 @@ import {
 } from "../move_generator/move_list_new.js";
 
 import {
-    x07_y07_to_0x88, s_0x88_to_x07, s_0x88_to_y07,
-    test_print_any_0x88, test_print_piese_0x88, test_print_piese_color_0x88, test_print_piese_in_line_0x88, test_compare_chess_board_0x88,
-    save_chess_board_0x88, set_board_from_fen_0x88, set_fen_from_0x88, searching_king, iniStartPositionForWhite, letter_to_x_coordinate,
-    IND_MAX, SIDE_TO_MOVE, LET_COOR,
-    BLACK, WHITE, PIECE_NO, W_PAWN, W_KNIGHT, W_BISHOP, W_ROOK, W_QUEEN, W_KING, B_PAWN, B_KNIGHT, B_BISHOP, B_ROOK, B_QUEEN, B_KING,
-    IND_CASTLING_Q, IND_CASTLING_q, IND_CASTLING_K, IND_CASTLING_k,
-    IND_EN_PASSANT_YES, IND_EN_PASSANT_TARGET_SQUARE, IND_KING_FROM_WHITE, IND_KING_FROM_BLACK,
-    SQUARE_64_to_128_CB,  SQUARE_128_to_64_CB
+  x07_y07_to_0x88, s_0x88_to_x07, s_0x88_to_y07,
+  test_print_any_0x88, test_print_piese_0x88, test_print_piese_color_0x88, test_print_piese_in_line_0x88, test_compare_chess_board_0x88,
+  save_chess_board_0x88, set_board_from_fen_0x88, set_fen_from_0x88, searching_king, iniStartPositionForWhite, letter_to_x_coordinate,
+  IND_MAX, SIDE_TO_MOVE, LET_COOR,
+  BLACK, WHITE, PIECE_NO, W_PAWN, W_KNIGHT, W_BISHOP, W_ROOK, W_QUEEN, W_KING, B_PAWN, B_KNIGHT, B_BISHOP, B_ROOK, B_QUEEN, B_KING,
+  IND_CASTLING_Q, IND_CASTLING_q, IND_CASTLING_K, IND_CASTLING_k,
+  IND_EN_PASSANT_YES, IND_EN_PASSANT_TARGET_SQUARE, IND_KING_FROM_WHITE, IND_KING_FROM_BLACK,
+  SQUARE_64_to_128_CB, SQUARE_128_to_64_CB
 } from "../move_generator/chess_board_new.js";
 
 import {
@@ -184,11 +184,15 @@ const start_search_minmax_r = function (fen_start, depth_max) {
 
   let chess_board_0x88_save_test = new Uint8Array(IND_MAX).fill(0);// доска 0x88 с фигурами
 
+  const chess_board_key_64 = new BigUint64Array(1);
+
   let packing_pv_line = new Uint32Array(MAX_DEPTH_PV).fill(MOVE_NO);
 
   let time_start = 0;// запускаем таймер
   let time_end = 0;// останавливаем таймер
   let time_delta = 0;// промежуток времени между запуском и остановкой таймера
+
+  ini_random_key_array_64_tk();// инициируем внтуренний массив случайных чисел.
 
   time_start = timer_O.getCurrentTimeMs();
 
@@ -205,7 +209,7 @@ const start_search_minmax_r = function (fen_start, depth_max) {
   //
   let node = 0;
 
-  let best_score = searching_minmax(packing_pv_line, chess_board_0x88, depth, depth_max);
+  let best_score = searching_minmax(packing_pv_line, chess_board_0x88, chess_board_key_64, depth, depth_max);
 
   node = node + node_mm;
 

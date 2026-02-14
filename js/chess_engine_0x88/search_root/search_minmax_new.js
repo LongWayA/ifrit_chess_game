@@ -46,11 +46,12 @@ let chess_board_0x88_end_original = new Uint8Array(IND_MAX).fill(0);// доск�
 /**
  * @param {Uint32Array} packing_pv_line
  * @param {Uint8Array} chess_board_0x88 
+ * @param {BigUint64Array} chess_board_key_64
  * @param {number} depth
  * @param {number} depth_max
  * @returns {number}
  */
-const searching_minmax = function (packing_pv_line, chess_board_0x88, depth, depth_max) {
+const searching_minmax = function (packing_pv_line, chess_board_0x88, chess_board_key_64, depth, depth_max) {
 
   let undo = new Uint8Array(UNDO_MAX).fill(0);
 
@@ -62,6 +63,8 @@ const searching_minmax = function (packing_pv_line, chess_board_0x88, depth, dep
   let is_moove_legal = -1;
 
   let packing_moves = new Uint32Array(LENGTH_LIST).fill(MOVE_NO);
+
+  const chess_board_key_64_undo = new BigUint64Array(1);
 
   let type_move;// тип хода
   let from;
@@ -77,7 +80,7 @@ const searching_minmax = function (packing_pv_line, chess_board_0x88, depth, dep
   if (depth == 0) node_mm = 0;
 
   if (depth >= depth_max) {
-    found_score = score_position(chess_board_0x88);
+    found_score = score_position(chess_board_0x88, chess_board_key_64);
     //console.log("searching_minmax->found_score " + found_score);
     //found_score = 0;
     node_mm = node_mm + 1;
@@ -104,10 +107,10 @@ const searching_minmax = function (packing_pv_line, chess_board_0x88, depth, dep
       name_capture_piece = get_name_capture_piece(move_i, packing_moves);
       piece_color = packing_moves[IND_PIESE_COLOR];
 
-      is_moove_legal = do_moves_mm(chess_board_0x88, undo, type_move, from, to, piece_color);
+      is_moove_legal = do_moves_mm(chess_board_0x88, chess_board_key_64, chess_board_key_64_undo, undo, type_move, from, to, piece_color);
 
       if (is_moove_legal == 0) { // король под шахом. отменяем ход и пропускаем этот цикл
-        undo_moves_um(chess_board_0x88, undo, type_move, from, to, name_capture_piece, piece_color);
+        undo_moves_um(chess_board_0x88, chess_board_key_64, chess_board_key_64_undo, undo, type_move, from, to, name_capture_piece, piece_color);
         continue;
       } else if (is_moove_legal == 2) {// нелегальные рокировки и взятия короля не генерируются. просто пропускаем ход
         continue;
@@ -118,7 +121,7 @@ const searching_minmax = function (packing_pv_line, chess_board_0x88, depth, dep
       //pv_line_0x88_O.add_move(move_i, packing_moves, depth);
       if (depth == 0) packing_pv_line[IND_TYPE_VARIANT_PV] = 1;
 
-      score = searching_minmax(packing_pv_line, chess_board_0x88, (depth + 1), depth_max);
+      score = searching_minmax(packing_pv_line, chess_board_0x88, chess_board_key_64, (depth + 1), depth_max);
 
       if (packing_moves[IND_PIESE_COLOR] == WHITE) {
 
@@ -142,7 +145,7 @@ const searching_minmax = function (packing_pv_line, chess_board_0x88, depth, dep
 
       }
 
-      undo_moves_um(chess_board_0x88, undo, type_move, from, to, name_capture_piece, piece_color);
+      undo_moves_um(chess_board_0x88, chess_board_key_64, chess_board_key_64_undo, undo, type_move, from, to, name_capture_piece, piece_color);
 
     }//for (let move_i = 0; move_i < move_list_0x88_O.number_move; move_i++) {
 

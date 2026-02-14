@@ -12,8 +12,6 @@ import { Game_line_0x88_C } from "./game_line_0x88.js";
 import { GuiLegalMove_0x88_С } from "./gui_legal_move_0x88.js";
 
 import { Draw_С } from "./draw.js";
-// uci
-import { Uci_C } from "../uci/uci.js";
 
 /**
  * НАЗНАЧЕНИЕ
@@ -32,7 +30,6 @@ class Gui_chess_C {
       guiLegalMove_0x88_O = new GuiLegalMove_0x88_С();//   
 
       draw_O = new Draw_С();// рисуем в браузере   
-      uci_O = new Uci_C();
 
       static NAME = "Gui_chess_C";
 
@@ -90,7 +87,6 @@ class Gui_chess_C {
             this.chessBoard_8x8_O.iniM();
             this.GuiStartWorker_O.iniM(IfritChessGame_R);
             this.draw_O.iniM();
-            this.uci_O.iniM();
             this.guiLegalMove_0x88_O.iniM();
 
             this.click_state = Gui_chess_C.CLICK_NO;

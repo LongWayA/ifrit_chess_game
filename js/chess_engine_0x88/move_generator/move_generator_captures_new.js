@@ -707,6 +707,6 @@ const check_detected = function (from, piece_color, chess_board_0x88) {
 }
 
 export {
-    generated_pseudo_legal_captures, check_detected,
+    generated_pseudo_legal_captures, generated_pseudo_legal_moves_one_piece_for_gui, check_detected,
     H1, H8, A1, A8, E1, E8, F1, F8, G1, G8, D1, D8, C1, C8
 };

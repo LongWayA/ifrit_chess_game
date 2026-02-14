@@ -102,7 +102,7 @@ const generated_pseudo_legal_quiet_moves = function (chess_board_0x88, packing_m
 * @param {Uint32Array} packing_moves
 * @returns {void}
 */
-const generated_pseudo_legal_moves_one_piece_for_gui = function (from, chess_board_0x88, packing_moves) {
+const generated_pseudo_legal_moves_one_piece_for_gui_qm = function (from, chess_board_0x88, packing_moves) {
     //console.log('Move_generator_quiet_0x88_С->generated_pseudo_legal_moves');
     let side_to_move = chess_board_0x88[SIDE_TO_MOVE];
     generated_pseudo_legal_moves_one_piece(from, side_to_move, chess_board_0x88, packing_moves);
@@ -514,4 +514,4 @@ const generated_quiet_moves_pawn_promo = function (from, to_center, chess_board_
     }
 }
 
-export { generated_pseudo_legal_quiet_moves };
+export { generated_pseudo_legal_quiet_moves, generated_pseudo_legal_moves_one_piece_for_gui_qm };

@@ -14,6 +14,42 @@
 import { Html5Canvas_C } from "./html5_canvas/html5_canvas.js";
 import { Html5Sprites_C } from "./html5_sprites/html5_sprites.js";
 
+import {
+  clear_list, add_packing_move, get_type_move, get_from, get_to, get_name_capture_piece, set_color, set_number_captures_move,
+  sorting_list_ml, test_compare_list_from, test_print_i_move_list, test_print_list, save_list_from, move_is_found,
+  return_i_move, move_to_string_uci, return_type_captures_pawn_promo, return_type_simple_move,
+  type_move_to_name_piese, type_move_to_name_piese_f, return_promo_piece_from_type_move, set_move_after_the_captures_ml,
+  sorting_list_history_heuristic_ml,
+  LENGTH_LIST, IND_PIESE_COLOR, IND_NUMBER_CAPTURES_MOVE, IND_NUMBER_MOVE,
+  IND_PROMO_QUEEN, IND_PROMO_ROOK, IND_PROMO_BISHOP, IND_PROMO_KNIGHT,
+  MOVE_NO, CAPTURES_PAWN_QUEEN_PROMO_QUEEN, CAPTURES_PAWN_ROOK_PROMO_QUEEN, CAPTURES_PAWN_BISHOP_PROMO_QUEEN,
+  CAPTURES_PAWN_KNIGHT_PROMO_QUEEN, CAPTURES_PAWN_QUEEN_PROMO_ROOK, CAPTURES_PAWN_ROOK_PROMO_ROOK,
+  CAPTURES_PAWN_BISHOP_PROMO_ROOK, CAPTURES_PAWN_KNIGHT_PROMO_ROOK, CAPTURES_PAWN_QUEEN_PROMO_BISHOP,
+  CAPTURES_PAWN_ROOK_PROMO_BISHOP, CAPTURES_PAWN_BISHOP_PROMO_BISHOP, CAPTURES_PAWN_KNIGHT_PROMO_BISHOP,
+  CAPTURES_PAWN_QUEEN_PROMO_KNIGHT, CAPTURES_PAWN_ROOK_PROMO_KNIGHT, CAPTURES_PAWN_BISHOP_PROMO_KNIGHT,
+  CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT, MOVE_PAWN_PROMO_QUEEN, MOVE_PAWN_PROMO_ROOK, MOVE_PAWN_PROMO_BISHOP,
+  MOVE_PAWN_PROMO_KNIGHT, CAPTURES_PAWN_QUEEN, CAPTURES_PAWN_ROOK, CAPTURES_PAWN_BISHOP, CAPTURES_PAWN_KNIGHT,
+  CAPTURES_KNIGHT_QUEEN, CAPTURES_KNIGHT_ROOK, CAPTURES_BISHOP_QUEEN, CAPTURES_BISHOP_ROOK, CAPTURES_ROOK_QUEEN,
+  CAPTURES_KNIGHT_BISHOP, CAPTURES_KNIGHT_KNIGHT, CAPTURES_BISHOP_BISHOP, CAPTURES_BISHOP_KNIGHT, CAPTURES_ROOK_ROOK,
+  CAPTURES_QUEEN_QUEEN, CAPTURES_ROOK_BISHOP, CAPTURES_ROOK_KNIGHT, CAPTURES_QUEEN_ROOK, CAPTURES_QUEEN_BISHOP,
+  CAPTURES_QUEEN_KNIGHT, CAPTURES_KING_QUEEN, CAPTURES_KING_ROOK, CAPTURES_KING_BISHOP, CAPTURES_KING_KNIGHT,
+  CAPTURES_PAWN_PAWN, EP_CAPTURES, CAPTURES_KNIGHT_PAWN, CAPTURES_BISHOP_PAWN, CAPTURES_ROOK_PAWN,
+  CAPTURES_QUEEN_PAWN, CAPTURES_KING_PAWN, MOVE_QUEEN, MOVE_ROOK, MOVE_BISHOP, MOVE_KNIGHT, MOVE_KING, MOVE_PAWN,
+  MOVE_DOUBLE_PAWN, MOVE_KING_CASTLE, MOVE_KING_QUEEN_CASTLE, TYPE_MOVE_NAME
+} from "../chess_engine_0x88/move_generator/move_list_new.js";
+
+import {
+  x07_y07_to_0x88, s_0x88_to_x07, s_0x88_to_y07,
+  test_print_any_0x88, test_print_piese_0x88, test_print_piese_color_0x88, test_print_piese_in_line_0x88, test_compare_chess_board_0x88,
+  save_chess_board_0x88, set_board_from_fen_0x88, set_fen_from_0x88, searching_king, iniStartPositionForWhite, letter_to_x_coordinate,
+  IND_MAX, SIDE_TO_MOVE, LET_COOR,
+  BLACK, WHITE, PIECE_NO, W_PAWN, W_KNIGHT, W_BISHOP, W_ROOK, W_QUEEN, W_KING, B_PAWN, B_KNIGHT, B_BISHOP, B_ROOK, B_QUEEN, B_KING,
+  IND_CASTLING_Q, IND_CASTLING_q, IND_CASTLING_K, IND_CASTLING_k,
+  IND_EN_PASSANT_YES, IND_EN_PASSANT_TARGET_SQUARE, IND_KING_FROM_WHITE, IND_KING_FROM_BLACK,
+  SQUARE_64_to_128_CB, SQUARE_128_to_64_CB
+} from "../chess_engine_0x88/move_generator/chess_board_new.js";
+
+
 /**
  * Класс.
  * @class
@@ -124,14 +160,13 @@ class Draw_С {
 
     //color = Html5Canvas_C.BLUE;//
     /**
- * @param {any} move_list_0x88_O
- * @param {any} chess_board_0x88_O
+ * @param {Uint32Array} packing_moves
  * @param {any} chessBoard_8x8_O
- * @param {number} color
+ * @param {string} color
  * @param {number} is_white
  * @returns {void}
  */
-    draw_rect_move(move_list_0x88_O, chess_board_0x88_O, chessBoard_8x8_O, color, is_white) {
+    draw_rect_move(packing_moves, chessBoard_8x8_O, color, is_white) {
 
         let left;
         let top;
@@ -143,10 +178,15 @@ class Draw_С {
         let x_b_n = -1; // номер клетки по х
         let y_b_n = -1; // номер клетки по у
 
-        for (let i = 0; i < move_list_0x88_O.number_move; i++) {
+        let to;
 
-            x_b_n = chess_board_0x88_O.s_0x88_to_x07(move_list_0x88_O.to[i]);
-            y_b_n = chess_board_0x88_O.s_0x88_to_y07(move_list_0x88_O.to[i]);
+
+        for (let i = 0; i < packing_moves[IND_NUMBER_MOVE]; i++) {
+
+            to = get_to(i, packing_moves);
+
+            x_b_n = s_0x88_to_x07(to);
+            y_b_n = s_0x88_to_y07(to);
             if (is_white == 0) y_b_n = 7 - y_b_n;
             if (is_white == 0) x_b_n = 7 - x_b_n;
             //console.log("is_white = " + is_white);

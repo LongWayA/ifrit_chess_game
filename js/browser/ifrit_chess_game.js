@@ -276,7 +276,7 @@ let IfritChessGame_R = {
 
         // мы уже сделали ход на вспомогательной доске движка. и до этого проверили его на легальность 
         // теперь пишем фен
-        let fen = IfritChessGame_R.gui_chess_O.guiLegalMove_0x88_O.chess_board_0x88_O_gui.set_fen_from_0x88();
+        let fen = IfritChessGame_R.gui_chess_O.guiLegalMove_0x88_O.set_fen();
 
         IfritChessGame_R.gui_chess_O.game_line_0x88_O.add_position(fen);
 
