@@ -62,7 +62,7 @@ rl.on('line', (line) => {
   save_command(command);
 
   if (command === 'uci') {
-    console.log('id name Ifrit_js_1302m26');
+    console.log('id name Ifrit_js_1402m26');
     console.log('id author AnBr75');
     console.log('uciok');
   }
@@ -116,7 +116,8 @@ rl.on('line', (line) => {
     // + " nodes " + info_return_search.node_count_str + " nps " + info_return_search.nodes_per_second_str 
     // + " pv " + info_return_search.pv_line_uci_str);
 
-    console.log('bestmove ' + info_return_search.best_move);
+    //console.log('bestmove ' + info_return_search.best_move);
+    console.log(info_return_search.best_move);
   }
 
   else if (command === 'stop') {

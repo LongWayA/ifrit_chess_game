@@ -43,15 +43,16 @@ import {
 
 
 // nnnnnnnnnnnnnnnnnnnnnn
-//import crypto from 'node:crypto';
+// import crypto from 'node:crypto';
 
 /**
 * НАЗНАЧЕНИЕ
-
+  Работаем с кеш ключом шахматной доски.
+  Каждой позиции присваеваем уникальный 64 битный ключ.
 */
 
 let key_64_equal = 0;// совпадающие ключи
-let key_64_not_equal = 0;
+let key_64_not_equal = 0;// не совпадающие ключи
 
 //const chess_board_key_64_tk = new BigUint64Array(1);
 //chess_board_key_64_tk[0] = 0n;
@@ -59,15 +60,16 @@ let key_64_not_equal = 0;
 // трехмерный массив ключей положения разных 
 const key_array_64_tk = new Array(13);// положений фигур на разных полях 2 * 7 * 64 = 896
 
+// инициализируем трехмерный массив 13*64 = 832 ячеек
 const ini_key_array_64_tk = function () {
 
     //console.log("Transposition_table_0x88_C -> iniM");
 
-    // инициализируем трехмерный массив 13*64 = 896 ячеек
+    // инициализируем трехмерный массив 13*64 = 832 ячеек
 
     for (let name = 0; name < 13; name++) {// по количеству имен фигур
 
-        key_array_64_tk[name] = new BigUint64Array(64);
+        key_array_64_tk[name] = new BigUint64Array(128).fill(0n);
     }
 }
 
@@ -80,95 +82,107 @@ const ini_random_key_array_64_tk = function () {
 
     ini_key_array_64_tk();
 
-    // заполняем трехмерный массив 13*64 = 768 состояний.
+    // заполняем трехмерный массив 13*64 = 832 ключей.  13*128 = 1 664 ячеек.
     for (let name = 0; name < 13; name++) {// 0;13
-        for (let sq = 0; sq < 64; sq++) {
+        for (let sq = 0; sq < 128; sq++) {
 
-            // nnnnnnnnnnnnnnnnnnnnnn
-            //crypto.getRandomValues(uint_a_64);
-            self.crypto.getRandomValues(uint_a_64);
-            //window.crypto.getRandomValues(hi_lo);
-            uint64 = uint_a_64[0];//
+            // если мы не вышли за пределы доски
+            if ((sq & 136) == 0) {// 136 0x88
+                // nnnnnnnnnnnnnnnnnnnnnn
+                //crypto.getRandomValues(uint_a_64);
+                self.crypto.getRandomValues(uint_a_64);
 
-            key_array_64_tk[name][sq] = uint64;
+                uint64 = uint_a_64[0];//
+
+                key_array_64_tk[name][sq] = uint64;
+            }
         }
     }
 
     // поищем совпадение ключей
     for (let name1 = 0; name1 < 13; name1++) {
-        for (let sq1 = 0; sq1 < 64; sq1++) {
+        for (let sq1 = 0; sq1 < 128; sq1++) {
 
             //key_64_not_equal = key_64_not_equal + 1;
 
             for (let name2 = 0; name2 < (13); name2++) {
-                for (let sq2 = 0; sq2 < 64; sq2++) {
-                    //768
-                    if ((name1 == name2) && (sq1 == sq2)) {
-                        key_64_not_equal = key_64_not_equal + 1;
-                    } else {
-                        if (key_array_64_tk[name1][sq1] == key_array_64_tk[name2][sq2]) {
-                            key_64_equal = key_64_equal + 1;
-                        } else {
+                for (let sq2 = 0; sq2 < 128; sq2++) {
+
+                    if (((sq1 & 136) == 0) && ((sq2 & 136) == 0)) {
+
+                        if ((name1 == name2) && (sq1 == sq2)) {
                             key_64_not_equal = key_64_not_equal + 1;
+                        } else {
+                            if (key_array_64_tk[name1][sq1] == key_array_64_tk[name2][sq2]) {
+                                key_64_equal = key_64_equal + 1;
+                            } else {
+                                key_64_not_equal = key_64_not_equal + 1;
+                            }
                         }
                     }
                 }
             }
         }
     }
-    console.log("Transposition_table_0x88_C key_64_equal " + key_64_equal);
+
+    if (key_64_equal != 0) {
+        // если нет совпадений то 692 224
+        console.log("Transposition_table_0x88_C key_64_not_equal " + key_64_not_equal);
+        console.log("Transposition_table_0x88_C key_64_equal " + key_64_equal);
+    }
 
 }
 
 // 
 /**
  * по позиции генерируем ключ
+ * sm16 ep32 epsq70 Q48 K64 q80 k96
  * @param {Uint8Array} chess_board_0x88 
  * @param {BigUint64Array} chess_board_key_64
  * @returns {void} 
 */
 const set_key_from_board_0x88_tk = function (chess_board_0x88, chess_board_key_64) {
 
-    let sq_0x88;
     let piece;
     let key_64 = 0n;
 
     // бежим по шахматной доске
-    for (let sq = 0; sq < 64; sq++) {
+    for (let sq = 0; sq < 128; sq++) {
 
-        sq_0x88 = SQUARE_64_to_128_CB[sq];
-        piece = chess_board_0x88[sq_0x88];
+        if ((sq & 136) == 0) {// 136 0x88
+            piece = chess_board_0x88[sq];
 
-        if (piece != 0) {
-            key_64 = key_64 ^ key_array_64_tk[piece][sq];
+            if (piece != 0) {
+                key_64 = key_64 ^ key_array_64_tk[piece][sq];
+            }
         }
     }
 
     if (chess_board_0x88[SIDE_TO_MOVE] == 1) {
-        key_64 = key_64 ^ key_array_64_tk[6][10];
+        key_64 = key_64 ^ key_array_64_tk[6][16];
     }
 
     if (chess_board_0x88[IND_EN_PASSANT_YES] == 1) {
-        key_64 = key_64 ^ key_array_64_tk[5][20];
+        key_64 = key_64 ^ key_array_64_tk[5][32];
     }
 
-    key_64 = key_64 ^ BigInt(chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE]) ^ key_array_64_tk[5][25];
+    key_64 = key_64 ^ BigInt(chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE]) ^ key_array_64_tk[5][70];
 
-
+    // sm16 ep32 epsq70 Q48 K64 q80 k96
     if (chess_board_0x88[IND_CASTLING_Q] == 1) {
-        key_64 = key_64 ^ key_array_64_tk[4][30];
+        key_64 = key_64 ^ key_array_64_tk[4][48];
     }
 
     if (chess_board_0x88[IND_CASTLING_K] == 1) {
-        key_64 = key_64 ^ key_array_64_tk[4][40];
+        key_64 = key_64 ^ key_array_64_tk[4][64];
     }
 
     if (chess_board_0x88[IND_CASTLING_q] == 1) {
-        key_64 = key_64 ^ key_array_64_tk[4][50];
+        key_64 = key_64 ^ key_array_64_tk[4][80];
     }
 
     if (chess_board_0x88[IND_CASTLING_k] == 1) {
-        key_64 = key_64 ^ key_array_64_tk[4][60];
+        key_64 = key_64 ^ key_array_64_tk[4][96];
     }
 
     chess_board_key_64[0] = key_64;
@@ -177,7 +191,7 @@ const set_key_from_board_0x88_tk = function (chess_board_0x88, chess_board_key_6
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * простой ход и взятия. принципиальный момент обработка фигуры которую берем.
+ * проверяем кеш ключ доски на совпадение. если не совпал то печатем значения
 * @param {BigUint64Array} chess_board_key_64_save 
 * @param {BigUint64Array} chess_board_key_64
 * @returns {void}
@@ -196,101 +210,85 @@ const test_chess_board_key_64_tk = function (chess_board_key_64_save, chess_boar
 
 /**
  * простой ход и взятия. принципиальный момент обработка фигуры которую берем.
-* @param {number} from128
-* @param {number} to128
+* @param {number} from
+* @param {number} to
 * @param {number} piece_from
 * @param {number} piece_to
 * @param {BigUint64Array} chess_board_key_64 
 * @returns {void}
 */
-const key_update_do_move_0x88_tk = function (from128, to128, piece_from, piece_to, chess_board_key_64) {
+const key_update_do_move_0x88_tk = function (from, to, piece_from, piece_to, chess_board_key_64) {
 
-    let from64 = SQUARE_128_to_64_CB[from128];
-    let to64 = SQUARE_128_to_64_CB[to128];
-
-
-    chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[piece_from][from64];
-    chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[piece_from][to64];
+    chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[piece_from][from];
+    chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[piece_from][to];
 
     // если есть фигура которую берем ее надо убрать из хеш ключа
     if (piece_to != 0) {
-        chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[piece_to][to64];
+        chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[piece_to][to];
     }
 
     // side_to_move
-    chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[6][10];
+    chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[6][16];
 }
 
 /**
  * взятие на проходе
-* @param {number} from128
-* @param {number} to128
-* @param {number} ep128
+* @param {number} from
+* @param {number} to
+* @param {number} ep
 * @param {number} piece_from
 * @param {number} piece_ep
 * @param {BigUint64Array} chess_board_key_64 
 * @returns {void}
 */
-const key_update_ep_move_0x88_tk = function (from128, to128, ep128, piece_from, piece_ep, chess_board_key_64) {
+const key_update_ep_move_0x88_tk = function (from, to, ep, piece_from, piece_ep, chess_board_key_64) {
 
-    let from64 = SQUARE_128_to_64_CB[from128];
-    let to64 = SQUARE_128_to_64_CB[to128];
-    let ep64 = SQUARE_128_to_64_CB[ep128];
-
-    chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[piece_from][from64];
-    chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[piece_from][to64];
-    chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[piece_ep][ep64];
+    chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[piece_from][from];
+    chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[piece_from][to];
+    chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[piece_ep][ep];
 
     // side_to_move
-    chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[6][10];
+    chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[6][16];
 }
 
 // 
 /**
  * превращение и превращение с взятием. принципиальный момент обработка фигуры которую берем.
-* @param {number} from128
-* @param {number} to128
+* @param {number} from
+* @param {number} to
 * @param {number} piece_promo
 * @param {number} piece_to
 * @param {number} piece_color 
 * @param {BigUint64Array} chess_board_key_64 
 * @returns {void}
 */
-const key_update_promo_move_0x88_tk = function (from128, to128, piece_promo, piece_to, piece_color, chess_board_key_64) {
-
-    let from64 = SQUARE_128_to_64_CB[from128];
-    let to64 = SQUARE_128_to_64_CB[to128];
+const key_update_promo_move_0x88_tk = function (from, to, piece_promo, piece_to, piece_color, chess_board_key_64) {
 
     let nf = (piece_color == 1) ? W_PAWN : B_PAWN;
 
-    chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[nf][from64];
-    chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[piece_promo][to64];
+    chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[nf][from];
+    chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[piece_promo][to];
 
     // если есть фигура которую берем ее надо убрать из хеш ключа
     if (piece_to != 0) {
-        chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[piece_to][to64];
+        chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[piece_to][to];
     }
 
     // side_to_move
-    chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[6][10];
+    chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[6][16];
 }
 
 /**
  * рокировки
-* @param {number} from128
-* @param {number} to128
-* @param {number} r_from128
-* @param {number} r_to128
+* @param {number} from
+* @param {number} to
+* @param {number} r_from
+* @param {number} r_to
 * @param {number} piece_color 
 * @param {BigUint64Array} chess_board_key_64 
 * @returns {void}
 */
-const key_update_castle_move_0x88_tk = function (from128, to128, r_from128, r_to128, piece_color, chess_board_key_64) {
-
-    let from64 = SQUARE_128_to_64_CB[from128];
-    let to64 = SQUARE_128_to_64_CB[to128];
-    let r_from64 = SQUARE_128_to_64_CB[r_from128];
-    let r_to64 = SQUARE_128_to_64_CB[r_to128];
+const key_update_castle_move_0x88_tk = function (from, to, r_from, r_to, piece_color, chess_board_key_64) {
 
     let nfk = (piece_color == 1) ? W_KING : B_KING;
     let nfr = (piece_color == 1) ? W_ROOK : B_ROOK;
@@ -298,14 +296,14 @@ const key_update_castle_move_0x88_tk = function (from128, to128, r_from128, r_to
     //console.log("key_update_castle_move_0x88_tk -> nfk " + nfk);
     //console.log("key_update_castle_move_0x88_tk -> nfr " + nfr);
 
-    chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[nfk][from64];
-    chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[nfk][to64];
+    chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[nfk][from];
+    chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[nfk][to];
 
-    chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[nfr][r_from64];
-    chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[nfr][r_to64];
+    chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[nfr][r_from];
+    chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[nfr][r_to];
 
     // side_to_move
-    chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[6][10];
+    chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[6][16];
 }
 
 /**
@@ -314,7 +312,8 @@ const key_update_castle_move_0x88_tk = function (from128, to128, r_from128, r_to
  * @returns {void}
 */
 const key_update_ep_0x88_tk = function (chess_board_key_64) {
-     chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[5][20];
+    // sm16 ep32 epsq70 Q48 K64 q80 k96
+    chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[5][32];
 }
 
 /**
@@ -324,8 +323,9 @@ const key_update_ep_0x88_tk = function (chess_board_key_64) {
  * @returns {void}
 */
 const key_update_ep2_0x88_tk = function (chess_board_key_64, chess_board_0x88) {
-     chess_board_key_64[0] = chess_board_key_64[0] ^
-         BigInt(chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE]) ^ key_array_64_tk[5][25];
+    // sm16 ep32 epsq70 Q48 K64 q80 k96
+    chess_board_key_64[0] = chess_board_key_64[0] ^
+        BigInt(chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE]) ^ key_array_64_tk[5][70];
 }
 
 /**
@@ -339,25 +339,27 @@ const key_update_ep2_0x88_tk = function (chess_board_key_64, chess_board_0x88) {
 */
 const key_update_QqKk_0x88_tk = function (Q, q, K, k, chess_board_key_64) {
 
+   // sm16 ep32 epsq70 Q48 K64 q80 k96 
     if (Q == 1) {
-        chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[4][30];
+        chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[4][48];
     }
 
     if (K == 1) {
-        chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[4][40];
+        chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[4][64];
     }
 
     if (q == 1) {
-        chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[4][50];
+        chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[4][80];
     }
 
     if (k == 1) {
-        chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[4][60];
+        chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[4][96];
     }
 }
 
 /**
- * простой ход и взятия. принципиальный момент обработка фигуры которую берем.
+ * проверяем кеш ключ доски на совпадение. если не совпал то печатем значения 
+ * и ход который привел к отклонению
 * @param {BigUint64Array} chess_board_key_64_test 
 * @param {BigUint64Array} chess_board_key_64
 * @param {Uint32Array} packing_moves
