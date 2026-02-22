@@ -105,11 +105,11 @@ let is_history_heuristic_use_ab = 1;// использование сортиро
 
 let is_TT_use = 1;// сортировка и отсечка по таблице перестановок(хеш-таблице)
 
-// pruning
+// pruning надо думать. ухудшают игру
 let is_razoring_use = 1;// не смотрим очень плохие для нас позиции. отключаем если нашли мат.
 
 // надо думать. ухудшают игру
-let is_lmr_use = 0;// уменьшаем глубину поиска ходов после всех взятий и двух киллеров, но не меньше 4 полухода 
+let is_lmr_use = 1;// уменьшаем глубину поиска ходов после всех взятий и двух киллеров, но не меньше 4 полухода 
 //let is_futility_pruning_use = 0;// not working
 
 let stop_search = 0;
@@ -133,6 +133,8 @@ let chess_board_0x88_test = new Uint8Array(IND_MAX).fill(0);// записыва�
 
 let new_depth_max = 0;
 let i_lmr = 0;
+
+const chess_board_key_64_3_repetition = new BigUint64Array(20).fill(0n);
 
 //const chess_board_key_64_testab = new BigUint64Array(1);
 
@@ -194,7 +196,7 @@ const searching_alpha_beta_id_ab = function (alpha, beta, chess_board_0x88, ches
 
   const chess_board_key_64_undo = new BigUint64Array(1);
 
-  let number_move_legal = 0;
+  let number_move_legal = 0;// колличество легальных ходов
 
   let score = 0;// текущая оценка позиции
   let best_score = 0;// лучшая оценка позиции
@@ -219,8 +221,21 @@ const searching_alpha_beta_id_ab = function (alpha, beta, chess_board_0x88, ches
   // экстренный выход
   if (stop_search == 1) return 0;
 
+  chess_board_key_64_3_repetition[depth] = chess_board_key_64[0];
+
   // поиск на максимальной глубине-----------------------------------
   if (depth >= depth_max) {
+
+    if (depth > 4) {// на глубине 5 -> 5, 3 , 1 все ок
+
+      if (chess_board_key_64_3_repetition[depth] == chess_board_key_64_3_repetition[depth - 2]) {
+        if (chess_board_key_64_3_repetition[depth] == chess_board_key_64_3_repetition[depth - 4]) {
+          best_score = 0;
+          //console.log("searching_alpha_beta_id_ab-> repetition depth " + depth);
+          return best_score;
+        }
+      }
+    }
 
     if (is_quiescence_use == 0) {
       best_score = score_position(chess_board_0x88, chess_board_key_64);
@@ -259,7 +274,7 @@ const searching_alpha_beta_id_ab = function (alpha, beta, chess_board_0x88, ches
     if ((out_tt[IND_TN_TT] == BETA_CUT_TT) && (chess_board_0x88[SIDE_TO_MOVE] == WHITE)) {
 
       if (out_tt[IND_SC_TT] >= beta) {
-        use_beta_cut_test_tt = use_beta_cut_test_tt + 1;          
+        use_beta_cut_test_tt = use_beta_cut_test_tt + 1;
 
         return out_tt[IND_SC_TT];
       }
@@ -278,7 +293,7 @@ const searching_alpha_beta_id_ab = function (alpha, beta, chess_board_0x88, ches
   // razoring ====================================================    
   if (is_razoring_use == 1) {
 
-    if ((isPV == 0) && ((depth_max - depth) <= 5)) {
+    if ((isPV == 0) && ((depth_max - depth) < 3)) {
 
       score = score_position(chess_board_0x88, chess_board_key_64);
 
@@ -290,18 +305,22 @@ const searching_alpha_beta_id_ab = function (alpha, beta, chess_board_0x88, ches
         // и вместо матовой оценки получаем обычную
         // что бы это предотвратить добавил условие 5000 > alpha.
         if (((score + raz) < alpha) && (5000 > alpha)) {
-
-          score = quiescence_search(alpha, beta, chess_board_0x88, chess_board_key_64, depth);
+         if (check_detected(chess_board_0x88[IND_KING_FROM_WHITE], WHITE, chess_board_0x88) == 0){
+          score = quiescence_search(alpha, (alpha+1), chess_board_0x88, chess_board_key_64, depth);
 
           if (score <= alpha) return score;
+         }
         }
       } else {
 
-        if (((score - raz) > beta) && (-5000 < beta)) {
+        if (((score - raz) > beta) &&  (-5000 < beta)) {
 
-          score = quiescence_search(alpha, beta, chess_board_0x88, chess_board_key_64, depth);
+          if (check_detected(chess_board_0x88[IND_KING_FROM_BLACK], BLACK, chess_board_0x88) == 0){
 
-          if (score >= beta) return score;
+             score = quiescence_search((beta-1), beta, chess_board_0x88, chess_board_key_64, depth);
+
+             if (score >= beta) return score;
+          }
         }
       }
     }
@@ -384,7 +403,7 @@ const searching_alpha_beta_id_ab = function (alpha, beta, chess_board_0x88, ches
   new_depth_max = depth_max;
 
   if (is_lmr_use == 1) {
-    i_lmr = packing_moves[IND_NUMBER_CAPTURES_MOVE] + 2;//(3) взятия два киллера и тт ход не сокращаем 
+    i_lmr = packing_moves[IND_NUMBER_CAPTURES_MOVE] + 4;//(3) взятия два киллера и тт ход не сокращаем 
   }
 
 
@@ -445,10 +464,22 @@ const searching_alpha_beta_id_ab = function (alpha, beta, chess_board_0x88, ches
         }
 
         if ((score > alpha) && (score < beta)) {
-          isPV_node = 1;
-          //console.log("Search_0x88_C->depth " + depth + " пересчет ");
-          score = searching_alpha_beta_id_ab(alpha, beta, chess_board_0x88, chess_board_key_64, packing_pv_line,
-            (depth + 1), depth_max, isPV_node);
+          isPV_node = 0;
+
+          if (packing_moves[IND_PIESE_COLOR] == WHITE) {
+            score = searching_alpha_beta_id_ab(alpha, (alpha + 1), chess_board_0x88, chess_board_key_64, packing_pv_line,
+              (depth + 1), depth_max, isPV_node);
+          } else {
+            score = searching_alpha_beta_id_ab((beta - 1), beta, chess_board_0x88, chess_board_key_64, packing_pv_line,
+              (depth + 1), depth_max, isPV_node);
+          }
+
+          if ((score > alpha) && (score < beta)) {
+            isPV_node = 1;
+            //console.log("Search_0x88_C->depth " + depth + " пересчет ");
+            score = searching_alpha_beta_id_ab(alpha, beta, chess_board_0x88, chess_board_key_64, packing_pv_line,
+              (depth + 1), depth_max, isPV_node);
+          }
         }
       }
     }
@@ -657,6 +688,7 @@ export {
   use_alpha_up_test_tt, use_alpha_cut_test_tt, use_beta_up_test_tt, use_beta_cut_test_tt, //use_score_test_tt,
   clear_test_tt
 };
+
 
 // from Alexandria_src=====================
 // Reverse futility pruning -> (eval - futilityMargin) >= beta return (eval - futilityMargin)
