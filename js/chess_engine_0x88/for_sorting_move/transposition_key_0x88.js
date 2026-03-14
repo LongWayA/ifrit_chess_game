@@ -15,7 +15,7 @@ import {
     IND_CASTLING_Q, IND_CASTLING_q, IND_CASTLING_K, IND_CASTLING_k,
     IND_EN_PASSANT_YES, IND_EN_PASSANT_TARGET_SQUARE, IND_KING_FROM_WHITE, IND_KING_FROM_BLACK,
     SQUARE_64_to_128_CB, SQUARE_128_to_64_CB
-} from "../move_generator/chess_board_new.js";
+} from "../move_generator_0x88/chess_board_0x88.js";
 
 import {
     clear_list, add_packing_move, get_type_move, get_from, get_to, get_name_capture_piece, set_color, set_number_captures_move,
@@ -39,7 +39,7 @@ import {
     CAPTURES_PAWN_PAWN, EP_CAPTURES, CAPTURES_KNIGHT_PAWN, CAPTURES_BISHOP_PAWN, CAPTURES_ROOK_PAWN,
     CAPTURES_QUEEN_PAWN, CAPTURES_KING_PAWN, MOVE_QUEEN, MOVE_ROOK, MOVE_BISHOP, MOVE_KNIGHT, MOVE_KING, MOVE_PAWN,
     MOVE_DOUBLE_PAWN, MOVE_KING_CASTLE, MOVE_KING_QUEEN_CASTLE, TYPE_MOVE_NAME
-} from "../move_generator/move_list_new.js";
+} from "../move_generator_0x88/move_list_0x88.js";
 
 
 // nnnnnnnnnnnnnnnnnnnnnn

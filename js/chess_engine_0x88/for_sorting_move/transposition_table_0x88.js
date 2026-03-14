@@ -15,7 +15,7 @@ import {
     IND_CASTLING_Q, IND_CASTLING_q, IND_CASTLING_K, IND_CASTLING_k,
     IND_EN_PASSANT_YES, IND_EN_PASSANT_TARGET_SQUARE, IND_KING_FROM_WHITE, IND_KING_FROM_BLACK,
     SQUARE_64_to_128_CB, SQUARE_128_to_64_CB
-} from "../move_generator/chess_board_new.js";
+} from "../move_generator_0x88/chess_board_0x88.js";
 
 /**
 * НАЗНАЧЕНИЕ

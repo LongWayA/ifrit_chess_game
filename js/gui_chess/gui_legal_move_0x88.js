@@ -34,7 +34,7 @@ import {
   CAPTURES_PAWN_PAWN, EP_CAPTURES, CAPTURES_KNIGHT_PAWN, CAPTURES_BISHOP_PAWN, CAPTURES_ROOK_PAWN,
   CAPTURES_QUEEN_PAWN, CAPTURES_KING_PAWN, MOVE_QUEEN, MOVE_ROOK, MOVE_BISHOP, MOVE_KNIGHT, MOVE_KING, MOVE_PAWN,
   MOVE_DOUBLE_PAWN, MOVE_KING_CASTLE, MOVE_KING_QUEEN_CASTLE, TYPE_MOVE_NAME
-} from "../chess_engine_0x88/move_generator/move_list_new.js";
+} from "../chess_engine_0x88/move_generator_0x88/move_list_0x88.js";
 
 import {
   x07_y07_to_0x88, s_0x88_to_x07, s_0x88_to_y07,
@@ -45,21 +45,21 @@ import {
   IND_CASTLING_Q, IND_CASTLING_q, IND_CASTLING_K, IND_CASTLING_k,
   IND_EN_PASSANT_YES, IND_EN_PASSANT_TARGET_SQUARE, IND_KING_FROM_WHITE, IND_KING_FROM_BLACK,
   SQUARE_64_to_128_CB, SQUARE_128_to_64_CB
-} from "../chess_engine_0x88/move_generator/chess_board_new.js";
+} from "../chess_engine_0x88/move_generator_0x88/chess_board_0x88.js";
 
-import { generated_pseudo_legal_captures, generated_pseudo_legal_moves_one_piece_for_gui, check_detected } from "../chess_engine_0x88/move_generator/move_generator_captures_new.js";
-import { generated_pseudo_legal_quiet_moves, generated_pseudo_legal_moves_one_piece_for_gui_qm } from "../chess_engine_0x88/move_generator/move_generator_quiet_new.js";
+import { generated_pseudo_legal_captures, generated_pseudo_legal_moves_one_piece_for_gui, check_detected } from "../chess_engine_0x88/move_generator_0x88/move_generator_captures_0x88.js";
+import { generated_pseudo_legal_quiet_moves, generated_pseudo_legal_moves_one_piece_for_gui_qm } from "../chess_engine_0x88/move_generator_0x88/move_generator_quiet_0x88.js";
 
-import { do_moves_mm } from "../chess_engine_0x88/move_generator/make_move_new.js";
+import { do_moves_mm } from "../chess_engine_0x88/move_generator_0x88/make_move_0x88.js";
 
-import { UNDO_MAX } from "../chess_engine_0x88/move_generator/undo_new.js";
+import { UNDO_MAX } from "../chess_engine_0x88/move_generator_0x88/undo_0x88.js";
 
 import {
   ini_random_key_array_64_tk, ini_key_array_64_tk, set_key_from_board_0x88_tk, test_chess_board_key_64_tk,
   key_update_do_move_0x88_tk, key_update_ep_move_0x88_tk, key_update_promo_move_0x88_tk,
   key_update_castle_move_0x88_tk, key_update_ep_0x88_tk, key_update_ep2_0x88_tk, key_update_QqKk_0x88_tk,
   test_generation_key_64_tk
-} from "../chess_engine_0x88/for_sorting_move/transposition_key_new.js";
+} from "../chess_engine_0x88/for_sorting_move/transposition_key_0x88.js";
 
 /**
 * НАЗНАЧЕНИЕ

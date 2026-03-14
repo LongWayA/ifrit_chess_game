@@ -2,7 +2,7 @@
 /** 
  * @copyright Copyright (c) 2026, AnBr75 and/or its affiliates. All rights reserved.
  * @author AnBr75
- * @name move_generator_captures_new.js
+ * @name move_generator_captures_0x88.js
  * @version created 24.01m.2026 
 */
 
@@ -10,7 +10,7 @@ import {
     SIDE_TO_MOVE,
     BLACK, WHITE, W_PAWN, W_KNIGHT, W_BISHOP, W_ROOK, W_QUEEN, W_KING, B_PAWN, B_KNIGHT, B_BISHOP, B_ROOK, B_QUEEN, B_KING,
     IND_EN_PASSANT_YES, IND_EN_PASSANT_TARGET_SQUARE
-} from "./chess_board_new.js";
+} from "./chess_board_0x88.js";
 
 import {
     clear_list, add_packing_move, get_name_capture_piece,
@@ -18,7 +18,7 @@ import {
     LENGTH_LIST, IND_PIESE_COLOR, IND_NUMBER_CAPTURES_MOVE, IND_NUMBER_MOVE,
     IND_PROMO_QUEEN, IND_PROMO_ROOK, IND_PROMO_BISHOP, IND_PROMO_KNIGHT, MOVE_NO,
     EP_CAPTURES, MOVE_KING_QUEEN_CASTLE
-} from "../move_generator/move_list_new.js";
+} from "./move_list_0x88.js";
 
 /**
 * НАЗНАЧЕНИЕ

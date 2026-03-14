@@ -29,7 +29,7 @@ import {
   CAPTURES_PAWN_PAWN, EP_CAPTURES, CAPTURES_KNIGHT_PAWN, CAPTURES_BISHOP_PAWN, CAPTURES_ROOK_PAWN,
   CAPTURES_QUEEN_PAWN, CAPTURES_KING_PAWN, MOVE_QUEEN, MOVE_ROOK, MOVE_BISHOP, MOVE_KNIGHT, MOVE_KING, MOVE_PAWN,
   MOVE_DOUBLE_PAWN, MOVE_KING_CASTLE, MOVE_KING_QUEEN_CASTLE, TYPE_MOVE_NAME
-} from "../move_generator/move_list_new.js";
+} from "../move_generator_0x88/move_list_0x88.js";
 
 import {
   x07_y07_to_0x88, s_0x88_to_x07, s_0x88_to_y07,
@@ -40,24 +40,24 @@ import {
   IND_CASTLING_Q, IND_CASTLING_q, IND_CASTLING_K, IND_CASTLING_k,
   IND_EN_PASSANT_YES, IND_EN_PASSANT_TARGET_SQUARE, IND_KING_FROM_WHITE, IND_KING_FROM_BLACK,
   SQUARE_64_to_128_CB, SQUARE_128_to_64_CB
-} from "../move_generator/chess_board_new.js";
+} from "../move_generator_0x88/chess_board_0x88.js";
 
 import {
   clear_pv_line_pv, add_move_to_pv_line_pv, save_pv_line_pv, test_print_pv_line_pv, pv_line_to_uci_string_pv,
   MAX_DEPTH_PV, IND_TYPE_VARIANT_PV, IND_DEPTH_MAT_PV, IND_DEPTH_PV
-} from "../move_generator/pv_line_new.js";
+} from "../move_generator_0x88/pv_line_0x88.js";
 
-import { generated_pseudo_legal_captures } from "../move_generator/move_generator_captures_new.js";
-import { generated_pseudo_legal_quiet_moves } from "../move_generator/move_generator_quiet_new.js";
+import { generated_pseudo_legal_captures } from "../move_generator_0x88/move_generator_captures_0x88.js";
+import { generated_pseudo_legal_quiet_moves } from "../move_generator_0x88/move_generator_quiet_0x88.js";
 
-import { do_moves_mm } from "../move_generator/make_move_new.js";
-import { undo_moves_um } from "../move_generator/unmake_move_new.js";
+import { do_moves_mm } from "../move_generator_0x88/make_move_0x88.js";
+import { undo_moves_um } from "../move_generator_0x88/unmake_move_0x88.js";
 
-import { UNDO_MAX } from "../move_generator/undo_new.js";
+import { UNDO_MAX } from "../move_generator_0x88/undo_0x88.js";
 
 import {
   searching_minmax, chess_board_0x88_end_original, node_mm
-} from "./search_minmax_new.js";
+} from "./search_minmax_0x88.js";
 
 import {
   searching_alpha_beta_id_ab, set_stop_search_in_1_ab, set_stop_search_in_0_ab, set_node_in_0_ab,
@@ -66,30 +66,30 @@ import {
   save_alpha_up_test_tt, save_alpha_cut_test_tt, save_beta_up_test_tt, save_beta_cut_test_tt,
   use_alpha_up_test_tt, use_alpha_cut_test_tt, use_beta_up_test_tt, use_beta_cut_test_tt,
   clear_test_tt
-} from "./search_ab_new.js";
+} from "./search_ab_0x88.js";
 
 import {
   sorting_list_top_max_score_lr, sorting_list_top_min_score_lr, add_score_lr, clear_list_lr,
   LENGTH_LIST_LR, IND_NUMBER_MOVE_LR
-} from "../move_generator/move_list_root_new.js";
+} from "../move_generator_0x88/move_list_root_0x88.js";
 
 import {
   ini_Array_hh, clear_history_hh, ini_test_history_hh, history_good_save_hh, history_bad_save_hh, get_history_hh,
   MAX_COLOR_HH, MAX_COORDINATE_HH, MAX_HISTORY_HH
-} from "../for_sorting_move/history_heuristic_new.js";
+} from "../for_sorting_move/history_heuristic_0x88.js";
 
 import {
   ini_random_key_array_64_tk, ini_key_array_64_tk, set_key_from_board_0x88_tk, test_chess_board_key_64_tk,
   key_update_do_move_0x88_tk, key_update_ep_move_0x88_tk, key_update_promo_move_0x88_tk,
   key_update_castle_move_0x88_tk, key_update_ep_0x88_tk, key_update_ep2_0x88_tk, key_update_QqKk_0x88_tk,
   test_generation_key_64_tk
-} from "../for_sorting_move/transposition_key_new.js";
+} from "../for_sorting_move/transposition_key_0x88.js";
 
 import {
   clear_out_tt, ini_tt, clear_hash_tt, test_uses_hash_tt, set_position_in_tt, get_position_from_tt, print_test_set_get_position_tt,
   MAX_TABLE_LENTH_TT, MAX_SCORE_UPDATE_TT, ALPHA_UPDATE_TT, BETA_UPDATE_TT, ALPHA_CUT_TT, BETA_CUT_TT,
   IND_TN_TT, IND_SC_TT, IND_DD_TT
-} from "../for_sorting_move/transposition_table_new.js";
+} from "../for_sorting_move/transposition_table_0x88.js";
 
 import { Timer_C } from "../../browser/timer.js";
 

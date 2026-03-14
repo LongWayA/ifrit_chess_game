@@ -14,7 +14,7 @@ import {
   BLACK, WHITE, PIECE_NO, W_PAWN, W_KNIGHT, W_BISHOP, W_ROOK, W_QUEEN, W_KING, B_PAWN, B_KNIGHT, B_BISHOP, B_ROOK, B_QUEEN, B_KING,
   IND_CASTLING_Q, IND_CASTLING_q, IND_CASTLING_K, IND_CASTLING_k,
   IND_EN_PASSANT_YES, IND_EN_PASSANT_TARGET_SQUARE, IND_KING_FROM_WHITE, IND_KING_FROM_BLACK
-} from "../move_generator/chess_board_new.js";
+} from "../move_generator_0x88/chess_board_0x88.js";
 
 import {
   clear_list, add_packing_move, get_type_move, get_from, get_to, get_name_capture_piece, set_color, set_number_captures_move,
@@ -38,48 +38,48 @@ import {
   CAPTURES_PAWN_PAWN, EP_CAPTURES, CAPTURES_KNIGHT_PAWN, CAPTURES_BISHOP_PAWN, CAPTURES_ROOK_PAWN,
   CAPTURES_QUEEN_PAWN, CAPTURES_KING_PAWN, MOVE_QUEEN, MOVE_ROOK, MOVE_BISHOP, MOVE_KNIGHT, MOVE_KING, MOVE_PAWN,
   MOVE_DOUBLE_PAWN, MOVE_KING_CASTLE, MOVE_KING_QUEEN_CASTLE, TYPE_MOVE_NAME
-} from "../move_generator/move_list_new.js";
+} from "../move_generator_0x88/move_list_0x88.js";
 
 import {
   clear_pv_line_pv, add_move_to_pv_line_pv, save_pv_line_pv, test_print_pv_line_pv, pv_line_to_uci_string_pv,
   MAX_DEPTH_PV, IND_TYPE_VARIANT_PV, IND_DEPTH_MAT_PV, IND_DEPTH_PV
-} from "../move_generator/pv_line_new.js";
+} from "../move_generator_0x88/pv_line_0x88.js";
 
 import {
   generated_pseudo_legal_captures, check_detected,
   H1, H8, A1, A8, E1, E8, F1, F8, G1, G8, D1, D8, C1, C8
-} from "../move_generator/move_generator_captures_new.js";
+} from "../move_generator_0x88/move_generator_captures_0x88.js";
 
-import { generated_pseudo_legal_quiet_moves } from "../move_generator/move_generator_quiet_new.js";
+import { generated_pseudo_legal_quiet_moves } from "../move_generator_0x88/move_generator_quiet_0x88.js";
 
-import { do_moves_mm } from "../move_generator/make_move_new.js";
-import { undo_moves_um } from "../move_generator/unmake_move_new.js";
+import { do_moves_mm } from "../move_generator_0x88/make_move_0x88.js";
+import { undo_moves_um } from "../move_generator_0x88/unmake_move_0x88.js";
 
-import { UNDO_MAX } from "../move_generator/undo_new.js";
+import { UNDO_MAX } from "../move_generator_0x88/undo_0x88.js";
 
-import { score_position, PAWN_SCORE_E } from "./evaluate_new.js";
+import { score_position, PAWN_SCORE_E } from "./evaluate_0x88.js";
 
-import { quiescence_search } from "./quiescence_search_new.js";
+import { quiescence_search } from "./quiescence_search_0x88.js";
 
-import { clear_packing_moves_k, add_move_k, MAX_DEPTH_K, IND_DEPTH_K } from "../for_sorting_move/killer_heuristic_new.js";
+import { clear_packing_moves_k, add_move_k, MAX_DEPTH_K, IND_DEPTH_K } from "../for_sorting_move/killer_heuristic_0x88.js";
 
 import {
   ini_Array_hh, clear_history_hh, ini_test_history_hh, history_good_save_hh, history_bad_save_hh, get_history_hh,
   MAX_COLOR_HH, MAX_COORDINATE_HH, MAX_HISTORY_HH
-} from "../for_sorting_move/history_heuristic_new.js";
+} from "../for_sorting_move/history_heuristic_0x88.js";
 
 import {
   ini_random_key_array_64_tk, ini_key_array_64_tk, set_key_from_board_0x88_tk, test_chess_board_key_64_tk,
   key_update_do_move_0x88_tk, key_update_ep_move_0x88_tk, key_update_promo_move_0x88_tk,
   key_update_castle_move_0x88_tk, key_update_ep_0x88_tk, key_update_ep2_0x88_tk, key_update_QqKk_0x88_tk,
   test_generation_key_64_tk
-} from "../for_sorting_move/transposition_key_new.js";
+} from "../for_sorting_move/transposition_key_0x88.js";
 
 import {
   clear_out_tt, ini_tt, clear_hash_tt, test_uses_hash_tt, set_position_in_tt, get_position_from_tt, print_test_set_get_position_tt,
   MAX_TABLE_LENTH_TT, MAX_SCORE_UPDATE_TT, ALPHA_UPDATE_TT, BETA_UPDATE_TT, ALPHA_CUT_TT, BETA_CUT_TT,
   IND_TN_TT, IND_SC_TT, IND_DD_TT
-} from "../for_sorting_move/transposition_table_new.js";
+} from "../for_sorting_move/transposition_table_0x88.js";
 
 
 /**
@@ -102,13 +102,12 @@ let is_PVS_use = 1;// использование полного поиска в 
 // sorting
 let is_killer_heuristic_use_ab = 1;// использование двух киллеров, т.е. лучших ходов на этой глубине
 let is_history_heuristic_use_ab = 1;// использование сортировки по частоте отсечений. 
-
 let is_TT_use = 1;// сортировка и отсечка по таблице перестановок(хеш-таблице)
 
-// pruning надо думать. ухудшают игру
+// pruning
 let is_razoring_use = 1;// не смотрим очень плохие для нас позиции. отключаем если нашли мат.
 
-// надо думать. ухудшают игру
+// 
 let is_lmr_use = 1;// уменьшаем глубину поиска ходов после всех взятий и двух киллеров, но не меньше 4 полухода 
 //let is_futility_pruning_use = 0;// not working
 
@@ -231,7 +230,7 @@ const searching_alpha_beta_id_ab = function (alpha, beta, chess_board_0x88, ches
       if (chess_board_key_64_3_repetition[depth] == chess_board_key_64_3_repetition[depth - 2]) {
         if (chess_board_key_64_3_repetition[depth] == chess_board_key_64_3_repetition[depth - 4]) {
           best_score = 0;
-          //console.log("searching_alpha_beta_id_ab-> repetition depth " + depth);
+          console.log("searching_alpha_beta_id_ab-> repetition depth " + depth);
           return best_score;
         }
       }

@@ -11,14 +11,14 @@ import {
   save_chess_board_0x88, set_board_from_fen_0x88, set_fen_from_0x88,
   IND_MAX,
   BLACK, WHITE, W_PAWN, W_KNIGHT, W_BISHOP, W_ROOK, W_QUEEN, W_KING, B_PAWN, B_KNIGHT, B_BISHOP, B_ROOK, B_QUEEN, B_KING,
-} from "../move_generator/chess_board_new.js";
+} from "../move_generator_0x88/chess_board_0x88.js";
 
 import {
   ini_random_key_array_64_tk, ini_key_array_64_tk, set_key_from_board_0x88_tk, test_chess_board_key_64_tk,
   key_update_do_move_0x88_tk, key_update_ep_move_0x88_tk, key_update_promo_move_0x88_tk,
   key_update_castle_move_0x88_tk, key_update_ep_0x88_tk, key_update_ep2_0x88_tk, key_update_QqKk_0x88_tk,
   test_generation_key_64_tk
-} from "../for_sorting_move/transposition_key_new.js";
+} from "../for_sorting_move/transposition_key_0x88.js";
 
 /**
 * НАЗНАЧЕНИЕ

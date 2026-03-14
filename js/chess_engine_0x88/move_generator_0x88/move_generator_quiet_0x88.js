@@ -2,7 +2,7 @@
 /** 
  * @copyright Copyright (c) 2026, AnBr75 and/or its affiliates. All rights reserved.
  * @author AnBr75
- * @name move_generator_quiet_new.js
+ * @name move_generator_quiet_0x88.js
  * @version created 24.01m.2026 
 */
 
@@ -10,13 +10,13 @@ import {
     SIDE_TO_MOVE,
     BLACK, WHITE, PIECE_NO, W_PAWN, W_KNIGHT, W_BISHOP, W_ROOK, W_QUEEN, W_KING, B_PAWN, B_KNIGHT, B_BISHOP, B_ROOK, B_QUEEN, B_KING,
     IND_CASTLING_Q, IND_CASTLING_q, IND_CASTLING_K, IND_CASTLING_k
-} from "./chess_board_new.js";
+} from "./chess_board_0x88.js";
 
 import {
     add_packing_move, return_type_simple_move,
     MOVE_KING_CASTLE, MOVE_KING_QUEEN_CASTLE, MOVE_PAWN, MOVE_DOUBLE_PAWN,
     MOVE_PAWN_PROMO_QUEEN, MOVE_PAWN_PROMO_ROOK, MOVE_PAWN_PROMO_BISHOP, MOVE_PAWN_PROMO_KNIGHT
-} from "../move_generator/move_list_new.js";
+} from "./move_list_0x88.js";
 
 /**
 * НАЗНАЧЕНИЕ

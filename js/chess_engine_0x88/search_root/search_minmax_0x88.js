@@ -14,26 +14,26 @@
 import {
    save_chess_board_0x88, 
    IND_MAX, SIDE_TO_MOVE, WHITE
-} from "../move_generator/chess_board_new.js";
+} from "../move_generator_0x88/chess_board_0x88.js";
 
-import { do_moves_mm } from "../move_generator/make_move_new.js";
-import { undo_moves_um } from "../move_generator/unmake_move_new.js";
+import { do_moves_mm } from "../move_generator_0x88/make_move_0x88.js";
+import { undo_moves_um } from "../move_generator_0x88/unmake_move_0x88.js";
 
-import { UNDO_MAX } from "../move_generator/undo_new.js";
+import { UNDO_MAX } from "../move_generator_0x88/undo_0x88.js";
 
 import {
    get_type_move, get_from, get_to, get_name_capture_piece,
   LENGTH_LIST, IND_PIESE_COLOR, IND_NUMBER_MOVE,
   MOVE_NO
-} from "../move_generator/move_list_new.js";
+} from "../move_generator_0x88/move_list_0x88.js";
 
 import { clear_pv_line_pv, add_move_to_pv_line_pv, save_pv_line_pv, test_print_pv_line_pv, pv_line_to_uci_string_pv,
-  MAX_DEPTH_PV, IND_TYPE_VARIANT_PV, IND_DEPTH_MAT_PV, IND_DEPTH_PV} from "../move_generator/pv_line_new.js";
+  MAX_DEPTH_PV, IND_TYPE_VARIANT_PV, IND_DEPTH_MAT_PV, IND_DEPTH_PV} from "../move_generator_0x88/pv_line_0x88.js";
 
-import { generated_pseudo_legal_captures } from "../move_generator/move_generator_captures_new.js";
-import { generated_pseudo_legal_quiet_moves } from "../move_generator/move_generator_quiet_new.js";
+import { generated_pseudo_legal_captures } from "../move_generator_0x88/move_generator_captures_0x88.js";
+import { generated_pseudo_legal_quiet_moves } from "../move_generator_0x88/move_generator_quiet_0x88.js";
 
-import { score_position } from "./evaluate_new.js";
+import { score_position } from "./evaluate_0x88.js";
 
 
 

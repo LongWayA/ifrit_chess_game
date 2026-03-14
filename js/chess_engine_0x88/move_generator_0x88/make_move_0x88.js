@@ -21,7 +21,7 @@ import {
   CAPTURES_PAWN_PAWN, EP_CAPTURES, CAPTURES_KNIGHT_PAWN, CAPTURES_BISHOP_PAWN, CAPTURES_ROOK_PAWN,
   CAPTURES_QUEEN_PAWN, CAPTURES_KING_PAWN, MOVE_QUEEN, MOVE_ROOK, MOVE_BISHOP, MOVE_KNIGHT, MOVE_KING, MOVE_PAWN,
   MOVE_DOUBLE_PAWN, MOVE_KING_CASTLE, MOVE_KING_QUEEN_CASTLE
-} from "./move_list_new.js";
+} from "./move_list_0x88.js";
 
 import {
     x07_y07_to_0x88, s_0x88_to_x07, s_0x88_to_y07,
@@ -32,20 +32,20 @@ import {
     IND_CASTLING_Q, IND_CASTLING_q, IND_CASTLING_K, IND_CASTLING_k,
     IND_EN_PASSANT_YES, IND_EN_PASSANT_TARGET_SQUARE, IND_KING_FROM_WHITE, IND_KING_FROM_BLACK,
     SQUARE_64_to_128_CB,  SQUARE_128_to_64_CB
-} from "./chess_board_new.js";
+} from "./chess_board_0x88.js";
 
 import {
   check_detected,
   H1, H8, A1, A8, E1, E8, F1, F8, G1, G8, D1, D8, C1, C8
-} from "./move_generator_captures_new.js";
+} from "./move_generator_captures_0x88.js";
 
-import { set_undo } from "../move_generator/undo_new.js";
+import { set_undo } from "./undo_0x88.js";
 
 import {
   ini_random_key_array_64_tk, ini_key_array_64_tk, set_key_from_board_0x88_tk, test_chess_board_key_64_tk,
   key_update_do_move_0x88_tk, key_update_ep_move_0x88_tk, key_update_promo_move_0x88_tk,
   key_update_castle_move_0x88_tk, key_update_ep_0x88_tk, key_update_ep2_0x88_tk, key_update_QqKk_0x88_tk
-} from "../for_sorting_move/transposition_key_new.js";
+} from "../for_sorting_move/transposition_key_0x88.js";
 
 
 /**

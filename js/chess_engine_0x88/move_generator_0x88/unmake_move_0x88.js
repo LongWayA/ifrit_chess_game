@@ -21,17 +21,17 @@ import {
   CAPTURES_PAWN_PAWN, EP_CAPTURES, CAPTURES_KNIGHT_PAWN, CAPTURES_BISHOP_PAWN, CAPTURES_ROOK_PAWN,
   CAPTURES_QUEEN_PAWN, CAPTURES_KING_PAWN, MOVE_QUEEN, MOVE_ROOK, MOVE_BISHOP, MOVE_KNIGHT, MOVE_KING, MOVE_PAWN,
   MOVE_DOUBLE_PAWN, MOVE_KING_CASTLE, MOVE_KING_QUEEN_CASTLE
-} from "./move_list_new.js";
+} from "./move_list_0x88.js";
 
 import {
   PIECE_NO, W_PAWN, W_ROOK, B_PAWN,
-} from "./chess_board_new.js";
+} from "./chess_board_0x88.js";
 
 import {
   H1, H8, A1, A8, F1, F8, D1, D8
-} from "./move_generator_captures_new.js";
+} from "./move_generator_captures_0x88.js";
 
-import { get_undo } from "../move_generator/undo_new.js";
+import { get_undo } from "./undo_0x88.js";
 
 /**
 * НАЗНАЧЕНИЕ
