@@ -7,7 +7,7 @@
 */
 
 import {
-  test_compare_chess_board_0x88,
+  test_compare_chess_board_0x88, test_print_piese_0x88,
   save_chess_board_0x88, set_board_from_fen_0x88, set_fen_from_0x88,
   IND_MAX,
   BLACK, WHITE, W_PAWN, W_KNIGHT, W_BISHOP, W_ROOK, W_QUEEN, W_KING, B_PAWN, B_KNIGHT, B_BISHOP, B_ROOK, B_QUEEN, B_KING,
@@ -32,7 +32,7 @@ const ROOK_SCORE_E = 600;  // ладья
 const QUEEN_SCORE_E = 1200; // ферзь
 const KING_SCORE_E = 10000;// король
 
-const PIECE_SCORE = [0, 100, 400, 400, 600, 1200, 10000, 100, 400, 400, 600, 1200, 10000];
+const PIECE_SCORE = [0, 100, 400, 400, 600, 1200, 10000, 0, 0, 100, 400, 400, 600, 1200, 10000];
 
 const center_0x88 = [
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -102,7 +102,7 @@ const black_pawn_0x88 = [
 ];
 
 /**
-* @param {Uint8Array} chess_board_0x88 
+* @param {Int32Array} chess_board_0x88 
 * @param {BigUint64Array} chess_board_key_64
 * @returns {number}
 */
@@ -171,8 +171,9 @@ const score_position = function (chess_board_0x88, chess_board_key_64) {
   }//for (let sq = 0; sq < 128; sq++) {
 
   // тестируем запись в фен
-  //test_fen(chess_board_0x88_O);
-
+  //test_fen(chess_board_0x88);
+  //test_print_piese_0x88(chess_board_0x88);
+  //console.log("score_position -> score " + score);
 
   return score;
 }//score_position(chess_board_0x88_O) {
@@ -180,12 +181,12 @@ const score_position = function (chess_board_0x88, chess_board_key_64) {
 
 // тестируем фен. то что правильно в него записывается позиция и наоборот - считывается
 /**
-* @param {Uint8Array} chess_board_0x88
+* @param {Int32Array} chess_board_0x88
 * @returns {void}
 */
 const test_fen = function (chess_board_0x88) {
 
-  let chess_board_0x88_O_save = new Uint8Array(IND_MAX).fill(0);// доска 0x88 с фигурами
+  let chess_board_0x88_O_save = new Int32Array(IND_MAX).fill(0);// доска 0x88 с фигурами
 
   // записали доску чтобы потом сравнить
   save_chess_board_0x88(chess_board_0x88_O_save, chess_board_0x88);

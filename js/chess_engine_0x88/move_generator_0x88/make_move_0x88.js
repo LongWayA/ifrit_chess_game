@@ -62,10 +62,10 @@ import {
 
 // делаем ход на доске chess_board_0x88
 /**
-* @param {Uint8Array} chess_board_0x88
+* @param {Int32Array} chess_board_0x88
 * @param {BigUint64Array} chess_board_key_64
 * @param {BigUint64Array} chess_board_key_64_save
-* @param {Uint8Array} undo
+* @param {Int32Array} undo
 * @param {number} type_move
 * @param {number} from
 * @param {number} to
@@ -610,7 +610,7 @@ const do_moves_mm = function (chess_board_0x88, chess_board_key_64, chess_board_
 
 // рисуем фигуру на новом месте и стираем на старом. это и просто ход и взятие. 
 /**
- * @param {Uint8Array} chess_board_0x88
+ * @param {Int32Array} chess_board_0x88
  * @param {BigUint64Array} chess_board_key_64
  * @param {number} from
  * @param {number} to 
@@ -639,7 +639,7 @@ const make_simple_move_0x88 = function (chess_board_0x88, chess_board_key_64, fr
 
 // если берется ладья на исходном месте то отменяем флаг возможности связанной с ней рокировки
 /**
- * @param {Uint8Array} chess_board_0x88
+ * @param {Int32Array} chess_board_0x88
  * @param {BigUint64Array} chess_board_key_64 
  * @param {number} to 
  * @returns {void}
@@ -690,7 +690,7 @@ const stop_king_castle_captures_rook_0x88 = function (chess_board_0x88, chess_bo
 
 // отмена флага возможности рокировок из за хода ладьи
 /**
- * @param {Uint8Array} chess_board_0x88
+ * @param {Int32Array} chess_board_0x88
  * @param {BigUint64Array} chess_board_key_64
  * @param {number} from
  * @returns {void}
@@ -740,7 +740,7 @@ const stop_king_castle_move_rook_0x88 = function (chess_board_0x88, chess_board_
 
 // отмена флагов возможности рокировок из за хода короля
 /**
- * @param {Uint8Array} chess_board_0x88
+ * @param {Int32Array} chess_board_0x88
  * @param {BigUint64Array} chess_board_key_64
  * @param {number} from
  * @returns {void}
@@ -786,7 +786,7 @@ const stop_king_castle_move_king_0x88 = function (chess_board_0x88, chess_board_
 
 // короткая рокировка
 /**
- * @param {Uint8Array} chess_board_0x88
+ * @param {Int32Array} chess_board_0x88
  * @param {BigUint64Array} chess_board_key_64 
  * @param {number} from
  * @param {number} to
@@ -881,7 +881,7 @@ const make_king_castle_move_0x88 = function (chess_board_0x88, chess_board_key_6
 
 // длинная рокировка
 /**
- * @param {Uint8Array} chess_board_0x88
+ * @param {Int32Array} chess_board_0x88
  * @param {BigUint64Array} chess_board_key_64  
  * @param {number} from
  * @param {number} to
@@ -977,7 +977,7 @@ const make_king_queen_castle_move_0x88 = function (chess_board_0x88, chess_board
 // остались пешки
 //  взятие на проходе
 /**
- * @param {Uint8Array} chess_board_0x88
+ * @param {Int32Array} chess_board_0x88
  * @param {BigUint64Array} chess_board_key_64
  * @param {number} from
  * @param {number} to
@@ -1016,7 +1016,7 @@ const make_en_passant_move_0x88 = function (chess_board_0x88, chess_board_key_64
 
 // ход пешки с превращением
 /**
- * @param {Uint8Array} chess_board_0x88
+ * @param {Int32Array} chess_board_0x88
  * @param {BigUint64Array} chess_board_key_64 
  * @param {number} from
  * @param {number} to 

@@ -178,11 +178,11 @@ const test_tt = function () {
 const start_search_minmax_r = function (fen_start, depth_max) {
   let depth = 0;
 
-  let chess_board_0x88 = new Uint8Array(IND_MAX).fill(0);// текущая доска с фигурами 0x88 
-  let chess_board_0x88_start = new Uint8Array(IND_MAX).fill(0);// записываем стартовую доску
-  let chess_board_0x88_get_move = new Uint8Array(IND_MAX).fill(0);// записываем доску с ходом
+  let chess_board_0x88 = new Int32Array(IND_MAX).fill(0);// текущая доска с фигурами 0x88 
+  let chess_board_0x88_start = new Int32Array(IND_MAX).fill(0);// записываем стартовую доску
+  let chess_board_0x88_get_move = new Int32Array(IND_MAX).fill(0);// записываем доску с ходом
 
-  let chess_board_0x88_save_test = new Uint8Array(IND_MAX).fill(0);// доска 0x88 с фигурами
+  let chess_board_0x88_save_test = new Int32Array(IND_MAX).fill(0);// доска 0x88 с фигурами
 
   const chess_board_key_64 = new BigUint64Array(1);
 
@@ -216,6 +216,9 @@ const start_search_minmax_r = function (fen_start, depth_max) {
   test_compare_chess_board_0x88(chess_board_0x88_save_test, chess_board_0x88);
 
   save_chess_board_0x88(chess_board_0x88_get_move, chess_board_0x88_end_original);
+
+  //test
+  test_print_piese_0x88(chess_board_0x88_get_move);
 
   time_end = timer_O.getCurrentTimeMs();
   time_delta = (time_end - time_start) / 1000;
@@ -261,9 +264,9 @@ const start_search_minmax_r = function (fen_start, depth_max) {
  */
 const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start, depth_max) {
 
-  let chess_board_0x88 = new Uint8Array(IND_MAX).fill(0);// текущая доска с фигурами 0x88 
-  let chess_board_0x88_start = new Uint8Array(IND_MAX).fill(0);// записываем стартовую доску
-  let chess_board_0x88_get_move = new Uint8Array(IND_MAX).fill(0);// записываем доску с ходом
+  let chess_board_0x88 = new Int32Array(IND_MAX).fill(0);// текущая доска с фигурами 0x88 
+  let chess_board_0x88_start = new Int32Array(IND_MAX).fill(0);// записываем стартовую доску
+  let chess_board_0x88_get_move = new Int32Array(IND_MAX).fill(0);// записываем доску с ходом
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
   const chess_board_key_64 = new BigUint64Array(1);
@@ -282,7 +285,7 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
 
   let list_score_move = new Int32Array(LENGTH_LIST).fill(MOVE_NO);// список оценок ходов. нужно для сортировки по оценке в корне
 
-  let undo = new Uint8Array(UNDO_MAX).fill(0);// для отмены хода
+  let undo = new Int32Array(UNDO_MAX).fill(0);// для отмены хода
 
   let packing_pv_line = new Uint32Array(MAX_DEPTH_PV).fill(MOVE_NO);// линия лучших ходов
   let best_packing_pv_line = new Uint32Array(MAX_DEPTH_PV).fill(MOVE_NO);// линия лучших ходов для конкретного узла
@@ -332,7 +335,10 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
   generated_pseudo_legal_captures(chess_board_0x88, packing_moves);
   generated_pseudo_legal_quiet_moves(chess_board_0x88, packing_moves);
 
+
   //test_print_list(packing_moves);
+  //test_print_piese_0x88(chess_board_0x88);
+
 
   sorting_list_ml(packing_moves);// сортировка списка ходов по типу хода
 
@@ -400,6 +406,10 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
 
       score = searching_alpha_beta_id_ab(alpha, beta, chess_board_0x88, chess_board_key_64, packing_pv_line,
         (depth + 1), depth_max_current, isPV_node);
+
+  //test
+  //console.log("searching_iterative_deepening -> score " + score);
+  //test_print_piese_0x88(chess_board_0x88);
 
       // сравниваем ключи сохраненный и измененный
       test_chess_board_key_64_tk(chess_board_key_64_save_test, chess_board_key_64);
@@ -541,9 +551,9 @@ const move_str_to_board_r = function (fen_start, move_str) {
   // эта доска используется что бы перевести уки команду в позицию 
   // потом провести ходы, если есть, а потом опять перевести в фен. 
   // т.е. к счету внутри движка эта доска отношения не имеет.
-  let chess_board_0x88_uci = new Uint8Array(IND_MAX).fill(0);// текущая доска с фигурами 0x88 
+  let chess_board_0x88_uci = new Int32Array(IND_MAX).fill(0);// текущая доска с фигурами 0x88 
   let packing_moves = new Uint32Array(LENGTH_LIST).fill(MOVE_NO);// список ходов. ход упакован в одно число Uint32
-  let undo = new Uint8Array(UNDO_MAX).fill(0);// для отмены хода
+  let undo = new Int32Array(UNDO_MAX).fill(0);// для отмены хода
 
   const chess_board_key_64 = new BigUint64Array(1);
   const chess_board_key_64_undo = new BigUint64Array(1);

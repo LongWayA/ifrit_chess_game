@@ -37,8 +37,8 @@ const UNDO_MAX = 9;
 
 // сохраняем значения из доски
 /**
- * @param {Uint8Array} undo
- * @param {Uint8Array} chess_board_0x88
+ * @param {Int32Array} undo
+ * @param {Int32Array} chess_board_0x88
  * @returns {void}
  */
 const set_undo = function (undo, chess_board_0x88) {
@@ -70,8 +70,8 @@ const set_undo = function (undo, chess_board_0x88) {
 
 // возвращаем доске записанные значения
 /**
-* @param {Uint8Array} chess_board_0x88
-* @param {Uint8Array} undo 
+* @param {Int32Array} chess_board_0x88
+* @param {Int32Array} undo 
 * @returns {void}
 */
 const get_undo = function (chess_board_0x88, undo) {

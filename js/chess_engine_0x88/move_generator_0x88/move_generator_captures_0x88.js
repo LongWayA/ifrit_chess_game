@@ -82,7 +82,7 @@ const moves_knight = [-33, -31, -14, 18, 33, 31, 14, -18];
 
 // генерируем всевозможные ходы, но не учитываем шахи и вскрытые шахи.
 /**
-* @param {Uint8Array} chess_board_0x88
+* @param {Int32Array} chess_board_0x88
 * @param {Uint32Array} packing_moves
 * @returns {void}
 */
@@ -103,7 +103,7 @@ const generated_pseudo_legal_captures = function (chess_board_0x88, packing_move
 //  считаем ходы одной фигуры из конкретной позиции
 /**
 * @param {number} from
-* @param {Uint8Array} chess_board_0x88
+* @param {Int32Array} chess_board_0x88
 * @param {Uint32Array} packing_moves
 * @returns {void}
 */
@@ -123,7 +123,7 @@ const generated_pseudo_legal_moves_one_piece_for_gui = function (from, chess_boa
 /**
 * @param {number} from
 * @param {number} side_to_move
-* @param {Uint8Array} chess_board_0x88
+* @param {Int32Array} chess_board_0x88
 * @param {Uint32Array} packing_moves
 * @returns {void}
 */
@@ -193,7 +193,7 @@ const generated_pseudo_legal_moves_one_piece = function (from, side_to_move, che
 * @param {number} piece_color
 * @param {number} from
 * @param {number} to
-* @param {Uint8Array} chess_board_0x88
+* @param {Int32Array} chess_board_0x88
 * @param {Uint32Array} packing_moves
 * @returns {number}
 */
@@ -233,7 +233,7 @@ const add_captures_move = function (piece_name, piece_color, from, to, chess_boa
 * @param {number} piece_name
 * @param {number} piece_color
 * @param {number} from
-* @param {Uint8Array} chess_board_0x88
+* @param {Int32Array} chess_board_0x88
 * @param {Uint32Array} packing_moves
 * @returns {void}
 */
@@ -254,7 +254,7 @@ const generated_captures_moves_king = function (piece_name, piece_color, from, c
 * @param {number} piece_name 
 * @param {number} piece_color
 * @param {number} from
-* @param {Uint8Array} chess_board_0x88
+* @param {Int32Array} chess_board_0x88
 * @param {Uint32Array} packing_moves
 * @returns {void}
 */
@@ -284,7 +284,7 @@ const generated_captures_moves_queen = function (piece_name, piece_color, from, 
 * @param {number} piece_name 
 * @param {number} piece_color
 * @param {number} from
-* @param {Uint8Array} chess_board_0x88
+* @param {Int32Array} chess_board_0x88
 * @param {Uint32Array} packing_moves
 * @returns {void}
 */
@@ -311,7 +311,7 @@ const generated_captures_moves_rook = function (piece_name, piece_color, from, c
 * @param {number} piece_name 
 * @param {number} piece_color
 * @param {number} from
-* @param {Uint8Array} chess_board_0x88
+* @param {Int32Array} chess_board_0x88
 * @param {Uint32Array} packing_moves
 * @returns {void}
 */
@@ -339,7 +339,7 @@ const generated_captures_moves_bishop = function (piece_name, piece_color, from,
 * @param {number} piece_name
 * @param {number} piece_color
 * @param {number} from
-* @param {Uint8Array} chess_board_0x88
+* @param {Int32Array} chess_board_0x88
 * @param {Uint32Array} packing_moves
 * @returns {void}
 */
@@ -361,7 +361,7 @@ const generated_captures_moves_knight = function (piece_name, piece_color, from,
 * @param {number} piece_name 
 * @param {number} piece_color
 * @param {number} from
-* @param {Uint8Array} chess_board_0x88
+* @param {Int32Array} chess_board_0x88
 * @param {Uint32Array} packing_moves
 * @returns {void}
 */
@@ -383,7 +383,7 @@ const generated_captures_moves_pawn = function (piece_name, piece_color, from, c
 * @param {number} piece_name
 * @param {number} piece_color
 * @param {number} from
-* @param {Uint8Array} chess_board_0x88
+* @param {Int32Array} chess_board_0x88
 * @param {Uint32Array} packing_moves
 * @returns {void}
 */
@@ -404,7 +404,7 @@ const generated_captures_moves_pawn_white = function (piece_name, piece_color, f
 * @param {number} piece_name
 * @param {number} piece_color
 * @param {number} from
-* @param {Uint8Array} chess_board_0x88
+* @param {Int32Array} chess_board_0x88
 * @param {Uint32Array} packing_moves
 * @returns {void}
 */
@@ -425,7 +425,7 @@ const generated_captures_moves_pawn_black = function (piece_name, piece_color, f
 * @param {number} to_left
 * @param {number} to_right
 * @param {number} piece_color 
-* @param {Uint8Array} chess_board_0x88
+* @param {Int32Array} chess_board_0x88
 * @param {Uint32Array} packing_moves
 * @returns {void}
 */
@@ -466,7 +466,7 @@ const generated_moves_pawn_captures = function (piece_name, from, to_left, to_ri
 * @param {number} to_left
 * @param {number} to_right
 * @param {number} piece_color 
-* @param {Uint8Array} chess_board_0x88
+* @param {Int32Array} chess_board_0x88
 * @param {Uint32Array} packing_moves
 * @returns {void}
 */
@@ -517,7 +517,7 @@ const generated_captures_moves_pawn_promo = function (piece_name, from, to_left,
 /**
 * @param {number} from
 * @param {number} piece_color 
-* @param {Uint8Array} chess_board_0x88
+* @param {Int32Array} chess_board_0x88
 * @returns {number}
 */
 const check_detected_generated_moves_king = function (from, piece_color, chess_board_0x88) {
@@ -545,7 +545,7 @@ const check_detected_generated_moves_king = function (from, piece_color, chess_b
 /**
 * @param {number} from
 * @param {number} piece_color 
-* @param {Uint8Array} chess_board_0x88
+* @param {Int32Array} chess_board_0x88
 * @returns {number}
 */
 const check_detected = function (from, piece_color, chess_board_0x88) {

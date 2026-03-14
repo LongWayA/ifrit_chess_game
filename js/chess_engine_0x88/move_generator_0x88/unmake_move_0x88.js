@@ -40,10 +40,10 @@ import { get_undo } from "./undo_0x88.js";
 
 // возврат хода
 /**
-* @param {Uint8Array} chess_board_0x88
+* @param {Int32Array} chess_board_0x88
 * @param {BigUint64Array} chess_board_key_64
 * @param {BigUint64Array} chess_board_key_64_save
-* @param {Uint8Array} undo
+* @param {Int32Array} undo
 * @param {number} type_move
 * @param {number} from
 * @param {number} to
@@ -192,7 +192,7 @@ const undo_moves_um = function (chess_board_0x88, chess_board_key_64, chess_boar
 
 // возврат хода рисуем фигуру на старом месте и стираем на новом. это и просто ход.
 /**
- * @param {Uint8Array} chess_board_0x88
+ * @param {Int32Array} chess_board_0x88
  * @param {number} from
  * @param {number} to 
  * @returns {void}
@@ -210,7 +210,7 @@ const unmake_simple_move_0x88 = function (chess_board_0x88, from, to) {
 
 // возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
 /**
- * @param {Uint8Array} chess_board_0x88
+ * @param {Int32Array} chess_board_0x88
  * @param {number} from
  * @param {number} to 
  * @param {number} captures_piece 
@@ -229,7 +229,7 @@ const unmake_captures_move_0x88 = function (chess_board_0x88, from, to, captures
 
 // возврат короткой рокировки
 /**
- * @param {Uint8Array} chess_board_0x88
+ * @param {Int32Array} chess_board_0x88
  * @param {number} from
  * @param {number} to 
  * @param {number} piece_color 
@@ -268,7 +268,7 @@ const unmake_king_castle_move_0x88 = function (chess_board_0x88, from, to, piece
 
 // возврат длинной рокировки
 /**
- * @param {Uint8Array} chess_board_0x88
+ * @param {Int32Array} chess_board_0x88
  * @param {number} from
  * @param {number} to 
  * @param {number} piece_color 
@@ -309,7 +309,7 @@ const unmake_king_queen_castle_move_0x88 = function (chess_board_0x88, from, to,
 // остались пешки
 // возврат взятия на проходе 
 /**
- * @param {Uint8Array} chess_board_0x88
+ * @param {Int32Array} chess_board_0x88
  * @param {number} from
  * @param {number} to 
  * @param {number} piece_color 
@@ -334,7 +334,7 @@ const unmake_en_passant_move_0x88 = function (chess_board_0x88, from, to, piece_
 
 //возврат простого хода превращения
 /**
- * @param {Uint8Array} chess_board_0x88
+ * @param {Int32Array} chess_board_0x88
  * @param {number} from
  * @param {number} to 
  * @param {number} piece_color 
@@ -355,7 +355,7 @@ const unmake_promo_move_0x88 = function (chess_board_0x88, from, to, piece_color
 
 //возврат  хода превращения со взятием
 /**
- * @param {Uint8Array} chess_board_0x88
+ * @param {Int32Array} chess_board_0x88
  * @param {number} from
  * @param {number} to 
  * @param {number} captures_piece

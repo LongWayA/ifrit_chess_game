@@ -74,7 +74,7 @@ class GuiLegalMove_0x88_С {
 
   static NAME = "GuiLegalMove_0x88_С";
 
-  chess_board_0x88_gui = new Uint8Array(IND_MAX).fill(0);// текущая доска с фигурами 0x88 
+  chess_board_0x88_gui = new Int32Array(IND_MAX).fill(0);// текущая доска с фигурами 0x88 
   packing_moves_gui = new Uint32Array(LENGTH_LIST).fill(MOVE_NO);// список ходов. ход упакован в одно число Uint32
 
   //packing_moves_gui_save = new Uint32Array(LENGTH_LIST).fill(MOVE_NO);// список ходов. ход упакован в одно число Uint32
@@ -146,7 +146,7 @@ class GuiLegalMove_0x88_С {
   */
   move_is_legal(one_click_on_squares_x, one_click_on_squares_y, x_b_n, y_b_n, chessBoard_8x8_O) {
 
-    let undo = new Uint8Array(UNDO_MAX).fill(0);// для отмены хода
+    let undo = new Int32Array(UNDO_MAX).fill(0);// для отмены хода
 
     // инициализируем вспомогательный массив    
     let fen_start = chessBoard_8x8_O.set_fen_from_8x8();

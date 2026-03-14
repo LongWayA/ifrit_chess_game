@@ -41,11 +41,11 @@ const BEST_VALUE_MOD = 20000;
 
 let node_mm = 0;
 
-let chess_board_0x88_end_original = new Uint8Array(IND_MAX).fill(0);// доска 0x88 с фигурами;
+let chess_board_0x88_end_original = new Int32Array(IND_MAX).fill(0);// доска 0x88 с фигурами;
 
 /**
  * @param {Uint32Array} packing_pv_line
- * @param {Uint8Array} chess_board_0x88 
+ * @param {Int32Array} chess_board_0x88 
  * @param {BigUint64Array} chess_board_key_64
  * @param {number} depth
  * @param {number} depth_max
@@ -53,7 +53,7 @@ let chess_board_0x88_end_original = new Uint8Array(IND_MAX).fill(0);// доск�
  */
 const searching_minmax = function (packing_pv_line, chess_board_0x88, chess_board_key_64, depth, depth_max) {
 
-  let undo = new Uint8Array(UNDO_MAX).fill(0);
+  let undo = new Int32Array(UNDO_MAX).fill(0);
 
   let best_packing_pv_line = new Uint32Array(MAX_DEPTH_PV).fill(MOVE_NO);
 

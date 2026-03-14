@@ -58,16 +58,16 @@ let key_64_not_equal = 0;// не совпадающие ключи
 //chess_board_key_64_tk[0] = 0n;
 
 // трехмерный массив ключей положения разных 
-const key_array_64_tk = new Array(13);// положений фигур на разных полях 2 * 7 * 64 = 896
+const key_array_64_tk = new Array(15);// положений фигур на разных полях 2 * 7 * 64 = 896
 
-// инициализируем трехмерный массив 13*64 = 832 ячеек
+// инициализируем трехмерный массив 15*64 = 832 ячеек
 const ini_key_array_64_tk = function () {
 
     //console.log("Transposition_table_0x88_C -> iniM");
 
-    // инициализируем трехмерный массив 13*64 = 832 ячеек
+    // инициализируем трехмерный массив 15*64 = 832 ячеек
 
-    for (let name = 0; name < 13; name++) {// по количеству имен фигур
+    for (let name = 0; name < 15; name++) {// по количеству имен фигур
 
         key_array_64_tk[name] = new BigUint64Array(128).fill(0n);
     }
@@ -82,8 +82,8 @@ const ini_random_key_array_64_tk = function () {
 
     ini_key_array_64_tk();
 
-    // заполняем трехмерный массив 13*64 = 832 ключей.  13*128 = 1 664 ячеек.
-    for (let name = 0; name < 13; name++) {// 0;13
+    // заполняем трехмерный массив 15*64 = 832 ключей.  15*128 = 1 664 ячеек.
+    for (let name = 0; name < 15; name++) {// 0;15
         for (let sq = 0; sq < 128; sq++) {
 
             // если мы не вышли за пределы доски
@@ -100,12 +100,12 @@ const ini_random_key_array_64_tk = function () {
     }
 
     // поищем совпадение ключей
-    for (let name1 = 0; name1 < 13; name1++) {
+    for (let name1 = 0; name1 < 15; name1++) {
         for (let sq1 = 0; sq1 < 128; sq1++) {
 
             //key_64_not_equal = key_64_not_equal + 1;
 
-            for (let name2 = 0; name2 < (13); name2++) {
+            for (let name2 = 0; name2 < (15); name2++) {
                 for (let sq2 = 0; sq2 < 128; sq2++) {
 
                     if (((sq1 & 136) == 0) && ((sq2 & 136) == 0)) {
@@ -137,7 +137,7 @@ const ini_random_key_array_64_tk = function () {
 /**
  * по позиции генерируем ключ
  * sm16 ep32 epsq70 Q48 K64 q80 k96
- * @param {Uint8Array} chess_board_0x88 
+ * @param {Int32Array} chess_board_0x88 
  * @param {BigUint64Array} chess_board_key_64
  * @returns {void} 
 */
@@ -319,7 +319,7 @@ const key_update_ep_0x88_tk = function (chess_board_key_64) {
 /**
  * это переключение поля взятия на проходе
  * @param {BigUint64Array} chess_board_key_64 
- * @param {Uint8Array} chess_board_0x88
+ * @param {Int32Array} chess_board_0x88
  * @returns {void}
 */
 const key_update_ep2_0x88_tk = function (chess_board_key_64, chess_board_0x88) {
