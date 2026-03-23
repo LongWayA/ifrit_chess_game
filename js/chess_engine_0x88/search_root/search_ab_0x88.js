@@ -125,8 +125,8 @@ const set_node_in_0_ab = function () {
   node_ab = 0;
 }
 
-let packing_moves_k1 = new Uint32Array(MAX_DEPTH_K).fill(MOVE_NO);// список ходов. ход упакован в одно число Uint32
-let packing_moves_k2 = new Uint32Array(MAX_DEPTH_K).fill(MOVE_NO);// список ходов. ход упакован в одно число Uint32
+let packing_moves_k1 = new Int32Array(MAX_DEPTH_K).fill(MOVE_NO);// список ходов. ход упакован в одно число Uint32
+let packing_moves_k2 = new Int32Array(MAX_DEPTH_K).fill(MOVE_NO);// список ходов. ход упакован в одно число Uint32
 
 let chess_board_0x88_test = new Int32Array(IND_MAX).fill(0);// записываем доску с ходом
 
@@ -180,7 +180,7 @@ const clear_test_tt = function () {
  * @param {number} beta
  * @param {Int32Array} chess_board_0x88
  * @param {BigUint64Array} chess_board_key_64
- * @param {Uint32Array} packing_pv_line 
+ * @param {Int32Array} packing_pv_line 
  * @param {number} depth
  * @param {number} depth_max
  * @param {number} isPV
@@ -189,8 +189,8 @@ const clear_test_tt = function () {
 
 const searching_alpha_beta_id_ab = function (alpha, beta, chess_board_0x88, chess_board_key_64, packing_pv_line, depth, depth_max, isPV) {
 
-  let packing_moves = new Uint32Array(LENGTH_LIST).fill(MOVE_NO);// список ходов. ход упакован в одно число Uint32
-  let best_packing_pv_line = new Uint32Array(MAX_DEPTH_PV).fill(MOVE_NO);// линия лучших ходов для конкретного узла
+  let packing_moves = new Int32Array(LENGTH_LIST).fill(MOVE_NO);// список ходов. ход упакован в одно число Uint32
+  let best_packing_pv_line = new Int32Array(MAX_DEPTH_PV).fill(MOVE_NO);// линия лучших ходов для конкретного узла
   let undo = new Int32Array(UNDO_MAX).fill(0);// для отмены хода
 
   const chess_board_key_64_undo = new BigUint64Array(1);
@@ -213,7 +213,7 @@ const searching_alpha_beta_id_ab = function (alpha, beta, chess_board_0x88, ches
 
   let out_tt = [-1, -1, -1];
 
-  let packing_moves_1_tt = new Uint32Array(1).fill(MOVE_NO);// список ходов. ход упакован в одно число Uint32
+  let packing_moves_1_tt = new Int32Array(1).fill(MOVE_NO);// список ходов. ход упакован в одно число Uint32
 
   let fen;
 

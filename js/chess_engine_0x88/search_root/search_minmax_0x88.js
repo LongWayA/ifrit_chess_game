@@ -44,7 +44,7 @@ let node_mm = 0;
 let chess_board_0x88_end_original = new Int32Array(IND_MAX).fill(0);// доска 0x88 с фигурами;
 
 /**
- * @param {Uint32Array} packing_pv_line
+ * @param {Int32Array} packing_pv_line
  * @param {Int32Array} chess_board_0x88 
  * @param {BigUint64Array} chess_board_key_64
  * @param {number} depth
@@ -55,14 +55,14 @@ const searching_minmax = function (packing_pv_line, chess_board_0x88, chess_boar
 
   let undo = new Int32Array(UNDO_MAX).fill(0);
 
-  let best_packing_pv_line = new Uint32Array(MAX_DEPTH_PV).fill(MOVE_NO);
+  let best_packing_pv_line = new Int32Array(MAX_DEPTH_PV).fill(MOVE_NO);
 
   let score = 0;// текущая оценка позиции
   let found_score;// максимальная оценка позиции
 
   let is_moove_legal = -1;
 
-  let packing_moves = new Uint32Array(LENGTH_LIST).fill(MOVE_NO);
+  let packing_moves = new Int32Array(LENGTH_LIST).fill(MOVE_NO);
 
   const chess_board_key_64_undo = new BigUint64Array(1);
 

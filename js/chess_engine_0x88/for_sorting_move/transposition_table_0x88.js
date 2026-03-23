@@ -74,7 +74,7 @@ const out_tt = [-1, -1, -1];//
 const key_64_chess_board_tt = new BigUint64Array(MAX_TABLE_LENTH_TT);
 
 // записанный упакованный ход
-const packing_move_tt = new Uint32Array(MAX_TABLE_LENTH_TT);
+const packing_move_tt = new Int32Array(MAX_TABLE_LENTH_TT);
 
 // оценка позиции
 const score_tt = new Int32Array(MAX_TABLE_LENTH_TT);
@@ -195,7 +195,7 @@ const test_uses_hash_tt = function () {
 /**
 * добавляем ход в таблицу
 * @param {BigUint64Array} chess_board_key_64
-* @param {Uint32Array} packing_moves
+* @param {Int32Array} packing_moves
 * @param {number} type_nodes
 * @param {number} score
 * @param {number} depth
@@ -250,7 +250,7 @@ const set_position_in_tt = function (chess_board_key_64, packing_moves, type_nod
 /**
 * смотрим есть ли у нас в таблице такая позиция и если есть извлекаем ход
 * @param {BigUint64Array} chess_board_key_64
-* @param {Uint32Array} packing_moves_1
+* @param {Int32Array} packing_moves_1
 * @param {number} depth
 * @param {number} max_depth
 * @param {string} fen

@@ -186,7 +186,7 @@ const start_search_minmax_r = function (fen_start, depth_max) {
 
   const chess_board_key_64 = new BigUint64Array(1);
 
-  let packing_pv_line = new Uint32Array(MAX_DEPTH_PV).fill(MOVE_NO);
+  let packing_pv_line = new Int32Array(MAX_DEPTH_PV).fill(MOVE_NO);
 
   let time_start = 0;// запускаем таймер
   let time_end = 0;// останавливаем таймер
@@ -281,14 +281,14 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
   ini_tt();
   clear_test_tt();
 
-  let packing_moves = new Uint32Array(LENGTH_LIST).fill(MOVE_NO);// список ходов. ход упакован в одно число Uint32
+  let packing_moves = new Int32Array(LENGTH_LIST).fill(MOVE_NO);// список ходов. ход упакован в одно число Uint32
 
   let list_score_move = new Int32Array(LENGTH_LIST).fill(MOVE_NO);// список оценок ходов. нужно для сортировки по оценке в корне
 
   let undo = new Int32Array(UNDO_MAX).fill(0);// для отмены хода
 
-  let packing_pv_line = new Uint32Array(MAX_DEPTH_PV).fill(MOVE_NO);// линия лучших ходов
-  let best_packing_pv_line = new Uint32Array(MAX_DEPTH_PV).fill(MOVE_NO);// линия лучших ходов для конкретного узла
+  let packing_pv_line = new Int32Array(MAX_DEPTH_PV).fill(MOVE_NO);// линия лучших ходов
+  let best_packing_pv_line = new Int32Array(MAX_DEPTH_PV).fill(MOVE_NO);// линия лучших ходов для конкретного узла
 
   let alpha;
   let beta;
@@ -552,7 +552,7 @@ const move_str_to_board_r = function (fen_start, move_str) {
   // потом провести ходы, если есть, а потом опять перевести в фен. 
   // т.е. к счету внутри движка эта доска отношения не имеет.
   let chess_board_0x88_uci = new Int32Array(IND_MAX).fill(0);// текущая доска с фигурами 0x88 
-  let packing_moves = new Uint32Array(LENGTH_LIST).fill(MOVE_NO);// список ходов. ход упакован в одно число Uint32
+  let packing_moves = new Int32Array(LENGTH_LIST).fill(MOVE_NO);// список ходов. ход упакован в одно число Uint32
   let undo = new Int32Array(UNDO_MAX).fill(0);// для отмены хода
 
   const chess_board_key_64 = new BigUint64Array(1);

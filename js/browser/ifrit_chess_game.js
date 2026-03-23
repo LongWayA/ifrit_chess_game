@@ -481,11 +481,11 @@ const BLACK = 8;
 // Пример проверки:
 if (sq_piece_0x88[pos] & BLACK) { // черная фигура 
 
-const table = new Uint32Array(1024);
+const table = new Int32Array(1024);
 table.fill(0); // Очень быстрая очистка на уровне памяти
 
 // Представление всех белых пешек
-const whitePawns = new Uint32Array(2); 
+const whitePawns = new Int32Array(2); 
 // whitePawns[0] — нижние 32 клетки, whitePawns[1] — верхние 32 клетки
 
 Для принудительного приведения числа к 32-битному целому (Int32) используйте операцию x | 0

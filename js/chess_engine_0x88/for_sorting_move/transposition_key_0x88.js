@@ -362,7 +362,7 @@ const key_update_QqKk_0x88_tk = function (Q, q, K, k, chess_board_key_64) {
  * и ход который привел к отклонению
 * @param {BigUint64Array} chess_board_key_64_test 
 * @param {BigUint64Array} chess_board_key_64
-* @param {Uint32Array} packing_moves
+* @param {Int32Array} packing_moves
 * @param {number} move_i
 * @param {string} is
 * @returns {void}

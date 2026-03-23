@@ -199,6 +199,7 @@ const test_print_any_0x88 = function (chess_board_0x88) {
     console.log("castling_k " + chess_board_0x88[IND_CASTLING_k]);
     console.log("king_from_white " + chess_board_0x88[IND_KING_FROM_WHITE]);
     console.log("king_from_black " + chess_board_0x88[IND_KING_FROM_BLACK]);
+    console.log("score " + chess_board_0x88[IND_SCORE]);
     console.log("**************** test_print_any_0x88");
 }
 
@@ -294,26 +295,26 @@ const test_compare_chess_board_0x88 = function (chess_board_0x88_original, chess
     // цвет хода 0 - черные 1 - белые
     if (chess_board_0x88_original[SIDE_TO_MOVE] != chess_board_0x88[SIDE_TO_MOVE]) {
         is_test_ok = 0;
-        console.log("this side_to_move original" + chess_board_0x88_original[SIDE_TO_MOVE]);
+        console.log("this side_to_move original " + chess_board_0x88_original[SIDE_TO_MOVE]);
         console.log("out side_to_move " + chess_board_0x88[SIDE_TO_MOVE]);
     };
     if (chess_board_0x88_original[IND_EN_PASSANT_YES] != chess_board_0x88[IND_EN_PASSANT_YES]) {
         is_test_ok = 0;
-        console.log("this en_passant_yes original" + chess_board_0x88_original[IND_EN_PASSANT_YES]);
+        console.log("this en_passant_yes original " + chess_board_0x88_original[IND_EN_PASSANT_YES]);
         console.log("out en_passant_yes " + chess_board_0x88[IND_EN_PASSANT_YES]);
     };
 
     if (chess_board_0x88_original[IND_EN_PASSANT_YES] == 1) {
         if (chess_board_0x88_original[IND_EN_PASSANT_TARGET_SQUARE] != chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE]) {
             is_test_ok = 0;
-            console.log("this en_passant_target_square original" + chess_board_0x88_original[IND_EN_PASSANT_TARGET_SQUARE]);
+            console.log("this en_passant_target_square original " + chess_board_0x88_original[IND_EN_PASSANT_TARGET_SQUARE]);
             console.log("out en_passant_target_square " + chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE]);
         };
     };
 
     if (chess_board_0x88_original[IND_CASTLING_Q] != chess_board_0x88[IND_CASTLING_Q]) {
         is_test_ok = 0;
-        console.log("this castling_Q original" + chess_board_0x88_original[IND_CASTLING_Q]);
+        console.log("this castling_Q original " + chess_board_0x88_original[IND_CASTLING_Q]);
         console.log("out castling_Q " + chess_board_0x88[IND_CASTLING_Q]);
     };
     if (chess_board_0x88_original[IND_CASTLING_K] != chess_board_0x88[IND_CASTLING_K]) {
@@ -323,23 +324,28 @@ const test_compare_chess_board_0x88 = function (chess_board_0x88_original, chess
     };
     if (chess_board_0x88_original[IND_CASTLING_q] != chess_board_0x88[IND_CASTLING_q]) {
         is_test_ok = 0;
-        console.log("this castling_q original" + chess_board_0x88_original[IND_CASTLING_q]);
+        console.log("this castling_q original " + chess_board_0x88_original[IND_CASTLING_q]);
         console.log("out castling_q " + chess_board_0x88[IND_CASTLING_q]);
     };
     if (chess_board_0x88_original[IND_CASTLING_k] != chess_board_0x88[IND_CASTLING_k]) {
         is_test_ok = 0;
-        console.log("this castling_k original" + chess_board_0x88_original[IND_CASTLING_k]);
+        console.log("this castling_k original " + chess_board_0x88_original[IND_CASTLING_k]);
         console.log("out castling_k " + chess_board_0x88[IND_CASTLING_k]);
     };
     if (chess_board_0x88_original[IND_KING_FROM_WHITE] != chess_board_0x88[IND_KING_FROM_WHITE]) {
         is_test_ok = 0;
-        console.log("this king_from_white original" + chess_board_0x88_original[IND_KING_FROM_WHITE]);
+        console.log("this king_from_white original " + chess_board_0x88_original[IND_KING_FROM_WHITE]);
         console.log("out king_from_white " + chess_board_0x88[IND_KING_FROM_WHITE]);
     };
     if (chess_board_0x88_original[IND_KING_FROM_BLACK] != chess_board_0x88[IND_KING_FROM_BLACK]) {
         is_test_ok = 0;
-        console.log("this king_from_black original" + chess_board_0x88_original[IND_KING_FROM_BLACK]);
+        console.log("this king_from_black original " + chess_board_0x88_original[IND_KING_FROM_BLACK]);
         console.log("out king_from_black " + chess_board_0x88[IND_KING_FROM_BLACK]);
+    };
+    if (chess_board_0x88_original[IND_SCORE] != chess_board_0x88[IND_SCORE]) {
+        is_test_ok = 0;
+        console.log("this score original " + chess_board_0x88_original[IND_SCORE]);
+        console.log("out score " + chess_board_0x88[IND_SCORE]);
     };
 
     //console.log("**************** test_compare_chess_board_0x88");
@@ -379,6 +385,8 @@ const save_chess_board_0x88 = function (chess_board_0x88_to, chess_board_0x88_fr
     chess_board_0x88_to[IND_CASTLING_q] = chess_board_0x88_from[IND_CASTLING_q];
     // рокировка черных в короткую сторону 1/0
     chess_board_0x88_to[IND_CASTLING_k] = chess_board_0x88_from[IND_CASTLING_k];
+
+    chess_board_0x88_to[IND_SCORE] = chess_board_0x88_from[IND_SCORE];
 }
 
 // https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
@@ -787,6 +795,8 @@ const iniStartPositionForWhite = function (chess_board_0x88) {
     chess_board_0x88[IND_CASTLING_q] = 1;
     // рокировка черных в короткую сторону 1/0
     chess_board_0x88[IND_CASTLING_k] = 1;
+
+    chess_board_0x88[IND_SCORE] = -1;
 }
 
 // нулевая позиция. нужна когда мы раставляем фигуры по фену
@@ -825,6 +835,8 @@ const iniPositionFor_0 = function (chess_board_0x88) {
     chess_board_0x88[IND_CASTLING_q] = 0;
     // рокировка черных в короткую сторону 1/0
     chess_board_0x88[IND_CASTLING_k] = 0;
+
+    chess_board_0x88[IND_SCORE] = -1;
 }
 
 export {
@@ -833,7 +845,7 @@ export {
     save_chess_board_0x88, set_board_from_fen_0x88, set_fen_from_0x88, searching_king, iniStartPositionForWhite, letter_to_x_coordinate,
     IND_MAX, SIDE_TO_MOVE, LET_COOR,
     BLACK, WHITE, PIECE_NO, W_PAWN, W_KNIGHT, W_BISHOP, W_ROOK, W_QUEEN, W_KING, B_PAWN, B_KNIGHT, B_BISHOP, B_ROOK, B_QUEEN, B_KING,
-    IND_CASTLING_Q, IND_CASTLING_q, IND_CASTLING_K, IND_CASTLING_k,
-    IND_EN_PASSANT_YES, IND_EN_PASSANT_TARGET_SQUARE, IND_KING_FROM_WHITE, IND_KING_FROM_BLACK,
+    IND_CASTLING_Q, IND_CASTLING_q, IND_CASTLING_K, IND_CASTLING_k, IND_HALFMOVE_CLOCK, IND_FULLMOVE_NUMBER, PIECE_NAME, 
+    IND_EN_PASSANT_YES, IND_EN_PASSANT_TARGET_SQUARE, IND_KING_FROM_WHITE, IND_KING_FROM_BLACK, IND_SCORE,
     SQUARE_64_to_128_CB,  SQUARE_128_to_64_CB
 };

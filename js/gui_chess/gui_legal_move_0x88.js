@@ -75,9 +75,9 @@ class GuiLegalMove_0x88_С {
   static NAME = "GuiLegalMove_0x88_С";
 
   chess_board_0x88_gui = new Int32Array(IND_MAX).fill(0);// текущая доска с фигурами 0x88 
-  packing_moves_gui = new Uint32Array(LENGTH_LIST).fill(MOVE_NO);// список ходов. ход упакован в одно число Uint32
+  packing_moves_gui = new Int32Array(LENGTH_LIST).fill(MOVE_NO);// список ходов. ход упакован в одно число Uint32
 
-  //packing_moves_gui_save = new Uint32Array(LENGTH_LIST).fill(MOVE_NO);// список ходов. ход упакован в одно число Uint32
+  //packing_moves_gui_save = new Int32Array(LENGTH_LIST).fill(MOVE_NO);// список ходов. ход упакован в одно число Uint32
 
   chess_board_key_64 = new BigUint64Array(1);
   chess_board_key_64_undo = new BigUint64Array(1);

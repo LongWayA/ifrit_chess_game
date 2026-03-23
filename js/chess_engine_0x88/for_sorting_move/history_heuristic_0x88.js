@@ -109,7 +109,7 @@ const ini_test_history_hh = function () {// 64
 // 
 /** записываем хороший ход
 * @param {number} move_i
-* @param {Uint32Array} packing_moves
+* @param {Int32Array} packing_moves
 * @param {number} depth
 * @param {number} depth_max
 * @returns {void}

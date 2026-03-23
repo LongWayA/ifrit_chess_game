@@ -160,7 +160,7 @@ class Draw_С {
 
     //color = Html5Canvas_C.BLUE;//
     /**
- * @param {Uint32Array} packing_moves
+ * @param {Int32Array} packing_moves
  * @param {any} chessBoard_8x8_O
  * @param {string} color
  * @param {number} is_white

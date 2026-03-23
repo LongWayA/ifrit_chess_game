@@ -82,7 +82,7 @@ let node_qs = 0;
 
 const quiescence_search = function (alpha, beta, chess_board_0x88, chess_board_key_64, depth) {
 
-  let packing_moves = new Uint32Array(LENGTH_LIST).fill(MOVE_NO);// список ходов. ход упакован в одно число Uint32
+  let packing_moves = new Int32Array(LENGTH_LIST).fill(MOVE_NO);// список ходов. ход упакован в одно число Uint32
   let undo = new Int32Array(UNDO_MAX).fill(0);// для отмены хода
 
   const chess_board_key_64_undo = new BigUint64Array(1);

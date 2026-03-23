@@ -20,7 +20,7 @@ import {
 /**
 * НАЗНАЧЕНИЕ
 
-let packing_pv_line = new Uint32Array(MAX_DEPTH = 103).fill(MOVE_NO);
+let packing_pv_line = new Int32Array(MAX_DEPTH = 103).fill(MOVE_NO);
 
 101 - type_variant - тип варианта
 102 - score_variant - оценка варианта
@@ -36,7 +36,7 @@ const IND_DEPTH_PV = 103;
 
 /**
 * очищаем список ходов
-* @param {Uint32Array} packing_pv_line
+* @param {Int32Array} packing_pv_line
 * @returns {void}
 */
 const clear_pv_line_pv = function (packing_pv_line) {
@@ -47,8 +47,8 @@ const clear_pv_line_pv = function (packing_pv_line) {
 
 /**
 * @param {number} i_move
-* @param {Uint32Array} packing_moves
-* @param {Uint32Array} packing_pv_line
+* @param {Int32Array} packing_moves
+* @param {Int32Array} packing_pv_line
 * @param {number} depth
 * @returns {void}
 */
@@ -59,8 +59,8 @@ const add_move_to_pv_line_pv = function (i_move, packing_moves, packing_pv_line,
 }
 
 /**
-* @param {Uint32Array} packing_pv_line_to
-* @param {Uint32Array} packing_pv_line_from
+* @param {Int32Array} packing_pv_line_to
+* @param {Int32Array} packing_pv_line_from
  * @returns {void}
  */
 const save_pv_line_pv = function (packing_pv_line_to, packing_pv_line_from) {
@@ -77,7 +77,7 @@ const save_pv_line_pv = function (packing_pv_line_to, packing_pv_line_from) {
 }
 
 /**
- * @param {Uint32Array} packing_pv_line
+ * @param {Int32Array} packing_pv_line
  * @returns {void}
  */
 const test_print_pv_line_pv = function (packing_pv_line) {
@@ -119,7 +119,7 @@ const test_print_pv_line_pv = function (packing_pv_line) {
 }
 
 /**
- * @param {Uint32Array} packing_pv_line
+ * @param {Int32Array} packing_pv_line
  * @param {number} mat
  * @returns {string}
  */

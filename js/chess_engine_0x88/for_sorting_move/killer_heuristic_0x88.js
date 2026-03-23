@@ -17,7 +17,7 @@
 //+
 // тут все прозрачно. идей пока нет
 
-  //let packing_moves_k1 = new Uint32Array(MAX_DEPTH_K).fill(MOVE_NO);// список ходов. ход упакован в одно число Uint32
+  //let packing_moves_k1 = new Int32Array(MAX_DEPTH_K).fill(MOVE_NO);// список ходов. ход упакован в одно число Uint32
 
   const MAX_DEPTH_K = 104;
   const IND_DEPTH_K = 103;
@@ -26,7 +26,7 @@
 
   /**
   * очищаем список ходов
-  * @param {Uint32Array} packing_moves_k
+  * @param {Int32Array} packing_moves_k
   * @returns {void}
   */
   const clear_packing_moves_k = function (packing_moves_k) {
@@ -38,9 +38,9 @@
 
   // записываем не взятия вызвавшие отсечку 
    /**
-   * @param {Uint32Array} packing_moves 
-   * @param {Uint32Array} packing_moves_k1
-   * @param {Uint32Array} packing_moves_k2 
+   * @param {Int32Array} packing_moves 
+   * @param {Int32Array} packing_moves_k1
+   * @param {Int32Array} packing_moves_k2 
    * @param {number} move_i
    * @param {number} depth
    * @returns {void}
