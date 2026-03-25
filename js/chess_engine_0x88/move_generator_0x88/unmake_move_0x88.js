@@ -7,24 +7,35 @@
 */
 
 import {
-  MOVE_NO, CAPTURES_PAWN_QUEEN_PROMO_QUEEN, CAPTURES_PAWN_ROOK_PROMO_QUEEN, CAPTURES_PAWN_BISHOP_PROMO_QUEEN,
-  CAPTURES_PAWN_KNIGHT_PROMO_QUEEN, CAPTURES_PAWN_QUEEN_PROMO_ROOK, CAPTURES_PAWN_ROOK_PROMO_ROOK,
-  CAPTURES_PAWN_BISHOP_PROMO_ROOK, CAPTURES_PAWN_KNIGHT_PROMO_ROOK, CAPTURES_PAWN_QUEEN_PROMO_BISHOP,
-  CAPTURES_PAWN_ROOK_PROMO_BISHOP, CAPTURES_PAWN_BISHOP_PROMO_BISHOP, CAPTURES_PAWN_KNIGHT_PROMO_BISHOP,
-  CAPTURES_PAWN_QUEEN_PROMO_KNIGHT, CAPTURES_PAWN_ROOK_PROMO_KNIGHT, CAPTURES_PAWN_BISHOP_PROMO_KNIGHT,
-  CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT, MOVE_PAWN_PROMO_QUEEN, MOVE_PAWN_PROMO_ROOK, MOVE_PAWN_PROMO_BISHOP,
-  MOVE_PAWN_PROMO_KNIGHT, CAPTURES_PAWN_QUEEN, CAPTURES_PAWN_ROOK, CAPTURES_PAWN_BISHOP, CAPTURES_PAWN_KNIGHT,
-  CAPTURES_KNIGHT_QUEEN, CAPTURES_KNIGHT_ROOK, CAPTURES_BISHOP_QUEEN, CAPTURES_BISHOP_ROOK, CAPTURES_ROOK_QUEEN,
-  CAPTURES_KNIGHT_BISHOP, CAPTURES_KNIGHT_KNIGHT, CAPTURES_BISHOP_BISHOP, CAPTURES_BISHOP_KNIGHT, CAPTURES_ROOK_ROOK,
-  CAPTURES_QUEEN_QUEEN, CAPTURES_ROOK_BISHOP, CAPTURES_ROOK_KNIGHT, CAPTURES_QUEEN_ROOK, CAPTURES_QUEEN_BISHOP,
-  CAPTURES_QUEEN_KNIGHT, CAPTURES_KING_QUEEN, CAPTURES_KING_ROOK, CAPTURES_KING_BISHOP, CAPTURES_KING_KNIGHT,
-  CAPTURES_PAWN_PAWN, EP_CAPTURES, CAPTURES_KNIGHT_PAWN, CAPTURES_BISHOP_PAWN, CAPTURES_ROOK_PAWN,
-  CAPTURES_QUEEN_PAWN, CAPTURES_KING_PAWN, MOVE_QUEEN, MOVE_ROOK, MOVE_BISHOP, MOVE_KNIGHT, MOVE_KING, MOVE_PAWN,
-  MOVE_DOUBLE_PAWN, MOVE_KING_CASTLE, MOVE_KING_QUEEN_CASTLE
+    LENGTH_LIST_ML, IND_PIESE_COLOR_ML, IND_NUMBER_CAPTURES_MOVE_ML, IND_NUMBER_MOVE_ML,
+    IND_PROMO_QUEEN_ML, IND_PROMO_ROOK_ML, IND_PROMO_BISHOP_ML, IND_PROMO_KNIGHT_ML,
+    MOVE_NO_ML, CAPTURES_PAWN_QUEEN_PROMO_QUEEN_ML, CAPTURES_PAWN_ROOK_PROMO_QUEEN_ML, CAPTURES_PAWN_BISHOP_PROMO_QUEEN_ML,
+    CAPTURES_PAWN_KNIGHT_PROMO_QUEEN_ML, CAPTURES_PAWN_QUEEN_PROMO_ROOK_ML, CAPTURES_PAWN_ROOK_PROMO_ROOK_ML,
+    CAPTURES_PAWN_BISHOP_PROMO_ROOK_ML, CAPTURES_PAWN_KNIGHT_PROMO_ROOK_ML, CAPTURES_PAWN_QUEEN_PROMO_BISHOP_ML,
+    CAPTURES_PAWN_ROOK_PROMO_BISHOP_ML, CAPTURES_PAWN_BISHOP_PROMO_BISHOP_ML, CAPTURES_PAWN_KNIGHT_PROMO_BISHOP_ML,
+    CAPTURES_PAWN_QUEEN_PROMO_KNIGHT_ML, CAPTURES_PAWN_ROOK_PROMO_KNIGHT_ML, CAPTURES_PAWN_BISHOP_PROMO_KNIGHT_ML,
+    CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT_ML, MOVE_PAWN_PROMO_QUEEN_ML, MOVE_PAWN_PROMO_ROOK_ML, MOVE_PAWN_PROMO_BISHOP_ML,
+    MOVE_PAWN_PROMO_KNIGHT_ML, CAPTURES_PAWN_QUEEN_ML, CAPTURES_PAWN_ROOK_ML, CAPTURES_PAWN_BISHOP_ML, CAPTURES_PAWN_KNIGHT_ML,
+    CAPTURES_KNIGHT_QUEEN_ML, CAPTURES_KNIGHT_ROOK_ML, CAPTURES_BISHOP_QUEEN_ML, CAPTURES_BISHOP_ROOK_ML, CAPTURES_ROOK_QUEEN_ML,
+    CAPTURES_KNIGHT_BISHOP_ML, CAPTURES_KNIGHT_KNIGHT_ML, CAPTURES_BISHOP_BISHOP_ML, CAPTURES_BISHOP_KNIGHT_ML, CAPTURES_ROOK_ROOK_ML,
+    CAPTURES_QUEEN_QUEEN_ML, CAPTURES_ROOK_BISHOP_ML, CAPTURES_ROOK_KNIGHT_ML, CAPTURES_QUEEN_ROOK_ML, CAPTURES_QUEEN_BISHOP_ML,
+    CAPTURES_QUEEN_KNIGHT_ML, CAPTURES_KING_QUEEN_ML, CAPTURES_KING_ROOK_ML, CAPTURES_KING_BISHOP_ML, CAPTURES_KING_KNIGHT_ML,
+    CAPTURES_PAWN_PAWN_ML, EP_CAPTURES_ML, CAPTURES_KNIGHT_PAWN_ML, CAPTURES_BISHOP_PAWN_ML, CAPTURES_ROOK_PAWN_ML,
+    CAPTURES_QUEEN_PAWN_ML, CAPTURES_KING_PAWN_ML, MOVE_QUEEN_ML, MOVE_ROOK_ML, MOVE_BISHOP_ML, MOVE_KNIGHT_ML, MOVE_KING_ML, MOVE_PAWN_ML,
+    MOVE_DOUBLE_PAWN_ML, MOVE_KING_CASTLE_ML, MOVE_KING_QUEEN_CASTLE_ML, TYPE_MOVE_NAME_ML
 } from "./move_list_0x88.js";
 
 import {
-  PIECE_NO, W_PAWN, W_ROOK, B_PAWN,
+    x07_y07_to_0x88_cb, s_0x88_to_x07_cb, s_0x88_to_y07_cb,
+    test_print_any_0x88_cb, test_print_piese_0x88_cb, test_print_piese_color_0x88_cb, test_print_piese_in_line_0x88_cb, 
+    test_compare_chess_board_0x88_cb,save_chess_board_0x88_cb, set_board_from_fen_0x88_cb, set_fen_from_0x88_cb, 
+    searching_king_cb, iniStartPositionForWhite_cb, letter_to_x_coordinate_cb,
+    IND_MAX_CB, SIDE_TO_MOVE_CB, LET_COOR_CB,
+    BLACK_CB, WHITE_CB, PIECE_NO_CB, W_PAWN_CB, W_KNIGHT_CB, W_BISHOP_CB, W_ROOK_CB, W_QUEEN_CB, W_KING_CB, B_PAWN_CB, 
+    B_KNIGHT_CB, B_BISHOP_CB, B_ROOK_CB, B_QUEEN_CB, B_KING_CB, IND_CASTLING_Q_CB, IND_CASTLING_q_CB, IND_CASTLING_K_CB,
+    IND_CASTLING_k_CB, IND_HALFMOVE_CLOCK_CB, IND_FULLMOVE_NUMBER_CB, PIECE_NAME_CB, IND_EN_PASSANT_YES_CB, 
+    IND_EN_PASSANT_TARGET_SQUARE_CB, IND_KING_FROM_WHITE_CB, IND_KING_FROM_BLACK_CB, IND_SCORE_CB,
+    SQUARE_64_to_128_CB,  SQUARE_128_to_64_CB
 } from "./chess_board_0x88.js";
 
 import {
@@ -62,17 +73,17 @@ const undo_moves_um = function (chess_board_0x88, chess_board_key_64, chess_boar
   // смотрим 
   switch (type_move) {
 
-    case MOVE_NO:
+    case MOVE_NO_ML:
       break;
     ////////////////////////////////////////////////
     // простые ходы
     // MOVE
-    case MOVE_KING:
-    case MOVE_ROOK: 
-    case MOVE_QUEEN:
-    case MOVE_BISHOP:
-    case MOVE_KNIGHT:
-    case MOVE_PAWN:
+    case MOVE_KING_ML:
+    case MOVE_ROOK_ML: 
+    case MOVE_QUEEN_ML:
+    case MOVE_BISHOP_ML:
+    case MOVE_KNIGHT_ML:
+    case MOVE_PAWN_ML:
       // возвращаем простой ход.
       unmake_simple_move_0x88(chess_board_0x88, from, to);
       break;
@@ -80,107 +91,107 @@ const undo_moves_um = function (chess_board_0x88, chess_board_key_64, chess_boar
     ///////////////////////////////////////////////////////  
     // взятия
     // CAPTURES_KING_...
-    case CAPTURES_KING_QUEEN:
-    case CAPTURES_KING_BISHOP:
-    case CAPTURES_KING_KNIGHT:
-    case CAPTURES_KING_PAWN:
+    case CAPTURES_KING_QUEEN_ML:
+    case CAPTURES_KING_BISHOP_ML:
+    case CAPTURES_KING_KNIGHT_ML:
+    case CAPTURES_KING_PAWN_ML:
 
     // CAPTURES_ROOK_...
-    case CAPTURES_ROOK_QUEEN:
-    case CAPTURES_ROOK_BISHOP:
-    case CAPTURES_ROOK_KNIGHT:
-    case CAPTURES_ROOK_PAWN:
+    case CAPTURES_ROOK_QUEEN_ML:
+    case CAPTURES_ROOK_BISHOP_ML:
+    case CAPTURES_ROOK_KNIGHT_ML:
+    case CAPTURES_ROOK_PAWN_ML:
 
     // CAPTURES_QUEEN
-    case CAPTURES_QUEEN_QUEEN:
-    case CAPTURES_QUEEN_BISHOP:
-    case CAPTURES_QUEEN_KNIGHT:
-    case CAPTURES_QUEEN_PAWN:
+    case CAPTURES_QUEEN_QUEEN_ML:
+    case CAPTURES_QUEEN_BISHOP_ML:
+    case CAPTURES_QUEEN_KNIGHT_ML:
+    case CAPTURES_QUEEN_PAWN_ML:
 
     // CAPTURES_BISHOP
-    case CAPTURES_BISHOP_QUEEN:
-    case CAPTURES_BISHOP_BISHOP:
-    case CAPTURES_BISHOP_KNIGHT:
-    case CAPTURES_BISHOP_PAWN:
+    case CAPTURES_BISHOP_QUEEN_ML:
+    case CAPTURES_BISHOP_BISHOP_ML:
+    case CAPTURES_BISHOP_KNIGHT_ML:
+    case CAPTURES_BISHOP_PAWN_ML:
 
     // CAPTURES_KNIGHT
-    case CAPTURES_KNIGHT_QUEEN:
-    case CAPTURES_KNIGHT_BISHOP:
-    case CAPTURES_KNIGHT_KNIGHT:
-    case CAPTURES_KNIGHT_PAWN:
+    case CAPTURES_KNIGHT_QUEEN_ML:
+    case CAPTURES_KNIGHT_BISHOP_ML:
+    case CAPTURES_KNIGHT_KNIGHT_ML:
+    case CAPTURES_KNIGHT_PAWN_ML:
 
     // CAPTURES_PAWN
-    case CAPTURES_PAWN_QUEEN:
-    case CAPTURES_PAWN_BISHOP:
-    case CAPTURES_PAWN_KNIGHT:
-    case CAPTURES_PAWN_PAWN:
+    case CAPTURES_PAWN_QUEEN_ML:
+    case CAPTURES_PAWN_BISHOP_ML:
+    case CAPTURES_PAWN_KNIGHT_ML:
+    case CAPTURES_PAWN_PAWN_ML:
 
     // CAPTURES_..._ROOK   
-    case CAPTURES_QUEEN_ROOK:
-    case CAPTURES_BISHOP_ROOK:
-    case CAPTURES_KNIGHT_ROOK:
-    case CAPTURES_PAWN_ROOK:
+    case CAPTURES_QUEEN_ROOK_ML:
+    case CAPTURES_BISHOP_ROOK_ML:
+    case CAPTURES_KNIGHT_ROOK_ML:
+    case CAPTURES_PAWN_ROOK_ML:
 
-    case CAPTURES_ROOK_ROOK:
-    case CAPTURES_KING_ROOK:
+    case CAPTURES_ROOK_ROOK_ML:
+    case CAPTURES_KING_ROOK_ML:
       unmake_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece);     
       break;
 
     //////////////////////////////////////////////
     // MOVE_KING_CASTLE
-    case MOVE_KING_CASTLE:
+    case MOVE_KING_CASTLE_ML:
       unmake_king_castle_move_0x88(chess_board_0x88, from, to, piece_color);
       break;
 
     // MOVE_KING_QUEEN_CASTLE   
-    case MOVE_KING_QUEEN_CASTLE:
+    case MOVE_KING_QUEEN_CASTLE_ML:
       unmake_king_queen_castle_move_0x88(chess_board_0x88, from, to, piece_color);
       break;
 
     //////////////////////////////////////////////
     // специальный ходы все про пешки 
     // MOVE_DOUBLE_PAWN       
-    case MOVE_DOUBLE_PAWN:
+    case MOVE_DOUBLE_PAWN_ML:
       unmake_simple_move_0x88(chess_board_0x88, from, to);
       break;
 
     // EP_CAPTURES
-    case EP_CAPTURES:
+    case EP_CAPTURES_ML:
       unmake_en_passant_move_0x88(chess_board_0x88, from, to, piece_color);
       break;
 
     // MOVE PAWN PROMO  
-    case MOVE_PAWN_PROMO_QUEEN:
-    case MOVE_PAWN_PROMO_ROOK:
-    case MOVE_PAWN_PROMO_BISHOP:
-    case MOVE_PAWN_PROMO_KNIGHT:
+    case MOVE_PAWN_PROMO_QUEEN_ML:
+    case MOVE_PAWN_PROMO_ROOK_ML:
+    case MOVE_PAWN_PROMO_BISHOP_ML:
+    case MOVE_PAWN_PROMO_KNIGHT_ML:
       unmake_promo_move_0x88(chess_board_0x88, from, to, piece_color);
       break;
 
     //CAPTURES PAWN PROMO
     //CAPTURES_PROMO_QUEEN
-    case CAPTURES_PAWN_QUEEN_PROMO_QUEEN:
-    case CAPTURES_PAWN_BISHOP_PROMO_QUEEN:
-    case CAPTURES_PAWN_KNIGHT_PROMO_QUEEN:
-    case CAPTURES_PAWN_ROOK_PROMO_QUEEN:
+    case CAPTURES_PAWN_QUEEN_PROMO_QUEEN_ML:
+    case CAPTURES_PAWN_BISHOP_PROMO_QUEEN_ML:
+    case CAPTURES_PAWN_KNIGHT_PROMO_QUEEN_ML:
+    case CAPTURES_PAWN_ROOK_PROMO_QUEEN_ML:
 
     //CAPTURES_PROMO_ROOK
-    case CAPTURES_PAWN_QUEEN_PROMO_ROOK:
-    case CAPTURES_PAWN_BISHOP_PROMO_ROOK:
-    case CAPTURES_PAWN_KNIGHT_PROMO_ROOK:
-    case CAPTURES_PAWN_ROOK_PROMO_ROOK:
+    case CAPTURES_PAWN_QUEEN_PROMO_ROOK_ML:
+    case CAPTURES_PAWN_BISHOP_PROMO_ROOK_ML:
+    case CAPTURES_PAWN_KNIGHT_PROMO_ROOK_ML:
+    case CAPTURES_PAWN_ROOK_PROMO_ROOK_ML:
 
     //CAPTURES_PROMO_BISHOP
-    case CAPTURES_PAWN_QUEEN_PROMO_BISHOP:
-    case CAPTURES_PAWN_BISHOP_PROMO_BISHOP:
-    case CAPTURES_PAWN_KNIGHT_PROMO_BISHOP:
-    case CAPTURES_PAWN_ROOK_PROMO_BISHOP:
+    case CAPTURES_PAWN_QUEEN_PROMO_BISHOP_ML:
+    case CAPTURES_PAWN_BISHOP_PROMO_BISHOP_ML:
+    case CAPTURES_PAWN_KNIGHT_PROMO_BISHOP_ML:
+    case CAPTURES_PAWN_ROOK_PROMO_BISHOP_ML:
 
     // CAPTURES_PROMO_KNIGHT
-    case CAPTURES_PAWN_QUEEN_PROMO_KNIGHT:
-    case CAPTURES_PAWN_BISHOP_PROMO_KNIGHT:
-    case CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT:
-    case CAPTURES_PAWN_ROOK_PROMO_KNIGHT:
+    case CAPTURES_PAWN_QUEEN_PROMO_KNIGHT_ML:
+    case CAPTURES_PAWN_BISHOP_PROMO_KNIGHT_ML:
+    case CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT_ML:
+    case CAPTURES_PAWN_ROOK_PROMO_KNIGHT_ML:
       unmake_promo_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece, piece_color);
       break;
 
@@ -204,7 +215,7 @@ const unmake_simple_move_0x88 = function (chess_board_0x88, from, to) {
     chess_board_0x88[to];
 
   // стираем имя фигуры на новом месте
-  chess_board_0x88[to] = PIECE_NO;// 0
+  chess_board_0x88[to] = PIECE_NO_CB;// 0
 }
 
 
@@ -243,7 +254,7 @@ const unmake_king_castle_move_0x88 = function (chess_board_0x88, from, to, piece
     chess_board_0x88[to];
 
   // стираем имя фигуры на новом месте
-  chess_board_0x88[to] = PIECE_NO;// 0
+  chess_board_0x88[to] = PIECE_NO_CB;// 0
 
   if (piece_color == 1) {
 
@@ -252,7 +263,7 @@ const unmake_king_castle_move_0x88 = function (chess_board_0x88, from, to, piece
     chess_board_0x88[H1] = chess_board_0x88[F1];
 
     // стираем имя фигуры на новом месте
-    chess_board_0x88[F1] = PIECE_NO;//
+    chess_board_0x88[F1] = PIECE_NO_CB;//
 
   } else {
 
@@ -261,7 +272,7 @@ const unmake_king_castle_move_0x88 = function (chess_board_0x88, from, to, piece
     chess_board_0x88[H8] = chess_board_0x88[F8];
 
     // стираем имя фигуры на новом месте
-    chess_board_0x88[F8] = PIECE_NO;// 0
+    chess_board_0x88[F8] = PIECE_NO_CB;// 0
 
   }
 }
@@ -282,7 +293,7 @@ const unmake_king_queen_castle_move_0x88 = function (chess_board_0x88, from, to,
     chess_board_0x88[to];
 
   // стираем имя фигуры на новом месте
-  chess_board_0x88[to] = PIECE_NO;// 0
+  chess_board_0x88[to] = PIECE_NO_CB;// 0
 
   if (piece_color == 1) {
 
@@ -291,7 +302,7 @@ const unmake_king_queen_castle_move_0x88 = function (chess_board_0x88, from, to,
     chess_board_0x88[A1] = chess_board_0x88[D1];
 
     // стираем имя фигуры на новом месте
-    chess_board_0x88[D1] = PIECE_NO;// 0
+    chess_board_0x88[D1] = PIECE_NO_CB;// 0
 
   } else {
 
@@ -300,7 +311,7 @@ const unmake_king_queen_castle_move_0x88 = function (chess_board_0x88, from, to,
     chess_board_0x88[A8] = chess_board_0x88[D8];
 
     // стираем имя фигуры на новом месте
-    chess_board_0x88[D8] = PIECE_NO;// 0
+    chess_board_0x88[D8] = PIECE_NO_CB;// 0
 
   }// 
 
@@ -322,13 +333,13 @@ const unmake_en_passant_move_0x88 = function (chess_board_0x88, from, to, piece_
     chess_board_0x88[to];
 
   // стираем имя фигуры на новом месте
-  chess_board_0x88[to] = PIECE_NO;//
+  chess_board_0x88[to] = PIECE_NO_CB;//
 
   if (piece_color == 1) {
     // востанавливаем имя битой на проходе пешки
-    chess_board_0x88[to + 16] = B_PAWN;//
+    chess_board_0x88[to + 16] = B_PAWN_CB;//
   } else {
-    chess_board_0x88[to - 16] = W_PAWN;//
+    chess_board_0x88[to - 16] = W_PAWN_CB;//
   }
 }
 
@@ -343,13 +354,13 @@ const unmake_en_passant_move_0x88 = function (chess_board_0x88, from, to, piece_
 const unmake_promo_move_0x88 = function (chess_board_0x88, from, to, piece_color) {
 
   if (piece_color == 1) {
-    chess_board_0x88[from] = W_PAWN;//
+    chess_board_0x88[from] = W_PAWN_CB;//
   } else {
-    chess_board_0x88[from] = B_PAWN;//
+    chess_board_0x88[from] = B_PAWN_CB;//
   }
 
   // стираем имя фигуры на новом месте
-  chess_board_0x88[to] = PIECE_NO;// 0
+  chess_board_0x88[to] = PIECE_NO_CB;// 0
 
 }
 
@@ -365,9 +376,9 @@ const unmake_promo_move_0x88 = function (chess_board_0x88, from, to, piece_color
 const unmake_promo_captures_move_0x88 = function (chess_board_0x88, from, to, captures_piece, piece_color) {
 
   if (piece_color == 1) {
-    chess_board_0x88[from] = W_PAWN;//
+    chess_board_0x88[from] = W_PAWN_CB;//
   } else {
-    chess_board_0x88[from] = B_PAWN;//
+    chess_board_0x88[from] = B_PAWN_CB;//
   }
 
   // записываем имя взятой фигуры на новом месте

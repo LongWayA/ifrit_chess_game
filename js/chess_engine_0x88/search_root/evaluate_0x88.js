@@ -7,10 +7,16 @@
 */
 
 import {
-  test_compare_chess_board_0x88, test_print_piese_0x88,
-  save_chess_board_0x88, set_board_from_fen_0x88, set_fen_from_0x88,
-  IND_MAX,
-  BLACK, WHITE, W_PAWN, W_KNIGHT, W_BISHOP, W_ROOK, W_QUEEN, W_KING, B_PAWN, B_KNIGHT, B_BISHOP, B_ROOK, B_QUEEN, B_KING,
+    x07_y07_to_0x88_cb, s_0x88_to_x07_cb, s_0x88_to_y07_cb,
+    test_print_any_0x88_cb, test_print_piese_0x88_cb, test_print_piese_color_0x88_cb, test_print_piese_in_line_0x88_cb, 
+    test_compare_chess_board_0x88_cb,save_chess_board_0x88_cb, set_board_from_fen_0x88_cb, set_fen_from_0x88_cb, 
+    searching_king_cb, iniStartPositionForWhite_cb, letter_to_x_coordinate_cb,
+    IND_MAX_CB, SIDE_TO_MOVE_CB, LET_COOR_CB,
+    BLACK_CB, WHITE_CB, PIECE_NO_CB, W_PAWN_CB, W_KNIGHT_CB, W_BISHOP_CB, W_ROOK_CB, W_QUEEN_CB, W_KING_CB, B_PAWN_CB, 
+    B_KNIGHT_CB, B_BISHOP_CB, B_ROOK_CB, B_QUEEN_CB, B_KING_CB, IND_CASTLING_Q_CB, IND_CASTLING_q_CB, IND_CASTLING_K_CB,
+    IND_CASTLING_k_CB, IND_HALFMOVE_CLOCK_CB, IND_FULLMOVE_NUMBER_CB, PIECE_NAME_CB, IND_EN_PASSANT_YES_CB, 
+    IND_EN_PASSANT_TARGET_SQUARE_CB, IND_KING_FROM_WHITE_CB, IND_KING_FROM_BLACK_CB, IND_SCORE_CB,
+    SQUARE_64_to_128_CB,  SQUARE_128_to_64_CB
 } from "../move_generator_0x88/chess_board_0x88.js";
 
 import {
@@ -130,38 +136,39 @@ const score_position = function (chess_board_0x88, chess_board_key_64) {
 
       index_piece = chess_board_0x88[sq];
       score_piece = PIECE_SCORE[index_piece];
-      color_piece = (index_piece > W_KING) ? BLACK : WHITE;
+      //color_piece = (index_piece > W_KING) ? BLACK : WHITE;
+      color_piece = 1 - (index_piece >> 3);
 
       // есть фигура на доске
       if (index_piece != 0) {
         if (color_piece == 1) {// белая фигура
           score = score + score_piece;
-          if (index_piece == W_KING) {
+          if (index_piece == W_KING_CB) {
             score = score + white_king_0x88[sq];
-          } else if (index_piece == W_QUEEN) {
+          } else if (index_piece == W_QUEEN_CB) {
             score = score + center_queen_0x88[sq];
-          } else if (index_piece == W_ROOK) {
+          } else if (index_piece == W_ROOK_CB) {
 
-          } else if (index_piece == W_BISHOP) {
+          } else if (index_piece == W_BISHOP_CB) {
             score = score + center_0x88[sq];
-          } else if (index_piece == W_KNIGHT) {
+          } else if (index_piece == W_KNIGHT_CB) {
             score = score + center_0x88[sq];
-          } else if (index_piece == W_PAWN) {
+          } else if (index_piece == W_PAWN_CB) {
             score = score + white_pawn_0x88[sq];
           }
         } else {// черная фигура
           score = score - score_piece;
-          if (index_piece == B_KING) {
+          if (index_piece == B_KING_CB) {
             score = score - black_king_0x88[sq];
-          } else if (index_piece == B_QUEEN) {
+          } else if (index_piece == B_QUEEN_CB) {
             score = score - center_queen_0x88[sq];
-          } else if (index_piece == B_ROOK) {
+          } else if (index_piece == B_ROOK_CB) {
 
-          } else if (index_piece == B_BISHOP) {
+          } else if (index_piece == B_BISHOP_CB) {
             score = score - center_0x88[sq];
-          } else if (index_piece == B_KNIGHT) {
+          } else if (index_piece == B_KNIGHT_CB) {
             score = score - center_0x88[sq];
-          } else if (index_piece == B_PAWN) {
+          } else if (index_piece == B_PAWN_CB) {
             score = score - black_pawn_0x88[sq];
           }
         }//if (color_piece == 1) {// белая фигура
@@ -186,34 +193,34 @@ const score_position = function (chess_board_0x88, chess_board_key_64) {
 */
 const test_fen = function (chess_board_0x88) {
 
-  let chess_board_0x88_O_save = new Int32Array(IND_MAX).fill(0);// доска 0x88 с фигурами
+  let chess_board_0x88_O_save = new Int32Array(IND_MAX_CB).fill(0);// доска 0x88 с фигурами
 
   // записали доску чтобы потом сравнить
-  save_chess_board_0x88(chess_board_0x88_O_save, chess_board_0x88);
+  save_chess_board_0x88_cb(chess_board_0x88_O_save, chess_board_0x88);
 
   // // загнали позицию в фен
-  let fen_save_1 = set_fen_from_0x88(chess_board_0x88);
+  let fen_save_1 = set_fen_from_0x88_cb(chess_board_0x88);
 
   // // возвращаем позицию из фена
-  set_board_from_fen_0x88(fen_save_1, chess_board_0x88);
+  set_board_from_fen_0x88_cb(fen_save_1, chess_board_0x88);
 
   // загнали позицию в фен повторно
-  let fen_save_2 = set_fen_from_0x88(chess_board_0x88);
+  let fen_save_2 = set_fen_from_0x88_cb(chess_board_0x88);
 
   // возвращаем позицию из фена
-  set_board_from_fen_0x88(fen_save_2, chess_board_0x88);
+  set_board_from_fen_0x88_cb(fen_save_2, chess_board_0x88);
 
   // загнали позицию в фен повторно
-  let fen_save_3 = set_fen_from_0x88(chess_board_0x88);
+  let fen_save_3 = set_fen_from_0x88_cb(chess_board_0x88);
 
   // возвращаем позицию из фена
-  set_board_from_fen_0x88(fen_save_3, chess_board_0x88);
+  set_board_from_fen_0x88_cb(fen_save_3, chess_board_0x88);
 
   // загнали позицию в фен повторно
-  let fen_save_4 = set_fen_from_0x88(chess_board_0x88);
+  let fen_save_4 = set_fen_from_0x88_cb(chess_board_0x88);
 
   // возвращаем позицию из фена
-  set_board_from_fen_0x88(fen_save_4, chess_board_0x88);
+  set_board_from_fen_0x88_cb(fen_save_4, chess_board_0x88);
 
 
   if ((fen_save_1 != fen_save_2) && (fen_save_2 != fen_save_3) && (fen_save_3 != fen_save_4)) {
@@ -221,12 +228,12 @@ const test_fen = function (chess_board_0x88) {
   }
 
   // загнали позицию в фен повторно
-  let fen_save_5 = set_fen_from_0x88(chess_board_0x88_O_save);
+  let fen_save_5 = set_fen_from_0x88_cb(chess_board_0x88_O_save);
 
 
   // сравниваем записанную доску и ту что получилась из фена. если что то не так будет вывод на консоль
   
-  test_compare_chess_board_0x88(chess_board_0x88_O_save, chess_board_0x88);
+  test_compare_chess_board_0x88_cb(chess_board_0x88_O_save, chess_board_0x88);
 
 }
 

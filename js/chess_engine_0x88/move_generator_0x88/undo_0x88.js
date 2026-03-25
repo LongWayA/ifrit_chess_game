@@ -7,13 +7,16 @@
 */
 
 import {
-    x07_y07_to_0x88, s_0x88_to_x07, s_0x88_to_y07,
-    test_print_any_0x88, test_print_piese_0x88, test_print_piese_color_0x88, test_print_piese_in_line_0x88, test_compare_chess_board_0x88,
-    save_chess_board_0x88, set_board_from_fen_0x88, set_fen_from_0x88, searching_king, iniStartPositionForWhite,
-    IND_MAX, SIDE_TO_MOVE, LET_COOR,
-    BLACK, WHITE, PIECE_NO, W_PAWN, W_KNIGHT, W_BISHOP, W_ROOK, W_QUEEN, W_KING, B_PAWN, B_KNIGHT, B_BISHOP, B_ROOK, B_QUEEN, B_KING,
-    IND_CASTLING_Q, IND_CASTLING_q, IND_CASTLING_K, IND_CASTLING_k,
-    IND_EN_PASSANT_YES, IND_EN_PASSANT_TARGET_SQUARE, IND_KING_FROM_WHITE, IND_KING_FROM_BLACK
+    x07_y07_to_0x88_cb, s_0x88_to_x07_cb, s_0x88_to_y07_cb,
+    test_print_any_0x88_cb, test_print_piese_0x88_cb, test_print_piese_color_0x88_cb, test_print_piese_in_line_0x88_cb, 
+    test_compare_chess_board_0x88_cb,save_chess_board_0x88_cb, set_board_from_fen_0x88_cb, set_fen_from_0x88_cb, 
+    searching_king_cb, iniStartPositionForWhite_cb, letter_to_x_coordinate_cb,
+    IND_MAX_CB, SIDE_TO_MOVE_CB, LET_COOR_CB,
+    BLACK_CB, WHITE_CB, PIECE_NO_CB, W_PAWN_CB, W_KNIGHT_CB, W_BISHOP_CB, W_ROOK_CB, W_QUEEN_CB, W_KING_CB, B_PAWN_CB, 
+    B_KNIGHT_CB, B_BISHOP_CB, B_ROOK_CB, B_QUEEN_CB, B_KING_CB, IND_CASTLING_Q_CB, IND_CASTLING_q_CB, IND_CASTLING_K_CB,
+    IND_CASTLING_k_CB, IND_HALFMOVE_CLOCK_CB, IND_FULLMOVE_NUMBER_CB, PIECE_NAME_CB, IND_EN_PASSANT_YES_CB, 
+    IND_EN_PASSANT_TARGET_SQUARE_CB, IND_KING_FROM_WHITE_CB, IND_KING_FROM_BLACK_CB, IND_SCORE_CB,
+    SQUARE_64_to_128_CB,  SQUARE_128_to_64_CB
 } from "./chess_board_0x88.js";
 
 /**
@@ -43,28 +46,28 @@ const UNDO_MAX = 9;
  */
 const set_undo = function (undo, chess_board_0x88) {
   // цвет хода 0 - черные 1 - белые
-  undo[UNDO_SIDE_TO_MOVE] = chess_board_0x88[SIDE_TO_MOVE];
+  undo[UNDO_SIDE_TO_MOVE] = chess_board_0x88[SIDE_TO_MOVE_CB];
 
   // разрешение взятия на проходе 1/0
-  undo[UNDO_EN_PASSANT_YES] = chess_board_0x88[IND_EN_PASSANT_YES];
+  undo[UNDO_EN_PASSANT_YES] = chess_board_0x88[IND_EN_PASSANT_YES_CB];
 
   // координата битого поля
-  undo[UNDO_EN_PASSANT_TARGET_SQUARE] = chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE];
+  undo[UNDO_EN_PASSANT_TARGET_SQUARE] = chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE_CB];
 
   // рокировка белых в длинную сторону   1/0
-  undo[UNDO_CASTLING_Q] = chess_board_0x88[IND_CASTLING_Q];
+  undo[UNDO_CASTLING_Q] = chess_board_0x88[IND_CASTLING_Q_CB];
 
   // рокировка белых в короткую сторону  1/0
-  undo[UNDO_CASTLING_K] = chess_board_0x88[IND_CASTLING_K];
+  undo[UNDO_CASTLING_K] = chess_board_0x88[IND_CASTLING_K_CB];
 
   // рокировка черных в длинную сторону  1/0
-  undo[UNDO_CASTLING_q] = chess_board_0x88[IND_CASTLING_q];
+  undo[UNDO_CASTLING_q] = chess_board_0x88[IND_CASTLING_q_CB];
 
   // рокировка черных в короткую сторону 1/0
-  undo[UNDO_CASTLING_k] = chess_board_0x88[IND_CASTLING_k];
+  undo[UNDO_CASTLING_k] = chess_board_0x88[IND_CASTLING_k_CB];
 
-  undo[UNDO_KING_FROM_WHITE] = chess_board_0x88[IND_KING_FROM_WHITE];
-  undo[UNDO_KING_FROM_BLACK] = chess_board_0x88[IND_KING_FROM_BLACK];
+  undo[UNDO_KING_FROM_WHITE] = chess_board_0x88[IND_KING_FROM_WHITE_CB];
+  undo[UNDO_KING_FROM_BLACK] = chess_board_0x88[IND_KING_FROM_BLACK_CB];
 
 }
 
@@ -77,24 +80,24 @@ const set_undo = function (undo, chess_board_0x88) {
 const get_undo = function (chess_board_0x88, undo) {
 
   // цвет хода 0 - черные 1 - белые
-  chess_board_0x88[SIDE_TO_MOVE] = undo[UNDO_SIDE_TO_MOVE];
+  chess_board_0x88[SIDE_TO_MOVE_CB] = undo[UNDO_SIDE_TO_MOVE];
 
   // разрешение взятия на проходе 1/0
-  chess_board_0x88[IND_EN_PASSANT_YES] = undo[UNDO_EN_PASSANT_YES];
+  chess_board_0x88[IND_EN_PASSANT_YES_CB] = undo[UNDO_EN_PASSANT_YES];
 
   // координата битого поля
-  chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE] = undo[UNDO_EN_PASSANT_TARGET_SQUARE];
+  chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE_CB] = undo[UNDO_EN_PASSANT_TARGET_SQUARE];
   // рокировка белых в длинную сторону   1/0
-  chess_board_0x88[IND_CASTLING_Q] = undo[UNDO_CASTLING_Q];
+  chess_board_0x88[IND_CASTLING_Q_CB] = undo[UNDO_CASTLING_Q];
   // рокировка белых в короткую сторону  1/0
-  chess_board_0x88[IND_CASTLING_K] = undo[UNDO_CASTLING_K];
+  chess_board_0x88[IND_CASTLING_K_CB] = undo[UNDO_CASTLING_K];
   // рокировка черных в длинную сторону  1/0
-  chess_board_0x88[IND_CASTLING_q] = undo[UNDO_CASTLING_q];
+  chess_board_0x88[IND_CASTLING_q_CB] = undo[UNDO_CASTLING_q];
   // рокировка черных в короткую сторону 1/0
-  chess_board_0x88[IND_CASTLING_k] = undo[UNDO_CASTLING_k];
+  chess_board_0x88[IND_CASTLING_k_CB] = undo[UNDO_CASTLING_k];
 
-  chess_board_0x88[IND_KING_FROM_WHITE] = undo[UNDO_KING_FROM_WHITE];
-  chess_board_0x88[IND_KING_FROM_BLACK] = undo[UNDO_KING_FROM_BLACK];
+  chess_board_0x88[IND_KING_FROM_WHITE_CB] = undo[UNDO_KING_FROM_WHITE];
+  chess_board_0x88[IND_KING_FROM_BLACK_CB] = undo[UNDO_KING_FROM_BLACK];
 
 }
 

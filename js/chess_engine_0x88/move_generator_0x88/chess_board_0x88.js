@@ -74,56 +74,56 @@
 */
 
 //
-const BLACK = 0;
-const WHITE = 1;
+const BLACK_CB = 0;
+const WHITE_CB = 1;
 
 // 
-const PIECE_NO = 0; // нет фигуры
+const PIECE_NO_CB = 0; // нет фигуры
 
 // WHITE PIECE
-const W_PAWN = 1;     // пешка 
-const W_KNIGHT = 2;   // конь
-const W_BISHOP = 3;   // слон
-const W_ROOK = 4;     // ладья
-const W_QUEEN = 5;    // ферзь
-const W_KING = 6;     // король
+const W_PAWN_CB = 1;     // пешка 
+const W_KNIGHT_CB = 2;   // конь
+const W_BISHOP_CB = 3;   // слон
+const W_ROOK_CB = 4;     // ладья
+const W_QUEEN_CB = 5;    // ферзь
+const W_KING_CB = 6;     // король
 
 // BLACK PIECE
-const B_PAWN = 9;     // пешка 
-const B_KNIGHT = 10;   // конь
-const B_BISHOP = 11;   // слон
-const B_ROOK = 12;     // ладья
-const B_QUEEN = 13;    // ферзь
-const B_KING = 14;     // король
+const B_PAWN_CB = 9;     // пешка 
+const B_KNIGHT_CB = 10;   // конь
+const B_BISHOP_CB = 11;   // слон
+const B_ROOK_CB = 12;     // ладья
+const B_QUEEN_CB = 13;    // ферзь
+const B_KING_CB = 14;     // король
 
-const PIECE_NAME = [
-    "PIECE_NO", "W_PAWN", "W_KNIGHT", "W_BISHOP", "W_ROOK", "W_QUEEN", "W_KING",
-    "B_PAWN", "B_KNIGHT", "B_BISHOP", "B_ROOK", "B_QUEEN", "B_KING"
+const PIECE_NAME_CB = [
+    "PIECE_NO_CB", "W_PAWN_CB", "W_KNIGHT_CB", "W_BISHOP_CB", "W_ROOK_CB", "W_QUEEN_CB", "W_KING_CB",
+    "B_PAWN_CB", "B_KNIGHT_CB", "B_BISHOP_CB", "B_ROOK_CB", "B_QUEEN_CB", "B_KING_CB"
 ];
 
-const SIDE_TO_MOVE = 128; // положение в массиве цвета хода
+const SIDE_TO_MOVE_CB = 128; // положение в массиве цвета хода
 
-const IND_CASTLING_Q = 129; // положение в массиве рокировки белых в длинную сторону 0-1
-const IND_CASTLING_q = 130; // положение в массиве рокировки белых в короткую сторону 0-1
-const IND_CASTLING_K = 131; // положение в массиве рокировки черных в длинную сторону 0-1
-const IND_CASTLING_k = 132; // положение в массиве рокировки черных в короткую сторону 0-1
+const IND_CASTLING_Q_CB = 129; // положение в массиве рокировки белых в длинную сторону 0-1
+const IND_CASTLING_q_CB = 130; // положение в массиве рокировки белых в короткую сторону 0-1
+const IND_CASTLING_K_CB = 131; // положение в массиве рокировки черных в длинную сторону 0-1
+const IND_CASTLING_k_CB = 132; // положение в массиве рокировки черных в короткую сторону 0-1
 
-const IND_EN_PASSANT_YES = 133; // положение в массиве разрешение взятия на проходе 0-1
-const IND_EN_PASSANT_TARGET_SQUARE = 134; // положение в массиве координата битого поля от 0 до 119
+const IND_EN_PASSANT_YES_CB = 133; // положение в массиве разрешение взятия на проходе 0-1
+const IND_EN_PASSANT_TARGET_SQUARE_CB = 134; // положение в массиве координата битого поля от 0 до 119
 
-const IND_KING_FROM_WHITE = 135; // положение в массиве положение белого короля от 0 до 119
-const IND_KING_FROM_BLACK = 136; // положение в массиве положение черного короля от 0 до 119
+const IND_KING_FROM_WHITE_CB = 135; // положение в массиве положение белого короля от 0 до 119
+const IND_KING_FROM_BLACK_CB = 136; // положение в массиве положение черного короля от 0 до 119
 
-const IND_HALFMOVE_CLOCK = 137; // The number of halfmoves since the last capture or pawn advance,
+const IND_HALFMOVE_CLOCK_CB = 137; // The number of halfmoves since the last capture or pawn advance,
                                 // used for the fifty-move rule.(from wikipedia)
-const IND_FULLMOVE_NUMBER = 138; // The number of the full moves. It starts at 1 and is incremented after Black's move.(from wikipedia)
+const IND_FULLMOVE_NUMBER_CB = 138; // The number of the full moves. It starts at 1 and is incremented after Black's move.(from wikipedia)
 
-const IND_SCORE = 139;
+const IND_SCORE_CB = 139;
 
-const IND_MAX = 140;
+const IND_MAX_CB = 140;
 
 // нужно для взятия на проходе при перевода позиции в фен
-const LET_COOR = [
+const LET_COOR_CB = [
     "a", "b", "c", "d", "e", "f", "g", "h"
 ];
 
@@ -157,7 +157,7 @@ const SQUARE_128_to_64_CB = [
 * @param {number} y07
 * @returns {number}
 */
-const x07_y07_to_0x88 = function (x07, y07) {//rank07, file07
+const x07_y07_to_0x88_cb = function (x07, y07) {//rank07, file07
     let s_0x88 = 16 * y07 + x07;
     return s_0x88;
 }
@@ -167,7 +167,7 @@ const x07_y07_to_0x88 = function (x07, y07) {//rank07, file07
 * @param {number} s_0x88
 * @returns {number}
 */
-const s_0x88_to_x07 = function (s_0x88) {//rank07, file07
+const s_0x88_to_x07_cb = function (s_0x88) {//rank07, file07
     let x07 = s_0x88 & 7;
     return x07;
 }
@@ -177,7 +177,7 @@ const s_0x88_to_x07 = function (s_0x88) {//rank07, file07
 * @param {number} s_0x88
 * @returns {number}
 */
-const s_0x88_to_y07 = function (s_0x88) {//rank07, file07
+const s_0x88_to_y07_cb = function (s_0x88) {//rank07, file07
     let y07 = s_0x88 >> 4; // s_0x88 / 16    
     return y07;
 }
@@ -188,18 +188,18 @@ const s_0x88_to_y07 = function (s_0x88) {//rank07, file07
 * @param {Int32Array} chess_board_0x88
 * @returns {void}
 */
-const test_print_any_0x88 = function (chess_board_0x88) {
+const test_print_any_0x88_cb = function (chess_board_0x88) {
     console.log("test_print_any_0x88 ****************");
-    console.log("side_to_move " + chess_board_0x88[SIDE_TO_MOVE]);
-    console.log("en_passant_yes " + chess_board_0x88[IND_EN_PASSANT_YES]);
-    console.log("en_passant_target_square " + chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE]);
-    console.log("castling_Q " + chess_board_0x88[IND_CASTLING_Q]);
-    console.log("castling_q " + chess_board_0x88[IND_CASTLING_q]);
-    console.log("castling_K " + chess_board_0x88[IND_CASTLING_K]);
-    console.log("castling_k " + chess_board_0x88[IND_CASTLING_k]);
-    console.log("king_from_white " + chess_board_0x88[IND_KING_FROM_WHITE]);
-    console.log("king_from_black " + chess_board_0x88[IND_KING_FROM_BLACK]);
-    console.log("score " + chess_board_0x88[IND_SCORE]);
+    console.log("side_to_move " + chess_board_0x88[SIDE_TO_MOVE_CB]);
+    console.log("en_passant_yes " + chess_board_0x88[IND_EN_PASSANT_YES_CB]);
+    console.log("en_passant_target_square " + chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE_CB]);
+    console.log("castling_Q " + chess_board_0x88[IND_CASTLING_Q_CB]);
+    console.log("castling_q " + chess_board_0x88[IND_CASTLING_q_CB]);
+    console.log("castling_K " + chess_board_0x88[IND_CASTLING_K_CB]);
+    console.log("castling_k " + chess_board_0x88[IND_CASTLING_k_CB]);
+    console.log("king_from_white " + chess_board_0x88[IND_KING_FROM_WHITE_CB]);
+    console.log("king_from_black " + chess_board_0x88[IND_KING_FROM_BLACK_CB]);
+    console.log("score " + chess_board_0x88[IND_SCORE_CB]);
     console.log("**************** test_print_any_0x88");
 }
 
@@ -208,7 +208,7 @@ const test_print_any_0x88 = function (chess_board_0x88) {
 * @param {Int32Array} chess_board_0x88
 * @returns {void}
 */
-const test_print_piese_0x88 = function (chess_board_0x88) {
+const test_print_piese_0x88_cb = function (chess_board_0x88) {
     console.log("test_print_piese_0x88 ****************");
     let l = 0;// 
     let line = "";//
@@ -225,7 +225,7 @@ const test_print_piese_0x88 = function (chess_board_0x88) {
             line = "";
         }
     }
-    console.log("side_to_move = " + chess_board_0x88[SIDE_TO_MOVE]);
+    console.log("side_to_move = " + chess_board_0x88[SIDE_TO_MOVE_CB]);
     console.log("**************** test_print_0x88");
 }
 
@@ -234,7 +234,7 @@ const test_print_piese_0x88 = function (chess_board_0x88) {
 * @param {Int32Array} chess_board_0x88
 * @returns {void}
 */
-const test_print_piese_color_0x88 = function (chess_board_0x88) {
+const test_print_piese_color_0x88_cb = function (chess_board_0x88) {
     console.log("test_print_0x88_color ****************");
     let l = 0;// только один раз должен сработать перевод строки
     let line = "";//
@@ -245,7 +245,9 @@ const test_print_piese_color_0x88 = function (chess_board_0x88) {
             l = 1;
 
             // если имя фигуры больше 6 то это черная фигура так как они 9-черная пешка, и т.д.
-            color = (chess_board_0x88[i] > W_KING) ? BLACK : WHITE;
+            //color = (chess_board_0x88[i] > W_KING) ? BLACK : WHITE;
+            color = 1 - (chess_board_0x88[i] >> 3);// тут магия 8( в битах это 00001000) (подсказал ИИ от Гугла) 1 для белых и 0 для черных.
+
 
             line = line + "|" + String(color);
         } else if (l == 1) {
@@ -262,7 +264,7 @@ const test_print_piese_color_0x88 = function (chess_board_0x88) {
 * @param {Int32Array} chess_board_0x88
 * @returns {void}
 */
-const test_print_piese_in_line_0x88 = function (chess_board_0x88) {
+const test_print_piese_in_line_0x88_cb = function (chess_board_0x88) {
     console.log("test_print_0x88_line ****************");
     let line = "";//
     for (let i = 0; i < 128; i++) {
@@ -280,7 +282,7 @@ const test_print_piese_in_line_0x88 = function (chess_board_0x88) {
 * @param {Int32Array} chess_board_0x88
 * @returns {number}
 */
-const test_compare_chess_board_0x88 = function (chess_board_0x88_original, chess_board_0x88) {
+const test_compare_chess_board_0x88_cb = function (chess_board_0x88_original, chess_board_0x88) {
 
     let is_test_ok = 1;
     //console.log("test_compare_chess_board_0x88****************");
@@ -293,59 +295,59 @@ const test_compare_chess_board_0x88 = function (chess_board_0x88_original, chess
     }
 
     // цвет хода 0 - черные 1 - белые
-    if (chess_board_0x88_original[SIDE_TO_MOVE] != chess_board_0x88[SIDE_TO_MOVE]) {
+    if (chess_board_0x88_original[SIDE_TO_MOVE_CB] != chess_board_0x88[SIDE_TO_MOVE_CB]) {
         is_test_ok = 0;
-        console.log("this side_to_move original " + chess_board_0x88_original[SIDE_TO_MOVE]);
-        console.log("out side_to_move " + chess_board_0x88[SIDE_TO_MOVE]);
+        console.log("this side_to_move original " + chess_board_0x88_original[SIDE_TO_MOVE_CB]);
+        console.log("out side_to_move " + chess_board_0x88[SIDE_TO_MOVE_CB]);
     };
-    if (chess_board_0x88_original[IND_EN_PASSANT_YES] != chess_board_0x88[IND_EN_PASSANT_YES]) {
+    if (chess_board_0x88_original[IND_EN_PASSANT_YES_CB] != chess_board_0x88[IND_EN_PASSANT_YES_CB]) {
         is_test_ok = 0;
-        console.log("this en_passant_yes original " + chess_board_0x88_original[IND_EN_PASSANT_YES]);
-        console.log("out en_passant_yes " + chess_board_0x88[IND_EN_PASSANT_YES]);
+        console.log("this en_passant_yes original " + chess_board_0x88_original[IND_EN_PASSANT_YES_CB]);
+        console.log("out en_passant_yes " + chess_board_0x88[IND_EN_PASSANT_YES_CB]);
     };
 
-    if (chess_board_0x88_original[IND_EN_PASSANT_YES] == 1) {
-        if (chess_board_0x88_original[IND_EN_PASSANT_TARGET_SQUARE] != chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE]) {
+    if (chess_board_0x88_original[IND_EN_PASSANT_YES_CB] == 1) {
+        if (chess_board_0x88_original[IND_EN_PASSANT_TARGET_SQUARE_CB] != chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE_CB]) {
             is_test_ok = 0;
-            console.log("this en_passant_target_square original " + chess_board_0x88_original[IND_EN_PASSANT_TARGET_SQUARE]);
-            console.log("out en_passant_target_square " + chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE]);
+            console.log("this en_passant_target_square original " + chess_board_0x88_original[IND_EN_PASSANT_TARGET_SQUARE_CB]);
+            console.log("out en_passant_target_square " + chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE_CB]);
         };
     };
 
-    if (chess_board_0x88_original[IND_CASTLING_Q] != chess_board_0x88[IND_CASTLING_Q]) {
+    if (chess_board_0x88_original[IND_CASTLING_Q_CB] != chess_board_0x88[IND_CASTLING_Q_CB]) {
         is_test_ok = 0;
-        console.log("this castling_Q original " + chess_board_0x88_original[IND_CASTLING_Q]);
-        console.log("out castling_Q " + chess_board_0x88[IND_CASTLING_Q]);
+        console.log("this castling_Q original " + chess_board_0x88_original[IND_CASTLING_Q_CB]);
+        console.log("out castling_Q " + chess_board_0x88[IND_CASTLING_Q_CB]);
     };
-    if (chess_board_0x88_original[IND_CASTLING_K] != chess_board_0x88[IND_CASTLING_K]) {
+    if (chess_board_0x88_original[IND_CASTLING_K_CB] != chess_board_0x88[IND_CASTLING_K_CB]) {
         is_test_ok = 0;
-        console.log("this castling_K " + chess_board_0x88_original[IND_CASTLING_K]);
-        console.log("out castling_K " + chess_board_0x88[IND_CASTLING_K]);
+        console.log("this castling_K " + chess_board_0x88_original[IND_CASTLING_K_CB]);
+        console.log("out castling_K " + chess_board_0x88[IND_CASTLING_K_CB]);
     };
-    if (chess_board_0x88_original[IND_CASTLING_q] != chess_board_0x88[IND_CASTLING_q]) {
+    if (chess_board_0x88_original[IND_CASTLING_q_CB] != chess_board_0x88[IND_CASTLING_q_CB]) {
         is_test_ok = 0;
-        console.log("this castling_q original " + chess_board_0x88_original[IND_CASTLING_q]);
-        console.log("out castling_q " + chess_board_0x88[IND_CASTLING_q]);
+        console.log("this castling_q original " + chess_board_0x88_original[IND_CASTLING_q_CB]);
+        console.log("out castling_q " + chess_board_0x88[IND_CASTLING_q_CB]);
     };
-    if (chess_board_0x88_original[IND_CASTLING_k] != chess_board_0x88[IND_CASTLING_k]) {
+    if (chess_board_0x88_original[IND_CASTLING_k_CB] != chess_board_0x88[IND_CASTLING_k_CB]) {
         is_test_ok = 0;
-        console.log("this castling_k original " + chess_board_0x88_original[IND_CASTLING_k]);
-        console.log("out castling_k " + chess_board_0x88[IND_CASTLING_k]);
+        console.log("this castling_k original " + chess_board_0x88_original[IND_CASTLING_k_CB]);
+        console.log("out castling_k " + chess_board_0x88[IND_CASTLING_k_CB]);
     };
-    if (chess_board_0x88_original[IND_KING_FROM_WHITE] != chess_board_0x88[IND_KING_FROM_WHITE]) {
+    if (chess_board_0x88_original[IND_KING_FROM_WHITE_CB] != chess_board_0x88[IND_KING_FROM_WHITE_CB]) {
         is_test_ok = 0;
-        console.log("this king_from_white original " + chess_board_0x88_original[IND_KING_FROM_WHITE]);
-        console.log("out king_from_white " + chess_board_0x88[IND_KING_FROM_WHITE]);
+        console.log("this king_from_white original " + chess_board_0x88_original[IND_KING_FROM_WHITE_CB]);
+        console.log("out king_from_white " + chess_board_0x88[IND_KING_FROM_WHITE_CB]);
     };
-    if (chess_board_0x88_original[IND_KING_FROM_BLACK] != chess_board_0x88[IND_KING_FROM_BLACK]) {
+    if (chess_board_0x88_original[IND_KING_FROM_BLACK_CB] != chess_board_0x88[IND_KING_FROM_BLACK_CB]) {
         is_test_ok = 0;
-        console.log("this king_from_black original " + chess_board_0x88_original[IND_KING_FROM_BLACK]);
-        console.log("out king_from_black " + chess_board_0x88[IND_KING_FROM_BLACK]);
+        console.log("this king_from_black original " + chess_board_0x88_original[IND_KING_FROM_BLACK_CB]);
+        console.log("out king_from_black " + chess_board_0x88[IND_KING_FROM_BLACK_CB]);
     };
-    if (chess_board_0x88_original[IND_SCORE] != chess_board_0x88[IND_SCORE]) {
+    if (chess_board_0x88_original[IND_SCORE_CB] != chess_board_0x88[IND_SCORE_CB]) {
         is_test_ok = 0;
-        console.log("this score original " + chess_board_0x88_original[IND_SCORE]);
-        console.log("out score " + chess_board_0x88[IND_SCORE]);
+        console.log("this score original " + chess_board_0x88_original[IND_SCORE_CB]);
+        console.log("out score " + chess_board_0x88[IND_SCORE_CB]);
     };
 
     //console.log("**************** test_compare_chess_board_0x88");
@@ -362,31 +364,31 @@ const test_compare_chess_board_0x88 = function (chess_board_0x88_original, chess
 * @param {Int32Array} chess_board_0x88_from
 * @returns {void}
 */
-const save_chess_board_0x88 = function (chess_board_0x88_to, chess_board_0x88_from) {
+const save_chess_board_0x88_cb = function (chess_board_0x88_to, chess_board_0x88_from) {
     //console.log("Make_move_0x88_C->do_undo_moves");
     for (let i = 0; i < 128; i++) {
         chess_board_0x88_to[i] = chess_board_0x88_from[i];
     }
 
-    chess_board_0x88_to[IND_KING_FROM_WHITE] = chess_board_0x88_from[IND_KING_FROM_WHITE];
-    chess_board_0x88_to[IND_KING_FROM_BLACK] = chess_board_0x88_from[IND_KING_FROM_BLACK];
+    chess_board_0x88_to[IND_KING_FROM_WHITE_CB] = chess_board_0x88_from[IND_KING_FROM_WHITE_CB];
+    chess_board_0x88_to[IND_KING_FROM_BLACK_CB] = chess_board_0x88_from[IND_KING_FROM_BLACK_CB];
 
     // цвет хода 0 - черные 1 - белые
-    chess_board_0x88_to[SIDE_TO_MOVE] = chess_board_0x88_from[SIDE_TO_MOVE];
+    chess_board_0x88_to[SIDE_TO_MOVE_CB] = chess_board_0x88_from[SIDE_TO_MOVE_CB];
     // разрешение взятия на проходе 1/0
-    chess_board_0x88_to[IND_EN_PASSANT_YES] = chess_board_0x88_from[IND_EN_PASSANT_YES];
+    chess_board_0x88_to[IND_EN_PASSANT_YES_CB] = chess_board_0x88_from[IND_EN_PASSANT_YES_CB];
     // координата битого поля
-    chess_board_0x88_to[IND_EN_PASSANT_TARGET_SQUARE] = chess_board_0x88_from[IND_EN_PASSANT_TARGET_SQUARE];
+    chess_board_0x88_to[IND_EN_PASSANT_TARGET_SQUARE_CB] = chess_board_0x88_from[IND_EN_PASSANT_TARGET_SQUARE_CB];
     // рокировка белых в длинную сторону   1/0
-    chess_board_0x88_to[IND_CASTLING_Q] = chess_board_0x88_from[IND_CASTLING_Q];
+    chess_board_0x88_to[IND_CASTLING_Q_CB] = chess_board_0x88_from[IND_CASTLING_Q_CB];
     // рокировка белых в короткую сторону  1/0
-    chess_board_0x88_to[IND_CASTLING_K] = chess_board_0x88_from[IND_CASTLING_K];
+    chess_board_0x88_to[IND_CASTLING_K_CB] = chess_board_0x88_from[IND_CASTLING_K_CB];
     // рокировка черных в длинную сторону  1/0
-    chess_board_0x88_to[IND_CASTLING_q] = chess_board_0x88_from[IND_CASTLING_q];
+    chess_board_0x88_to[IND_CASTLING_q_CB] = chess_board_0x88_from[IND_CASTLING_q_CB];
     // рокировка черных в короткую сторону 1/0
-    chess_board_0x88_to[IND_CASTLING_k] = chess_board_0x88_from[IND_CASTLING_k];
+    chess_board_0x88_to[IND_CASTLING_k_CB] = chess_board_0x88_from[IND_CASTLING_k_CB];
 
-    chess_board_0x88_to[IND_SCORE] = chess_board_0x88_from[IND_SCORE];
+    chess_board_0x88_to[IND_SCORE_CB] = chess_board_0x88_from[IND_SCORE_CB];
 }
 
 // https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
@@ -397,7 +399,7 @@ const save_chess_board_0x88 = function (chess_board_0x88_to, chess_board_0x88_fr
  * @param {string} fen 
  * @returns {void}
 */
-const set_board_from_fen_0x88 = function (fen, chess_board_0x88) {
+const set_board_from_fen_0x88_cb = function (fen, chess_board_0x88) {
     //console.log('ChessBoard_0x88_C->set_0x88_from_fen');
 
     let char = "";
@@ -407,7 +409,7 @@ const set_board_from_fen_0x88 = function (fen, chess_board_0x88) {
     let x07_en_passant = -1;
     let y07_en_passant = -1;
 
-    iniPositionFor_0(chess_board_0x88);
+    iniPositionFor_0_cb(chess_board_0x88);
 
     //console.log('fen.length ' + fen.length);
 
@@ -431,37 +433,37 @@ const set_board_from_fen_0x88 = function (fen, chess_board_0x88) {
 
         } else if (void_f == 1) {// цвет хода 0 - черные,1 - белые
             if (char == "w") {
-                chess_board_0x88[SIDE_TO_MOVE] = WHITE;
+                chess_board_0x88[SIDE_TO_MOVE_CB] = WHITE_CB;
             } else if (char == "b") {
-                chess_board_0x88[SIDE_TO_MOVE] = BLACK;
+                chess_board_0x88[SIDE_TO_MOVE_CB] = BLACK_CB;
             }
 
         } else if (void_f == 2) {// рокировки
             if (char == "K") { // короткая рокировка белых 
-                chess_board_0x88[IND_CASTLING_K] = 1;
+                chess_board_0x88[IND_CASTLING_K_CB] = 1;
             } else if (char == "Q") {// длинная рокировка белых
-                chess_board_0x88[IND_CASTLING_Q] = 1;
+                chess_board_0x88[IND_CASTLING_Q_CB] = 1;
             } else if (char == "k") {// короткая рокировка черных
-                chess_board_0x88[IND_CASTLING_k] = 1;
+                chess_board_0x88[IND_CASTLING_k_CB] = 1;
             } else if (char == "q") {// длинная рокировка черных
-                chess_board_0x88[IND_CASTLING_q] = 1;
+                chess_board_0x88[IND_CASTLING_q_CB] = 1;
             }
 
         } else if (void_f == 3) {// взятие на проходе
             //console.log('fen[' + i_fen + '] ' + char);
 
             if (char == "-") {
-                chess_board_0x88[IND_EN_PASSANT_YES] = 0;
-                chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE] = 0;
+                chess_board_0x88[IND_EN_PASSANT_YES_CB] = 0;
+                chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE_CB] = 0;
             } else {
                 // 
                 if (x07_en_passant == -1) {
-                    x07_en_passant = letter_to_x_coordinate(char);
+                    x07_en_passant = letter_to_x_coordinate_cb(char);
                 } else {
                     y07_en_passant = 8 - Number(char);
-                    chess_board_0x88[IND_EN_PASSANT_YES] = 1;
+                    chess_board_0x88[IND_EN_PASSANT_YES_CB] = 1;
                     // 
-                    chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE] = x07_y07_to_0x88(x07_en_passant, y07_en_passant);
+                    chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE_CB] = x07_y07_to_0x88_cb(x07_en_passant, y07_en_passant);
                     //console.log('x07_en_passant ' + x07_en_passant);
                     //console.log('y07_en_passant ' + y07_en_passant);
                     //console.log('this.en_passant_target_square ' + this.en_passant_target_square);
@@ -489,7 +491,7 @@ const set_board_from_fen_0x88 = function (fen, chess_board_0x88) {
  * @param {string} letter
  * @returns {number}
 */
-const letter_to_x_coordinate = function (letter) {
+const letter_to_x_coordinate_cb = function (letter) {
     if (letter == "a") return 0;
     if (letter == "b") return 1;
     if (letter == "c") return 2;
@@ -515,50 +517,50 @@ const letter_to_x_coordinate = function (letter) {
 const char_fen_to_board = function (char, x, y, chess_board_0x88) {
 
     let delta_x = 1;
-    let z_0x88 = x07_y07_to_0x88(x, y);
+    let z_0x88 = x07_y07_to_0x88_cb(x, y);
 
     // смотрим символ из фен строки
     switch (char) {
         //черные фигуры
         case "k":// король
-            chess_board_0x88[z_0x88] = B_KING;
-            chess_board_0x88[IND_KING_FROM_BLACK] = z_0x88;
+            chess_board_0x88[z_0x88] = B_KING_CB;
+            chess_board_0x88[IND_KING_FROM_BLACK_CB] = z_0x88;
             break;
         case "q":// ферзь
-            chess_board_0x88[z_0x88] = B_QUEEN;
+            chess_board_0x88[z_0x88] = B_QUEEN_CB;
             break;
         case "r":// ладья
-            chess_board_0x88[z_0x88] = B_ROOK;
+            chess_board_0x88[z_0x88] = B_ROOK_CB;
             break;
         case "b":// слон
-            chess_board_0x88[z_0x88] = B_BISHOP;
+            chess_board_0x88[z_0x88] = B_BISHOP_CB;
             break;
         case "n":// конь
-            chess_board_0x88[z_0x88] = B_KNIGHT;
+            chess_board_0x88[z_0x88] = B_KNIGHT_CB;
             break;
         case "p":// пешка
-            chess_board_0x88[z_0x88] = B_PAWN;
+            chess_board_0x88[z_0x88] = B_PAWN_CB;
             break;
 
         //белые фигуры
         case "K":// король
-            chess_board_0x88[z_0x88] = W_KING;
-            chess_board_0x88[IND_KING_FROM_WHITE] = z_0x88;
+            chess_board_0x88[z_0x88] = W_KING_CB;
+            chess_board_0x88[IND_KING_FROM_WHITE_CB] = z_0x88;
             break;
         case "Q":// ферзь
-            chess_board_0x88[z_0x88] = W_QUEEN;
+            chess_board_0x88[z_0x88] = W_QUEEN_CB;
             break;
         case "R":// ладья
-            chess_board_0x88[z_0x88] = W_ROOK;
+            chess_board_0x88[z_0x88] = W_ROOK_CB;
             break;
         case "B":// слон
-            chess_board_0x88[z_0x88] = W_BISHOP;
+            chess_board_0x88[z_0x88] = W_BISHOP_CB;
             break;
         case "N":// конь
-            chess_board_0x88[z_0x88] = W_KNIGHT;
+            chess_board_0x88[z_0x88] = W_KNIGHT_CB;
             break;
         case "P":// пешка
-            chess_board_0x88[z_0x88] = W_PAWN;
+            chess_board_0x88[z_0x88] = W_PAWN_CB;
             break;
 
         // количество пустых клеток   
@@ -576,7 +578,7 @@ const char_fen_to_board = function (char, x, y, chess_board_0x88) {
 * @param {Int32Array} chess_board_0x88 
 * @returns {string}
 */
-const set_fen_from_0x88 = function (chess_board_0x88) {//
+const set_fen_from_0x88_cb = function (chess_board_0x88) {//
     //console.log('Chess_board_0x88_C->set_fen_from_8x8************************');
     let z = 0;
     let i = 0;
@@ -585,16 +587,16 @@ const set_fen_from_0x88 = function (chess_board_0x88) {//
     for (let y = 0; y < 8; y++) {
         for (let x = 0; x < 8; x++) {
             // перводим координаты х,у в координату одномерного массива
-            z = x07_y07_to_0x88(x, y);
+            z = x07_y07_to_0x88_cb(x, y);
 
-            if (chess_board_0x88[z] != PIECE_NO) {
+            if (chess_board_0x88[z] != PIECE_NO_CB) {
                 if (i == 0) {
                     // фигура есть. символ добавляем 
-                    fen = fen + fen_piece_to_char(chess_board_0x88, z);
+                    fen = fen + fen_piece_to_char_cb(chess_board_0x88, z);
                 } else {
                     fen = fen + i;
                     i = 0;
-                    fen = fen + fen_piece_to_char(chess_board_0x88, z);
+                    fen = fen + fen_piece_to_char_cb(chess_board_0x88, z);
                 }
             } else {
                 i = i + 1;
@@ -609,7 +611,7 @@ const set_fen_from_0x88 = function (chess_board_0x88) {//
     fen = fen + " ";
 
     // цвет хода
-    if (chess_board_0x88[SIDE_TO_MOVE] == WHITE) {
+    if (chess_board_0x88[SIDE_TO_MOVE_CB] == WHITE_CB) {
         fen = fen + "w";
     } else {
         fen = fen + "b";
@@ -617,22 +619,22 @@ const set_fen_from_0x88 = function (chess_board_0x88) {//
     fen = fen + " ";
     let c = 0;
     // разрешения на рокировки. в данном случае короткая для белых
-    if (chess_board_0x88[IND_CASTLING_K] == 1) {
+    if (chess_board_0x88[IND_CASTLING_K_CB] == 1) {
         c = 1;
         fen = fen + "K";
     }
     //длинная для белых
-    if (chess_board_0x88[IND_CASTLING_Q] == 1) {
+    if (chess_board_0x88[IND_CASTLING_Q_CB] == 1) {
         c = 1;
         fen = fen + "Q";
     }
     // короткая для черных
-    if (chess_board_0x88[IND_CASTLING_k] == 1) {
+    if (chess_board_0x88[IND_CASTLING_k_CB] == 1) {
         c = 1;
         fen = fen + "k";
     }
     // длинная для черных
-    if (chess_board_0x88[IND_CASTLING_q] == 1) {
+    if (chess_board_0x88[IND_CASTLING_q_CB] == 1) {
         c = 1;
         fen = fen + "q";
     }
@@ -644,10 +646,10 @@ const set_fen_from_0x88 = function (chess_board_0x88) {//
         fen = fen + " ";
     }
     // взятие на проходе. пишем вида a3
-    let yy = 8 - s_0x88_to_y07(chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE]);
-    if (chess_board_0x88[IND_EN_PASSANT_YES] == 1) {
+    let yy = 8 - s_0x88_to_y07_cb(chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE_CB]);
+    if (chess_board_0x88[IND_EN_PASSANT_YES_CB] == 1) {
 
-        fen = fen + LET_COOR[s_0x88_to_x07(chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE])];
+        fen = fen + LET_COOR_CB[s_0x88_to_x07_cb(chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE_CB])];
         fen = fen + yy;
     } else {
         fen = fen + "-";
@@ -664,64 +666,64 @@ const set_fen_from_0x88 = function (chess_board_0x88) {//
 * @param {number} z 
 * @returns {string}
 */
-const fen_piece_to_char = function (chess_board_0x88, z) {
+const fen_piece_to_char_cb = function (chess_board_0x88, z) {
     let char = "";
     // KING
-    if (chess_board_0x88[z] == W_KING) {
+    if (chess_board_0x88[z] == W_KING_CB) {
         char = "K";
         return char;
     }
-    if (chess_board_0x88[z] == B_KING) {
+    if (chess_board_0x88[z] == B_KING_CB) {
         char = "k";
         return char;
     }
 
     // QUEEN
-     if (chess_board_0x88[z] == W_QUEEN) {
+     if (chess_board_0x88[z] == W_QUEEN_CB) {
         char = "Q";
         return char;
     }
-    if (chess_board_0x88[z] == B_QUEEN) {
+    if (chess_board_0x88[z] == B_QUEEN_CB) {
         char = "q";
         return char;
     }
 
     // ROOK
-    if (chess_board_0x88[z] == W_ROOK) {
+    if (chess_board_0x88[z] == W_ROOK_CB) {
         char = "R";
         return char;
     }
-    if (chess_board_0x88[z] == B_ROOK) {
+    if (chess_board_0x88[z] == B_ROOK_CB) {
         char = "r";
         return char;
     }
 
     // BISHOP
-    if (chess_board_0x88[z] == W_BISHOP) {
+    if (chess_board_0x88[z] == W_BISHOP_CB) {
         char = "B";
         return char;
     }
-    if (chess_board_0x88[z] == B_BISHOP) {
+    if (chess_board_0x88[z] == B_BISHOP_CB) {
         char = "b";
         return char;
     }
 
     // KNIGHT
-    if (chess_board_0x88[z] == W_KNIGHT) {
+    if (chess_board_0x88[z] == W_KNIGHT_CB) {
         char = "N";
         return char;
     }
-    if (chess_board_0x88[z] == B_KNIGHT) {
+    if (chess_board_0x88[z] == B_KNIGHT_CB) {
         char = "n";
         return char;
     }
 
     // PAWN
-    if (chess_board_0x88[z] == W_PAWN) {
+    if (chess_board_0x88[z] == W_PAWN_CB) {
         char = "P";
         return char;
     }
-    if (chess_board_0x88[z] == B_PAWN) {
+    if (chess_board_0x88[z] == B_PAWN_CB) {
         char = "p";
         return char;
     }
@@ -735,16 +737,16 @@ const fen_piece_to_char = function (chess_board_0x88, z) {
  * @param {number} piece_color
  * @returns {number}
 */
-const searching_king = function (chess_board_0x88, piece_color) {
+const searching_king_cb = function (chess_board_0x88, piece_color) {
 
     for (let i = 0; i < 128; i++) {
         if ((i & 136) == 0) {// 136 0x88
-            if (chess_board_0x88[i] == W_KING) {
+            if (chess_board_0x88[i] == W_KING_CB) {
                 if (piece_color == 1) {
                     return i;
                 }
             }
-            if (chess_board_0x88[i] == B_KING) {
+            if (chess_board_0x88[i] == B_KING_CB) {
                 if (piece_color == 0) {
                     return i;
                 }
@@ -760,7 +762,7 @@ const searching_king = function (chess_board_0x88, piece_color) {
  * @param {Int32Array} chess_board_0x88 
  * @returns {void}
 */
-const iniStartPositionForWhite = function (chess_board_0x88) {
+const iniStartPositionForWhite_cb = function (chess_board_0x88) {
 
 // 0- нет фигуры, 
 // 1- пешка, 2-конь, 3-слон, 4-ладья,  5-ферзь,  6-король <- белые фигуры 
@@ -768,35 +770,35 @@ const iniStartPositionForWhite = function (chess_board_0x88) {
 
     // раставляем фигуры
     chess_board_0x88.set([
-        B_ROOK, B_KNIGHT, B_BISHOP, B_QUEEN, B_KING, B_BISHOP, B_KNIGHT, B_ROOK, 0, 0, 0, 0, 0, 0, 0, 0,
-        B_PAWN, B_PAWN, B_PAWN, B_PAWN, B_PAWN, B_PAWN, B_PAWN, B_PAWN, 0, 0, 0, 0, 0, 0, 0, 0,
+        B_ROOK_CB, B_KNIGHT_CB, B_BISHOP_CB, B_QUEEN_CB, B_KING_CB, B_BISHOP_CB, B_KNIGHT_CB, B_ROOK_CB, 0, 0, 0, 0, 0, 0, 0, 0,
+        B_PAWN_CB, B_PAWN_CB, B_PAWN_CB, B_PAWN_CB, B_PAWN_CB, B_PAWN_CB, B_PAWN_CB, B_PAWN_CB, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        W_PAWN, W_PAWN, W_PAWN, W_PAWN, W_PAWN, W_PAWN, W_PAWN, W_PAWN, 0, 0, 0, 0, 0, 0, 0, 0,
-        W_ROOK, W_KNIGHT, W_BISHOP, W_QUEEN, W_KING, W_BISHOP, W_KNIGHT, W_ROOK, 0, 0, 0, 0, 0, 0, 0, 0
+        W_PAWN_CB, W_PAWN_CB, W_PAWN_CB, W_PAWN_CB, W_PAWN_CB, W_PAWN_CB, W_PAWN_CB, W_PAWN_CB, 0, 0, 0, 0, 0, 0, 0, 0,
+        W_ROOK_CB, W_KNIGHT_CB, W_BISHOP_CB, W_QUEEN_CB, W_KING_CB, W_BISHOP_CB, W_KNIGHT_CB, W_ROOK_CB, 0, 0, 0, 0, 0, 0, 0, 0
     ]);
 
-    chess_board_0x88[IND_KING_FROM_WHITE] = 116;
-    chess_board_0x88[IND_KING_FROM_BLACK] = 4;
+    chess_board_0x88[IND_KING_FROM_WHITE_CB] = 116;
+    chess_board_0x88[IND_KING_FROM_BLACK_CB] = 4;
 
     // цвет хода 0 - черные 1 - белые
-    chess_board_0x88[SIDE_TO_MOVE] = 1;
+    chess_board_0x88[SIDE_TO_MOVE_CB] = 1;
     // разрешение взятия на проходе 1/0
-    chess_board_0x88[IND_EN_PASSANT_YES] = 0;
+    chess_board_0x88[IND_EN_PASSANT_YES_CB] = 0;
     // координата битого поля
-    chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE] = 0;
+    chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE_CB] = 0;
     // рокировка белых в длинную сторону   1/0
-    chess_board_0x88[IND_CASTLING_Q] = 1;
+    chess_board_0x88[IND_CASTLING_Q_CB] = 1;
     // рокировка белых в короткую сторону  1/0
-    chess_board_0x88[IND_CASTLING_K] = 1;
+    chess_board_0x88[IND_CASTLING_K_CB] = 1;
     // рокировка черных в длинную сторону  1/0
-    chess_board_0x88[IND_CASTLING_q] = 1;
+    chess_board_0x88[IND_CASTLING_q_CB] = 1;
     // рокировка черных в короткую сторону 1/0
-    chess_board_0x88[IND_CASTLING_k] = 1;
+    chess_board_0x88[IND_CASTLING_k_CB] = 1;
 
-    chess_board_0x88[IND_SCORE] = -1;
+    chess_board_0x88[IND_SCORE_CB] = -1;
 }
 
 // нулевая позиция. нужна когда мы раставляем фигуры по фену
@@ -804,7 +806,7 @@ const iniStartPositionForWhite = function (chess_board_0x88) {
  * @param {Int32Array} chess_board_0x88 
  * @returns {void}
 */
-const iniPositionFor_0 = function (chess_board_0x88) {
+const iniPositionFor_0_cb = function (chess_board_0x88) {
 
     // раставляем фигуры
     chess_board_0x88.set([
@@ -818,34 +820,36 @@ const iniPositionFor_0 = function (chess_board_0x88) {
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
     ]);
 
-    chess_board_0x88[IND_KING_FROM_WHITE] = 0;
-    chess_board_0x88[IND_KING_FROM_BLACK] = 0;
+    chess_board_0x88[IND_KING_FROM_WHITE_CB] = 0;
+    chess_board_0x88[IND_KING_FROM_BLACK_CB] = 0;
 
     // цвет хода 0 - черные 1 - белые
-    chess_board_0x88[SIDE_TO_MOVE] = 0;
+    chess_board_0x88[SIDE_TO_MOVE_CB] = 0;
     // разрешение взятия на проходе 1/0
-    chess_board_0x88[IND_EN_PASSANT_YES] = 0;
+    chess_board_0x88[IND_EN_PASSANT_YES_CB] = 0;
     // координата битого поля
-    chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE] = 0;
+    chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE_CB] = 0;
     // рокировка белых в длинную сторону   1/0
-    chess_board_0x88[IND_CASTLING_Q] = 0;
+    chess_board_0x88[IND_CASTLING_Q_CB] = 0;
     // рокировка белых в короткую сторону  1/0
-    chess_board_0x88[IND_CASTLING_K] = 0;
+    chess_board_0x88[IND_CASTLING_K_CB] = 0;
     // рокировка черных в длинную сторону  1/0
-    chess_board_0x88[IND_CASTLING_q] = 0;
+    chess_board_0x88[IND_CASTLING_q_CB] = 0;
     // рокировка черных в короткую сторону 1/0
-    chess_board_0x88[IND_CASTLING_k] = 0;
+    chess_board_0x88[IND_CASTLING_k_CB] = 0;
 
-    chess_board_0x88[IND_SCORE] = -1;
+    chess_board_0x88[IND_SCORE_CB] = -1;
 }
 
 export {
-    x07_y07_to_0x88, s_0x88_to_x07, s_0x88_to_y07,
-    test_print_any_0x88, test_print_piese_0x88, test_print_piese_color_0x88, test_print_piese_in_line_0x88, test_compare_chess_board_0x88,
-    save_chess_board_0x88, set_board_from_fen_0x88, set_fen_from_0x88, searching_king, iniStartPositionForWhite, letter_to_x_coordinate,
-    IND_MAX, SIDE_TO_MOVE, LET_COOR,
-    BLACK, WHITE, PIECE_NO, W_PAWN, W_KNIGHT, W_BISHOP, W_ROOK, W_QUEEN, W_KING, B_PAWN, B_KNIGHT, B_BISHOP, B_ROOK, B_QUEEN, B_KING,
-    IND_CASTLING_Q, IND_CASTLING_q, IND_CASTLING_K, IND_CASTLING_k, IND_HALFMOVE_CLOCK, IND_FULLMOVE_NUMBER, PIECE_NAME, 
-    IND_EN_PASSANT_YES, IND_EN_PASSANT_TARGET_SQUARE, IND_KING_FROM_WHITE, IND_KING_FROM_BLACK, IND_SCORE,
+    x07_y07_to_0x88_cb, s_0x88_to_x07_cb, s_0x88_to_y07_cb,
+    test_print_any_0x88_cb, test_print_piese_0x88_cb, test_print_piese_color_0x88_cb, test_print_piese_in_line_0x88_cb, 
+    test_compare_chess_board_0x88_cb,save_chess_board_0x88_cb, set_board_from_fen_0x88_cb, set_fen_from_0x88_cb, 
+    searching_king_cb, iniStartPositionForWhite_cb, letter_to_x_coordinate_cb,
+    IND_MAX_CB, SIDE_TO_MOVE_CB, LET_COOR_CB,
+    BLACK_CB, WHITE_CB, PIECE_NO_CB, W_PAWN_CB, W_KNIGHT_CB, W_BISHOP_CB, W_ROOK_CB, W_QUEEN_CB, W_KING_CB, B_PAWN_CB, 
+    B_KNIGHT_CB, B_BISHOP_CB, B_ROOK_CB, B_QUEEN_CB, B_KING_CB, IND_CASTLING_Q_CB, IND_CASTLING_q_CB, IND_CASTLING_K_CB,
+    IND_CASTLING_k_CB, IND_HALFMOVE_CLOCK_CB, IND_FULLMOVE_NUMBER_CB, PIECE_NAME_CB, IND_EN_PASSANT_YES_CB, 
+    IND_EN_PASSANT_TARGET_SQUARE_CB, IND_KING_FROM_WHITE_CB, IND_KING_FROM_BLACK_CB, IND_SCORE_CB,
     SQUARE_64_to_128_CB,  SQUARE_128_to_64_CB
 };

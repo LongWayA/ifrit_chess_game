@@ -7,17 +7,40 @@
 */
 
 import {
-    SIDE_TO_MOVE,
-    BLACK, WHITE, W_PAWN, W_KNIGHT, W_BISHOP, W_ROOK, W_QUEEN, W_KING, B_PAWN, B_KNIGHT, B_BISHOP, B_ROOK, B_QUEEN, B_KING,
-    IND_EN_PASSANT_YES, IND_EN_PASSANT_TARGET_SQUARE
+    x07_y07_to_0x88_cb, s_0x88_to_x07_cb, s_0x88_to_y07_cb,
+    test_print_any_0x88_cb, test_print_piese_0x88_cb, test_print_piese_color_0x88_cb, test_print_piese_in_line_0x88_cb, 
+    test_compare_chess_board_0x88_cb,save_chess_board_0x88_cb, set_board_from_fen_0x88_cb, set_fen_from_0x88_cb, 
+    searching_king_cb, iniStartPositionForWhite_cb, letter_to_x_coordinate_cb,
+    IND_MAX_CB, SIDE_TO_MOVE_CB, LET_COOR_CB,
+    BLACK_CB, WHITE_CB, PIECE_NO_CB, W_PAWN_CB, W_KNIGHT_CB, W_BISHOP_CB, W_ROOK_CB, W_QUEEN_CB, W_KING_CB, B_PAWN_CB, 
+    B_KNIGHT_CB, B_BISHOP_CB, B_ROOK_CB, B_QUEEN_CB, B_KING_CB, IND_CASTLING_Q_CB, IND_CASTLING_q_CB, IND_CASTLING_K_CB,
+    IND_CASTLING_k_CB, IND_HALFMOVE_CLOCK_CB, IND_FULLMOVE_NUMBER_CB, PIECE_NAME_CB, IND_EN_PASSANT_YES_CB, 
+    IND_EN_PASSANT_TARGET_SQUARE_CB, IND_KING_FROM_WHITE_CB, IND_KING_FROM_BLACK_CB, IND_SCORE_CB,
+    SQUARE_64_to_128_CB,  SQUARE_128_to_64_CB
 } from "./chess_board_0x88.js";
 
 import {
-    clear_list, add_packing_move, get_name_capture_piece,
-    return_type_captures_pawn_promo, return_type_simple_move,
-    LENGTH_LIST, IND_PIESE_COLOR, IND_NUMBER_CAPTURES_MOVE, IND_NUMBER_MOVE,
-    IND_PROMO_QUEEN, IND_PROMO_ROOK, IND_PROMO_BISHOP, IND_PROMO_KNIGHT, MOVE_NO,
-    EP_CAPTURES, MOVE_KING_QUEEN_CASTLE
+    clear_list_ml, add_packing_move_ml, get_type_move_ml, get_from_ml, get_to_ml, get_name_capture_piece_ml, set_color_ml, 
+    set_number_captures_move_ml, sorting_list_ml, test_compare_list_from_ml, test_print_i_move_list_ml, test_print_list_ml, 
+    save_list_from_ml, move_is_found_ml, return_i_move_ml, move_to_string_uci_ml, return_type_captures_pawn_promo_ml, 
+    return_type_simple_move_ml, type_move_to_name_piese_ml, type_move_to_name_piese_f_ml, return_promo_piece_from_type_move_ml, 
+    set_move_after_the_captures_ml, sorting_list_history_heuristic_ml, set_move_in_0_ml,
+    LENGTH_LIST_ML, IND_PIESE_COLOR_ML, IND_NUMBER_CAPTURES_MOVE_ML, IND_NUMBER_MOVE_ML,
+    IND_PROMO_QUEEN_ML, IND_PROMO_ROOK_ML, IND_PROMO_BISHOP_ML, IND_PROMO_KNIGHT_ML,
+    MOVE_NO_ML, CAPTURES_PAWN_QUEEN_PROMO_QUEEN_ML, CAPTURES_PAWN_ROOK_PROMO_QUEEN_ML, CAPTURES_PAWN_BISHOP_PROMO_QUEEN_ML,
+    CAPTURES_PAWN_KNIGHT_PROMO_QUEEN_ML, CAPTURES_PAWN_QUEEN_PROMO_ROOK_ML, CAPTURES_PAWN_ROOK_PROMO_ROOK_ML,
+    CAPTURES_PAWN_BISHOP_PROMO_ROOK_ML, CAPTURES_PAWN_KNIGHT_PROMO_ROOK_ML, CAPTURES_PAWN_QUEEN_PROMO_BISHOP_ML,
+    CAPTURES_PAWN_ROOK_PROMO_BISHOP_ML, CAPTURES_PAWN_BISHOP_PROMO_BISHOP_ML, CAPTURES_PAWN_KNIGHT_PROMO_BISHOP_ML,
+    CAPTURES_PAWN_QUEEN_PROMO_KNIGHT_ML, CAPTURES_PAWN_ROOK_PROMO_KNIGHT_ML, CAPTURES_PAWN_BISHOP_PROMO_KNIGHT_ML,
+    CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT_ML, MOVE_PAWN_PROMO_QUEEN_ML, MOVE_PAWN_PROMO_ROOK_ML, MOVE_PAWN_PROMO_BISHOP_ML,
+    MOVE_PAWN_PROMO_KNIGHT_ML, CAPTURES_PAWN_QUEEN_ML, CAPTURES_PAWN_ROOK_ML, CAPTURES_PAWN_BISHOP_ML, CAPTURES_PAWN_KNIGHT_ML,
+    CAPTURES_KNIGHT_QUEEN_ML, CAPTURES_KNIGHT_ROOK_ML, CAPTURES_BISHOP_QUEEN_ML, CAPTURES_BISHOP_ROOK_ML, CAPTURES_ROOK_QUEEN_ML,
+    CAPTURES_KNIGHT_BISHOP_ML, CAPTURES_KNIGHT_KNIGHT_ML, CAPTURES_BISHOP_BISHOP_ML, CAPTURES_BISHOP_KNIGHT_ML, CAPTURES_ROOK_ROOK_ML,
+    CAPTURES_QUEEN_QUEEN_ML, CAPTURES_ROOK_BISHOP_ML, CAPTURES_ROOK_KNIGHT_ML, CAPTURES_QUEEN_ROOK_ML, CAPTURES_QUEEN_BISHOP_ML,
+    CAPTURES_QUEEN_KNIGHT_ML, CAPTURES_KING_QUEEN_ML, CAPTURES_KING_ROOK_ML, CAPTURES_KING_BISHOP_ML, CAPTURES_KING_KNIGHT_ML,
+    CAPTURES_PAWN_PAWN_ML, EP_CAPTURES_ML, CAPTURES_KNIGHT_PAWN_ML, CAPTURES_BISHOP_PAWN_ML, CAPTURES_ROOK_PAWN_ML,
+    CAPTURES_QUEEN_PAWN_ML, CAPTURES_KING_PAWN_ML, MOVE_QUEEN_ML, MOVE_ROOK_ML, MOVE_BISHOP_ML, MOVE_KNIGHT_ML, MOVE_KING_ML, MOVE_PAWN_ML,
+    MOVE_DOUBLE_PAWN_ML, MOVE_KING_CASTLE_ML, MOVE_KING_QUEEN_CASTLE_ML, TYPE_MOVE_NAME_ML
 } from "./move_list_0x88.js";
 
 /**
@@ -54,7 +77,7 @@ const H8 = 7;
 32  33  34    
 */
 // ходы короля. так же ходит ферзь
-const moves_king = [-16, -15, 1, 17, 16, 15, -1, -17];
+const moves_king = new Int32Array([-16, -15, 1, 17, 16, 15, -1, -17]);
 const moves_queen = moves_king;
 /*
  1      
@@ -62,14 +85,14 @@ const moves_queen = moves_king;
  33
 */
 // ходы ладьи
-const moves_rook = [-16, 1, 16, -1];
+const moves_rook = new Int32Array([-16, 1, 16, -1]);
 /*
  0    2     
    17
  32   34
 */
 // ходы слона
-const moves_bishop = [-15, 17, 15, -17];
+const moves_bishop = new Int32Array([-15, 17, 15, -17]);
 /*
      1---3    
  16    |   20
@@ -78,7 +101,7 @@ const moves_bishop = [-15, 17, 15, -17];
     65---67
 */
 // ходы коня
-const moves_knight = [-33, -31, -14, 18, 33, 31, 14, -18];
+const moves_knight = new Int32Array([-33, -31, -14, 18, 33, 31, 14, -18]);
 
 // генерируем всевозможные ходы, но не учитываем шахи и вскрытые шахи.
 /**
@@ -89,15 +112,18 @@ const moves_knight = [-33, -31, -14, 18, 33, 31, 14, -18];
 const generated_pseudo_legal_captures = function (chess_board_0x88, packing_moves) {
     //console.log('->generated_pseudo_legal_moves');
     // вывели из цикла чтобы определить один раз
-    let side_to_move = chess_board_0x88[SIDE_TO_MOVE];
+    let side_to_move = chess_board_0x88[SIDE_TO_MOVE_CB];
 
-    clear_list(packing_moves);
-    packing_moves[IND_PIESE_COLOR] = side_to_move;
+    clear_list_ml(packing_moves);
+    packing_moves[IND_PIESE_COLOR_ML] = side_to_move;
 
     for (let from = 0; from < 128; from++) {
-        generated_pseudo_legal_moves_one_piece(from, side_to_move, chess_board_0x88, packing_moves);
+        // если мы не вышли за пределы доски
+        if ((from & 136) == 0) {// 136 0x88
+            generated_pseudo_legal_moves_one_piece(from, side_to_move, chess_board_0x88, packing_moves);
+        }
     }
-    packing_moves[IND_NUMBER_CAPTURES_MOVE] = packing_moves[IND_NUMBER_MOVE];
+    packing_moves[IND_NUMBER_CAPTURES_MOVE_ML] = packing_moves[IND_NUMBER_MOVE_ML];
 }
 
 //  считаем ходы одной фигуры из конкретной позиции
@@ -110,12 +136,14 @@ const generated_pseudo_legal_captures = function (chess_board_0x88, packing_move
 const generated_pseudo_legal_moves_one_piece_for_gui = function (from, chess_board_0x88, packing_moves) {
     //console.log('->generated_pseudo_legal_moves');
     // тут определяем чтобы не менять вызов generated_pseudo_legal_moves_one_piece(from, side_to_move, ...
-    let side_to_move = chess_board_0x88[SIDE_TO_MOVE];
+    let side_to_move = chess_board_0x88[SIDE_TO_MOVE_CB];
 
-    clear_list(packing_moves);
-    packing_moves[IND_PIESE_COLOR] = side_to_move;
-
-    generated_pseudo_legal_moves_one_piece(from, side_to_move, chess_board_0x88, packing_moves);
+    clear_list_ml(packing_moves);
+    packing_moves[IND_PIESE_COLOR_ML] = side_to_move;
+    // если мы не вышли за пределы доски
+    if ((from & 136) == 0) {// 136 0x88
+        generated_pseudo_legal_moves_one_piece(from, side_to_move, chess_board_0x88, packing_moves);
+    }
 }
 
 
@@ -132,57 +160,56 @@ const generated_pseudo_legal_moves_one_piece = function (from, side_to_move, che
     let piece_name = -1;// имя фигуры типа 1,2, ...,6
     let piece_color = -1;// цвет фигуры 0 или 1
 
-    // если мы не вышли за пределы доски
-    if ((from & 136) == 0) {// 136 0x88
-        piece_name = chess_board_0x88[from];
-        piece_color = (chess_board_0x88[from] > W_KING) ? BLACK : WHITE;
 
-        // если фигура иммеет цвет ходящей стороны
-        if (piece_color == side_to_move) {
+    piece_name = chess_board_0x88[from];
+    //piece_color = (chess_board_0x88[from] > W_KING) ? BLACK : WHITE;
+    piece_color = 1 - (chess_board_0x88[from] >> 3);// тут магия 8( в битах это 00001000) (подсказал ИИ от Гугла) 1 для белых и 0 для черных.
 
-            // смотрим фигуру на доске
-            switch (piece_name) {
-                case W_KING:// KING
-                    // считаем взятия королем и заполняем список move_list_0x88_O
-                    generated_captures_moves_king(W_KING, WHITE, from, chess_board_0x88, packing_moves);
-                    break;
-                case B_KING:// KING                
-                    // считаем взятия королем и заполняем список move_list_0x88_O
-                    generated_captures_moves_king(B_KING, BLACK, from, chess_board_0x88, packing_moves);
-                    break;
-                case W_QUEEN://QUEEN
-                    generated_captures_moves_queen(W_QUEEN, WHITE, from, chess_board_0x88, packing_moves);
-                    break;
-                case B_QUEEN://QUEEN                
-                    generated_captures_moves_queen(B_QUEEN, BLACK, from, chess_board_0x88, packing_moves);
-                    break;
-                case W_ROOK://ROOK
-                    generated_captures_moves_rook(W_ROOK, WHITE, from, chess_board_0x88, packing_moves);
-                    break;
-                case B_ROOK://ROOK               
-                    generated_captures_moves_rook(B_ROOK, BLACK, from, chess_board_0x88, packing_moves);
-                    break;
-                case W_BISHOP://BISHOP
-                    generated_captures_moves_bishop(W_BISHOP, WHITE, from, chess_board_0x88, packing_moves);
-                    break;
-                case B_BISHOP://BISHOP                
-                    generated_captures_moves_bishop(B_BISHOP, BLACK, from, chess_board_0x88, packing_moves);
-                    break;
-                case W_KNIGHT://KNIGHT
-                    generated_captures_moves_knight(W_KNIGHT, WHITE, from, chess_board_0x88, packing_moves);
-                    break;
-                case B_KNIGHT://KNIGHT                
-                    generated_captures_moves_knight(B_KNIGHT, BLACK, from, chess_board_0x88, packing_moves);
-                    break;
-                case W_PAWN://PAWN
-                    generated_captures_moves_pawn(W_PAWN, WHITE, from, chess_board_0x88, packing_moves);
-                    break;
-                case B_PAWN://PAWN                
-                    generated_captures_moves_pawn(B_PAWN, BLACK, from, chess_board_0x88, packing_moves);
-                    break;
-                default://
-                // console.log("default");
-            }
+    // если фигура иммеет цвет ходящей стороны
+    if (piece_color == side_to_move) {
+
+        // смотрим фигуру на доске
+        switch (piece_name) {
+            case W_KING_CB:// KING
+                // считаем взятия королем и заполняем список move_list_0x88_O
+                generated_captures_moves_king(W_KING_CB, WHITE_CB, from, chess_board_0x88, packing_moves);
+                break;
+            case B_KING_CB:// KING                
+                // считаем взятия королем и заполняем список move_list_0x88_O
+                generated_captures_moves_king(B_KING_CB, BLACK_CB, from, chess_board_0x88, packing_moves);
+                break;
+            case W_QUEEN_CB://QUEEN
+                generated_captures_moves_queen(W_QUEEN_CB, WHITE_CB, from, chess_board_0x88, packing_moves);
+                break;
+            case B_QUEEN_CB://QUEEN                
+                generated_captures_moves_queen(B_QUEEN_CB, BLACK_CB, from, chess_board_0x88, packing_moves);
+                break;
+            case W_ROOK_CB://ROOK
+                generated_captures_moves_rook(W_ROOK_CB, WHITE_CB, from, chess_board_0x88, packing_moves);
+                break;
+            case B_ROOK_CB://ROOK               
+                generated_captures_moves_rook(B_ROOK_CB, BLACK_CB, from, chess_board_0x88, packing_moves);
+                break;
+            case W_BISHOP_CB://BISHOP
+                generated_captures_moves_bishop(W_BISHOP_CB, WHITE_CB, from, chess_board_0x88, packing_moves);
+                break;
+            case B_BISHOP_CB://BISHOP                
+                generated_captures_moves_bishop(B_BISHOP_CB, BLACK_CB, from, chess_board_0x88, packing_moves);
+                break;
+            case W_KNIGHT_CB://KNIGHT
+                generated_captures_moves_knight(W_KNIGHT_CB, WHITE_CB, from, chess_board_0x88, packing_moves);
+                break;
+            case B_KNIGHT_CB://KNIGHT                
+                generated_captures_moves_knight(B_KNIGHT_CB, BLACK_CB, from, chess_board_0x88, packing_moves);
+                break;
+            case W_PAWN_CB://PAWN
+                generated_captures_moves_pawn(W_PAWN_CB, WHITE_CB, from, chess_board_0x88, packing_moves);
+                break;
+            case B_PAWN_CB://PAWN                
+                generated_captures_moves_pawn(B_PAWN_CB, BLACK_CB, from, chess_board_0x88, packing_moves);
+                break;
+            default://
+            // console.log("default");
         }
     }
 }
@@ -206,22 +233,15 @@ const add_captures_move = function (piece_name, piece_color, from, to, chess_boa
     if (piece_captures == 0) {// проверяем клетку куда ходим. Если там нет фигур то можно ходить
         return 0;// можно продолжать луч
     }
-    piece_color_captures = (chess_board_0x88[to] > W_KING) ? BLACK : WHITE;// цвет взятой фигуры
+    //piece_color_captures = (chess_board_0x88[to] > W_KING) ? BLACK : WHITE;// цвет взятой фигуры
+    piece_color_captures = 1 - (chess_board_0x88[to] >> 3);
 
     if (piece_color != piece_color_captures) {// мы уже знаем что тут есть фигура и если цвет отличен, то это взятие  
         // определяем тип простых взятий по имени фигуры и имени взятой фигуры
-        type_move = return_type_simple_move(piece_name, piece_captures);
-
-        // TEST
-        // if ((type_move == MOVE_NO) || (type_move < MOVE_NO) || (type_move > MOVE_KING_QUEEN_CASTLE)) {
-        //     console.log("add_captures_move-> type_move !!!! type_move " + type_move);
-        //     console.log("add_captures_move-> type_move !!!! piece_name " + piece_name +" piece_captures "+ piece_captures);
-        //     //test_print_piese_0x88(chess_board_0x88);
-        //     //test_print_any_0x88(chess_board_0x88);
-        // }
+        type_move = return_type_simple_move_ml(piece_name, piece_captures);
 
         // добавляем взятие в список
-        add_packing_move(packing_moves, type_move, from, to, piece_captures);
+        add_packing_move_ml(packing_moves, type_move, from, to, piece_captures);
         return 1;// луч прерываем на вражеской фигуре включительно
     } else {//на свою фигуру не прыгаем. хода нет. 
         return 1;// луч прерываем на своей фигуре не включительно
@@ -436,24 +456,26 @@ const generated_moves_pawn_captures = function (piece_name, from, to_left, to_ri
 
     if ((to_left & 136) == 0) {// взятия налево если мы на доске
         piece_captures = chess_board_0x88[to_left];
-        piece_color_captures = (chess_board_0x88[to_left] > W_KING) ? BLACK : WHITE;
+        //piece_color_captures = (chess_board_0x88[to_left] > W_KING) ? BLACK : WHITE;
+        piece_color_captures = 1 - (chess_board_0x88[to_left] >> 3);
         if ((piece_captures != 0) && (piece_color != piece_color_captures)) {// 
-            type_move = return_type_simple_move(piece_name, piece_captures);
-            add_packing_move(packing_moves, type_move, from, to_left, piece_captures);
-        } else if ((chess_board_0x88[IND_EN_PASSANT_YES] == 1) && (chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE] == to_left)) {
-            type_move = EP_CAPTURES;
-            add_packing_move(packing_moves, type_move, from, to_left, piece_captures);
+            type_move = return_type_simple_move_ml(piece_name, piece_captures);
+            add_packing_move_ml(packing_moves, type_move, from, to_left, piece_captures);
+        } else if ((chess_board_0x88[IND_EN_PASSANT_YES_CB] == 1) && (chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE_CB] == to_left)) {
+            type_move = EP_CAPTURES_ML;
+            add_packing_move_ml(packing_moves, type_move, from, to_left, piece_captures);
         }
     }
     if ((to_right & 136) == 0) {// 136 0x88    
         piece_captures = chess_board_0x88[to_right];
-        piece_color_captures = (chess_board_0x88[to_right] > W_KING) ? BLACK : WHITE;
+        //piece_color_captures = (chess_board_0x88[to_right] > W_KING) ? BLACK : WHITE;
+        piece_color_captures = 1 - (chess_board_0x88[to_right] >> 3);
         if ((piece_captures != 0) && (piece_color != piece_color_captures)) {// 
-            type_move = return_type_simple_move(piece_name, piece_captures);
-            add_packing_move(packing_moves, type_move, from, to_right, piece_captures);
-        } else if ((chess_board_0x88[IND_EN_PASSANT_YES] == 1) && (chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE] == to_right)) {
-            type_move = EP_CAPTURES;
-            add_packing_move(packing_moves, type_move, from, to_right, piece_captures);
+            type_move = return_type_simple_move_ml(piece_name, piece_captures);
+            add_packing_move_ml(packing_moves, type_move, from, to_right, piece_captures);
+        } else if ((chess_board_0x88[IND_EN_PASSANT_YES_CB] == 1) && (chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE_CB] == to_right)) {
+            type_move = EP_CAPTURES_ML;
+            add_packing_move_ml(packing_moves, type_move, from, to_right, piece_captures);
         }
     }
 
@@ -478,37 +500,41 @@ const generated_captures_moves_pawn_promo = function (piece_name, from, to_left,
     // взятие пешкой влево с превращением
     if ((to_left & 136) == 0) {// 136 0x88                
         piece_captures = chess_board_0x88[to_left];
-        piece_color_captures = (chess_board_0x88[to_left] > W_KING) ? BLACK : WHITE;
+        //piece_color_captures = (chess_board_0x88[to_left] > W_KING) ? BLACK : WHITE;
+        piece_color_captures = 1 - (chess_board_0x88[to_left] >> 3);
+
         if ((piece_captures != 0) && (piece_color != piece_color_captures)) {//
             // по взятой фигуре возвращаем тип хода взятия с превращением
-            let out = return_type_captures_pawn_promo(piece_captures);
+            let out = return_type_captures_pawn_promo_ml(piece_captures);
 
-            type_move = out[IND_PROMO_QUEEN];// взятие с превращением в ферзь
-            add_packing_move(packing_moves, type_move, from, to_left, piece_captures);
-            type_move = out[IND_PROMO_ROOK];// взятие с превращением в ладью
-            add_packing_move(packing_moves, type_move, from, to_left, piece_captures);
-            type_move = out[IND_PROMO_BISHOP];
-            add_packing_move(packing_moves, type_move, from, to_left, piece_captures);
-            type_move = out[IND_PROMO_KNIGHT];
-            add_packing_move(packing_moves, type_move, from, to_left, piece_captures);
+            type_move = out[IND_PROMO_QUEEN_ML];// взятие с превращением в ферзь
+            add_packing_move_ml(packing_moves, type_move, from, to_left, piece_captures);
+            type_move = out[IND_PROMO_ROOK_ML];// взятие с превращением в ладью
+            add_packing_move_ml(packing_moves, type_move, from, to_left, piece_captures);
+            type_move = out[IND_PROMO_BISHOP_ML];
+            add_packing_move_ml(packing_moves, type_move, from, to_left, piece_captures);
+            type_move = out[IND_PROMO_KNIGHT_ML];
+            add_packing_move_ml(packing_moves, type_move, from, to_left, piece_captures);
 
         }
     }
     // взятие пешкой вправо с превращением
     if ((to_right & 136) == 0) {// 136 0x88      
         piece_captures = chess_board_0x88[to_right];
-        piece_color_captures = (chess_board_0x88[to_right] > W_KING) ? BLACK : WHITE;
-        if ((piece_captures != 0) && (piece_color != piece_color_captures)) {// 
-            let out = return_type_captures_pawn_promo(piece_captures);
+        //piece_color_captures = (chess_board_0x88[to_right] > W_KING) ? BLACK : WHITE;
+        piece_color_captures = 1 - (chess_board_0x88[to_right] >> 3);
 
-            type_move = out[IND_PROMO_QUEEN];// взятие с превращением в ферзь
-            add_packing_move(packing_moves, type_move, from, to_right, piece_captures);
-            type_move = out[IND_PROMO_ROOK];// взятие с превращением в ладью
-            add_packing_move(packing_moves, type_move, from, to_right, piece_captures);
-            type_move = out[IND_PROMO_BISHOP];
-            add_packing_move(packing_moves, type_move, from, to_right, piece_captures);
-            type_move = out[IND_PROMO_KNIGHT];
-            add_packing_move(packing_moves, type_move, from, to_right, piece_captures);
+        if ((piece_captures != 0) && (piece_color != piece_color_captures)) {// 
+            let out = return_type_captures_pawn_promo_ml(piece_captures);
+
+            type_move = out[IND_PROMO_QUEEN_ML];// взятие с превращением в ферзь
+            add_packing_move_ml(packing_moves, type_move, from, to_right, piece_captures);
+            type_move = out[IND_PROMO_ROOK_ML];// взятие с превращением в ладью
+            add_packing_move_ml(packing_moves, type_move, from, to_right, piece_captures);
+            type_move = out[IND_PROMO_BISHOP_ML];
+            add_packing_move_ml(packing_moves, type_move, from, to_right, piece_captures);
+            type_move = out[IND_PROMO_KNIGHT_ML];
+            add_packing_move_ml(packing_moves, type_move, from, to_right, piece_captures);
         }
     }
 }
@@ -528,12 +554,12 @@ const check_detected_generated_moves_king = function (from, piece_color, chess_b
         to = from + moves_king[j];
         if ((to & 136) == 0) {// если мы не вышли за пределы доски
             // если на клетке хода обнаружили короля проверим цвет, так как детектором и рокировки проверяем, а там свой король тусуется :)
-            if ((chess_board_0x88[to] == B_KING) && (piece_color == 1)) {
-                check = B_KING;
+            if ((chess_board_0x88[to] == B_KING_CB) && (piece_color == 1)) {
+                check = B_KING_CB;
                 return check;
             }
-            if ((chess_board_0x88[to] == W_KING) && (piece_color == 0)) {
-                check = W_KING;
+            if ((chess_board_0x88[to] == W_KING_CB) && (piece_color == 0)) {
+                check = W_KING_CB;
                 return check;
             }
         }
@@ -551,152 +577,152 @@ const check_detected_generated_moves_king = function (from, piece_color, chess_b
 const check_detected = function (from, piece_color, chess_board_0x88) {
 
     let check = -1;
-    let packing_moves_in = new Int32Array(LENGTH_LIST).fill(MOVE_NO);
+    let packing_moves_in = new Int32Array(LENGTH_LIST_ML).fill(MOVE_NO_ML);
     let number_move;
 
-    if (piece_color == WHITE) {
+    if (piece_color == WHITE_CB) {
 
-        clear_list(packing_moves_in);
+        clear_list_ml(packing_moves_in);
         // 1 шах от короля это если подошли к королю противника вплотную
-        if (check_detected_generated_moves_king(from, piece_color, chess_board_0x88) == B_KING) {
-            check = B_KING;
+        if (check_detected_generated_moves_king(from, piece_color, chess_board_0x88) == B_KING_CB) {
+            check = B_KING_CB;
             return check;
         }
 
 
-        clear_list(packing_moves_in);
+        clear_list_ml(packing_moves_in);
         // 2 шах от коня
-        generated_captures_moves_knight(W_KNIGHT, piece_color, from, chess_board_0x88, packing_moves_in);
+        generated_captures_moves_knight(W_KNIGHT_CB, piece_color, from, chess_board_0x88, packing_moves_in);
 
-        number_move = packing_moves_in[IND_NUMBER_MOVE];
+        number_move = packing_moves_in[IND_NUMBER_MOVE_ML];
 
         for (let i = 0; i < number_move; i++) {
 
 
-            if (get_name_capture_piece(i, packing_moves_in) == B_KNIGHT) {
-                check = B_KNIGHT;
+            if (get_name_capture_piece_ml(i, packing_moves_in) == B_KNIGHT_CB) {
+                check = B_KNIGHT_CB;
                 return check;
             }
         }
 
-        clear_list(packing_moves_in);
+        clear_list_ml(packing_moves_in);
         // 3 шах от слона + 1/2 шах от половины ходов ферзя как у слона
-        generated_captures_moves_bishop(W_BISHOP, piece_color, from, chess_board_0x88, packing_moves_in)
+        generated_captures_moves_bishop(W_BISHOP_CB, piece_color, from, chess_board_0x88, packing_moves_in)
 
-        number_move = packing_moves_in[IND_NUMBER_MOVE];
+        number_move = packing_moves_in[IND_NUMBER_MOVE_ML];
 
         for (let i = 0; i < number_move; i++) {
 
-            if (get_name_capture_piece(i, packing_moves_in) == B_BISHOP) {
-                check = B_BISHOP;
+            if (get_name_capture_piece_ml(i, packing_moves_in) == B_BISHOP_CB) {
+                check = B_BISHOP_CB;
                 return check;
             }
-            if (get_name_capture_piece(i, packing_moves_in) == B_QUEEN) {
-                check = B_QUEEN;
+            if (get_name_capture_piece_ml(i, packing_moves_in) == B_QUEEN_CB) {
+                check = B_QUEEN_CB;
                 return check;
             }
         }
 
-        clear_list(packing_moves_in);
+        clear_list_ml(packing_moves_in);
         // 4 шах от ладьи + 1/2 шах от половины ходов ферзя как у ладьи
-        generated_captures_moves_rook(W_ROOK, piece_color, from, chess_board_0x88, packing_moves_in);
+        generated_captures_moves_rook(W_ROOK_CB, piece_color, from, chess_board_0x88, packing_moves_in);
 
-        number_move = packing_moves_in[IND_NUMBER_MOVE];
+        number_move = packing_moves_in[IND_NUMBER_MOVE_ML];
 
         for (let i = 0; i < number_move; i++) {
 
-            if (get_name_capture_piece(i, packing_moves_in) == B_ROOK) {
-                check = B_ROOK;
+            if (get_name_capture_piece_ml(i, packing_moves_in) == B_ROOK_CB) {
+                check = B_ROOK_CB;
                 return check;
             }
-            if (get_name_capture_piece(i, packing_moves_in) == B_QUEEN) {
-                check = B_QUEEN;
+            if (get_name_capture_piece_ml(i, packing_moves_in) == B_QUEEN_CB) {
+                check = B_QUEEN_CB;
                 return check;
             }
         }
 
-        clear_list(packing_moves_in);
+        clear_list_ml(packing_moves_in);
         // 5 шах от пешек
-        generated_captures_moves_pawn(W_PAWN, piece_color, from, chess_board_0x88, packing_moves_in);
+        generated_captures_moves_pawn(W_PAWN_CB, piece_color, from, chess_board_0x88, packing_moves_in);
 
-        number_move = packing_moves_in[IND_NUMBER_MOVE];
+        number_move = packing_moves_in[IND_NUMBER_MOVE_ML];
 
         for (let i = 0; i < number_move; i++) {
 
-            if (get_name_capture_piece(i, packing_moves_in) == B_PAWN) {
-                check = B_PAWN;
+            if (get_name_capture_piece_ml(i, packing_moves_in) == B_PAWN_CB) {
+                check = B_PAWN_CB;
                 return check;
             }
         }
     } else {
 
-        clear_list(packing_moves_in);
+        clear_list_ml(packing_moves_in);
         // 1 шах от короля это если подошли к королю противника вплотную
-        if (check_detected_generated_moves_king(from, piece_color, chess_board_0x88) == W_KING) {
-            check = W_KING;
+        if (check_detected_generated_moves_king(from, piece_color, chess_board_0x88) == W_KING_CB) {
+            check = W_KING_CB;
             return check;
         }
 
-        clear_list(packing_moves_in);
+        clear_list_ml(packing_moves_in);
         // 2 шах от коня
-        generated_captures_moves_knight(B_KNIGHT, piece_color, from, chess_board_0x88, packing_moves_in);
+        generated_captures_moves_knight(B_KNIGHT_CB, piece_color, from, chess_board_0x88, packing_moves_in);
 
-        number_move = packing_moves_in[IND_NUMBER_MOVE];
+        number_move = packing_moves_in[IND_NUMBER_MOVE_ML];
 
         for (let i = 0; i < number_move; i++) {
 
-            if (get_name_capture_piece(i, packing_moves_in) == W_KNIGHT) {
-                check = W_KNIGHT;
+            if (get_name_capture_piece_ml(i, packing_moves_in) == W_KNIGHT_CB) {
+                check = W_KNIGHT_CB;
                 return check;
             }
         }
 
-        clear_list(packing_moves_in);
+        clear_list_ml(packing_moves_in);
         // 3 шах от слона + 1/2 шах от половины ходов ферзя как у слона
-        generated_captures_moves_bishop(B_BISHOP, piece_color, from, chess_board_0x88, packing_moves_in)
+        generated_captures_moves_bishop(B_BISHOP_CB, piece_color, from, chess_board_0x88, packing_moves_in)
 
-        number_move = packing_moves_in[IND_NUMBER_MOVE];
+        number_move = packing_moves_in[IND_NUMBER_MOVE_ML];
 
         for (let i = 0; i < number_move; i++) {
 
-            if (get_name_capture_piece(i, packing_moves_in) == W_BISHOP) {
-                check = W_BISHOP;
+            if (get_name_capture_piece_ml(i, packing_moves_in) == W_BISHOP_CB) {
+                check = W_BISHOP_CB;
                 return check;
             }
-            if (get_name_capture_piece(i, packing_moves_in) == W_QUEEN) {
-                check = W_QUEEN;
+            if (get_name_capture_piece_ml(i, packing_moves_in) == W_QUEEN_CB) {
+                check = W_QUEEN_CB;
                 return check;
             }
         }
 
-        clear_list(packing_moves_in);
+        clear_list_ml(packing_moves_in);
         // 4 шах от ладьи + 1/2 шах от половины ходов ферзя как у ладьи
-        generated_captures_moves_rook(B_ROOK, piece_color, from, chess_board_0x88, packing_moves_in);
+        generated_captures_moves_rook(B_ROOK_CB, piece_color, from, chess_board_0x88, packing_moves_in);
 
-        number_move = packing_moves_in[IND_NUMBER_MOVE];
+        number_move = packing_moves_in[IND_NUMBER_MOVE_ML];
 
         for (let i = 0; i < number_move; i++) {
 
-            if (get_name_capture_piece(i, packing_moves_in) == W_ROOK) {
-                check = W_ROOK;
+            if (get_name_capture_piece_ml(i, packing_moves_in) == W_ROOK_CB) {
+                check = W_ROOK_CB;
                 return check;
             }
-            if (get_name_capture_piece(i, packing_moves_in) == W_QUEEN) {
-                check = W_QUEEN;
+            if (get_name_capture_piece_ml(i, packing_moves_in) == W_QUEEN_CB) {
+                check = W_QUEEN_CB;
                 return check;
             }
         }
 
-        clear_list(packing_moves_in);
+        clear_list_ml(packing_moves_in);
         // 5 шах от пешек
-        generated_captures_moves_pawn(B_PAWN, piece_color, from, chess_board_0x88, packing_moves_in);
+        generated_captures_moves_pawn(B_PAWN_CB, piece_color, from, chess_board_0x88, packing_moves_in);
 
-        number_move = packing_moves_in[IND_NUMBER_MOVE];
+        number_move = packing_moves_in[IND_NUMBER_MOVE_ML];
 
         for (let i = 0; i < number_move; i++) {
 
-            if (get_name_capture_piece(i, packing_moves_in) == W_PAWN) {
-                check = W_PAWN;
+            if (get_name_capture_piece_ml(i, packing_moves_in) == W_PAWN_CB) {
+                check = W_PAWN_CB;
                 return check;
             }
         }
