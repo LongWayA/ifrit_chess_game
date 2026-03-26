@@ -49,8 +49,14 @@ import {
   MAX_DEPTH_PV, IND_TYPE_VARIANT_PV, IND_DEPTH_MAT_PV, IND_DEPTH_PV
 } from "../move_generator_0x88/pv_line_0x88.js";
 
-import { generated_pseudo_legal_captures } from "../move_generator_0x88/move_generator_captures_0x88.js";
-import { generated_pseudo_legal_quiet_moves } from "../move_generator_0x88/move_generator_quiet_0x88.js";
+import {     
+  generated_pseudo_legal_captures_mgc, generated_pseudo_legal_moves_one_piece_for_gui_mgc, check_detected_mgc
+ } from "../move_generator_0x88/move_generator_captures_0x88.js";
+import {     
+  generated_pseudo_legal_quiet_moves_mgq, generated_pseudo_legal_moves_one_piece_for_gui_qm_mgq,
+  A1_MGQ, B1_MGQ, C1_MGQ , D1_MGQ, E1_MGQ, F1_MGQ, G1_MGQ, H1_MGQ, 
+  A8_MGQ, B8_MGQ, C8_MGQ, D8_MGQ, E8_MGQ, F8_MGQ, G8_MGQ, H8_MGQ 
+} from "../move_generator_0x88/move_generator_quiet_0x88.js";
 
 import { do_moves_mm } from "../move_generator_0x88/make_move_0x88.js";
 import { undo_moves_um } from "../move_generator_0x88/unmake_move_0x88.js";
@@ -334,8 +340,8 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
 
   let node_root = 0;// количество финальных позиций
 
-  generated_pseudo_legal_captures(chess_board_0x88, packing_moves);
-  generated_pseudo_legal_quiet_moves(chess_board_0x88, packing_moves);
+  generated_pseudo_legal_captures_mgc(chess_board_0x88, packing_moves);
+  generated_pseudo_legal_quiet_moves_mgq(chess_board_0x88, packing_moves);
 
 
   //test_print_list(packing_moves);
@@ -589,8 +595,8 @@ const move_str_to_board_r = function (fen_start, move_str) {
     //console.log("Search_0x88_C-> " + move_str[pos] + move_str[pos + 1] +
     //  move_str[pos + 2] + move_str[pos + 3] + move_str[pos + 4]);
 
-    generated_pseudo_legal_captures(chess_board_0x88_uci, packing_moves);
-    generated_pseudo_legal_quiet_moves(chess_board_0x88_uci, packing_moves);
+    generated_pseudo_legal_captures_mgc(chess_board_0x88_uci, packing_moves);
+    generated_pseudo_legal_quiet_moves_mgq(chess_board_0x88_uci, packing_moves);
 
 
     //console.log("1 Search_0x88_C-> move_str[" + pos + "] " + move_str[pos]);      

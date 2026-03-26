@@ -38,9 +38,11 @@ import {
     SQUARE_64_to_128_CB,  SQUARE_128_to_64_CB
 } from "./chess_board_0x88.js";
 
-import {
-  H1, H8, A1, A8, F1, F8, D1, D8
-} from "./move_generator_captures_0x88.js";
+import {     
+  generated_pseudo_legal_quiet_moves_mgq, generated_pseudo_legal_moves_one_piece_for_gui_qm_mgq,
+  A1_MGQ, B1_MGQ, C1_MGQ , D1_MGQ, E1_MGQ, F1_MGQ, G1_MGQ, H1_MGQ, 
+  A8_MGQ, B8_MGQ, C8_MGQ, D8_MGQ, E8_MGQ, F8_MGQ, G8_MGQ, H8_MGQ 
+} from "../move_generator_0x88/move_generator_quiet_0x88.js";
 
 import { get_undo } from "./undo_0x88.js";
 
@@ -260,19 +262,19 @@ const unmake_king_castle_move_0x88 = function (chess_board_0x88, from, to, piece
 
     // перемещаем ладью. ее ход не прописан в списке ходов
     // записываем имя фигуры на старом месте
-    chess_board_0x88[H1] = chess_board_0x88[F1];
+    chess_board_0x88[H1_MGQ] = chess_board_0x88[F1_MGQ];
 
     // стираем имя фигуры на новом месте
-    chess_board_0x88[F1] = PIECE_NO_CB;//
+    chess_board_0x88[F1_MGQ] = PIECE_NO_CB;//
 
   } else {
 
     // перемещаем ладью. ее ход не прописан в списке ходов
     // записываем имя фигуры на старом месте
-    chess_board_0x88[H8] = chess_board_0x88[F8];
+    chess_board_0x88[H8_MGQ] = chess_board_0x88[F8_MGQ];
 
     // стираем имя фигуры на новом месте
-    chess_board_0x88[F8] = PIECE_NO_CB;// 0
+    chess_board_0x88[F8_MGQ] = PIECE_NO_CB;// 0
 
   }
 }
@@ -299,19 +301,19 @@ const unmake_king_queen_castle_move_0x88 = function (chess_board_0x88, from, to,
 
     // перемещаем ладью. ее ход не прописан в списке ходов
     // записываем имя фигуры на старом месте
-    chess_board_0x88[A1] = chess_board_0x88[D1];
+    chess_board_0x88[A1_MGQ] = chess_board_0x88[D1_MGQ];
 
     // стираем имя фигуры на новом месте
-    chess_board_0x88[D1] = PIECE_NO_CB;// 0
+    chess_board_0x88[D1_MGQ] = PIECE_NO_CB;// 0
 
   } else {
 
     // перемещаем ладью. ее ход не прописан в списке ходов
     // записываем имя фигуры на старом месте
-    chess_board_0x88[A8] = chess_board_0x88[D8];
+    chess_board_0x88[A8_MGQ] = chess_board_0x88[D8_MGQ];
 
     // стираем имя фигуры на новом месте
-    chess_board_0x88[D8] = PIECE_NO_CB;// 0
+    chess_board_0x88[D8_MGQ] = PIECE_NO_CB;// 0
 
   }// 
 

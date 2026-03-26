@@ -50,27 +50,6 @@ import {
   Ходы псевдолегальные, т.е. тут есть ходы под шах или открывающие шах.
 */
 
-// нужно для рокировок и превращений пешек
-// именуем поля на первой линии
-const A1 = 112;
-const B1 = 113;
-const C1 = 114;
-const D1 = 115;
-const E1 = 116;
-const F1 = 117;
-const G1 = 118;
-const H1 = 119;
-
-// именуем поля на последней линии   
-const A8 = 0;
-const B8 = 1;
-const C8 = 2;
-const D8 = 3;
-const E8 = 4;
-const F8 = 5;
-const G8 = 6;
-const H8 = 7;
-
 /*
 0   1   2
 16  17  18
@@ -109,7 +88,7 @@ const moves_knight = new Int32Array([-33, -31, -14, 18, 33, 31, 14, -18]);
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_pseudo_legal_captures = function (chess_board_0x88, packing_moves) {
+const generated_pseudo_legal_captures_mgc = function (chess_board_0x88, packing_moves) {
     //console.log('->generated_pseudo_legal_moves');
     // вывели из цикла чтобы определить один раз
     let side_to_move = chess_board_0x88[SIDE_TO_MOVE_CB];
@@ -120,7 +99,7 @@ const generated_pseudo_legal_captures = function (chess_board_0x88, packing_move
     for (let from = 0; from < 128; from++) {
         // если мы не вышли за пределы доски
         if ((from & 136) == 0) {// 136 0x88
-            generated_pseudo_legal_moves_one_piece(from, side_to_move, chess_board_0x88, packing_moves);
+            generated_pseudo_legal_moves_one_piece_mgc(from, side_to_move, chess_board_0x88, packing_moves);
         }
     }
     packing_moves[IND_NUMBER_CAPTURES_MOVE_ML] = packing_moves[IND_NUMBER_MOVE_ML];
@@ -133,7 +112,7 @@ const generated_pseudo_legal_captures = function (chess_board_0x88, packing_move
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_pseudo_legal_moves_one_piece_for_gui = function (from, chess_board_0x88, packing_moves) {
+const generated_pseudo_legal_moves_one_piece_for_gui_mgc = function (from, chess_board_0x88, packing_moves) {
     //console.log('->generated_pseudo_legal_moves');
     // тут определяем чтобы не менять вызов generated_pseudo_legal_moves_one_piece(from, side_to_move, ...
     let side_to_move = chess_board_0x88[SIDE_TO_MOVE_CB];
@@ -142,7 +121,7 @@ const generated_pseudo_legal_moves_one_piece_for_gui = function (from, chess_boa
     packing_moves[IND_PIESE_COLOR_ML] = side_to_move;
     // если мы не вышли за пределы доски
     if ((from & 136) == 0) {// 136 0x88
-        generated_pseudo_legal_moves_one_piece(from, side_to_move, chess_board_0x88, packing_moves);
+        generated_pseudo_legal_moves_one_piece_mgc(from, side_to_move, chess_board_0x88, packing_moves);
     }
 }
 
@@ -155,7 +134,7 @@ const generated_pseudo_legal_moves_one_piece_for_gui = function (from, chess_boa
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_pseudo_legal_moves_one_piece = function (from, side_to_move, chess_board_0x88, packing_moves) {
+const generated_pseudo_legal_moves_one_piece_mgc = function (from, side_to_move, chess_board_0x88, packing_moves) {
 
     let piece_name = -1;// имя фигуры типа 1,2, ...,6
     let piece_color = -1;// цвет фигуры 0 или 1
@@ -172,41 +151,41 @@ const generated_pseudo_legal_moves_one_piece = function (from, side_to_move, che
         switch (piece_name) {
             case W_KING_CB:// KING
                 // считаем взятия королем и заполняем список move_list_0x88_O
-                generated_captures_moves_king(W_KING_CB, WHITE_CB, from, chess_board_0x88, packing_moves);
+                generated_captures_moves_king_mgc(W_KING_CB, WHITE_CB, from, chess_board_0x88, packing_moves);
                 break;
             case B_KING_CB:// KING                
                 // считаем взятия королем и заполняем список move_list_0x88_O
-                generated_captures_moves_king(B_KING_CB, BLACK_CB, from, chess_board_0x88, packing_moves);
+                generated_captures_moves_king_mgc(B_KING_CB, BLACK_CB, from, chess_board_0x88, packing_moves);
                 break;
             case W_QUEEN_CB://QUEEN
-                generated_captures_moves_queen(W_QUEEN_CB, WHITE_CB, from, chess_board_0x88, packing_moves);
+                generated_captures_moves_queen_mgc(W_QUEEN_CB, WHITE_CB, from, chess_board_0x88, packing_moves);
                 break;
             case B_QUEEN_CB://QUEEN                
-                generated_captures_moves_queen(B_QUEEN_CB, BLACK_CB, from, chess_board_0x88, packing_moves);
+                generated_captures_moves_queen_mgc(B_QUEEN_CB, BLACK_CB, from, chess_board_0x88, packing_moves);
                 break;
             case W_ROOK_CB://ROOK
-                generated_captures_moves_rook(W_ROOK_CB, WHITE_CB, from, chess_board_0x88, packing_moves);
+                generated_captures_moves_rook_mgc(W_ROOK_CB, WHITE_CB, from, chess_board_0x88, packing_moves);
                 break;
             case B_ROOK_CB://ROOK               
-                generated_captures_moves_rook(B_ROOK_CB, BLACK_CB, from, chess_board_0x88, packing_moves);
+                generated_captures_moves_rook_mgc(B_ROOK_CB, BLACK_CB, from, chess_board_0x88, packing_moves);
                 break;
             case W_BISHOP_CB://BISHOP
-                generated_captures_moves_bishop(W_BISHOP_CB, WHITE_CB, from, chess_board_0x88, packing_moves);
+                generated_captures_moves_bishop_mgc(W_BISHOP_CB, WHITE_CB, from, chess_board_0x88, packing_moves);
                 break;
             case B_BISHOP_CB://BISHOP                
-                generated_captures_moves_bishop(B_BISHOP_CB, BLACK_CB, from, chess_board_0x88, packing_moves);
+                generated_captures_moves_bishop_mgc(B_BISHOP_CB, BLACK_CB, from, chess_board_0x88, packing_moves);
                 break;
             case W_KNIGHT_CB://KNIGHT
-                generated_captures_moves_knight(W_KNIGHT_CB, WHITE_CB, from, chess_board_0x88, packing_moves);
+                generated_captures_moves_knight_mgc(W_KNIGHT_CB, WHITE_CB, from, chess_board_0x88, packing_moves);
                 break;
             case B_KNIGHT_CB://KNIGHT                
-                generated_captures_moves_knight(B_KNIGHT_CB, BLACK_CB, from, chess_board_0x88, packing_moves);
+                generated_captures_moves_knight_mgc(B_KNIGHT_CB, BLACK_CB, from, chess_board_0x88, packing_moves);
                 break;
             case W_PAWN_CB://PAWN
-                generated_captures_moves_pawn(W_PAWN_CB, WHITE_CB, from, chess_board_0x88, packing_moves);
+                generated_captures_moves_pawn_mgc(W_PAWN_CB, WHITE_CB, from, chess_board_0x88, packing_moves);
                 break;
             case B_PAWN_CB://PAWN                
-                generated_captures_moves_pawn(B_PAWN_CB, BLACK_CB, from, chess_board_0x88, packing_moves);
+                generated_captures_moves_pawn_mgc(B_PAWN_CB, BLACK_CB, from, chess_board_0x88, packing_moves);
                 break;
             default://
             // console.log("default");
@@ -224,7 +203,7 @@ const generated_pseudo_legal_moves_one_piece = function (from, side_to_move, che
 * @param {Int32Array} packing_moves
 * @returns {number}
 */
-const add_captures_move = function (piece_name, piece_color, from, to, chess_board_0x88, packing_moves) {
+const add_captures_move_mgc = function (piece_name, piece_color, from, to, chess_board_0x88, packing_moves) {
 
     let piece_captures = chess_board_0x88[to];// имя взятой фигуры
     let piece_color_captures;// цвет взятой фигуры
@@ -257,14 +236,14 @@ const add_captures_move = function (piece_name, piece_color, from, to, chess_boa
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_captures_moves_king = function (piece_name, piece_color, from, chess_board_0x88, packing_moves) {
+const generated_captures_moves_king_mgc = function (piece_name, piece_color, from, chess_board_0x88, packing_moves) {
     //moves_king  = [-16, -15, 1, 17, 16, 15, -1, -17];
     let to;
     let stop_beam;
     for (let j = 0; j < 8; j++) {
         to = from + moves_king[j];
         if ((to & 136) == 0) {// если мы не вышли за пределы доски
-            stop_beam = add_captures_move(piece_name, piece_color, from, to, chess_board_0x88, packing_moves);
+            stop_beam = add_captures_move_mgc(piece_name, piece_color, from, to, chess_board_0x88, packing_moves);
         }
     }
 }
@@ -278,7 +257,7 @@ const generated_captures_moves_king = function (piece_name, piece_color, from, c
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_captures_moves_queen = function (piece_name, piece_color, from, chess_board_0x88, packing_moves) {
+const generated_captures_moves_queen_mgc = function (piece_name, piece_color, from, chess_board_0x88, packing_moves) {
     //    moves_king = [-16, -15, 1, 17, 16, 15, -1, -17];
     //    moves_queen = this.moves_king;
     let to;
@@ -290,7 +269,7 @@ const generated_captures_moves_queen = function (piece_name, piece_color, from, 
             while (true) {
                 // проверяем каждую клетку хода на фигуру. если есть фигура противника то добавляем взятие
                 // в список, если это наша фигура то прерываем поиск на этом луче иначе идем дальше
-                stop_beam = add_captures_move(piece_name, piece_color, from, to, chess_board_0x88, packing_moves);
+                stop_beam = add_captures_move_mgc(piece_name, piece_color, from, to, chess_board_0x88, packing_moves);
                 if (stop_beam == 1) break;// уперлись в фигуру
                 to = to + moves_queen[j];
                 if ((to & 136) != 0) break;// конец доски прерываем поиск на этом луче
@@ -308,7 +287,7 @@ const generated_captures_moves_queen = function (piece_name, piece_color, from, 
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_captures_moves_rook = function (piece_name, piece_color, from, chess_board_0x88, packing_moves) {
+const generated_captures_moves_rook_mgc = function (piece_name, piece_color, from, chess_board_0x88, packing_moves) {
     //moves_rook = [-16, 1, 16, -1];
     let to;
     let stop_beam;
@@ -317,7 +296,7 @@ const generated_captures_moves_rook = function (piece_name, piece_color, from, c
         to = from + moves_rook[j];
         if ((to & 136) == 0) {// если мы не вышли за пределы доски
             while (true) {
-                stop_beam = add_captures_move(piece_name, piece_color, from, to, chess_board_0x88, packing_moves);
+                stop_beam = add_captures_move_mgc(piece_name, piece_color, from, to, chess_board_0x88, packing_moves);
                 if (stop_beam == 1) break;
                 to = to + moves_rook[j];
                 if ((to & 136) != 0) break;
@@ -335,7 +314,7 @@ const generated_captures_moves_rook = function (piece_name, piece_color, from, c
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_captures_moves_bishop = function (piece_name, piece_color, from, chess_board_0x88, packing_moves) {
+const generated_captures_moves_bishop_mgc = function (piece_name, piece_color, from, chess_board_0x88, packing_moves) {
     //moves_bishop = [-15, 17, 15, -17];
     let to;
     let stop_beam;
@@ -344,7 +323,7 @@ const generated_captures_moves_bishop = function (piece_name, piece_color, from,
         to = from + moves_bishop[j];
         if ((to & 136) == 0) {// если мы не вышли за пределы доски
             while (true) {
-                stop_beam = add_captures_move(piece_name, piece_color, from, to, chess_board_0x88, packing_moves);
+                stop_beam = add_captures_move_mgc(piece_name, piece_color, from, to, chess_board_0x88, packing_moves);
                 if (stop_beam == 1) break;
                 to = to + moves_bishop[j];
                 if ((to & 136) != 0) break;
@@ -363,7 +342,7 @@ const generated_captures_moves_bishop = function (piece_name, piece_color, from,
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_captures_moves_knight = function (piece_name, piece_color, from, chess_board_0x88, packing_moves) {
+const generated_captures_moves_knight_mgc = function (piece_name, piece_color, from, chess_board_0x88, packing_moves) {
     //moves_knight = [-33, -31, -14, 18, 33, 31, 14, -18];
     let to;
     let stop_beam;
@@ -371,7 +350,7 @@ const generated_captures_moves_knight = function (piece_name, piece_color, from,
     for (let j = 0; j < 8; j++) {
         to = from + moves_knight[j];
         if ((to & 136) == 0) {// если мы не вышли за пределы доски
-            stop_beam = add_captures_move(piece_name, piece_color, from, to, chess_board_0x88, packing_moves);
+            stop_beam = add_captures_move_mgc(piece_name, piece_color, from, to, chess_board_0x88, packing_moves);
         }
     }
 }
@@ -385,14 +364,14 @@ const generated_captures_moves_knight = function (piece_name, piece_color, from,
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_captures_moves_pawn = function (piece_name, piece_color, from, chess_board_0x88, packing_moves) {
+const generated_captures_moves_pawn_mgc = function (piece_name, piece_color, from, chess_board_0x88, packing_moves) {
 
     if (piece_color == 1) {// белая пешка
         // взятие белой пешкой
-        generated_captures_moves_pawn_white(piece_name, piece_color, from, chess_board_0x88, packing_moves);
+        generated_captures_moves_pawn_white_mgc(piece_name, piece_color, from, chess_board_0x88, packing_moves);
     } else {
         // взятие черной пешкой
-        generated_captures_moves_pawn_black(piece_name, piece_color, from, chess_board_0x88, packing_moves);
+        generated_captures_moves_pawn_black_mgc(piece_name, piece_color, from, chess_board_0x88, packing_moves);
     }
 }
 
@@ -407,14 +386,14 @@ const generated_captures_moves_pawn = function (piece_name, piece_color, from, c
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_captures_moves_pawn_white = function (piece_name, piece_color, from, chess_board_0x88, packing_moves) {
+const generated_captures_moves_pawn_white_mgc = function (piece_name, piece_color, from, chess_board_0x88, packing_moves) {
     if (Math.floor(from / 16) == 1) {// белая пешка на на предпоследней позиции(7-ая линия из 8). можно смотреть взятие с превращением
         // смотрим и если есть добавляем взятия пешкой с превращением
-        generated_captures_moves_pawn_promo(piece_name, from, (from - 17), (from - 15),
+        generated_captures_moves_pawn_promo_mgc(piece_name, from, (from - 17), (from - 15),
             piece_color, chess_board_0x88, packing_moves);
     } else {
         // простое взятие пешкой
-        generated_moves_pawn_captures(piece_name, from, (from - 17), (from - 15),
+        generated_moves_pawn_captures_mgc(piece_name, from, (from - 17), (from - 15),
             piece_color, chess_board_0x88, packing_moves);
     }
 }
@@ -428,12 +407,12 @@ const generated_captures_moves_pawn_white = function (piece_name, piece_color, f
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_captures_moves_pawn_black = function (piece_name, piece_color, from, chess_board_0x88, packing_moves) {
+const generated_captures_moves_pawn_black_mgc = function (piece_name, piece_color, from, chess_board_0x88, packing_moves) {
     if (Math.floor(from / 16) == 6) {// черная пешка на на предпоследней позиции(2-ая линия из 8). можно смотреть взятие с превращением
-        generated_captures_moves_pawn_promo(piece_name, from, (from + 15), (from + 17), piece_color,
+        generated_captures_moves_pawn_promo_mgc(piece_name, from, (from + 15), (from + 17), piece_color,
             chess_board_0x88, packing_moves);
     } else {
-        generated_moves_pawn_captures(piece_name, from, (from + 15), (from + 17), piece_color, chess_board_0x88, packing_moves);
+        generated_moves_pawn_captures_mgc(piece_name, from, (from + 15), (from + 17), piece_color, chess_board_0x88, packing_moves);
     }
 
 }
@@ -449,7 +428,7 @@ const generated_captures_moves_pawn_black = function (piece_name, piece_color, f
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_moves_pawn_captures = function (piece_name, from, to_left, to_right, piece_color, chess_board_0x88, packing_moves) {
+const generated_moves_pawn_captures_mgc = function (piece_name, from, to_left, to_right, piece_color, chess_board_0x88, packing_moves) {
     let piece_color_captures;
     let piece_captures;
     let type_move;
@@ -492,7 +471,7 @@ const generated_moves_pawn_captures = function (piece_name, from, to_left, to_ri
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_captures_moves_pawn_promo = function (piece_name, from, to_left, to_right, piece_color, chess_board_0x88, packing_moves) {
+const generated_captures_moves_pawn_promo_mgc = function (piece_name, from, to_left, to_right, piece_color, chess_board_0x88, packing_moves) {
     let piece_color_captures;
     let piece_captures;
     let type_move;
@@ -546,7 +525,7 @@ const generated_captures_moves_pawn_promo = function (piece_name, from, to_left,
 * @param {Int32Array} chess_board_0x88
 * @returns {number}
 */
-const check_detected_generated_moves_king = function (from, piece_color, chess_board_0x88) {
+const check_detected_generated_moves_king_mgc = function (from, piece_color, chess_board_0x88) {
     let to;
     let check = -1;
 
@@ -574,7 +553,7 @@ const check_detected_generated_moves_king = function (from, piece_color, chess_b
 * @param {Int32Array} chess_board_0x88
 * @returns {number}
 */
-const check_detected = function (from, piece_color, chess_board_0x88) {
+const check_detected_mgc = function (from, piece_color, chess_board_0x88) {
 
     let check = -1;
     let packing_moves_in = new Int32Array(LENGTH_LIST_ML).fill(MOVE_NO_ML);
@@ -584,7 +563,7 @@ const check_detected = function (from, piece_color, chess_board_0x88) {
 
         clear_list_ml(packing_moves_in);
         // 1 шах от короля это если подошли к королю противника вплотную
-        if (check_detected_generated_moves_king(from, piece_color, chess_board_0x88) == B_KING_CB) {
+        if (check_detected_generated_moves_king_mgc(from, piece_color, chess_board_0x88) == B_KING_CB) {
             check = B_KING_CB;
             return check;
         }
@@ -592,7 +571,7 @@ const check_detected = function (from, piece_color, chess_board_0x88) {
 
         clear_list_ml(packing_moves_in);
         // 2 шах от коня
-        generated_captures_moves_knight(W_KNIGHT_CB, piece_color, from, chess_board_0x88, packing_moves_in);
+        generated_captures_moves_knight_mgc(W_KNIGHT_CB, piece_color, from, chess_board_0x88, packing_moves_in);
 
         number_move = packing_moves_in[IND_NUMBER_MOVE_ML];
 
@@ -607,7 +586,7 @@ const check_detected = function (from, piece_color, chess_board_0x88) {
 
         clear_list_ml(packing_moves_in);
         // 3 шах от слона + 1/2 шах от половины ходов ферзя как у слона
-        generated_captures_moves_bishop(W_BISHOP_CB, piece_color, from, chess_board_0x88, packing_moves_in)
+        generated_captures_moves_bishop_mgc(W_BISHOP_CB, piece_color, from, chess_board_0x88, packing_moves_in)
 
         number_move = packing_moves_in[IND_NUMBER_MOVE_ML];
 
@@ -625,7 +604,7 @@ const check_detected = function (from, piece_color, chess_board_0x88) {
 
         clear_list_ml(packing_moves_in);
         // 4 шах от ладьи + 1/2 шах от половины ходов ферзя как у ладьи
-        generated_captures_moves_rook(W_ROOK_CB, piece_color, from, chess_board_0x88, packing_moves_in);
+        generated_captures_moves_rook_mgc(W_ROOK_CB, piece_color, from, chess_board_0x88, packing_moves_in);
 
         number_move = packing_moves_in[IND_NUMBER_MOVE_ML];
 
@@ -643,7 +622,7 @@ const check_detected = function (from, piece_color, chess_board_0x88) {
 
         clear_list_ml(packing_moves_in);
         // 5 шах от пешек
-        generated_captures_moves_pawn(W_PAWN_CB, piece_color, from, chess_board_0x88, packing_moves_in);
+        generated_captures_moves_pawn_mgc(W_PAWN_CB, piece_color, from, chess_board_0x88, packing_moves_in);
 
         number_move = packing_moves_in[IND_NUMBER_MOVE_ML];
 
@@ -658,14 +637,14 @@ const check_detected = function (from, piece_color, chess_board_0x88) {
 
         clear_list_ml(packing_moves_in);
         // 1 шах от короля это если подошли к королю противника вплотную
-        if (check_detected_generated_moves_king(from, piece_color, chess_board_0x88) == W_KING_CB) {
+        if (check_detected_generated_moves_king_mgc(from, piece_color, chess_board_0x88) == W_KING_CB) {
             check = W_KING_CB;
             return check;
         }
 
         clear_list_ml(packing_moves_in);
         // 2 шах от коня
-        generated_captures_moves_knight(B_KNIGHT_CB, piece_color, from, chess_board_0x88, packing_moves_in);
+        generated_captures_moves_knight_mgc(B_KNIGHT_CB, piece_color, from, chess_board_0x88, packing_moves_in);
 
         number_move = packing_moves_in[IND_NUMBER_MOVE_ML];
 
@@ -679,7 +658,7 @@ const check_detected = function (from, piece_color, chess_board_0x88) {
 
         clear_list_ml(packing_moves_in);
         // 3 шах от слона + 1/2 шах от половины ходов ферзя как у слона
-        generated_captures_moves_bishop(B_BISHOP_CB, piece_color, from, chess_board_0x88, packing_moves_in)
+        generated_captures_moves_bishop_mgc(B_BISHOP_CB, piece_color, from, chess_board_0x88, packing_moves_in)
 
         number_move = packing_moves_in[IND_NUMBER_MOVE_ML];
 
@@ -697,7 +676,7 @@ const check_detected = function (from, piece_color, chess_board_0x88) {
 
         clear_list_ml(packing_moves_in);
         // 4 шах от ладьи + 1/2 шах от половины ходов ферзя как у ладьи
-        generated_captures_moves_rook(B_ROOK_CB, piece_color, from, chess_board_0x88, packing_moves_in);
+        generated_captures_moves_rook_mgc(B_ROOK_CB, piece_color, from, chess_board_0x88, packing_moves_in);
 
         number_move = packing_moves_in[IND_NUMBER_MOVE_ML];
 
@@ -715,7 +694,7 @@ const check_detected = function (from, piece_color, chess_board_0x88) {
 
         clear_list_ml(packing_moves_in);
         // 5 шах от пешек
-        generated_captures_moves_pawn(B_PAWN_CB, piece_color, from, chess_board_0x88, packing_moves_in);
+        generated_captures_moves_pawn_mgc(B_PAWN_CB, piece_color, from, chess_board_0x88, packing_moves_in);
 
         number_move = packing_moves_in[IND_NUMBER_MOVE_ML];
 
@@ -733,6 +712,5 @@ const check_detected = function (from, piece_color, chess_board_0x88) {
 }
 
 export {
-    generated_pseudo_legal_captures, generated_pseudo_legal_moves_one_piece_for_gui, check_detected,
-    H1, H8, A1, A8, E1, E8, F1, F8, G1, G8, D1, D8, C1, C8
+    generated_pseudo_legal_captures_mgc, generated_pseudo_legal_moves_one_piece_for_gui_mgc, check_detected_mgc
 };

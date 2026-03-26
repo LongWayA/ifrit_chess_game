@@ -49,11 +49,8 @@ import {
 } from "../move_generator_0x88/pv_line_0x88.js";
 
 import {
-  generated_pseudo_legal_captures, check_detected,
-  H1, H8, A1, A8, E1, E8, F1, F8, G1, G8, D1, D8, C1, C8
+    generated_pseudo_legal_captures_mgc, generated_pseudo_legal_moves_one_piece_for_gui_mgc, check_detected_mgc
 } from "../move_generator_0x88/move_generator_captures_0x88.js";
-
-import { generated_pseudo_legal_quiet_moves } from "../move_generator_0x88/move_generator_quiet_0x88.js";
 
 import { do_moves_mm } from "../move_generator_0x88/make_move_0x88.js";
 import { undo_moves_um } from "../move_generator_0x88/unmake_move_0x88.js";
@@ -117,7 +114,7 @@ const quiescence_search = function (alpha, beta, chess_board_0x88, chess_board_k
   }
   // ===================================== Stand Pat
   //clear_list(packing_moves);
-  generated_pseudo_legal_captures(chess_board_0x88, packing_moves);
+  generated_pseudo_legal_captures_mgc(chess_board_0x88, packing_moves);
 
   if (packing_moves[IND_NUMBER_MOVE_ML] == 0) {
     //console.log("quiescence_search-> moves = 0 depth " + depth);

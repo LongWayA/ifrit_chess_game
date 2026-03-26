@@ -56,8 +56,14 @@ import {
 import { clear_pv_line_pv, add_move_to_pv_line_pv, save_pv_line_pv, test_print_pv_line_pv, pv_line_to_uci_string_pv,
   MAX_DEPTH_PV, IND_TYPE_VARIANT_PV, IND_DEPTH_MAT_PV, IND_DEPTH_PV} from "../move_generator_0x88/pv_line_0x88.js";
 
-import { generated_pseudo_legal_captures } from "../move_generator_0x88/move_generator_captures_0x88.js";
-import { generated_pseudo_legal_quiet_moves } from "../move_generator_0x88/move_generator_quiet_0x88.js";
+import {     
+  generated_pseudo_legal_captures_mgc, generated_pseudo_legal_moves_one_piece_for_gui_mgc, check_detected_mgc 
+} from "../move_generator_0x88/move_generator_captures_0x88.js";
+import {     
+  generated_pseudo_legal_quiet_moves_mgq, generated_pseudo_legal_moves_one_piece_for_gui_qm_mgq,
+  A1_MGQ, B1_MGQ, C1_MGQ , D1_MGQ, E1_MGQ, F1_MGQ, G1_MGQ, H1_MGQ, 
+  A8_MGQ, B8_MGQ, C8_MGQ, D8_MGQ, E8_MGQ, F8_MGQ, G8_MGQ, H8_MGQ 
+} from "../move_generator_0x88/move_generator_quiet_0x88.js";
 
 import { score_position } from "./evaluate_0x88.js";
 
@@ -120,8 +126,8 @@ const searching_minmax = function (packing_pv_line, chess_board_0x88, chess_boar
       found_score = BEST_VALUE_MOD;// максимальная оценка позиции
     }
 
-    generated_pseudo_legal_captures(chess_board_0x88, packing_moves);
-    generated_pseudo_legal_quiet_moves(chess_board_0x88, packing_moves);
+    generated_pseudo_legal_captures_mgc(chess_board_0x88, packing_moves);
+    generated_pseudo_legal_quiet_moves_mgq(chess_board_0x88, packing_moves);
 
     //test_print_list(packing_moves);
 

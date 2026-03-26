@@ -49,11 +49,14 @@ import {
 } from "../move_generator_0x88/pv_line_0x88.js";
 
 import {
-  generated_pseudo_legal_captures, check_detected,
-  H1, H8, A1, A8, E1, E8, F1, F8, G1, G8, D1, D8, C1, C8
+    generated_pseudo_legal_captures_mgc, generated_pseudo_legal_moves_one_piece_for_gui_mgc, check_detected_mgc
 } from "../move_generator_0x88/move_generator_captures_0x88.js";
 
-import { generated_pseudo_legal_quiet_moves } from "../move_generator_0x88/move_generator_quiet_0x88.js";
+import {     
+  generated_pseudo_legal_quiet_moves_mgq, generated_pseudo_legal_moves_one_piece_for_gui_qm_mgq,
+  A1_MGQ, B1_MGQ, C1_MGQ , D1_MGQ, E1_MGQ, F1_MGQ, G1_MGQ, H1_MGQ, 
+  A8_MGQ, B8_MGQ, C8_MGQ, D8_MGQ, E8_MGQ, F8_MGQ, G8_MGQ, H8_MGQ 
+} from "../move_generator_0x88/move_generator_quiet_0x88.js";
 
 import { do_moves_mm } from "../move_generator_0x88/make_move_0x88.js";
 import { undo_moves_um } from "../move_generator_0x88/unmake_move_0x88.js";
@@ -307,7 +310,7 @@ const searching_alpha_beta_id_ab = function (alpha, beta, chess_board_0x88, ches
         // и вместо матовой оценки получаем обычную
         // что бы это предотвратить добавил условие 5000 > alpha.
         if (((score + raz) < alpha) && (5000 > alpha)) {
-         if (check_detected(chess_board_0x88[IND_KING_FROM_WHITE_CB], WHITE_CB, chess_board_0x88) == 0){
+         if (check_detected_mgc(chess_board_0x88[IND_KING_FROM_WHITE_CB], WHITE_CB, chess_board_0x88) == 0){
           score = quiescence_search(alpha, (alpha+1), chess_board_0x88, chess_board_key_64, depth);
 
           if (score <= alpha) return score;
@@ -317,7 +320,7 @@ const searching_alpha_beta_id_ab = function (alpha, beta, chess_board_0x88, ches
 
         if (((score - raz) > beta) &&  (-5000 < beta)) {
 
-          if (check_detected(chess_board_0x88[IND_KING_FROM_BLACK_CB], BLACK_CB, chess_board_0x88) == 0){
+          if (check_detected_mgc(chess_board_0x88[IND_KING_FROM_BLACK_CB], BLACK_CB, chess_board_0x88) == 0){
 
              score = quiescence_search((beta-1), beta, chess_board_0x88, chess_board_key_64, depth);
 
@@ -343,8 +346,8 @@ const searching_alpha_beta_id_ab = function (alpha, beta, chess_board_0x88, ches
   //out = out + 1;
   //console.log("in searching_alpha_beta_id->depth " + depth + " out " + out);
 
-  generated_pseudo_legal_captures(chess_board_0x88, packing_moves);
-  generated_pseudo_legal_quiet_moves(chess_board_0x88, packing_moves);
+  generated_pseudo_legal_captures_mgc(chess_board_0x88, packing_moves);
+  generated_pseudo_legal_quiet_moves_mgq(chess_board_0x88, packing_moves);
 
 
   // сортировка по взятиям и типу других ходов
@@ -645,7 +648,7 @@ const searching_alpha_beta_id_ab = function (alpha, beta, chess_board_0x88, ches
     if (chess_board_0x88[SIDE_TO_MOVE_CB] == WHITE_CB) {//
 
       // ход белых. а ходов нет. это 0 пат, если же белый король под шахом это мат
-      if (check_detected(chess_board_0x88[IND_KING_FROM_WHITE_CB], WHITE_CB, chess_board_0x88) != 0) {
+      if (check_detected_mgc(chess_board_0x88[IND_KING_FROM_WHITE_CB], WHITE_CB, chess_board_0x88) != 0) {
 
         //console.log("searching_alpha_beta_id_ab-> W chek ");
 
@@ -664,7 +667,7 @@ const searching_alpha_beta_id_ab = function (alpha, beta, chess_board_0x88, ches
 
     } else {//if (chess_board_0x88_O.side_to_move == 1) {
       //  console.log("Search_0x88_C-> B pat ");
-      if (check_detected(chess_board_0x88[IND_KING_FROM_BLACK_CB], BLACK_CB, chess_board_0x88) != 0) {
+      if (check_detected_mgc(chess_board_0x88[IND_KING_FROM_BLACK_CB], BLACK_CB, chess_board_0x88) != 0) {
 
         //console.log("searching_alpha_beta_id_ab-> B chek ");
 

@@ -39,9 +39,14 @@ import {
 } from "./chess_board_0x88.js";
 
 import {
-  check_detected,
-  H1, H8, A1, A8, E1, E8, F1, F8, G1, G8, D1, D8, C1, C8
+    generated_pseudo_legal_captures_mgc, generated_pseudo_legal_moves_one_piece_for_gui_mgc, check_detected_mgc
 } from "./move_generator_captures_0x88.js";
+
+import {     
+  generated_pseudo_legal_quiet_moves_mgq, generated_pseudo_legal_moves_one_piece_for_gui_qm_mgq,
+  A1_MGQ, B1_MGQ, C1_MGQ , D1_MGQ, E1_MGQ, F1_MGQ, G1_MGQ, H1_MGQ, 
+  A8_MGQ, B8_MGQ, C8_MGQ, D8_MGQ, E8_MGQ, F8_MGQ, G8_MGQ, H8_MGQ 
+} from "../move_generator_0x88/move_generator_quiet_0x88.js";
 
 import { set_undo } from "./undo_0x88.js";
 
@@ -596,7 +601,7 @@ const do_moves_mm = function (chess_board_0x88, chess_board_key_64, chess_board_
       from_king = chess_board_0x88[IND_KING_FROM_BLACK_CB];
     }
 
-    if (check_detected(from_king, piece_color_king, chess_board_0x88) != 0) {
+    if (check_detected_mgc(from_king, piece_color_king, chess_board_0x88) != 0) {
 
       //console.log("check_detected " + check_detected(from_king, piece_color_king, chess_board_0x88));
 
@@ -652,7 +657,7 @@ const stop_king_castle_captures_rook_0x88 = function (chess_board_0x88, chess_bo
 
   if (chess_board_0x88[IND_CASTLING_K_CB] == 1) {
     // если ходит фигура с н1 то это белая ладья. отменяем рокировку в короткую сторону для белых
-    if (to == H1) {
+    if (to == H1_MGQ) {
       // рокировка белых в короткую сторону  1/0
       chess_board_0x88[IND_CASTLING_K_CB] = 0;
       // Q, q, K, k,
@@ -662,7 +667,7 @@ const stop_king_castle_captures_rook_0x88 = function (chess_board_0x88, chess_bo
 
   if (chess_board_0x88[IND_CASTLING_Q_CB] == 1) {
     // если ходит фигура с a1 то это белая ладья. отменяем рокировку в длинную сторону для белых
-    if (to == A1) {
+    if (to == A1_MGQ) {
       // рокировка белых в короткую сторону  1/0
       chess_board_0x88[IND_CASTLING_Q_CB] = 0;
       // Q, q, K, k,
@@ -672,7 +677,7 @@ const stop_king_castle_captures_rook_0x88 = function (chess_board_0x88, chess_bo
 
   if (chess_board_0x88[IND_CASTLING_k_CB] == 1) {
     // если ходит фигура с н8 то это черная ладья. отменяем рокировку в короткую сторону для черных
-    if (to == H8) {
+    if (to == H8_MGQ) {
       // рокировка белых в короткую сторону  1/0
       chess_board_0x88[IND_CASTLING_k_CB] = 0;
       // Q, q, K, k,
@@ -683,7 +688,7 @@ const stop_king_castle_captures_rook_0x88 = function (chess_board_0x88, chess_bo
 
   if (chess_board_0x88[IND_CASTLING_q_CB] == 1) {
     // если ходит фигура с a8 то это черная ладья. отменяем рокировку в длинную сторону для черных
-    if (to == A8) {
+    if (to == A8_MGQ) {
       // рокировка белых в короткую сторону  1/0
       chess_board_0x88[IND_CASTLING_q_CB] = 0;
       // Q, q, K, k,  
@@ -703,7 +708,7 @@ const stop_king_castle_move_rook_0x88 = function (chess_board_0x88, chess_board_
 
   if (chess_board_0x88[IND_CASTLING_K_CB] == 1) {
     // если ходит фигура с н1 то это белая ладья. отменяем рокировку в короткую сторону для белых
-    if (from == H1) {
+    if (from == H1_MGQ) {
       // рокировка белых в короткую сторону  1/0
       chess_board_0x88[IND_CASTLING_K_CB] = 0;
       // Q, q, K, k,
@@ -713,7 +718,7 @@ const stop_king_castle_move_rook_0x88 = function (chess_board_0x88, chess_board_
 
   if (chess_board_0x88[IND_CASTLING_Q_CB] == 1) {
     // если ходит фигура с a1 то это белая ладья. отменяем рокировку в длинную сторону для белых
-    if (from == A1) {
+    if (from == A1_MGQ) {
       // рокировка белых в короткую сторону  1/0
       chess_board_0x88[IND_CASTLING_Q_CB] = 0;
       // Q, q, K, k,
@@ -723,7 +728,7 @@ const stop_king_castle_move_rook_0x88 = function (chess_board_0x88, chess_board_
 
   if (chess_board_0x88[IND_CASTLING_k_CB] == 1) {
     // если ходит фигура с н8 то это черная ладья. отменяем рокировку в короткую сторону для черных
-    if (from == H8) {
+    if (from == H8_MGQ) {
       // рокировка белых в короткую сторону  1/0
       chess_board_0x88[IND_CASTLING_k_CB] = 0;
       // Q, q, K, k,
@@ -733,7 +738,7 @@ const stop_king_castle_move_rook_0x88 = function (chess_board_0x88, chess_board_
 
   if (chess_board_0x88[IND_CASTLING_q_CB] == 1) {
     // если ходит фигура с a8 то это черная ладья. отменяем рокировку в длинную сторону для черных
-    if (from == A8) {
+    if (from == A8_MGQ) {
       // рокировка белых в короткую сторону  1/0
       chess_board_0x88[IND_CASTLING_q_CB] = 0;
       // Q, q, K, k,
@@ -753,7 +758,7 @@ const stop_king_castle_move_king_0x88 = function (chess_board_0x88, chess_board_
 
   if (chess_board_0x88[IND_CASTLING_K_CB] == 1) {
     // если ходит фигура с e1 то это белый король. отменяем все рокировки для белых
-    if (from == E1) {
+    if (from == E1_MGQ) {
       chess_board_0x88[IND_CASTLING_K_CB] = 0;
       // Q, q, K, k,
       key_update_QqKk_0x88_tk(0, 0, 1, 0, chess_board_key_64);
@@ -762,7 +767,7 @@ const stop_king_castle_move_king_0x88 = function (chess_board_0x88, chess_board_
 
   if (chess_board_0x88[IND_CASTLING_Q_CB] == 1) {
     // если ходит фигура с e1 то это белый король. отменяем все рокировки для белых
-    if (from == E1) {
+    if (from == E1_MGQ) {
       chess_board_0x88[IND_CASTLING_Q_CB] = 0;
       // Q, q, K, k,
       key_update_QqKk_0x88_tk(1, 0, 0, 0, chess_board_key_64);
@@ -771,7 +776,7 @@ const stop_king_castle_move_king_0x88 = function (chess_board_0x88, chess_board_
 
   if (chess_board_0x88[IND_CASTLING_k_CB] == 1) {
     // если ходит фигура с e8 то это черный король. отменяем все рокировки для черных
-    if (from == E8) {
+    if (from == E8_MGQ) {
       chess_board_0x88[IND_CASTLING_k_CB] = 0;
       // Q, q, K, k,
       key_update_QqKk_0x88_tk(0, 0, 0, 1, chess_board_key_64);
@@ -780,7 +785,7 @@ const stop_king_castle_move_king_0x88 = function (chess_board_0x88, chess_board_
 
   if (chess_board_0x88[IND_CASTLING_q_CB] == 1) {
     // если ходит фигура с e8 то это черный король. отменяем все рокировки для черных
-    if (from == E8) {
+    if (from == E8_MGQ) {
       chess_board_0x88[IND_CASTLING_q_CB] = 0;
       // Q, q, K, k,
       key_update_QqKk_0x88_tk(0, 1, 0, 0, chess_board_key_64);
@@ -806,13 +811,13 @@ const make_king_castle_move_0x88 = function (chess_board_0x88, chess_board_key_6
 
   // проверяем не под шахом ли поля
   if (piece_color_sq == 1) {
-    if (check_detected(E1, piece_color_sq, chess_board_0x88) != 0) is_moove_legal = 2;
-    if (check_detected(F1, piece_color_sq, chess_board_0x88) != 0) is_moove_legal = 2;
-    if (check_detected(G1, piece_color_sq, chess_board_0x88) != 0) is_moove_legal = 2;
+    if (check_detected_mgc(E1_MGQ, piece_color_sq, chess_board_0x88) != 0) is_moove_legal = 2;
+    if (check_detected_mgc(F1_MGQ, piece_color_sq, chess_board_0x88) != 0) is_moove_legal = 2;
+    if (check_detected_mgc(G1_MGQ, piece_color_sq, chess_board_0x88) != 0) is_moove_legal = 2;
   } else {
-    if (check_detected(E8, piece_color_sq, chess_board_0x88) != 0) is_moove_legal = 2;
-    if (check_detected(F8, piece_color_sq, chess_board_0x88) != 0) is_moove_legal = 2;
-    if (check_detected(G8, piece_color_sq, chess_board_0x88) != 0) is_moove_legal = 2;
+    if (check_detected_mgc(E8_MGQ, piece_color_sq, chess_board_0x88) != 0) is_moove_legal = 2;
+    if (check_detected_mgc(F8_MGQ, piece_color_sq, chess_board_0x88) != 0) is_moove_legal = 2;
+    if (check_detected_mgc(G8_MGQ, piece_color_sq, chess_board_0x88) != 0) is_moove_legal = 2;
   }
 
   if (is_moove_legal == 1) {
@@ -833,10 +838,10 @@ const make_king_castle_move_0x88 = function (chess_board_0x88, chess_board_key_6
 
       // перемещаем ладью. ее ход не прописан в списке ходов
       // записываем имя фигуры на новом месте
-      chess_board_0x88[F1] = chess_board_0x88[H1];
+      chess_board_0x88[F1_MGQ] = chess_board_0x88[H1_MGQ];
 
       // стираем имя фигуры на старом месте
-      chess_board_0x88[H1] = PIECE_NO_CB;// 0
+      chess_board_0x88[H1_MGQ] = PIECE_NO_CB;// 0
 
       // рокировка белых в длинную сторону   1/0
       if (chess_board_0x88[IND_CASTLING_Q_CB] == 1) {
@@ -851,16 +856,16 @@ const make_king_castle_move_0x88 = function (chess_board_0x88, chess_board_key_6
       key_update_QqKk_0x88_tk(0, 0, 1, 0, chess_board_key_64);
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////      
-      key_update_castle_move_0x88_tk(from, to, H1, F1, piece_color, chess_board_key_64);
+      key_update_castle_move_0x88_tk(from, to, H1_MGQ, F1_MGQ, piece_color, chess_board_key_64);
 
     } else {
 
       // перемещаем ладью. ее ход не прописан в списке ходов
       // записываем имя фигуры на новом месте
-      chess_board_0x88[F8] = chess_board_0x88[H8];
+      chess_board_0x88[F8_MGQ] = chess_board_0x88[H8_MGQ];
 
       // стираем имя фигуры на старом месте
-      chess_board_0x88[H8] = PIECE_NO_CB;// 0  
+      chess_board_0x88[H8_MGQ] = PIECE_NO_CB;// 0  
 
       // рокировка черных в длинную сторону  1/0
       if (chess_board_0x88[IND_CASTLING_q_CB] == 1) {
@@ -875,7 +880,7 @@ const make_king_castle_move_0x88 = function (chess_board_0x88, chess_board_key_6
       key_update_QqKk_0x88_tk(0, 0, 0, 1, chess_board_key_64);
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////
-      key_update_castle_move_0x88_tk(from, to, H8, F8, piece_color, chess_board_key_64);
+      key_update_castle_move_0x88_tk(from, to, H8_MGQ, F8_MGQ, piece_color, chess_board_key_64);
 
     }
   }
@@ -901,13 +906,13 @@ const make_king_queen_castle_move_0x88 = function (chess_board_0x88, chess_board
   let piece_color_sq = 1 - (chess_board_0x88[from] >> 3);// тут магия 8( в битах это 00001000) (подсказал ИИ от Гугла) 1 для белых и 0 для черных.
 
   if (piece_color_sq == 1) {
-    if (check_detected(E1, piece_color_sq, chess_board_0x88) != 0) is_moove_legal = 2;
-    if (check_detected(D1, piece_color_sq, chess_board_0x88) != 0) is_moove_legal = 2;
-    if (check_detected(C1, piece_color_sq, chess_board_0x88) != 0) is_moove_legal = 2;
+    if (check_detected_mgc(E1_MGQ, piece_color_sq, chess_board_0x88) != 0) is_moove_legal = 2;
+    if (check_detected_mgc(D1_MGQ, piece_color_sq, chess_board_0x88) != 0) is_moove_legal = 2;
+    if (check_detected_mgc(C1_MGQ, piece_color_sq, chess_board_0x88) != 0) is_moove_legal = 2;
   } else {
-    if (check_detected(E8, piece_color_sq, chess_board_0x88) != 0) is_moove_legal = 2;
-    if (check_detected(D8, piece_color_sq, chess_board_0x88) != 0) is_moove_legal = 2;
-    if (check_detected(C8, piece_color_sq, chess_board_0x88) != 0) is_moove_legal = 2;
+    if (check_detected_mgc(E8_MGQ, piece_color_sq, chess_board_0x88) != 0) is_moove_legal = 2;
+    if (check_detected_mgc(D8_MGQ, piece_color_sq, chess_board_0x88) != 0) is_moove_legal = 2;
+    if (check_detected_mgc(C8_MGQ, piece_color_sq, chess_board_0x88) != 0) is_moove_legal = 2;
   }//if (piece_color_sq == 1) {
 
   // проверяем не под шахом ли поля
@@ -929,10 +934,10 @@ const make_king_queen_castle_move_0x88 = function (chess_board_0x88, chess_board
 
       // перемещаем ладью. ее ход не прописан в списке ходов
       // записываем имя фигуры на новом месте
-      chess_board_0x88[D1] = chess_board_0x88[A1];
+      chess_board_0x88[D1_MGQ] = chess_board_0x88[A1_MGQ];
 
       // стираем имя фигуры на старом месте
-      chess_board_0x88[A1] = PIECE_NO_CB;// 0
+      chess_board_0x88[A1_MGQ] = PIECE_NO_CB;// 0
 
       // рокировка белых в длинную сторону   1/0
       chess_board_0x88[IND_CASTLING_Q_CB] = 0;
@@ -947,16 +952,16 @@ const make_king_queen_castle_move_0x88 = function (chess_board_0x88, chess_board
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////
-       key_update_castle_move_0x88_tk(from, to, A1, D1, piece_color, chess_board_key_64);
+       key_update_castle_move_0x88_tk(from, to, A1_MGQ, D1_MGQ, piece_color, chess_board_key_64);
 
     } else {
 
       // перемещаем ладью. ее ход не прописан в списке ходов
       // записываем имя фигуры на новом месте
-      chess_board_0x88[D8] = chess_board_0x88[A8];
+      chess_board_0x88[D8_MGQ] = chess_board_0x88[A8_MGQ];
 
       // стираем имя фигуры на старом месте
-      chess_board_0x88[A8] = PIECE_NO_CB;// 0 
+      chess_board_0x88[A8_MGQ] = PIECE_NO_CB;// 0 
 
       // рокировка черных в длинную сторону  1/0
       chess_board_0x88[IND_CASTLING_q_CB] = 0;
@@ -971,7 +976,7 @@ const make_king_queen_castle_move_0x88 = function (chess_board_0x88, chess_board
       }
 
       ////////////////////////////////////////////////////////////////////////////////////////////////////      
-       key_update_castle_move_0x88_tk(from, to, A8, D8, piece_color, chess_board_key_64);
+       key_update_castle_move_0x88_tk(from, to, A8_MGQ, D8_MGQ, piece_color, chess_board_key_64);
 
 
     }// if (packing_moves.piece_color == 1) {
