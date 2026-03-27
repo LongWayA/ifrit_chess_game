@@ -49,11 +49,11 @@ import {
 } from "../move_generator_0x88/pv_line_0x88.js";
 
 import {
-    generated_pseudo_legal_captures_mgc, generated_pseudo_legal_moves_one_piece_for_gui_mgc, check_detected_mgc
+    generated_pseudo_legal_captures_mgc, generated_pseudo_legal_captures_one_piece_for_gui_mgc, check_detected_mgc
 } from "../move_generator_0x88/move_generator_captures_0x88.js";
 
 import {     
-  generated_pseudo_legal_quiet_moves_mgq, generated_pseudo_legal_moves_one_piece_for_gui_qm_mgq,
+  generated_pseudo_legal_quiet_moves_mgq, generated_pseudo_legal_quiet_moves_one_piece_for_gui_mgq,
   A1_MGQ, B1_MGQ, C1_MGQ , D1_MGQ, E1_MGQ, F1_MGQ, G1_MGQ, H1_MGQ, 
   A8_MGQ, B8_MGQ, C8_MGQ, D8_MGQ, E8_MGQ, F8_MGQ, G8_MGQ, H8_MGQ 
 } from "../move_generator_0x88/move_generator_quiet_0x88.js";
@@ -63,11 +63,11 @@ import { undo_moves_um } from "../move_generator_0x88/unmake_move_0x88.js";
 
 import { UNDO_MAX } from "../move_generator_0x88/undo_0x88.js";
 
-import { score_position, PAWN_SCORE_E } from "./evaluate_0x88.js";
+import { score_position_e, PAWN_SCORE_E } from "./evaluate_0x88.js";
 
 import { quiescence_search } from "./quiescence_search_0x88.js";
 
-import { clear_packing_moves_k, add_move_k, MAX_DEPTH_K, IND_DEPTH_K } from "../for_sorting_move/killer_heuristic_0x88.js";
+import {clear_packing_moves_kh, add_move_kh ,MAX_DEPTH_KH, IND_DEPTH_KH} from "../for_sorting_move/killer_heuristic_0x88.js";
 
 import {
   ini_Array_hh, clear_history_hh, ini_test_history_hh, history_good_save_hh, history_bad_save_hh, get_history_hh,
@@ -131,8 +131,8 @@ const set_node_in_0_ab = function () {
   node_ab = 0;
 }
 
-let packing_moves_k1 = new Int32Array(MAX_DEPTH_K).fill(MOVE_NO_ML);// список ходов. ход упакован в одно число Uint32
-let packing_moves_k2 = new Int32Array(MAX_DEPTH_K).fill(MOVE_NO_ML);// список ходов. ход упакован в одно число Uint32
+let packing_moves_k1 = new Int32Array(MAX_DEPTH_KH).fill(MOVE_NO_ML);// список ходов. ход упакован в одно число Uint32
+let packing_moves_k2 = new Int32Array(MAX_DEPTH_KH).fill(MOVE_NO_ML);// список ходов. ход упакован в одно число Uint32
 
 let chess_board_0x88_test = new Int32Array(IND_MAX_CB).fill(0);// записываем доску с ходом
 
@@ -243,7 +243,7 @@ const searching_alpha_beta_id_ab = function (alpha, beta, chess_board_0x88, ches
     }
 
     if (is_quiescence_use == 0) {
-      best_score = score_position(chess_board_0x88, chess_board_key_64);
+      best_score = score_position_e(chess_board_0x88, chess_board_key_64);
     } else {
       //this.quiescence_search_0x88_O.node = 0;
       save_chess_board_0x88_cb(chess_board_0x88_test, chess_board_0x88);
@@ -300,7 +300,7 @@ const searching_alpha_beta_id_ab = function (alpha, beta, chess_board_0x88, ches
 
     if ((isPV == 0) && ((depth_max - depth) < 3)) {
 
-      score = score_position(chess_board_0x88, chess_board_key_64);
+      score = score_position_e(chess_board_0x88, chess_board_key_64);
 
       let raz = PAWN_SCORE_E * (depth_max - depth);
 
@@ -521,7 +521,7 @@ const searching_alpha_beta_id_ab = function (alpha, beta, chess_board_0x88, ches
 
               type_move_k = get_type_move_ml(move_i, packing_moves);
               if (type_move_k > CAPTURES_KING_PAWN_ML) {// ход не взятие
-                add_move_k(packing_moves, packing_moves_k1, packing_moves_k2, move_i, depth);
+                add_move_kh(packing_moves, packing_moves_k1, packing_moves_k2, move_i, depth);
 
                 // console.log(" вставили киллер для белых depth " + depth + " k= " + packing_moves[move_i]);
                 // console.log(" киллер depth " + depth + " k1= " + packing_moves_k1[depth]);
@@ -591,7 +591,7 @@ const searching_alpha_beta_id_ab = function (alpha, beta, chess_board_0x88, ches
             if (is_killer_heuristic_use_ab == 1) {
               type_move_k = get_type_move_ml(move_i, packing_moves)
               if (type_move_k > CAPTURES_KING_PAWN_ML) {// ход не взятие
-                add_move_k(packing_moves, packing_moves_k1, packing_moves_k2, move_i, depth);
+                add_move_kh(packing_moves, packing_moves_k1, packing_moves_k2, move_i, depth);
 
                 // console.log(" вставили киллер для черных depth " + depth + " k= " + packing_moves[move_i]);
                 // console.log(" киллер depth " + depth + " k1= " + packing_moves_k1[depth]);

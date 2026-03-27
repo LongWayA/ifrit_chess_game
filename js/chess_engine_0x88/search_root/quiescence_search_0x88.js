@@ -49,7 +49,7 @@ import {
 } from "../move_generator_0x88/pv_line_0x88.js";
 
 import {
-    generated_pseudo_legal_captures_mgc, generated_pseudo_legal_moves_one_piece_for_gui_mgc, check_detected_mgc
+    generated_pseudo_legal_captures_mgc, generated_pseudo_legal_captures_one_piece_for_gui_mgc, check_detected_mgc
 } from "../move_generator_0x88/move_generator_captures_0x88.js";
 
 import { do_moves_mm } from "../move_generator_0x88/make_move_0x88.js";
@@ -57,7 +57,7 @@ import { undo_moves_um } from "../move_generator_0x88/unmake_move_0x88.js";
 
 import { UNDO_MAX } from "../move_generator_0x88/undo_0x88.js";
 
-import { score_position } from "./evaluate_0x88.js";
+import { score_position_e } from "./evaluate_0x88.js";
 
 /**
 * НАЗНАЧЕНИЕ
@@ -99,7 +99,7 @@ const quiescence_search = function (alpha, beta, chess_board_0x88, chess_board_k
   let name_capture_piece;// имя взятой фигуры
   let piece_color;// цвет хода
 
-  let static_eval = score_position(chess_board_0x88, chess_board_key_64);
+  let static_eval = score_position_e(chess_board_0x88, chess_board_key_64);
   node_qs = node_qs + 1;
 
   // Stand Pat =====================================

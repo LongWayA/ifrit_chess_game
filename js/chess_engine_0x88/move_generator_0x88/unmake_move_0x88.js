@@ -39,7 +39,7 @@ import {
 } from "./chess_board_0x88.js";
 
 import {     
-  generated_pseudo_legal_quiet_moves_mgq, generated_pseudo_legal_moves_one_piece_for_gui_qm_mgq,
+  generated_pseudo_legal_quiet_moves_mgq, generated_pseudo_legal_quiet_moves_one_piece_for_gui_mgq,
   A1_MGQ, B1_MGQ, C1_MGQ , D1_MGQ, E1_MGQ, F1_MGQ, G1_MGQ, H1_MGQ, 
   A8_MGQ, B8_MGQ, C8_MGQ, D8_MGQ, E8_MGQ, F8_MGQ, G8_MGQ, H8_MGQ 
 } from "../move_generator_0x88/move_generator_quiet_0x88.js";
@@ -87,7 +87,7 @@ const undo_moves_um = function (chess_board_0x88, chess_board_key_64, chess_boar
     case MOVE_KNIGHT_ML:
     case MOVE_PAWN_ML:
       // возвращаем простой ход.
-      unmake_simple_move_0x88(chess_board_0x88, from, to);
+      unmake_simple_move_0x88_um(chess_board_0x88, from, to);
       break;
 
     ///////////////////////////////////////////////////////  
@@ -136,30 +136,30 @@ const undo_moves_um = function (chess_board_0x88, chess_board_key_64, chess_boar
 
     case CAPTURES_ROOK_ROOK_ML:
     case CAPTURES_KING_ROOK_ML:
-      unmake_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece);     
+      unmake_captures_move_0x88_um(chess_board_0x88, from, to, name_capture_piece);     
       break;
 
     //////////////////////////////////////////////
     // MOVE_KING_CASTLE
     case MOVE_KING_CASTLE_ML:
-      unmake_king_castle_move_0x88(chess_board_0x88, from, to, piece_color);
+      unmake_king_castle_move_0x88_um(chess_board_0x88, from, to, piece_color);
       break;
 
     // MOVE_KING_QUEEN_CASTLE   
     case MOVE_KING_QUEEN_CASTLE_ML:
-      unmake_king_queen_castle_move_0x88(chess_board_0x88, from, to, piece_color);
+      unmake_king_queen_castle_move_0x88_um(chess_board_0x88, from, to, piece_color);
       break;
 
     //////////////////////////////////////////////
     // специальный ходы все про пешки 
     // MOVE_DOUBLE_PAWN       
     case MOVE_DOUBLE_PAWN_ML:
-      unmake_simple_move_0x88(chess_board_0x88, from, to);
+      unmake_simple_move_0x88_um(chess_board_0x88, from, to);
       break;
 
     // EP_CAPTURES
     case EP_CAPTURES_ML:
-      unmake_en_passant_move_0x88(chess_board_0x88, from, to, piece_color);
+      unmake_en_passant_move_0x88_um(chess_board_0x88, from, to, piece_color);
       break;
 
     // MOVE PAWN PROMO  
@@ -167,7 +167,7 @@ const undo_moves_um = function (chess_board_0x88, chess_board_key_64, chess_boar
     case MOVE_PAWN_PROMO_ROOK_ML:
     case MOVE_PAWN_PROMO_BISHOP_ML:
     case MOVE_PAWN_PROMO_KNIGHT_ML:
-      unmake_promo_move_0x88(chess_board_0x88, from, to, piece_color);
+      unmake_promo_move_0x88_um(chess_board_0x88, from, to, piece_color);
       break;
 
     //CAPTURES PAWN PROMO
@@ -194,7 +194,7 @@ const undo_moves_um = function (chess_board_0x88, chess_board_key_64, chess_boar
     case CAPTURES_PAWN_BISHOP_PROMO_KNIGHT_ML:
     case CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT_ML:
     case CAPTURES_PAWN_ROOK_PROMO_KNIGHT_ML:
-      unmake_promo_captures_move_0x88(chess_board_0x88, from, to, name_capture_piece, piece_color);
+      unmake_promo_captures_move_0x88_um(chess_board_0x88, from, to, name_capture_piece, piece_color);
       break;
 
     default://
@@ -210,7 +210,7 @@ const undo_moves_um = function (chess_board_0x88, chess_board_key_64, chess_boar
  * @param {number} to 
  * @returns {void}
  */
-const unmake_simple_move_0x88 = function (chess_board_0x88, from, to) {
+const unmake_simple_move_0x88_um = function (chess_board_0x88, from, to) {
 
   // записываем имя фигуры на старом месте
   chess_board_0x88[from] =
@@ -229,7 +229,7 @@ const unmake_simple_move_0x88 = function (chess_board_0x88, from, to) {
  * @param {number} captures_piece 
  * @returns {void}
  */
-const unmake_captures_move_0x88 = function (chess_board_0x88, from, to, captures_piece) {
+const unmake_captures_move_0x88_um = function (chess_board_0x88, from, to, captures_piece) {
 
   // записываем имя фигуры на старом месте
   chess_board_0x88[from] =
@@ -248,7 +248,7 @@ const unmake_captures_move_0x88 = function (chess_board_0x88, from, to, captures
  * @param {number} piece_color 
  * @returns {void}
  */
-const unmake_king_castle_move_0x88 = function (chess_board_0x88, from, to, piece_color) {
+const unmake_king_castle_move_0x88_um = function (chess_board_0x88, from, to, piece_color) {
 
   // перемещаем назад короля. его ход прописан в списке ходов
   // записываем имя фигуры на старом месте
@@ -287,7 +287,7 @@ const unmake_king_castle_move_0x88 = function (chess_board_0x88, from, to, piece
  * @param {number} piece_color 
  * @returns {void}
  */
-const unmake_king_queen_castle_move_0x88 = function (chess_board_0x88, from, to, piece_color) {
+const unmake_king_queen_castle_move_0x88_um = function (chess_board_0x88, from, to, piece_color) {
 
   // перемещаем назад короля. его ход прописан в списке ходов
   // записываем имя фигуры на старом месте
@@ -328,7 +328,7 @@ const unmake_king_queen_castle_move_0x88 = function (chess_board_0x88, from, to,
  * @param {number} piece_color 
  * @returns {void}
  */
-const unmake_en_passant_move_0x88 = function (chess_board_0x88, from, to, piece_color) {
+const unmake_en_passant_move_0x88_um = function (chess_board_0x88, from, to, piece_color) {
 
   // записываем имя фигуры на старом месте
   chess_board_0x88[from] =
@@ -353,7 +353,7 @@ const unmake_en_passant_move_0x88 = function (chess_board_0x88, from, to, piece_
  * @param {number} piece_color 
  * @returns {void}
  */
-const unmake_promo_move_0x88 = function (chess_board_0x88, from, to, piece_color) {
+const unmake_promo_move_0x88_um = function (chess_board_0x88, from, to, piece_color) {
 
   if (piece_color == 1) {
     chess_board_0x88[from] = W_PAWN_CB;//
@@ -375,7 +375,7 @@ const unmake_promo_move_0x88 = function (chess_board_0x88, from, to, piece_color
  * @param {number} piece_color 
  * @returns {void}
  */
-const unmake_promo_captures_move_0x88 = function (chess_board_0x88, from, to, captures_piece, piece_color) {
+const unmake_promo_captures_move_0x88_um = function (chess_board_0x88, from, to, captures_piece, piece_color) {
 
   if (piece_color == 1) {
     chess_board_0x88[from] = W_PAWN_CB;//

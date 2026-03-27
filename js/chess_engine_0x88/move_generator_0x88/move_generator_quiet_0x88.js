@@ -53,6 +53,9 @@ import {
 //+
 // тут все прозрачно. идей пока нет
 
+const STOP_BEAM_TRUE_MGQ = 1;
+const STOP_BEAM_FALSE_MGQ = 0;
+
 // нужно для рокировок и превращений пешек
 // именуем поля на первой линии
 const A1_MGQ = 112;
@@ -80,22 +83,22 @@ const H8_MGQ = 7;
 32  33  34    
 */
 // ходы короля. так же ходит ферзь
-const moves_king = new Int32Array([-16, -15, 1, 17, 16, 15, -1, -17]);
-const moves_queen = moves_king;
+const moves_king_mgq = new Int32Array([-16, -15, 1, 17, 16, 15, -1, -17]);
+const moves_queen = moves_king_mgq;
 /*
  1      
 16 17 18
  33
 */
 // ходы ладьи
-const moves_rook = new Int32Array([-16, 1, 16, -1]);
+const moves_rook_mgq = new Int32Array([-16, 1, 16, -1]);
 /*
  0    2     
    17
  32   34
 */
 // ходы слона
-const moves_bishop = new Int32Array([-15, 17, 15, -17]);
+const moves_bishop_mgq = new Int32Array([-15, 17, 15, -17]);
 /*
      1---3    
  16    |   20
@@ -104,10 +107,10 @@ const moves_bishop = new Int32Array([-15, 17, 15, -17]);
     65---67
 */
 // ходы коня
-const moves_knight = new Int32Array([-33, -31, -14, 18, 33, 31, 14, -18]);
+const moves_knight_mgq = new Int32Array([-33, -31, -14, 18, 33, 31, 14, -18]);
 
-// генерируем всевозможные ходы, но не учитываем шахи и вскрытые шахи.
-/**
+
+/** генерируем всевозможные ходы, но не учитываем шахи и вскрытые шахи.
 * @param {Int32Array} chess_board_0x88
 * @param {Int32Array} packing_moves
 * @returns {void}
@@ -118,37 +121,37 @@ const generated_pseudo_legal_quiet_moves_mgq = function (chess_board_0x88, packi
     for (let from = 0; from < 128; from++) {
         // если мы не вышли за пределы доски
         if ((from & 136) == 0) {// 136 0x88
-            generated_pseudo_legal_moves_one_piece_mgq(from, side_to_move, chess_board_0x88, packing_moves);
+            generated_pseudo_legal_quiet_moves_one_piece_mgq(from, side_to_move, chess_board_0x88, packing_moves);
         }
     }
 }
 
-//  считаем ходы одной фигуры из конкретной позиции
-/**
+
+/**  считаем ходы одной фигуры из конкретной позиции
 * @param {number} from
 * @param {Int32Array} chess_board_0x88
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_pseudo_legal_moves_one_piece_for_gui_qm_mgq = function (from, chess_board_0x88, packing_moves) {
+const generated_pseudo_legal_quiet_moves_one_piece_for_gui_mgq = function (from, chess_board_0x88, packing_moves) {
     //console.log('Move_generator_quiet_0x88_С->generated_pseudo_legal_moves');
     let side_to_move = chess_board_0x88[SIDE_TO_MOVE_CB];
     // если мы не вышли за пределы доски
     if ((from & 136) == 0) {// 136 0x88
-        generated_pseudo_legal_moves_one_piece_mgq(from, side_to_move, chess_board_0x88, packing_moves);
+        generated_pseudo_legal_quiet_moves_one_piece_mgq(from, side_to_move, chess_board_0x88, packing_moves);
     }
 }
 
 
-//  считаем ходы одной фигуры из конкретной позиции
-/**
+
+/** считаем ходы одной фигуры из конкретной позиции
 * @param {number} from
 * @param {number} side_to_move
 * @param {Int32Array} chess_board_0x88
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_pseudo_legal_moves_one_piece_mgq = function (from, side_to_move, chess_board_0x88, packing_moves) {
+const generated_pseudo_legal_quiet_moves_one_piece_mgq = function (from, side_to_move, chess_board_0x88, packing_moves) {
 
     let piece_name;
     let piece_color;
@@ -162,52 +165,52 @@ const generated_pseudo_legal_moves_one_piece_mgq = function (from, side_to_move,
 
         // смотрим фигуру на доске
         switch (piece_name) {
-            case W_KING_CB:// KING
+            case W_KING_CB:// белый король
                 // считаем взятия королем и заполняем список move_list_0x88_O
                 generated_quiet_moves_king_mgq(W_KING_CB, from, chess_board_0x88, packing_moves);
                 generated_moves_castle_king_mgq(WHITE_CB, from, chess_board_0x88, packing_moves);
                 break;
-            case B_KING_CB:// KING                
+            case B_KING_CB:// черный король            
                 // считаем взятия королем и заполняем список move_list_0x88_O
                 generated_quiet_moves_king_mgq(B_KING_CB, from, chess_board_0x88, packing_moves);
                 generated_moves_castle_king_mgq(BLACK_CB, from, chess_board_0x88, packing_moves);
                 break;
-            case W_QUEEN_CB://QUEEN
+            case W_QUEEN_CB:// белый ферзь
                 generated_quiet_moves_queen_mgq(W_QUEEN_CB, from, chess_board_0x88, packing_moves);
                 break;
-            case B_QUEEN_CB://QUEEN                
+            case B_QUEEN_CB:// черный ферзь              
                 generated_quiet_moves_queen_mgq(B_QUEEN_CB, from, chess_board_0x88, packing_moves);
                 break;
-            case W_ROOK_CB://ROOK
+            case W_ROOK_CB:// белая ладья
                 generated_quiet_moves_rook_mgq(W_ROOK_CB, from, chess_board_0x88, packing_moves);
                 break;
-            case B_ROOK_CB://ROOK               
+            case B_ROOK_CB:// черная ладья               
                 generated_quiet_moves_rook_mgq(B_ROOK_CB, from, chess_board_0x88, packing_moves);
                 break;
-            case W_BISHOP_CB://BISHOP
+            case W_BISHOP_CB:// белый слон
                 generated_quiet_moves_bishop_mgq(W_BISHOP_CB, from, chess_board_0x88, packing_moves);
                 break;
-            case B_BISHOP_CB://BISHOP                
+            case B_BISHOP_CB:// черный слон                
                 generated_quiet_moves_bishop_mgq(B_BISHOP_CB, from, chess_board_0x88, packing_moves);
                 break;
-            case W_KNIGHT_CB://KNIGHT
+            case W_KNIGHT_CB:// белый конь
                 generated_quiet_moves_knight_mgq(W_KNIGHT_CB, from, chess_board_0x88, packing_moves);
                 break;
-            case B_KNIGHT_CB://KNIGHT                
+            case B_KNIGHT_CB:// черный конь              
                 generated_quiet_moves_knight_mgq(B_KNIGHT_CB, from, chess_board_0x88, packing_moves);
                 break;
-            case W_PAWN_CB://PAWN
+            case W_PAWN_CB:// белая пешка
                 generated_quiet_moves_pawn_mgq(WHITE_CB, from, chess_board_0x88, packing_moves);
                 break;
-            case B_PAWN_CB://PAWN                
+            case B_PAWN_CB:// черная пешка               
                 generated_quiet_moves_pawn_mgq(BLACK_CB, from, chess_board_0x88, packing_moves);
                 break;
         }
     }
 }
 
-// смотрим и если находим простые ходы то добавляем в список ходов
-/**
+
+/** смотрим и если находим простые ходы то добавляем в список ходов
 * @param {number} piece_name
 * @param {number} from
 * @param {number} to
@@ -223,13 +226,13 @@ const add_quiet_move_mgq = function (piece_name, from, to, chess_board_0x88, pac
     if (piece_to == 0) {// проверяем клетку куда ходим. Если там нет фигур то можно ходить
         type_move = return_type_simple_move_ml(piece_name, PIECE_NO_CB);
         add_packing_move_ml(packing_moves, type_move, from, to, PIECE_NO_CB);
-        return 0;// можно продолжать луч
+        return STOP_BEAM_FALSE_MGQ;// можно продолжать луч
     }
-    return 1;// луч прерываем
+    return STOP_BEAM_TRUE_MGQ;// луч прерываем
 }
 
-// простые ходы короля (т.е. не взятия и не рокировки)
-/**
+
+/** простые ходы короля (т.е. не взятия и не рокировки)
 * @param {number} piece_name 
 * @param {number} from
 * @param {Int32Array} chess_board_0x88
@@ -241,15 +244,15 @@ const generated_quiet_moves_king_mgq = function (piece_name, from, chess_board_0
     let to;
     let stop_beam;
     for (let j = 0; j < 8; j++) {
-        to = from + moves_king[j];
+        to = from + moves_king_mgq[j];
         if ((to & 136) == 0) {// если мы не вышли за пределы доски
             stop_beam = add_quiet_move_mgq(piece_name, from, to, chess_board_0x88, packing_moves);
         }
     }
 }
 
-// простые ходы ферзя (т.е. не взятия)
-/**
+
+/** простые ходы ферзя (т.е. не взятия)
 * @param {number} piece_name 
 * @param {number} from
 * @param {Int32Array} chess_board_0x88
@@ -267,7 +270,7 @@ const generated_quiet_moves_queen_mgq = function (piece_name, from, chess_board_
         if ((to & 136) == 0) {// если мы не вышли за пределы доски
             while (true) {
                 stop_beam = add_quiet_move_mgq(piece_name, from, to, chess_board_0x88, packing_moves);
-                if (stop_beam == 1) break;// уперлись в фигуру
+                if (stop_beam == STOP_BEAM_TRUE_MGQ) break;// уперлись в фигуру
                 to = to + moves_queen[j];
                 if ((to & 136) != 0) break;// конец доски
             }
@@ -275,8 +278,8 @@ const generated_quiet_moves_queen_mgq = function (piece_name, from, chess_board_
     }
 }
 
-// простые ходы ладьи
-/**
+
+/** простые ходы ладьи
 * @param {number} piece_name 
 * @param {number} from
 * @param {Int32Array} chess_board_0x88
@@ -289,20 +292,20 @@ const generated_quiet_moves_rook_mgq = function (piece_name, from, chess_board_0
     let stop_beam;
 
     for (let j = 0; j < 4; j++) {
-        to = from + moves_rook[j];
+        to = from + moves_rook_mgq[j];
         if ((to & 136) == 0) {// если мы не вышли за пределы доски
             while (true) {
                 stop_beam = add_quiet_move_mgq(piece_name, from, to, chess_board_0x88, packing_moves);
-                if (stop_beam == 1) break;
-                to = to + moves_rook[j];
+                if (stop_beam == STOP_BEAM_TRUE_MGQ) break;
+                to = to + moves_rook_mgq[j];
                 if ((to & 136) != 0) break;
             }
         }
     }
 }
 
-// простые ходы слона
-/**
+
+/** простые ходы слона
 * @param {number} piece_name 
 * @param {number} from
 * @param {Int32Array} chess_board_0x88
@@ -315,21 +318,20 @@ const generated_quiet_moves_bishop_mgq = function (piece_name, from, chess_board
     let stop_beam;
 
     for (let j = 0; j < 4; j++) {
-        to = from + moves_bishop[j];
+        to = from + moves_bishop_mgq[j];
         if ((to & 136) == 0) {// если мы не вышли за пределы доски
             while (true) {
                 stop_beam = add_quiet_move_mgq(piece_name, from, to, chess_board_0x88, packing_moves);
-                if (stop_beam == 1) break;
-                to = to + moves_bishop[j];
+                if (stop_beam == STOP_BEAM_TRUE_MGQ) break;
+                to = to + moves_bishop_mgq[j];
                 if ((to & 136) != 0) break;
             }
         }
     }
-
 }
 
-// простые ходы коня
-/**
+
+/** простые ходы коня
 * @param {number} piece_name 
 * @param {number} from
 * @param {Int32Array} chess_board_0x88
@@ -342,15 +344,15 @@ const generated_quiet_moves_knight_mgq = function (piece_name, from, chess_board
     let stop_beam;
 
     for (let j = 0; j < 8; j++) {
-        to = from + moves_knight[j];
+        to = from + moves_knight_mgq[j];
         if ((to & 136) == 0) {// если мы не вышли за пределы доски
             stop_beam = add_quiet_move_mgq(piece_name, from, to, chess_board_0x88, packing_moves);
         }
     }
 }
 
-// рокировки короля. черного, белого, длинные, короткие
-/**
+
+/** рокировки короля. черного, белого, длинные, короткие
 * @param {number} piece_color
 * @param {number} from
 * @param {Int32Array} chess_board_0x88
@@ -358,14 +360,14 @@ const generated_quiet_moves_knight_mgq = function (piece_name, from, chess_board
 * @returns {void}
 */
 const generated_moves_castle_king_mgq = function (piece_color, from, chess_board_0x88, packing_moves) {
-    let to;
-    let piece_to_1;
-    let piece_to_2;
-    let piece_to_3;
+    let to;//        C1_MGQ G1_MGQ
+    let piece_to_1;//B1_MGQ F1_MGQ
+    let piece_to_2;//C1_MGQ G1_MGQ
+    let piece_to_3;//D1_MGQ
     let type_move;
 
-    if (from == E1_MGQ) {// король стоит на стартовой позиции
-        if (piece_color == 1) {// король белый
+    if (from == E1_MGQ) {//  король стоит на стартовой позиции
+        if (piece_color == WHITE_CB) {// король белый
             if (chess_board_0x88[IND_CASTLING_Q_CB] == 1) {// рокировка белых в длинную сторону   1/0
                 piece_to_1 = chess_board_0x88[B1_MGQ];
                 piece_to_2 = chess_board_0x88[C1_MGQ];
@@ -389,7 +391,7 @@ const generated_moves_castle_king_mgq = function (piece_color, from, chess_board
         }
 
     } else if (from == E8_MGQ) {// король стоит на стартовой позиции
-        if (piece_color == 0) {// король черный
+        if (piece_color == BLACK_CB) {// король черный
             if (chess_board_0x88[IND_CASTLING_q_CB] == 1) {// рокировка черных в длинную сторону   1/0
                 piece_to_1 = chess_board_0x88[B8_MGQ];
                 piece_to_2 = chess_board_0x88[C8_MGQ];
@@ -414,8 +416,8 @@ const generated_moves_castle_king_mgq = function (piece_color, from, chess_board
     }
 }
 
-// простые ходы пешек белых и черных
-/**
+
+/** простые ходы пешек белых и черных
 * @param {number} piece_color
 * @param {number} from
 * @param {Int32Array} chess_board_0x88
@@ -432,8 +434,8 @@ const generated_quiet_moves_pawn_mgq = function (piece_color, from, chess_board_
 }
 
 
-// простые ходы белых пешек
-/** 
+
+/** простые ходы белых пешек
 * @param {number} from
 * @param {Int32Array} chess_board_0x88
 * @param {Int32Array} packing_moves
@@ -441,21 +443,21 @@ const generated_quiet_moves_pawn_mgq = function (piece_color, from, chess_board_
 */
 const generated_quiet_moves_pawn_white_mgq = function (from, chess_board_0x88, packing_moves) {
 
-    if (Math.floor(from / 16) == 6) {// белая пешка на стартовой позиции(2-ая линия). можно ходить на две клетки
+    if (Math.floor(from / 16) == 6) {// белая пешка на стартовой позиции(2-ая линия снизу). можно ходить на две клетки
         generated_moves_pawn_double_mgq(from, (from - 16), (from - 32),
             chess_board_0x88, packing_moves);
     }
-    if (Math.floor(from / 16) == 1) {// белая пешка на на предпоследней позиции(7-ая линия). можно ходить с превращением
+    if (Math.floor(from / 16) == 1) {// белая пешка на предпоследней позиции(7-ая линия снизу). можно ходить с превращением
         generated_quiet_moves_pawn_promo_mgq(from, (from - 16),
             chess_board_0x88, packing_moves);
-    } else {
+    } else { //ходы белой пешки на одну клетку
         generated_moves_pawn_one_mgq(from, (from - 16), chess_board_0x88, packing_moves);
     }
 
 }
 
-// простые ходы черных пешек
-/**
+
+/** простые ходы черных пешек
 * @param {number} from
 * @param {Int32Array} chess_board_0x88
 * @param {Int32Array} packing_moves
@@ -463,21 +465,21 @@ const generated_quiet_moves_pawn_white_mgq = function (from, chess_board_0x88, p
 */
 const generated_quiet_moves_pawn_black_mgq = function (from, chess_board_0x88, packing_moves) {
 
-    if (Math.floor(from / 16) == 1) {// белые пешки на стартовой позиции. можно ходить на две клетки
+    if (Math.floor(from / 16) == 1) {// черная пешка на стартовой позиции(7-ая линия снизу). можно ходить на две клетки
         generated_moves_pawn_double_mgq(from, (from + 16), (from + 32),
             chess_board_0x88, packing_moves);
     }
-    if (Math.floor(from / 16) == 6) {// 136 0x88
+    if (Math.floor(from / 16) == 6) {// черная пешка на предпоследней позиции(2-ая линия снизу). можно ходить с превращением
         generated_quiet_moves_pawn_promo_mgq(from, (from + 16),
             chess_board_0x88, packing_moves);
-    } else {
+    } else { //ходы черной пешки на одну клетку
         generated_moves_pawn_one_mgq(from, (from + 16), chess_board_0x88, packing_moves);
     }
 
 }
 
-// ход пешки на одну клетку
-/**
+
+/** ход пешки на одну клетку
 * @param {number} from
 * @param {number} to
 * @param {Int32Array} chess_board_0x88
@@ -489,14 +491,14 @@ const generated_moves_pawn_one_mgq = function (from, to, chess_board_0x88, packi
     let type_move;
 
     piece_to = chess_board_0x88[to];
-    if (piece_to == 0) {// цвет не задан и значит фигуры там нет. можно ходить. это спокойный ход 
+    if (piece_to == 0) {// фигуры там нет. можно ходить. это спокойный ход 
         type_move = MOVE_PAWN_ML;
         add_packing_move_ml(packing_moves, type_move, from, to, PIECE_NO_CB);
     }
 }
 
-// ход пешки на две клетки
-/**
+
+/** ход пешки на две клетки
 * @param {number} from
 * @param {number} to_void
 * @param {number} to
@@ -517,8 +519,8 @@ const generated_moves_pawn_double_mgq = function (from, to_void, to, chess_board
     }
 }
 
-// ходы пешки с превращением
-/**
+
+/** ходы пешки с превращением
 * @param {number} from
 * @param {number} to_center
 * @param {Int32Array} chess_board_0x88
@@ -544,7 +546,7 @@ const generated_quiet_moves_pawn_promo_mgq = function (from, to_center, chess_bo
 }
 
 export { 
-    generated_pseudo_legal_quiet_moves_mgq, generated_pseudo_legal_moves_one_piece_for_gui_qm_mgq,
+    generated_pseudo_legal_quiet_moves_mgq, generated_pseudo_legal_quiet_moves_one_piece_for_gui_mgq,
     A1_MGQ, B1_MGQ, C1_MGQ , D1_MGQ, E1_MGQ, F1_MGQ, G1_MGQ, H1_MGQ, 
     A8_MGQ, B8_MGQ, C8_MGQ, D8_MGQ, E8_MGQ, F8_MGQ, G8_MGQ, H8_MGQ
 };

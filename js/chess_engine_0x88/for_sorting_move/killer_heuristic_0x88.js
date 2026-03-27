@@ -19,8 +19,8 @@
 
   //let packing_moves_k1 = new Int32Array(MAX_DEPTH_K).fill(MOVE_NO);// список ходов. ход упакован в одно число Uint32
 
-  const MAX_DEPTH_K = 104;
-  const IND_DEPTH_K = 103;
+  const MAX_DEPTH_KH = 104;
+  const IND_DEPTH_KH = 103;
   
   
 
@@ -29,8 +29,8 @@
   * @param {Int32Array} packing_moves_k
   * @returns {void}
   */
-  const clear_packing_moves_k = function (packing_moves_k) {
-    for (let i = 0; i < MAX_DEPTH_K; i++) {
+  const clear_packing_moves_kh = function (packing_moves_k) {
+    for (let i = 0; i < MAX_DEPTH_KH; i++) {
       packing_moves_k[i] = 0;
   
     }
@@ -45,7 +45,7 @@
    * @param {number} depth
    * @returns {void}
    */ 
-  const add_move_k = function (packing_moves, packing_moves_k1, packing_moves_k2, move_i, depth) {
+  const add_move_kh = function (packing_moves, packing_moves_k1, packing_moves_k2, move_i, depth) {
 
     //console.log('killer_heuristic_0x88_O->add_move depth ' + depth +" type_move " + type_move);
     if (packing_moves_k1[depth] != packing_moves[move_i]) {// если такой ход еще не записан
@@ -55,7 +55,7 @@
       packing_moves_k1[depth] = packing_moves[move_i];
     }
     // увеличиваем количество записанных по глубине позиций
-    if (depth > packing_moves_k1[IND_DEPTH_K]) packing_moves_k1[IND_DEPTH_K] = depth;
+    if (depth > packing_moves_k1[IND_DEPTH_KH]) packing_moves_k1[IND_DEPTH_KH] = depth;
   }
 
-export { clear_packing_moves_k, add_move_k ,MAX_DEPTH_K, IND_DEPTH_K};
+export { clear_packing_moves_kh, add_move_kh ,MAX_DEPTH_KH, IND_DEPTH_KH};

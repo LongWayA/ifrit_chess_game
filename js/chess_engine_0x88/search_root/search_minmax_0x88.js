@@ -57,15 +57,15 @@ import { clear_pv_line_pv, add_move_to_pv_line_pv, save_pv_line_pv, test_print_p
   MAX_DEPTH_PV, IND_TYPE_VARIANT_PV, IND_DEPTH_MAT_PV, IND_DEPTH_PV} from "../move_generator_0x88/pv_line_0x88.js";
 
 import {     
-  generated_pseudo_legal_captures_mgc, generated_pseudo_legal_moves_one_piece_for_gui_mgc, check_detected_mgc 
+  generated_pseudo_legal_captures_mgc, generated_pseudo_legal_captures_one_piece_for_gui_mgc, check_detected_mgc 
 } from "../move_generator_0x88/move_generator_captures_0x88.js";
 import {     
-  generated_pseudo_legal_quiet_moves_mgq, generated_pseudo_legal_moves_one_piece_for_gui_qm_mgq,
+  generated_pseudo_legal_quiet_moves_mgq, generated_pseudo_legal_quiet_moves_one_piece_for_gui_mgq,
   A1_MGQ, B1_MGQ, C1_MGQ , D1_MGQ, E1_MGQ, F1_MGQ, G1_MGQ, H1_MGQ, 
   A8_MGQ, B8_MGQ, C8_MGQ, D8_MGQ, E8_MGQ, F8_MGQ, G8_MGQ, H8_MGQ 
 } from "../move_generator_0x88/move_generator_quiet_0x88.js";
 
-import { score_position } from "./evaluate_0x88.js";
+import { score_position_e } from "./evaluate_0x88.js";
 
 
 
@@ -112,7 +112,7 @@ const searching_minmax = function (packing_pv_line, chess_board_0x88, chess_boar
   if (depth == 0) node_mm = 0;
 
   if (depth >= depth_max) {
-    found_score = score_position(chess_board_0x88, chess_board_key_64);
+    found_score = score_position_e(chess_board_0x88, chess_board_key_64);
     //console.log("searching_minmax->found_score " + found_score);
     //found_score = 0;
     node_mm = node_mm + 1;

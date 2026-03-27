@@ -38,9 +38,9 @@ const ROOK_SCORE_E = 600;  // ладья
 const QUEEN_SCORE_E = 1200; // ферзь
 const KING_SCORE_E = 10000;// король
 
-const PIECE_SCORE = [0, 100, 400, 400, 600, 1200, 10000, 0, 0, 100, 400, 400, 600, 1200, 10000];
+const PIECE_SCORE_E = [0, 100, 400, 400, 600, 1200, 10000, 0, 0, 100, 400, 400, 600, 1200, 10000];
 
-const center_0x88 = [
+const center_0x88_e = [
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   5, 5, 5, 5, 5, 5, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0,
   10, 20, 20, 20, 20, 20, 20, 10, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -51,7 +51,7 @@ const center_0x88 = [
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 ];
 
-const center_queen_0x88 = [
+const center_queen_0x88_e = [
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 1, 2, 2, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -63,7 +63,7 @@ const center_queen_0x88 = [
 ];
 
 
-const white_king_0x88 = [
+const white_king_0x88_e = [
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -74,7 +74,7 @@ const white_king_0x88 = [
   0, 5, 10, 0, 0, 0, 20, 5, 0, 0, 0, 0, 0, 0, 0, 0,
 ];
 
-const black_king_0x88 = [
+const black_king_0x88_e = [
   0, 5, 10, 0, 0, 0, 20, 5, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -85,7 +85,7 @@ const black_king_0x88 = [
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 ];
 
-const white_pawn_0x88 = [
+const white_pawn_0x88_e = [
   100, 100, 100, 100, 100, 100, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0,
   30, 30, 30, 30, 30, 30, 30, 30, 0, 0, 0, 0, 0, 0, 0, 0,
   25, 25, 25, 25, 20, 20, 20, 20, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -96,7 +96,7 @@ const white_pawn_0x88 = [
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 ];
 
-const black_pawn_0x88 = [
+const black_pawn_0x88_e = [
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   5, 5, 5, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   10, 10, 10, 10, 5, 5, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -112,7 +112,7 @@ const black_pawn_0x88 = [
 * @param {BigUint64Array} chess_board_key_64
 * @returns {number}
 */
-const score_position = function (chess_board_0x88, chess_board_key_64) {
+const score_position_e = function (chess_board_0x88, chess_board_key_64) {
 
   let color_piece = 0;
   let score_piece = 0;
@@ -135,7 +135,7 @@ const score_position = function (chess_board_0x88, chess_board_key_64) {
     if ((sq & 136) == 0) {// 136 0x88
 
       index_piece = chess_board_0x88[sq];
-      score_piece = PIECE_SCORE[index_piece];
+      score_piece = PIECE_SCORE_E[index_piece];
       //color_piece = (index_piece > W_KING) ? BLACK : WHITE;
       color_piece = 1 - (index_piece >> 3);
 
@@ -144,32 +144,32 @@ const score_position = function (chess_board_0x88, chess_board_key_64) {
         if (color_piece == 1) {// белая фигура
           score = score + score_piece;
           if (index_piece == W_KING_CB) {
-            score = score + white_king_0x88[sq];
+            score = score + white_king_0x88_e[sq];
           } else if (index_piece == W_QUEEN_CB) {
-            score = score + center_queen_0x88[sq];
+            score = score + center_queen_0x88_e[sq];
           } else if (index_piece == W_ROOK_CB) {
 
           } else if (index_piece == W_BISHOP_CB) {
-            score = score + center_0x88[sq];
+            score = score + center_0x88_e[sq];
           } else if (index_piece == W_KNIGHT_CB) {
-            score = score + center_0x88[sq];
+            score = score + center_0x88_e[sq];
           } else if (index_piece == W_PAWN_CB) {
-            score = score + white_pawn_0x88[sq];
+            score = score + white_pawn_0x88_e[sq];
           }
         } else {// черная фигура
           score = score - score_piece;
           if (index_piece == B_KING_CB) {
-            score = score - black_king_0x88[sq];
+            score = score - black_king_0x88_e[sq];
           } else if (index_piece == B_QUEEN_CB) {
-            score = score - center_queen_0x88[sq];
+            score = score - center_queen_0x88_e[sq];
           } else if (index_piece == B_ROOK_CB) {
 
           } else if (index_piece == B_BISHOP_CB) {
-            score = score - center_0x88[sq];
+            score = score - center_0x88_e[sq];
           } else if (index_piece == B_KNIGHT_CB) {
-            score = score - center_0x88[sq];
+            score = score - center_0x88_e[sq];
           } else if (index_piece == B_PAWN_CB) {
-            score = score - black_pawn_0x88[sq];
+            score = score - black_pawn_0x88_e[sq];
           }
         }//if (color_piece == 1) {// белая фигура
       }//if (index_piece != 0) {
@@ -191,7 +191,7 @@ const score_position = function (chess_board_0x88, chess_board_key_64) {
 * @param {Int32Array} chess_board_0x88
 * @returns {void}
 */
-const test_fen = function (chess_board_0x88) {
+const test_fen_e = function (chess_board_0x88) {
 
   let chess_board_0x88_O_save = new Int32Array(IND_MAX_CB).fill(0);// доска 0x88 с фигурами
 
@@ -237,4 +237,4 @@ const test_fen = function (chess_board_0x88) {
 
 }
 
-export { score_position, PAWN_SCORE_E };
+export { score_position_e, PAWN_SCORE_E };
