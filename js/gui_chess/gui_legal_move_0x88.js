@@ -65,7 +65,7 @@ import { UNDO_MAX } from "../chess_engine_0x88/move_generator_0x88/undo_0x88.js"
 import {
   ini_random_key_array_64_tk, ini_key_array_64_tk, set_key_from_board_0x88_tk, test_chess_board_key_64_tk,
   key_update_do_move_0x88_tk, key_update_ep_move_0x88_tk, key_update_promo_move_0x88_tk,
-  key_update_castle_move_0x88_tk, key_update_ep_0x88_tk, key_update_ep2_0x88_tk, key_update_QqKk_0x88_tk,
+  key_update_castle_move_0x88_tk, key_update_ep_0x88_tk, key_update_ep_sq_0x88_tk, key_update_QqKk_0x88_tk,
   test_generation_key_64_tk
 } from "../chess_engine_0x88/for_sorting_move/transposition_key_0x88.js";
 

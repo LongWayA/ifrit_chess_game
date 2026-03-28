@@ -51,8 +51,8 @@ import { get_undo } from "./undo_0x88.js";
  Отменяем сделанный ход.
 */
 
-// возврат хода
-/**
+
+/** возврат хода
 * @param {Int32Array} chess_board_0x88
 * @param {BigUint64Array} chess_board_key_64
 * @param {BigUint64Array} chess_board_key_64_save
@@ -203,8 +203,8 @@ const undo_moves_um = function (chess_board_0x88, chess_board_key_64, chess_boar
 
 }
 
-// возврат хода рисуем фигуру на старом месте и стираем на новом. это и просто ход.
-/**
+
+/** возврат хода рисуем фигуру на старом месте и стираем на новом. это и просто ход.
  * @param {Int32Array} chess_board_0x88
  * @param {number} from
  * @param {number} to 
@@ -213,16 +213,15 @@ const undo_moves_um = function (chess_board_0x88, chess_board_key_64, chess_boar
 const unmake_simple_move_0x88_um = function (chess_board_0x88, from, to) {
 
   // записываем имя фигуры на старом месте
-  chess_board_0x88[from] =
-    chess_board_0x88[to];
+  chess_board_0x88[from] = chess_board_0x88[to];
 
   // стираем имя фигуры на новом месте
   chess_board_0x88[to] = PIECE_NO_CB;// 0
 }
 
 
-// возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
-/**
+
+/** возврат хода рисуем фигуру на старом месте и востанавливаем взятую на новом.
  * @param {Int32Array} chess_board_0x88
  * @param {number} from
  * @param {number} to 
@@ -232,16 +231,15 @@ const unmake_simple_move_0x88_um = function (chess_board_0x88, from, to) {
 const unmake_captures_move_0x88_um = function (chess_board_0x88, from, to, captures_piece) {
 
   // записываем имя фигуры на старом месте
-  chess_board_0x88[from] =
-    chess_board_0x88[to];
+  chess_board_0x88[from] = chess_board_0x88[to];
 
   // востанавливаем имя фигуры на новом месте
   chess_board_0x88[to] = captures_piece;//
 }
 
 
-// возврат короткой рокировки
-/**
+
+/** возврат короткой рокировки
  * @param {Int32Array} chess_board_0x88
  * @param {number} from
  * @param {number} to 
@@ -252,8 +250,7 @@ const unmake_king_castle_move_0x88_um = function (chess_board_0x88, from, to, pi
 
   // перемещаем назад короля. его ход прописан в списке ходов
   // записываем имя фигуры на старом месте
-  chess_board_0x88[from] =
-    chess_board_0x88[to];
+  chess_board_0x88[from] = chess_board_0x88[to];
 
   // стираем имя фигуры на новом месте
   chess_board_0x88[to] = PIECE_NO_CB;// 0
@@ -279,8 +276,8 @@ const unmake_king_castle_move_0x88_um = function (chess_board_0x88, from, to, pi
   }
 }
 
-// возврат длинной рокировки
-/**
+
+/** возврат длинной рокировки
  * @param {Int32Array} chess_board_0x88
  * @param {number} from
  * @param {number} to 
@@ -291,8 +288,7 @@ const unmake_king_queen_castle_move_0x88_um = function (chess_board_0x88, from, 
 
   // перемещаем назад короля. его ход прописан в списке ходов
   // записываем имя фигуры на старом месте
-  chess_board_0x88[from] =
-    chess_board_0x88[to];
+  chess_board_0x88[from] = chess_board_0x88[to];
 
   // стираем имя фигуры на новом месте
   chess_board_0x88[to] = PIECE_NO_CB;// 0
@@ -319,9 +315,9 @@ const unmake_king_queen_castle_move_0x88_um = function (chess_board_0x88, from, 
 
 }
 
-// остались пешки
-// возврат взятия на проходе 
-/**
+// пешки
+
+/** возврат взятия на проходе 
  * @param {Int32Array} chess_board_0x88
  * @param {number} from
  * @param {number} to 
@@ -331,8 +327,7 @@ const unmake_king_queen_castle_move_0x88_um = function (chess_board_0x88, from, 
 const unmake_en_passant_move_0x88_um = function (chess_board_0x88, from, to, piece_color) {
 
   // записываем имя фигуры на старом месте
-  chess_board_0x88[from] =
-    chess_board_0x88[to];
+  chess_board_0x88[from] = chess_board_0x88[to];
 
   // стираем имя фигуры на новом месте
   chess_board_0x88[to] = PIECE_NO_CB;//
@@ -345,8 +340,7 @@ const unmake_en_passant_move_0x88_um = function (chess_board_0x88, from, to, pie
   }
 }
 
-//возврат простого хода превращения
-/**
+/** возврат простого хода превращения
  * @param {Int32Array} chess_board_0x88
  * @param {number} from
  * @param {number} to 
@@ -366,8 +360,8 @@ const unmake_promo_move_0x88_um = function (chess_board_0x88, from, to, piece_co
 
 }
 
-//возврат  хода превращения со взятием
-/**
+
+/** возврат  хода превращения со взятием
  * @param {Int32Array} chess_board_0x88
  * @param {number} from
  * @param {number} to 

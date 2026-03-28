@@ -324,7 +324,7 @@ const key_update_ep_0x88_tk = function (chess_board_key_64) {
  * @param {Int32Array} chess_board_0x88
  * @returns {void}
 */
-const key_update_ep2_0x88_tk = function (chess_board_key_64, chess_board_0x88) {
+const key_update_ep_sq_0x88_tk = function (chess_board_key_64, chess_board_0x88) {
     // sm16 ep32 epsq70 Q48 K64 q80 k96
     chess_board_key_64[0] = chess_board_key_64[0] ^
         BigInt(chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE_CB]) ^ key_array_64_tk[5][70];
@@ -386,6 +386,6 @@ const test_generation_key_64_tk = function (chess_board_key_64_test, chess_board
 export {
     ini_random_key_array_64_tk, ini_key_array_64_tk, set_key_from_board_0x88_tk, test_chess_board_key_64_tk,
     key_update_do_move_0x88_tk, key_update_ep_move_0x88_tk, key_update_promo_move_0x88_tk,
-    key_update_castle_move_0x88_tk, key_update_ep_0x88_tk, key_update_ep2_0x88_tk, key_update_QqKk_0x88_tk,
+    key_update_castle_move_0x88_tk, key_update_ep_0x88_tk, key_update_ep_sq_0x88_tk, key_update_QqKk_0x88_tk,
     test_generation_key_64_tk
 };

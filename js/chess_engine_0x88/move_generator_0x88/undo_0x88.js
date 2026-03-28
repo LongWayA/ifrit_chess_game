@@ -38,8 +38,8 @@ const UNDO_KING_FROM_BLACK = 8; // положение в массиве поло
 
 const UNDO_MAX = 9;
 
-// сохраняем значения из доски
-/**
+
+/** сохраняем значения из доски
  * @param {Int32Array} undo
  * @param {Int32Array} chess_board_0x88
  * @returns {void}

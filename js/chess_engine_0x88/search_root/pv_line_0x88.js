@@ -17,7 +17,7 @@ import {
     IND_CASTLING_k_CB, IND_HALFMOVE_CLOCK_CB, IND_FULLMOVE_NUMBER_CB, PIECE_NAME_CB, IND_EN_PASSANT_YES_CB, 
     IND_EN_PASSANT_TARGET_SQUARE_CB, IND_KING_FROM_WHITE_CB, IND_KING_FROM_BLACK_CB, IND_SCORE_CB,
     SQUARE_64_to_128_CB,  SQUARE_128_to_64_CB
-} from "./chess_board_0x88.js";
+} from "../move_generator_0x88/chess_board_0x88.js";
 
 import {
     clear_list_ml, add_packing_move_ml, get_type_move_ml, get_from_ml, get_to_ml, get_name_capture_piece_ml, set_color_ml, 
@@ -26,7 +26,7 @@ import {
     return_type_simple_move_ml, type_move_to_name_piese_ml, type_move_to_name_piese_f_ml, return_promo_piece_from_type_move_ml, 
     set_move_after_the_captures_ml, sorting_list_history_heuristic_ml, set_move_in_0_ml,
   TYPE_MOVE_NAME_ML
-} from "./move_list_0x88.js";
+} from "../move_generator_0x88/move_list_0x88.js";
 
 /**
 * НАЗНАЧЕНИЕ
