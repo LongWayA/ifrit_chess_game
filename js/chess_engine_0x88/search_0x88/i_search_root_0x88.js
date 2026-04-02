@@ -84,20 +84,20 @@ import {
 import {
   ini_Array_hh, clear_history_hh, ini_test_history_hh, history_good_save_hh, history_bad_save_hh, get_history_hh,
   MAX_COLOR_HH, MAX_COORDINATE_HH, MAX_HISTORY_HH
-} from "../for_sorting_move/history_heuristic_0x88.js";
+} from "../for_sorting_move_0x88/history_heuristic_0x88.js";
 
 import {
   ini_random_key_array_64_tk, ini_key_array_64_tk, set_key_from_board_0x88_tk, test_chess_board_key_64_tk,
   key_update_do_move_0x88_tk, key_update_ep_move_0x88_tk, key_update_promo_move_0x88_tk,
   key_update_castle_move_0x88_tk, key_update_ep_0x88_tk, key_update_ep_sq_0x88_tk, key_update_QqKk_0x88_tk,
   test_generation_key_64_tk
-} from "../for_sorting_move/transposition_key_0x88.js";
+} from "../for_sorting_move_0x88/transposition_key_0x88.js";
 
 import {
   clear_out_tt, ini_tt, clear_hash_tt, test_uses_hash_tt, set_position_in_tt, get_position_from_tt, print_test_set_get_position_tt,
   MAX_TABLE_LENTH_TT, MAX_SCORE_UPDATE_TT, ALPHA_UPDATE_TT, BETA_UPDATE_TT, ALPHA_CUT_TT, BETA_CUT_TT,
   IND_TN_TT, IND_SC_TT, IND_DD_TT
-} from "../for_sorting_move/transposition_table_0x88.js";
+} from "../for_sorting_move_0x88/transposition_table_0x88.js";
 
 import { Timer_C } from "../../browser/timer.js";
 
