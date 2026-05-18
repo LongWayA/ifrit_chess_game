@@ -7,7 +7,7 @@
 */
 
 import {
-  start_search_minmax_r, searching_iterative_deepening_r, set_stop_search_in_1_r, set_stop_search_in_0_r, test_tt,
+  start_search_negamax_r, searching_iterative_deepening_r, set_stop_search_in_1_r, set_stop_search_in_0_r, test_tt,
   move_str_to_board_r
 } from "./search_0x88/i_search_root_0x88.js";
 
@@ -113,20 +113,19 @@ class ChessEngine_0x88_С {
     return uci_return_search;
   }
 
-  // запуск полного перебора minmax
+  // запуск полного перебора negamax
   // тут можно проверить корректность игрового движка с помощью perf_t. как правильно он генерирует позиции.
   /**
    * @param {string} fen_start
    * @param {number} depth_max
    * @returns {uci_return_search}
    */
-  go_depth_minmax(fen_start, depth_max) {
-    console.log("ChessEngine_0x88_С->go_depth_minmax");
-    let uci_return_search = start_search_minmax_r(fen_start, depth_max);
+  go_depth_negamax(fen_start, depth_max) {
+    console.log("ChessEngine_0x88_С->go_depth_negamax");
+    let uci_return_search = start_search_negamax_r(fen_start, depth_max);
 
     return uci_return_search;
   }
-
 }
 
 export { ChessEngine_0x88_С };

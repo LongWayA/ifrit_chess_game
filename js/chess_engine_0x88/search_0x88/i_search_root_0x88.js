@@ -8,40 +8,40 @@
 
 
 import {
-    clear_list_ml, add_packing_move_ml, get_type_move_ml, get_from_ml, get_to_ml, get_name_capture_piece_ml, set_color_ml, 
-    set_number_captures_move_ml, sorting_list_ml, test_compare_list_from_ml, test_print_i_move_list_ml, test_print_list_ml, 
-    save_list_from_ml, move_is_found_ml, return_i_move_ml, move_to_string_uci_ml, return_type_captures_pawn_promo_ml, 
-    return_type_simple_move_ml, type_move_to_name_piese_ml, type_move_to_name_piese_f_ml, return_promo_piece_from_type_move_ml, 
-    set_move_after_the_captures_ml, sorting_list_history_heuristic_ml, set_move_in_0_ml,
-    LENGTH_LIST_ML, IND_PIESE_COLOR_ML, IND_NUMBER_CAPTURES_MOVE_ML, IND_NUMBER_MOVE_ML,
-    IND_PROMO_QUEEN_ML, IND_PROMO_ROOK_ML, IND_PROMO_BISHOP_ML, IND_PROMO_KNIGHT_ML,
-    MOVE_NO_ML, CAPTURES_PAWN_QUEEN_PROMO_QUEEN_ML, CAPTURES_PAWN_ROOK_PROMO_QUEEN_ML, CAPTURES_PAWN_BISHOP_PROMO_QUEEN_ML,
-    CAPTURES_PAWN_KNIGHT_PROMO_QUEEN_ML, CAPTURES_PAWN_QUEEN_PROMO_ROOK_ML, CAPTURES_PAWN_ROOK_PROMO_ROOK_ML,
-    CAPTURES_PAWN_BISHOP_PROMO_ROOK_ML, CAPTURES_PAWN_KNIGHT_PROMO_ROOK_ML, CAPTURES_PAWN_QUEEN_PROMO_BISHOP_ML,
-    CAPTURES_PAWN_ROOK_PROMO_BISHOP_ML, CAPTURES_PAWN_BISHOP_PROMO_BISHOP_ML, CAPTURES_PAWN_KNIGHT_PROMO_BISHOP_ML,
-    CAPTURES_PAWN_QUEEN_PROMO_KNIGHT_ML, CAPTURES_PAWN_ROOK_PROMO_KNIGHT_ML, CAPTURES_PAWN_BISHOP_PROMO_KNIGHT_ML,
-    CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT_ML, MOVE_PAWN_PROMO_QUEEN_ML, MOVE_PAWN_PROMO_ROOK_ML, MOVE_PAWN_PROMO_BISHOP_ML,
-    MOVE_PAWN_PROMO_KNIGHT_ML, CAPTURES_PAWN_QUEEN_ML, CAPTURES_PAWN_ROOK_ML, CAPTURES_PAWN_BISHOP_ML, CAPTURES_PAWN_KNIGHT_ML,
-    CAPTURES_KNIGHT_QUEEN_ML, CAPTURES_KNIGHT_ROOK_ML, CAPTURES_BISHOP_QUEEN_ML, CAPTURES_BISHOP_ROOK_ML, CAPTURES_ROOK_QUEEN_ML,
-    CAPTURES_KNIGHT_BISHOP_ML, CAPTURES_KNIGHT_KNIGHT_ML, CAPTURES_BISHOP_BISHOP_ML, CAPTURES_BISHOP_KNIGHT_ML, CAPTURES_ROOK_ROOK_ML,
-    CAPTURES_QUEEN_QUEEN_ML, CAPTURES_ROOK_BISHOP_ML, CAPTURES_ROOK_KNIGHT_ML, CAPTURES_QUEEN_ROOK_ML, CAPTURES_QUEEN_BISHOP_ML,
-    CAPTURES_QUEEN_KNIGHT_ML, CAPTURES_KING_QUEEN_ML, CAPTURES_KING_ROOK_ML, CAPTURES_KING_BISHOP_ML, CAPTURES_KING_KNIGHT_ML,
-    CAPTURES_PAWN_PAWN_ML, EP_CAPTURES_ML, CAPTURES_KNIGHT_PAWN_ML, CAPTURES_BISHOP_PAWN_ML, CAPTURES_ROOK_PAWN_ML,
-    CAPTURES_QUEEN_PAWN_ML, CAPTURES_KING_PAWN_ML, MOVE_QUEEN_ML, MOVE_ROOK_ML, MOVE_BISHOP_ML, MOVE_KNIGHT_ML, MOVE_KING_ML, MOVE_PAWN_ML,
-    MOVE_DOUBLE_PAWN_ML, MOVE_KING_CASTLE_ML, MOVE_KING_QUEEN_CASTLE_ML, TYPE_MOVE_NAME_ML
+  clear_list_ml, add_packing_move_ml, get_type_move_ml, get_from_ml, get_to_ml, get_name_capture_piece_ml, set_color_ml,
+  set_number_captures_move_ml, sorting_list_ml, test_compare_list_from_ml, test_print_i_move_list_ml, test_print_list_ml,
+  save_list_from_ml, move_is_found_ml, return_i_move_ml, move_to_string_uci_ml, return_type_captures_pawn_promo_ml,
+  return_type_simple_move_ml, type_move_to_name_piese_ml, type_move_to_name_piese_f_ml, return_promo_piece_from_type_move_ml,
+  set_move_after_the_captures_ml, sorting_list_history_heuristic_ml, set_move_in_0_ml,
+  LENGTH_LIST_ML, IND_PIESE_COLOR_ML, IND_NUMBER_CAPTURES_MOVE_ML, IND_NUMBER_MOVE_ML,
+  IND_PROMO_QUEEN_ML, IND_PROMO_ROOK_ML, IND_PROMO_BISHOP_ML, IND_PROMO_KNIGHT_ML,
+  MOVE_NO_ML, CAPTURES_PAWN_QUEEN_PROMO_QUEEN_ML, CAPTURES_PAWN_ROOK_PROMO_QUEEN_ML, CAPTURES_PAWN_BISHOP_PROMO_QUEEN_ML,
+  CAPTURES_PAWN_KNIGHT_PROMO_QUEEN_ML, CAPTURES_PAWN_QUEEN_PROMO_ROOK_ML, CAPTURES_PAWN_ROOK_PROMO_ROOK_ML,
+  CAPTURES_PAWN_BISHOP_PROMO_ROOK_ML, CAPTURES_PAWN_KNIGHT_PROMO_ROOK_ML, CAPTURES_PAWN_QUEEN_PROMO_BISHOP_ML,
+  CAPTURES_PAWN_ROOK_PROMO_BISHOP_ML, CAPTURES_PAWN_BISHOP_PROMO_BISHOP_ML, CAPTURES_PAWN_KNIGHT_PROMO_BISHOP_ML,
+  CAPTURES_PAWN_QUEEN_PROMO_KNIGHT_ML, CAPTURES_PAWN_ROOK_PROMO_KNIGHT_ML, CAPTURES_PAWN_BISHOP_PROMO_KNIGHT_ML,
+  CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT_ML, MOVE_PAWN_PROMO_QUEEN_ML, MOVE_PAWN_PROMO_ROOK_ML, MOVE_PAWN_PROMO_BISHOP_ML,
+  MOVE_PAWN_PROMO_KNIGHT_ML, CAPTURES_PAWN_QUEEN_ML, CAPTURES_PAWN_ROOK_ML, CAPTURES_PAWN_BISHOP_ML, CAPTURES_PAWN_KNIGHT_ML,
+  CAPTURES_KNIGHT_QUEEN_ML, CAPTURES_KNIGHT_ROOK_ML, CAPTURES_BISHOP_QUEEN_ML, CAPTURES_BISHOP_ROOK_ML, CAPTURES_ROOK_QUEEN_ML,
+  CAPTURES_KNIGHT_BISHOP_ML, CAPTURES_KNIGHT_KNIGHT_ML, CAPTURES_BISHOP_BISHOP_ML, CAPTURES_BISHOP_KNIGHT_ML, CAPTURES_ROOK_ROOK_ML,
+  CAPTURES_QUEEN_QUEEN_ML, CAPTURES_ROOK_BISHOP_ML, CAPTURES_ROOK_KNIGHT_ML, CAPTURES_QUEEN_ROOK_ML, CAPTURES_QUEEN_BISHOP_ML,
+  CAPTURES_QUEEN_KNIGHT_ML, CAPTURES_KING_QUEEN_ML, CAPTURES_KING_ROOK_ML, CAPTURES_KING_BISHOP_ML, CAPTURES_KING_KNIGHT_ML,
+  CAPTURES_PAWN_PAWN_ML, EP_CAPTURES_ML, CAPTURES_KNIGHT_PAWN_ML, CAPTURES_BISHOP_PAWN_ML, CAPTURES_ROOK_PAWN_ML,
+  CAPTURES_QUEEN_PAWN_ML, CAPTURES_KING_PAWN_ML, MOVE_QUEEN_ML, MOVE_ROOK_ML, MOVE_BISHOP_ML, MOVE_KNIGHT_ML, MOVE_KING_ML, MOVE_PAWN_ML,
+  MOVE_DOUBLE_PAWN_ML, MOVE_KING_CASTLE_ML, MOVE_KING_QUEEN_CASTLE_ML, TYPE_MOVE_NAME_ML
 } from "../move_generator_0x88/move_list_0x88.js";
 
 import {
-    x07_y07_to_0x88_cb, s_0x88_to_x07_cb, s_0x88_to_y07_cb,
-    test_print_any_0x88_cb, test_print_piese_0x88_cb, test_print_piese_color_0x88_cb, test_print_piese_in_line_0x88_cb, 
-    test_compare_chess_board_0x88_cb,save_chess_board_0x88_cb, set_board_from_fen_0x88_cb, set_fen_from_0x88_cb, 
-    searching_king_cb, iniStartPositionForWhite_cb, letter_to_x_coordinate_cb,
-    IND_MAX_CB, SIDE_TO_MOVE_CB, LET_COOR_CB,
-    BLACK_CB, WHITE_CB, PIECE_NO_CB, W_PAWN_CB, W_KNIGHT_CB, W_BISHOP_CB, W_ROOK_CB, W_QUEEN_CB, W_KING_CB, B_PAWN_CB, 
-    B_KNIGHT_CB, B_BISHOP_CB, B_ROOK_CB, B_QUEEN_CB, B_KING_CB, IND_CASTLING_Q_CB, IND_CASTLING_q_CB, IND_CASTLING_K_CB,
-    IND_CASTLING_k_CB, IND_HALFMOVE_CLOCK_CB, IND_FULLMOVE_NUMBER_CB, PIECE_NAME_CB, IND_EN_PASSANT_YES_CB, 
-    IND_EN_PASSANT_TARGET_SQUARE_CB, IND_KING_FROM_WHITE_CB, IND_KING_FROM_BLACK_CB, IND_SCORE_CB,
-    SQUARE_64_to_128_CB,  SQUARE_128_to_64_CB
+  x07_y07_to_0x88_cb, s_0x88_to_x07_cb, s_0x88_to_y07_cb,
+  test_print_any_0x88_cb, test_print_piese_0x88_cb, test_print_piese_color_0x88_cb, test_print_piese_in_line_0x88_cb,
+  test_compare_chess_board_0x88_cb, save_chess_board_0x88_cb, set_board_from_fen_0x88_cb, set_fen_from_0x88_cb,
+  searching_king_cb, iniStartPositionForWhite_cb, letter_to_x_coordinate_cb,
+  IND_MAX_CB, SIDE_TO_MOVE_CB, LET_COOR_CB,
+  BLACK_CB, WHITE_CB, PIECE_NO_CB, W_PAWN_CB, W_KNIGHT_CB, W_BISHOP_CB, W_ROOK_CB, W_QUEEN_CB, W_KING_CB, B_PAWN_CB,
+  B_KNIGHT_CB, B_BISHOP_CB, B_ROOK_CB, B_QUEEN_CB, B_KING_CB, IND_CASTLING_Q_CB, IND_CASTLING_q_CB, IND_CASTLING_K_CB,
+  IND_CASTLING_k_CB, IND_HALFMOVE_CLOCK_CB, IND_FULLMOVE_NUMBER_CB, PIECE_NAME_CB, IND_EN_PASSANT_YES_CB,
+  IND_EN_PASSANT_TARGET_SQUARE_CB, IND_KING_FROM_WHITE_CB, IND_KING_FROM_BLACK_CB, IND_SCORE_CB,
+  SQUARE_64_to_128_CB, SQUARE_128_to_64_CB
 } from "../move_generator_0x88/chess_board_0x88.js";
 
 import {
@@ -49,13 +49,13 @@ import {
   MAX_DEPTH_PV, IND_TYPE_VARIANT_PV, IND_DEPTH_MAT_PV, IND_DEPTH_PV
 } from "./pv_line_0x88.js";
 
-import {     
+import {
   generated_pseudo_legal_captures_mgc, generated_pseudo_legal_captures_one_piece_for_gui_mgc, check_detected_mgc
- } from "../move_generator_0x88/move_generator_captures_0x88.js";
-import {     
+} from "../move_generator_0x88/move_generator_captures_0x88.js";
+import {
   generated_pseudo_legal_quiet_moves_mgq, generated_pseudo_legal_quiet_moves_one_piece_for_gui_mgq,
-  A1_MGQ, B1_MGQ, C1_MGQ , D1_MGQ, E1_MGQ, F1_MGQ, G1_MGQ, H1_MGQ, 
-  A8_MGQ, B8_MGQ, C8_MGQ, D8_MGQ, E8_MGQ, F8_MGQ, G8_MGQ, H8_MGQ 
+  A1_MGQ, B1_MGQ, C1_MGQ, D1_MGQ, E1_MGQ, F1_MGQ, G1_MGQ, H1_MGQ,
+  A8_MGQ, B8_MGQ, C8_MGQ, D8_MGQ, E8_MGQ, F8_MGQ, G8_MGQ, H8_MGQ
 } from "../move_generator_0x88/move_generator_quiet_0x88.js";
 
 import { do_moves_mm } from "../move_generator_0x88/make_move_0x88.js";
@@ -64,17 +64,17 @@ import { undo_moves_um } from "../move_generator_0x88/unmake_move_0x88.js";
 import { UNDO_MAX } from "../move_generator_0x88/undo_0x88.js";
 
 import {
-  searching_minmax, chess_board_0x88_end_original, node_mm
-} from "./search_minmax_0x88.js";
+  searching_negamax, chess_board_0x88_end_original, node_mm
+} from "./search_negamax_0x88.js";
 
 import {
-  searching_alpha_beta_id_ab, set_stop_search_in_1_ab, set_stop_search_in_0_ab, set_node_in_0_ab,
+  searching_negamax_alpha_beta_id_ab, set_stop_search_in_1_ab, set_stop_search_in_0_ab, set_node_in_0_ab,
   node_ab, is_history_heuristic_use_ab,
-  BEST_SCORE_MOD_AB,
-  save_alpha_up_test_tt, save_alpha_cut_test_tt, save_beta_up_test_tt, save_beta_cut_test_tt,
-  use_alpha_up_test_tt, use_alpha_cut_test_tt, use_beta_up_test_tt, use_beta_cut_test_tt,
+  INIT_EVAL_AB,
+  save_alpha_up_test_tt, save_beta_cut_test_tt,
+  use_alpha_up_test_tt, use_beta_cut_test_tt,
   clear_test_tt
-} from "./search_ab_0x88.js";
+} from "./search_nm_ab_0x88.js";
 
 import {
   sorting_list_top_max_score_lr, sorting_list_top_min_score_lr, add_score_lr, clear_list_lr,
@@ -82,7 +82,7 @@ import {
 } from "./move_list_root_0x88.js";
 
 import {
-  ini_Array_hh, clear_history_hh, ini_test_history_hh, history_good_save_hh, history_bad_save_hh, get_history_hh,
+  ini_Array_hh, clear_history_hh, ini_test_history_hh, history_good_save_hh, get_history_hh,
   MAX_COLOR_HH, MAX_COORDINATE_HH, MAX_HISTORY_HH
 } from "../for_sorting_move_0x88/history_heuristic_0x88.js";
 
@@ -95,7 +95,7 @@ import {
 
 import {
   clear_out_tt, ini_tt, clear_hash_tt, test_uses_hash_tt, set_position_in_tt, get_position_from_tt, print_test_set_get_position_tt,
-  MAX_TABLE_LENTH_TT, MAX_SCORE_UPDATE_TT, ALPHA_UPDATE_TT, BETA_UPDATE_TT, ALPHA_CUT_TT, BETA_CUT_TT,
+  MAX_TABLE_LENTH_TT, MAX_SCORE_UPDATE_TT, ALPHA_UPDATE_TT, BETA_CUT_TT,
   IND_TN_TT, IND_SC_TT, IND_DD_TT
 } from "../for_sorting_move_0x88/transposition_table_0x88.js";
 
@@ -136,8 +136,8 @@ import { ChessEngine_0x88_С } from "../i_chess_engine_0x88.js";
     * @property {string} best_move - bestmove e2e4 ponder e7e6
     */
 
-const ALPHA_SCORE_R = -30000;
-const BETA_SCORE_R = 30000;
+const ALPHA_SCORE_R = -50000;
+const BETA_SCORE_R = 50000;
 
 
 const timer_O = new Timer_C();
@@ -163,27 +163,21 @@ const set_stop_search_in_0_r = function () {
 
 const test_tt = function () {
   console.log("-------------------------------------- ");
-  console.log("save_alpha_cut_test_tt " + save_alpha_cut_test_tt);
-  console.log("use_alpha_cut_test_tt " + use_alpha_cut_test_tt);
-  console.log("----- ");
   console.log("save_alpha_up_test_tt " + save_alpha_up_test_tt);
   console.log("use_alpha_up_test_tt " + use_alpha_up_test_tt);
   console.log("----- ");
   console.log("save_beta_cut_test_tt " + save_beta_cut_test_tt);
   console.log("use_beta_cut_test_tt " + use_beta_cut_test_tt);
-  console.log("----- ");
-  console.log("save_beta_up_test_tt " + save_beta_up_test_tt);
-  console.log("use_beta_up_test_tt " + use_beta_up_test_tt);
   console.log("-------------------------------------- ");
 
 }
 
-/** minmax
+/** negamax
  * @param {string} fen_start
  * @param {number} depth_max
  * @returns {uci_return_search}
  */
-const start_search_minmax_r = function (fen_start, depth_max) {
+const start_search_negamax_r = function (fen_start, depth_max) {
   let depth = 0;
 
   let chess_board_0x88 = new Int32Array(IND_MAX_CB).fill(0);// текущая доска с фигурами 0x88 
@@ -204,7 +198,7 @@ const start_search_minmax_r = function (fen_start, depth_max) {
 
   time_start = timer_O.getCurrentTimeMs();
 
-  console.log("start_search_minmax->fen_start " + fen_start);
+  console.log("start_search_negamax_r -> start_search_minmax->fen_start " + fen_start);
 
   set_board_from_fen_0x88_cb(fen_start, chess_board_0x88_start);
 
@@ -212,12 +206,12 @@ const start_search_minmax_r = function (fen_start, depth_max) {
   save_chess_board_0x88_cb(chess_board_0x88_save_test, chess_board_0x88);
   save_chess_board_0x88_cb(chess_board_0x88_get_move, chess_board_0x88);
 
-  console.log("start_search_minmax ");
-  console.log("=========================================================================");
+  console.log("start_search_negamax_r -> start_search_negamax ");
+  console.log("start_search_negamax_r -> =========================================================================");
   //
   let node = 0;
 
-  let best_score = searching_minmax(packing_pv_line, chess_board_0x88, chess_board_key_64, depth, depth_max);
+  let best_score = searching_negamax(packing_pv_line, chess_board_0x88, chess_board_key_64, depth, depth_max);
 
   node = node + node_mm;
 
@@ -226,19 +220,20 @@ const start_search_minmax_r = function (fen_start, depth_max) {
   save_chess_board_0x88_cb(chess_board_0x88_get_move, chess_board_0x88_end_original);
 
   //test
+  console.log("start_search_negamax_r -> test_print_piese_0x88_cb");
   test_print_piese_0x88_cb(chess_board_0x88_get_move);
 
   time_end = timer_O.getCurrentTimeMs();
   time_delta = (time_end - time_start) / 1000;
 
-  let w = (chess_board_0x88_start[SIDE_TO_MOVE_CB] == WHITE_CB) ? 1 : -1;
+  //let w = (chess_board_0x88_start[SIDE_TO_MOVE_CB] == WHITE_CB) ? 1 : -1;
 
   uci_return_search.fen_start = fen_start;
   uci_return_search.fen_end = set_fen_from_0x88_cb(chess_board_0x88_get_move);
   //uci_return_search.fen_end = fen_start;
 
   let depth_uci = String(depth_max);
-  let score_cp = String(w * best_score);
+  let score_cp = String(best_score);
   let nodes = String(node);
   let nps = String(Math.round(node / time_delta));
   let pv = pv_line_to_uci_string_pv(packing_pv_line, best_score);
@@ -255,7 +250,7 @@ const start_search_minmax_r = function (fen_start, depth_max) {
   //this.info_return_search.pv_line.test_print_pv_line(chess_board_0x88_O);
   //pv_line_0x88_O.test_print_pv_line(chess_board_0x88_O);
 
-  console.log("start_search_minmax node " + node);
+  console.log("start_search_negamax_r -> start_search_negamax node " + node);
 
   return uci_return_search;
 }
@@ -326,7 +321,7 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
   set_stop_search_in_0_ab();// сбрасываем флаг экстренного выхода в поиске
   stop_search_root = 0;// флаг эсктренного выхода в корне
 
-  console.log("searching_iterative_deepening->========================================================== ");
+  console.log("searching_iterative_deepening -> ========================================================== ");
   //console.log("searching_iterative_deepening->fen_start " + fen_start);
   set_board_from_fen_0x88_cb(fen_start, chess_board_0x88_start);// доска из фен
 
@@ -361,11 +356,7 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
 
     time_start = timer_O.getCurrentTimeMs();
 
-    if (packing_moves[IND_PIESE_COLOR_ML] == 1) {
-      best_score = -BEST_SCORE_MOD_AB;// максимальная оценка позиции
-    } else {
-      best_score = BEST_SCORE_MOD_AB;// максимальная оценка позиции
-    }
+    best_score = INIT_EVAL_AB;//  оценка позиции
 
     alpha = ALPHA_SCORE_R;
     beta = BETA_SCORE_R;
@@ -412,12 +403,18 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
       // сохраняем ключ доски для последующего сравнения
       chess_board_key_64_save_test[0] = chess_board_key_64[0];
 
-      score = searching_alpha_beta_id_ab(alpha, beta, chess_board_0x88, chess_board_key_64, packing_pv_line,
+      // score = searching_alpha_beta_id_ab(alpha, beta, chess_board_0x88, chess_board_key_64, packing_pv_line,
+      //   (depth + 1), depth_max_current, isPV_node);
+
+      // score = -searching_negamax_alpha_beta_id_ab(-beta, -alpha, chess_board_0x88, chess_board_key_64, packing_pv_line,
+      //   (depth + 1), depth_max_current, isPV_node);
+
+      score = -searching_negamax_alpha_beta_id_ab(-beta, -alpha, chess_board_0x88, chess_board_key_64, packing_pv_line,
         (depth + 1), depth_max_current, isPV_node);
 
-  //test
-  //console.log("searching_iterative_deepening -> score " + score);
-  //test_print_piese_0x88(chess_board_0x88);
+      //test
+      //console.log("searching_iterative_deepening -> score " + score);
+      //test_print_piese_0x88(chess_board_0x88);
 
       // сравниваем ключи сохраненный и измененный
       test_chess_board_key_64_tk(chess_board_key_64_save_test, chess_board_key_64);
@@ -433,39 +430,19 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
       add_score_lr(move_i, list_score_move, score);
 
       //console.log("Search_0x88_C-> должны смотреть за черных, а вот реально что " + move_list_0x88_O.piece_color);
-      // белые ищут максимум
-      if (packing_moves[IND_PIESE_COLOR_ML] == WHITE_CB) {
+  
+      if (score > best_score) {
 
-        if (score > best_score) {
+        best_score = score;
+        best_move_i = move_i;
 
-          best_score = score;
-          best_move_i = move_i;
+        save_pv_line_pv(best_packing_pv_line, packing_pv_line);
+        save_chess_board_0x88_cb(chess_board_0x88_get_move, chess_board_0x88);
 
-          save_pv_line_pv(best_packing_pv_line, packing_pv_line);
-          save_chess_board_0x88_cb(chess_board_0x88_get_move, chess_board_0x88);
-
-
-          if (score > alpha) {
-            alpha = score; // alpha acts like max in MiniMax
-          }
-        }//if (score > best_score) {
-
-      } else {
-
-        // черные ищут минимум
-        if (score < best_score) {
-
-          best_score = score;
-          best_move_i = move_i;
-
-          save_pv_line_pv(best_packing_pv_line, packing_pv_line);
-          save_chess_board_0x88_cb(chess_board_0x88_get_move, chess_board_0x88);
-
-          if (score < beta) {
-            beta = score; // beta acts like max in MiniMax
-          }
-        }//if (score > best_score) {
-      }
+        if (score > alpha) {
+          alpha = score; // alpha acts like max in MiniMax
+        }
+      }//if (score > best_score) {
 
       // восстановили доску
       undo_moves_um(chess_board_0x88, chess_board_key_64, chess_board_key_64_undo, undo, type_move,
@@ -484,16 +461,12 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
 
     if (number_move_legal != 0) {
 
-      if (chess_board_0x88_start[SIDE_TO_MOVE_CB] == WHITE_CB) {
         sorting_list_top_max_score_lr(list_score_move);
-      } else {
-        sorting_list_top_min_score_lr(list_score_move);
-      }
 
-      w = (chess_board_0x88_start[SIDE_TO_MOVE_CB] == WHITE_CB) ? 1 : -1;
+      //w = (chess_board_0x88_start[SIDE_TO_MOVE_CB] == WHITE_CB) ? 1 : -1;
 
       let depth_uci = String(depth_max);
-      let score_cp = String(w * best_score);
+      let score_cp = String(best_score);
       let nodes = String(node_root);
       let nps = String(Math.round(node_root / time_delta)); packing_pv_line
 
@@ -660,6 +633,6 @@ const move_str_to_board_r = function (fen_start, move_str) {
 
 
 export {
-  start_search_minmax_r, searching_iterative_deepening_r, set_stop_search_in_1_r, set_stop_search_in_0_r, test_tt,
+  start_search_negamax_r, searching_iterative_deepening_r, set_stop_search_in_1_r, set_stop_search_in_0_r, test_tt,
   move_str_to_board_r
 };

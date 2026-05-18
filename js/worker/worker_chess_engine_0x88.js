@@ -75,9 +75,11 @@ class Worker_ChessEngine_0x88_С {
 
       if (this.mode_game == 1) {
         
-        console.log('Worker_ChessEngine_0x88_С -> go_depth_minmax');
+        // console.log('Worker_ChessEngine_0x88_С -> go_depth_minmax');
+        // uci_return_search = this.chessEngine_0x88_O.go_depth_minmax(this.fen_start, depth_max);
 
-        uci_return_search = this.chessEngine_0x88_O.go_depth_minmax(this.fen_start, depth_max);
+        console.log('Worker_ChessEngine_0x88_С -> go_depth_negamax');
+        uci_return_search = this.chessEngine_0x88_O.go_depth_negamax(this.fen_start, depth_max);
 
         postMessage("position fen " + uci_return_search.fen_end);
         postMessage(uci_return_search.info);

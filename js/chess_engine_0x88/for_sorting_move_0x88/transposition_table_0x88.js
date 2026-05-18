@@ -58,10 +58,8 @@ const MAX_TABLE_LENTH_TT = 65_536;
 const MAX_SCORE_UPDATE_TT = 1;// не использую. флаг записи точной оценки позиции
 
 const ALPHA_UPDATE_TT = 2;// флаг записи хода который улучшил альфу
-const BETA_UPDATE_TT = 3;// флаг записи хода который улучшил бету
 
-const ALPHA_CUT_TT = 4;// флаг записи хода приведшего к отсечке по альфе
-const BETA_CUT_TT = 5;// флаг записи хода приведшего к отсечке по бете
+const BETA_CUT_TT = 3;// флаг записи хода приведшего к отсечке по бете
 
 // индексы для доступа к массиву out_tt
 const IND_TN_TT = 0;// индекс для записи типа узла (улучшение альфы или отсечка и т.д.)
@@ -81,7 +79,7 @@ const packing_move_tt = new Int32Array(MAX_TABLE_LENTH_TT);
 // оценка позиции
 const score_tt = new Int32Array(MAX_TABLE_LENTH_TT);
 
-// тип записанного хода. улучшение альфы-беты или отсечка по альфе-бете или точная оценка
+// тип записанного хода. улучшение альфы или отсечка по бете или точная оценка
 const type_save_node_tt = new Int32Array(MAX_TABLE_LENTH_TT);
 
 // глубина на которую посмотрели позицию
@@ -300,7 +298,7 @@ const get_position_from_tt = function (chess_board_key_64, packing_moves_1, dept
 
         } else {//if (delta_depth_tt_ >= delta_depth) {
 
-            if ((out_tt[IND_TN_TT] == ALPHA_UPDATE_TT) || (out_tt[IND_TN_TT] == BETA_UPDATE_TT)) {
+            if (out_tt[IND_TN_TT] == ALPHA_UPDATE_TT) {
 
             } else {
                 clear_out_tt();
@@ -321,6 +319,5 @@ const get_position_from_tt = function (chess_board_key_64, packing_moves_1, dept
 
 export {
     clear_out_tt, ini_tt, clear_hash_tt, test_uses_hash_tt, set_position_in_tt, get_position_from_tt, print_test_set_get_position_tt,
-    MAX_TABLE_LENTH_TT, MAX_SCORE_UPDATE_TT, ALPHA_UPDATE_TT, BETA_UPDATE_TT, ALPHA_CUT_TT, BETA_CUT_TT,
-    IND_TN_TT, IND_SC_TT, IND_DD_TT
+    MAX_TABLE_LENTH_TT, MAX_SCORE_UPDATE_TT, ALPHA_UPDATE_TT, BETA_CUT_TT, IND_TN_TT, IND_SC_TT, IND_DD_TT
 };

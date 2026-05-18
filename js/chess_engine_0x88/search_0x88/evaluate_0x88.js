@@ -31,14 +31,22 @@ import {
 
 */
 
+// оценки фигур
 const PAWN_SCORE_E = 100;  // пешка 
 const KNIGHT_SCORE_E = 400;  // конь
 const BISHOP_SCORE_E = 400;  // слон
 const ROOK_SCORE_E = 600;  // ладья
 const QUEEN_SCORE_E = 1200; // ферзь
-const KING_SCORE_E = 10000;// король
+const KING_SCORE_E = 5000;// король
 
-const PIECE_SCORE_E = [0, 100, 400, 400, 600, 1200, 10000, 0, 0, 100, 400, 400, 600, 1200, 10000];
+// Имена фигур закодированы цифрами: 
+// 0- нет фигуры, 
+// 1- пешка, 2-конь, 3-слон, 4-ладья,  5-ферзь,  6-король <- белые фигуры 
+// 9- пешка, 10-конь, 11-слон, 12-ладья, 13-ферзь, 14-король <- черные фигуры 
+//                     0  1             2               3               4             5              6             7  8
+const PIECE_SCORE_E = [0, PAWN_SCORE_E, KNIGHT_SCORE_E, BISHOP_SCORE_E, ROOK_SCORE_E, QUEEN_SCORE_E, KING_SCORE_E, 0, 0,
+//                        9             10              11              12            13             14   
+                          PAWN_SCORE_E, KNIGHT_SCORE_E, BISHOP_SCORE_E, ROOK_SCORE_E, QUEEN_SCORE_E, KING_SCORE_E];
 
 const center_0x88_e = [
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -181,6 +189,8 @@ const score_position_e = function (chess_board_0x88, chess_board_key_64) {
   //test_fen(chess_board_0x88);
   //test_print_piese_0x88(chess_board_0x88);
   //console.log("score_position -> score " + score);
+
+  if (chess_board_0x88[SIDE_TO_MOVE_CB] == BLACK_CB) score = -score;
 
   return score;
 }//score_position(chess_board_0x88_O) {

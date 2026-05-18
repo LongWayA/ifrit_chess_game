@@ -70,8 +70,14 @@
  * x_07 = s_0x88 & 7;
  * y_07 = s_0x88 >> 4; // s_0x88 / 16
  * 
+ * 📌 Соглашение о суффиксах:
+ *    _cb → chess_board (разграничение экспортов в многомодульной сборке)
+ * 
  * что тут еще? Вроде все. Никаких списков фигур, вся доска только в этом маленьком массиве. 
 */
+
+// В JSDoc типы пишутся в фигурных скобках: {number}, {string}, {Int32Array}, 
+//{boolean}, {void}. Для массивов: {number[]}, для объектов: {{x: number, y: number}}.
 
 //
 const BLACK_CB = 0;
@@ -151,8 +157,16 @@ const SQUARE_128_to_64_CB = [
     56, 57, 58, 59, 60, 61, 62, 63, 0, 0, 0, 0, 0, 0, 0, 0
 ];
 
+const BOARD_SIZE_CB = 128;
+const OUT_OF_BOUNDS_MASK_CB = 0x88; // 136 в десятичной, но лучше использовать hex для читаемости битовой логики
+const SIDE_OFFSET_CB = 4; // для y_07 = s_0x88 >> SIDE_OFFSET
+
+
 /**
 * переводим координаты х и у в линейную координату доски 128(0x88)
+* @example 
+* x07_y07_to_0x88_cb(rank07, file07); // return s_0x88
+*
 * @param {number} x07
 * @param {number} y07
 * @returns {number}
@@ -210,6 +224,7 @@ const test_print_any_0x88_cb = function (chess_board_0x88) {
 */
 const test_print_piese_0x88_cb = function (chess_board_0x88) {
     console.log("test_print_piese_0x88 ****************");
+    /** @type {number} */
     let l = 0;// 
     let line = "";//
     // бежим по доске и добавляем в линию фигуры с доски. как достигли 
@@ -276,8 +291,8 @@ const test_print_piese_in_line_0x88_cb = function (chess_board_0x88) {
     console.log("**************** test_print_0x88_line");
 }
 
-// проверяем совпадение двух позиций. нужно для тестирования
 /**
+* проверяем совпадение двух позиций. нужно для тестирования
 * @param {Int32Array} chess_board_0x88_original
 * @param {Int32Array} chess_board_0x88
 * @returns {number}
@@ -357,7 +372,6 @@ const test_compare_chess_board_0x88_cb = function (chess_board_0x88_original, ch
 // ==================================================================================TEST
 
 
-// 
 /**
 * записываем одну позицию в другую (копируем массив и вспомогательную информацию)
 * @param {Int32Array} chess_board_0x88_to
@@ -365,6 +379,10 @@ const test_compare_chess_board_0x88_cb = function (chess_board_0x88_original, ch
 * @returns {void}
 */
 const save_chess_board_0x88_cb = function (chess_board_0x88_to, chess_board_0x88_from) {
+
+    //dest.set(src);
+    //chess_board_0x88_to.set(chess_board_0x88_from);
+
     //console.log("Make_move_0x88_C->do_undo_moves");
     for (let i = 0; i < 128; i++) {
         chess_board_0x88_to[i] = chess_board_0x88_from[i];
@@ -393,8 +411,9 @@ const save_chess_board_0x88_cb = function (chess_board_0x88_to, chess_board_0x88
 
 // https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
 // "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-// инициируем позицию из фена
+// 
 /**
+ * инициируем позицию из фена
  * @param {Int32Array} chess_board_0x88
  * @param {string} fen 
  * @returns {void}
@@ -408,6 +427,13 @@ const set_board_from_fen_0x88_cb = function (fen, chess_board_0x88) {
     let void_f = 0;
     let x07_en_passant = -1;
     let y07_en_passant = -1;
+
+    //if (!fen || typeof fen !== 'string') throw new Error('Invalid FEN string');
+    //  if (!fen || typeof fen !== 'string') console.log('set_board_from_fen_0x88_cb->Invalid FEN string');
+
+    //const parts = fen.trim().split(/\s+/);
+    //if (parts.length < 4) throw new Error('FEN must contain at least [position, side, castling, enpassant]');
+    //if (parts.length < 4) console.log('set_board_from_fen_0x88_cb->FEN must contain at least [position, side, castling, enpassant]');
 
     iniPositionFor_0_cb(chess_board_0x88);
 
@@ -486,8 +512,8 @@ const set_board_from_fen_0x88_cb = function (fen, chess_board_0x88) {
     //console.log("ChessBoard_0x88_C set_0x88_from_fen king_from_white = " + this.king_from_white);
 }
 
-// переводим букву в координату
 /**
+ * переводим букву в координату
  * @param {string} letter
  * @returns {number}
 */
@@ -504,10 +530,10 @@ const letter_to_x_coordinate_cb = function (letter) {
 }
 
 
-// по букве из фена ставим фигуру на позицию. 
-// если вместо буквы цифра то перводим ее в количество пустых клеток 
-// так сделано потому что запись фена вида /1p6/8/
 /**
+ * по букве из фена ставим фигуру на позицию. 
+ * если вместо буквы цифра то перводим ее в количество пустых клеток 
+ * так сделано потому что запись фена вида /1p6/8/
  * @param {string} char
  * @param {number} x
  * @param {number} y 
@@ -660,8 +686,9 @@ const set_fen_from_0x88_cb = function (chess_board_0x88) {//
 
 }
 
-// первод имени фигуры в виде цифры в букву для фена
+
 /**
+* первод имени фигуры в виде цифры в букву для фена
 * @param {Int32Array} chess_board_0x88
 * @param {number} z 
 * @returns {string}
@@ -731,8 +758,9 @@ const fen_piece_to_char_cb = function (chess_board_0x88, z) {
     return char;
 }
 
-// ищем короля заданного цвета. нужно для обнаружения шаха
 /**
+ * ищем короля заданного цвета. нужно для обнаружения шаха
+ * эта функция нужна для тестирования верности записи положения королей
  * @param {Int32Array} chess_board_0x88 
  * @param {number} piece_color
  * @returns {number}
@@ -757,8 +785,8 @@ const searching_king_cb = function (chess_board_0x88, piece_color) {
     return -1;
 }
 
-// стартовая позиция
 /**
+ * стартовая позиция
  * @param {Int32Array} chess_board_0x88 
  * @returns {void}
 */
@@ -801,8 +829,9 @@ const iniStartPositionForWhite_cb = function (chess_board_0x88) {
     chess_board_0x88[IND_SCORE_CB] = -1;
 }
 
-// нулевая позиция. нужна когда мы раставляем фигуры по фену
+
 /**
+ * нулевая позиция. нужна когда мы раставляем фигуры по фену
  * @param {Int32Array} chess_board_0x88 
  * @returns {void}
 */

@@ -151,46 +151,7 @@ const history_good_save_hh = function (move_i, packing_moves, depth, depth_max) 
   }
 }
 
-// записываем плохой ход
-/**
-* @param {number} color
-* @param {number} from_128
-* @param {number} to_128
-* @param {number} depth
-* @param {number} depth_max
-* @returns {void}
-*/
-const history_bad_save_hh = function (color, from_128, to_128, depth, depth_max) {
-
-  let delta_depth = depth_max - depth;
-
-  // преобразование Chess_board_0x88_C.SQUARE_128_to_64[] переводит 128-клеточную доску в 64-клеточную 
-  // так как нам в масиве не нужны 64 дополнительные неиспользуемые в данном случае клетки. 
-  // напомню что 128 клеточная доска нужна что бы в одну операцию (SquareIndex & 0x88 == 0 - мы еще на доске) 
-  // оперделять выход за пределы доски
-
-  let from_64 = SQUARE_128_to_64_CB[from_128];
-  let to_64 = SQUARE_128_to_64_CB[to_128];
-
-  history[color][from_64][to_64] = history[color][from_64][to_64] - delta_depth * delta_depth;
-
-  // console.log("History_heuristic_0x88_C-> from_64 " + from_64 + " to_64 " + to_64 + " color " + color);
-  // console.log("History_heuristic_0x88_C-> history " + history[color][from_64][to_64]);    
-
-  // если запись в ячейку истории превысила лимит все делим на два  
-  if (history[color][from_64][to_64] < -1 * MAX_HISTORY_HH) {
-
-    for (let color = 0; color < MAX_COLOR_HH; color++) {
-      for (let from = 0; from < MAX_COORDINATE_HH; from++) {
-        for (let to = 0; to < MAX_COORDINATE_HH; to++) {
-          history[color][from][to] = history[color][from][to] / 2;
-        }
-      }
-    }
-  }
-}
-
 export {
-  ini_Array_hh, clear_history_hh, ini_test_history_hh, history_good_save_hh, history_bad_save_hh, get_history_hh,
+  ini_Array_hh, clear_history_hh, ini_test_history_hh, history_good_save_hh, get_history_hh,
   MAX_COLOR_HH, MAX_COORDINATE_HH, MAX_HISTORY_HH
 };
