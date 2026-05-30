@@ -34,7 +34,7 @@ import {
 import {
   x07_y07_to_0x88_cb, s_0x88_to_x07_cb, s_0x88_to_y07_cb,
   test_print_any_0x88_cb, test_print_piese_0x88_cb, test_print_piese_color_0x88_cb, test_print_piese_in_line_0x88_cb,
-  test_compare_chess_board_0x88_cb, save_chess_board_0x88_cb, set_board_from_fen_0x88_cb, set_fen_from_0x88_cb,
+  test_compare_chess_board_0x88_cb, set_board_from_fen_0x88_cb, set_fen_from_0x88_cb,
   searching_king_cb, iniStartPositionForWhite_cb, letter_to_x_coordinate_cb,
   BOARD_SIZE_CB, SIDE_TO_MOVE_CB, LET_COOR_CB,
   BLACK_CB, WHITE_CB, PIECE_NO_CB, W_PAWN_CB, W_KNIGHT_CB, W_BISHOP_CB, W_ROOK_CB, W_QUEEN_CB, W_KING_CB, B_PAWN_CB,
@@ -203,9 +203,9 @@ const start_search_negamax_r = function (fen_start, depth_max) {
 
   set_board_from_fen_0x88_cb(fen_start, chess_board_0x88_start);
 
-  save_chess_board_0x88_cb(chess_board_0x88, chess_board_0x88_start);
-  save_chess_board_0x88_cb(chess_board_0x88_save_test, chess_board_0x88);
-  save_chess_board_0x88_cb(chess_board_0x88_get_move, chess_board_0x88);
+  chess_board_0x88.set(chess_board_0x88_start);
+  chess_board_0x88_save_test.set(chess_board_0x88);
+  chess_board_0x88_get_move.set(chess_board_0x88);
 
   console.log("start_search_negamax_r -> start_search_negamax ");
   console.log("start_search_negamax_r -> =========================================================================");
@@ -218,8 +218,7 @@ const start_search_negamax_r = function (fen_start, depth_max) {
 
   test_compare_chess_board_0x88_cb(chess_board_0x88_save_test, chess_board_0x88);
 
-  save_chess_board_0x88_cb(chess_board_0x88_get_move, chess_board_0x88_end_original);
-
+  chess_board_0x88_get_move.set(chess_board_0x88_end_original);
   //test
   console.log("start_search_negamax_r -> test_print_piese_0x88_cb");
   test_print_piese_0x88_cb(chess_board_0x88_get_move);
@@ -287,7 +286,7 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
   clear_test_tt();
   ini_stack_qs();
   ini_stack_ab();
-  
+
   let packing_moves = new Int32Array(LENGTH_LIST_ML).fill(MOVE_NO_ML);// список ходов. ход упакован в одно число Uint32
 
   let list_score_move = new Int32Array(LENGTH_LIST_ML).fill(MOVE_NO_ML);// список оценок ходов. нужно для сортировки по оценке в корне
@@ -327,9 +326,9 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
   //console.log("searching_iterative_deepening->fen_start " + fen_start);
   set_board_from_fen_0x88_cb(fen_start, chess_board_0x88_start);// доска из фен
 
-  save_chess_board_0x88_cb(chess_board_0x88, chess_board_0x88_start);
+  chess_board_0x88.set(chess_board_0x88_start);
   // копируем доску чтобы когда у движка не будет ходов не получить пустую доску.
-  save_chess_board_0x88_cb(chess_board_0x88_get_move, chess_board_0x88);
+  chess_board_0x88_get_move.set(chess_board_0x88);
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // по позиции генерируем ключ
@@ -444,7 +443,7 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
         best_move_i = move_i;
 
         save_pv_line_pv(best_packing_pv_line, packing_pv_line);
-        save_chess_board_0x88_cb(chess_board_0x88_get_move, chess_board_0x88);
+        chess_board_0x88_get_move.set(chess_board_0x88);
 
         if (score > alpha) {
           alpha = score; // alpha acts like max in MiniMax

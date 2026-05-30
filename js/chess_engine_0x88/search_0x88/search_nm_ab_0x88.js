@@ -10,7 +10,7 @@
 import {
   x07_y07_to_0x88_cb, s_0x88_to_x07_cb, s_0x88_to_y07_cb,
   test_print_any_0x88_cb, test_print_piese_0x88_cb, test_print_piese_color_0x88_cb, test_print_piese_in_line_0x88_cb,
-  test_compare_chess_board_0x88_cb, save_chess_board_0x88_cb, set_board_from_fen_0x88_cb, set_fen_from_0x88_cb,
+  test_compare_chess_board_0x88_cb, set_board_from_fen_0x88_cb, set_fen_from_0x88_cb,
   searching_king_cb, iniStartPositionForWhite_cb, letter_to_x_coordinate_cb,
   BOARD_SIZE_CB, SIDE_TO_MOVE_CB, LET_COOR_CB,
   BLACK_CB, WHITE_CB, PIECE_NO_CB, W_PAWN_CB, W_KNIGHT_CB, W_BISHOP_CB, W_ROOK_CB, W_QUEEN_CB, W_KING_CB, B_PAWN_CB,
@@ -255,7 +255,7 @@ const searching_negamax_alpha_beta_id_ab = function (alpha, beta, chess_board_0x
     if (is_quiescence_use == 0) {
       best_score = score_position_e(chess_board_0x88, chess_board_key_64);
     } else {
-      save_chess_board_0x88_cb(chess_board_0x88_test, chess_board_0x88);
+      chess_board_0x88_test.set(chess_board_0x88);
       best_score = quiescence_search(alpha, beta, chess_board_0x88, chess_board_key_64, depth);
       test_compare_chess_board_0x88_cb(chess_board_0x88_test, chess_board_0x88);
     }

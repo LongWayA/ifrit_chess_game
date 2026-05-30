@@ -849,54 +849,10 @@ const searching_king_cb = function (chess_board_0x88, piece_color) {
 
 // ----------------------------------------------------------------------FOR TEST
 
-// видимо не нужно---------------------------------------------------------
-
-// лучше использовать системное копирование
-// chess_board_0x88_to.set(chess_board_0x88_from);
-
-/**
-* записываем одну позицию в другую (копируем массив и вспомогательную информацию)
-* @param {Int32Array} chess_board_0x88_to
-* @param {Int32Array} chess_board_0x88_from
-* @returns {void}
-*/
-const save_chess_board_0x88_cb = function (chess_board_0x88_to, chess_board_0x88_from) {
-
-    //dest.set(src);
-    //chess_board_0x88_to.set(chess_board_0x88_from);
-
-    //console.log("Make_move_0x88_C->do_undo_moves");
-    for (let i = 0; i < 128; i++) {
-        chess_board_0x88_to[i] = chess_board_0x88_from[i];
-    }
-
-    chess_board_0x88_to[IND_KING_FROM_WHITE_CB] = chess_board_0x88_from[IND_KING_FROM_WHITE_CB];
-    chess_board_0x88_to[IND_KING_FROM_BLACK_CB] = chess_board_0x88_from[IND_KING_FROM_BLACK_CB];
-
-    // цвет хода 0 - черные 1 - белые
-    chess_board_0x88_to[SIDE_TO_MOVE_CB] = chess_board_0x88_from[SIDE_TO_MOVE_CB];
-    // разрешение взятия на проходе 1/0
-    chess_board_0x88_to[IND_EN_PASSANT_YES_CB] = chess_board_0x88_from[IND_EN_PASSANT_YES_CB];
-    // координата битого поля
-    chess_board_0x88_to[IND_EN_PASSANT_TARGET_SQUARE_CB] = chess_board_0x88_from[IND_EN_PASSANT_TARGET_SQUARE_CB];
-    // рокировка белых в длинную сторону   1/0
-    chess_board_0x88_to[IND_CASTLING_Q_CB] = chess_board_0x88_from[IND_CASTLING_Q_CB];
-    // рокировка белых в короткую сторону  1/0
-    chess_board_0x88_to[IND_CASTLING_K_CB] = chess_board_0x88_from[IND_CASTLING_K_CB];
-    // рокировка черных в длинную сторону  1/0
-    chess_board_0x88_to[IND_CASTLING_q_CB] = chess_board_0x88_from[IND_CASTLING_q_CB];
-    // рокировка черных в короткую сторону 1/0
-    chess_board_0x88_to[IND_CASTLING_k_CB] = chess_board_0x88_from[IND_CASTLING_k_CB];
-
-    chess_board_0x88_to[IND_SCORE_CB] = chess_board_0x88_from[IND_SCORE_CB];
-}
-
-// ---------------------------------------------------------видимо не нужно
-
 export {
     x07_y07_to_0x88_cb, s_0x88_to_x07_cb, s_0x88_to_y07_cb,
     test_print_any_0x88_cb, test_print_piese_0x88_cb, test_print_piese_color_0x88_cb, test_print_piese_in_line_0x88_cb,
-    test_compare_chess_board_0x88_cb, save_chess_board_0x88_cb, set_board_from_fen_0x88_cb, set_fen_from_0x88_cb,
+    test_compare_chess_board_0x88_cb, set_board_from_fen_0x88_cb, set_fen_from_0x88_cb,
     searching_king_cb, iniStartPositionForWhite_cb, letter_to_x_coordinate_cb,
     BOARD_SIZE_CB, OUT_OF_BOUNDS_MASK_CB, SIDE_TO_MOVE_CB, LET_COOR_CB,
     BLACK_CB, WHITE_CB, PIECE_NO_CB, W_PAWN_CB, W_KNIGHT_CB, W_BISHOP_CB, W_ROOK_CB, W_QUEEN_CB, W_KING_CB, B_PAWN_CB,
