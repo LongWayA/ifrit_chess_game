@@ -1,0 +1,12 @@
+max depth:5, nodes:4 865 609, n/s:1 893 233, score:0
+max depth:6, nodes:119 060 324, n/s:1 074 620, score:0
+
+-------------
+
+max depth:5, nodes:4865609, n/s:989 548, score:0
+max depth:6, nodes:119 060 324, n/s:1 077 264, score:0
+
+----------------
+
+max depth:5, nodes:4 865 609, n/s:1 008 416, score:0
+max depth:6, nodes:119 060 324, n/s:1 405 870, score:0

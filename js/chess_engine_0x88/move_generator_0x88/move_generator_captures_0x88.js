@@ -11,7 +11,7 @@ import {
     test_print_any_0x88_cb, test_print_piese_0x88_cb, test_print_piese_color_0x88_cb, test_print_piese_in_line_0x88_cb,
     test_compare_chess_board_0x88_cb, save_chess_board_0x88_cb, set_board_from_fen_0x88_cb, set_fen_from_0x88_cb,
     searching_king_cb, iniStartPositionForWhite_cb, letter_to_x_coordinate_cb,
-    IND_MAX_CB, SIDE_TO_MOVE_CB, LET_COOR_CB,
+    BOARD_SIZE_CB, SIDE_TO_MOVE_CB, LET_COOR_CB,
     BLACK_CB, WHITE_CB, PIECE_NO_CB, W_PAWN_CB, W_KNIGHT_CB, W_BISHOP_CB, W_ROOK_CB, W_QUEEN_CB, W_KING_CB, B_PAWN_CB,
     B_KNIGHT_CB, B_BISHOP_CB, B_ROOK_CB, B_QUEEN_CB, B_KING_CB, IND_CASTLING_Q_CB, IND_CASTLING_q_CB, IND_CASTLING_K_CB,
     IND_CASTLING_k_CB, IND_HALFMOVE_CLOCK_CB, IND_FULLMOVE_NUMBER_CB, PIECE_NAME_CB, IND_EN_PASSANT_YES_CB,
@@ -143,7 +143,7 @@ const generated_pseudo_legal_captures_one_piece_mgc = function (from, side_to_mo
 
 
     piece_name = chess_board_0x88[from];
-    //piece_color = (chess_board_0x88[from] > W_KING) ? BLACK : WHITE;
+    //piece >> 3; 0 для белых, 1 для черных
     piece_color = 1 - (chess_board_0x88[from] >> 3);// тут магия 8( в битах это 00001000) (подсказал ИИ от Гугла) 1 для белых и 0 для черных.
 
     // если фигура иммеет цвет ходящей стороны

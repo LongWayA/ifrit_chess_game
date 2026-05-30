@@ -41,7 +41,7 @@ import {
     test_print_any_0x88_cb, test_print_piese_0x88_cb, test_print_piese_color_0x88_cb, test_print_piese_in_line_0x88_cb, 
     test_compare_chess_board_0x88_cb,save_chess_board_0x88_cb, set_board_from_fen_0x88_cb, set_fen_from_0x88_cb, 
     searching_king_cb, iniStartPositionForWhite_cb, letter_to_x_coordinate_cb,
-    IND_MAX_CB, SIDE_TO_MOVE_CB, LET_COOR_CB,
+    BOARD_SIZE_CB, SIDE_TO_MOVE_CB, LET_COOR_CB,
     BLACK_CB, WHITE_CB, PIECE_NO_CB, W_PAWN_CB, W_KNIGHT_CB, W_BISHOP_CB, W_ROOK_CB, W_QUEEN_CB, W_KING_CB, B_PAWN_CB, 
     B_KNIGHT_CB, B_BISHOP_CB, B_ROOK_CB, B_QUEEN_CB, B_KING_CB, IND_CASTLING_Q_CB, IND_CASTLING_q_CB, IND_CASTLING_K_CB,
     IND_CASTLING_k_CB, IND_HALFMOVE_CLOCK_CB, IND_FULLMOVE_NUMBER_CB, PIECE_NAME_CB, IND_EN_PASSANT_YES_CB, 
@@ -60,7 +60,6 @@ import {
 
 import { do_moves_mm } from "../chess_engine_0x88/move_generator_0x88/make_move_0x88.js";
 
-import { UNDO_MAX } from "../chess_engine_0x88/move_generator_0x88/undo_0x88.js";
 
 import {
   ini_random_key_array_64_tk, ini_key_array_64_tk, set_key_from_board_0x88_tk, test_chess_board_key_64_tk,
@@ -82,7 +81,7 @@ class GuiLegalMove_0x88_С {
 
   static NAME = "GuiLegalMove_0x88_С";
 
-  chess_board_0x88_gui = new Int32Array(IND_MAX_CB).fill(0);// текущая доска с фигурами 0x88 
+  chess_board_0x88_gui = new Int32Array(BOARD_SIZE_CB).fill(0);// текущая доска с фигурами 0x88 
   packing_moves_gui = new Int32Array(LENGTH_LIST_ML).fill(MOVE_NO_ML);// список ходов. ход упакован в одно число Uint32
 
   //packing_moves_gui_save = new Int32Array(LENGTH_LIST).fill(MOVE_NO);// список ходов. ход упакован в одно число Uint32
@@ -154,8 +153,6 @@ class GuiLegalMove_0x88_С {
   */
   move_is_legal(one_click_on_squares_x, one_click_on_squares_y, x_b_n, y_b_n, chessBoard_8x8_O) {
 
-    let undo = new Int32Array(UNDO_MAX).fill(0);// для отмены хода
-
     // инициализируем вспомогательный массив    
     let fen_start = chessBoard_8x8_O.set_fen_from_8x8();
     set_board_from_fen_0x88_cb(fen_start, this.chess_board_0x88_gui);//
@@ -190,8 +187,7 @@ class GuiLegalMove_0x88_С {
     let name_capture_piece = get_name_capture_piece_ml(move_i, this.packing_moves_gui);
     let piece_color = this.packing_moves_gui[IND_PIESE_COLOR_ML];
 
-    let is_moove_legal = do_moves_mm(this.chess_board_0x88_gui, this.chess_board_key_64, this.chess_board_key_64_undo, undo,
-      type_move, from, to, piece_color);
+    let is_moove_legal = do_moves_mm(this.chess_board_0x88_gui, this.chess_board_key_64, type_move, from, to, piece_color);
 
 
     return is_moove_legal;

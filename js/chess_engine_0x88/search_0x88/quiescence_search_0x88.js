@@ -12,7 +12,7 @@ import {
   test_print_any_0x88_cb, test_print_piese_0x88_cb, test_print_piese_color_0x88_cb, test_print_piese_in_line_0x88_cb,
   test_compare_chess_board_0x88_cb, save_chess_board_0x88_cb, set_board_from_fen_0x88_cb, set_fen_from_0x88_cb,
   searching_king_cb, iniStartPositionForWhite_cb, letter_to_x_coordinate_cb,
-  IND_MAX_CB, SIDE_TO_MOVE_CB, LET_COOR_CB,
+  BOARD_SIZE_CB, SIDE_TO_MOVE_CB, LET_COOR_CB,
   BLACK_CB, WHITE_CB, PIECE_NO_CB, W_PAWN_CB, W_KNIGHT_CB, W_BISHOP_CB, W_ROOK_CB, W_QUEEN_CB, W_KING_CB, B_PAWN_CB,
   B_KNIGHT_CB, B_BISHOP_CB, B_ROOK_CB, B_QUEEN_CB, B_KING_CB, IND_CASTLING_Q_CB, IND_CASTLING_q_CB, IND_CASTLING_K_CB,
   IND_CASTLING_k_CB, IND_HALFMOVE_CLOCK_CB, IND_FULLMOVE_NUMBER_CB, PIECE_NAME_CB, IND_EN_PASSANT_YES_CB,
@@ -54,9 +54,6 @@ import {
 } from "../move_generator_0x88/move_generator_captures_0x88.js";
 
 import { do_moves_mm } from "../move_generator_0x88/make_move_0x88.js";
-import { undo_moves_um } from "../move_generator_0x88/unmake_move_0x88.js";
-
-import { UNDO_MAX } from "../move_generator_0x88/undo_0x88.js";
 
 import { score_position_e } from "./evaluate_0x88.js";
 
@@ -66,6 +63,23 @@ import { score_position_e } from "./evaluate_0x88.js";
 */
 
 let node_qs = 0;
+
+const MAX_DEPTH_SEARCH = 128;
+
+let packing_moves_stack = new Array(MAX_DEPTH_SEARCH);
+let chess_board_save_stack = new Array(MAX_DEPTH_SEARCH);
+let chess_board_key_64_undo_stack = new Array(MAX_DEPTH_SEARCH);
+
+const ini_stack_qs = function () {
+
+  for (let depth = 0; depth < MAX_DEPTH_SEARCH; depth++) {
+
+    packing_moves_stack[depth] = new Int32Array(LENGTH_LIST_ML).fill(MOVE_NO_ML);
+    chess_board_save_stack[depth] = new Int32Array(BOARD_SIZE_CB).fill(MOVE_NO_ML);
+    chess_board_key_64_undo_stack[depth] = new BigUint64Array(1);
+  }
+}
+
 
 /**
 * @param {number} alpha
@@ -81,10 +95,11 @@ let node_qs = 0;
 
 const quiescence_search = function (alpha, beta, chess_board_0x88, chess_board_key_64, depth) {
 
-  let packing_moves = new Int32Array(LENGTH_LIST_ML).fill(MOVE_NO_ML);// список ходов. ход упакован в одно число Uint32
-  let undo = new Int32Array(UNDO_MAX).fill(0);// для отмены хода
+  let packing_moves = packing_moves_stack[depth];
 
-  const chess_board_key_64_undo = new BigUint64Array(1);
+  let chess_board_save = chess_board_save_stack[depth];
+
+  const chess_board_key_64_undo = chess_board_key_64_undo_stack[depth];
 
   let score = 0;// текущая оценка позиции
   let best_value;// максимальная оценка позиции
@@ -161,10 +176,16 @@ const quiescence_search = function (alpha, beta, chess_board_0x88, chess_board_k
     // }
 
 
-    is_moove_legal = do_moves_mm(chess_board_0x88, chess_board_key_64, chess_board_key_64_undo, undo, type_move, from, to, piece_color);
+    chess_board_save.set(chess_board_0x88);
+    chess_board_key_64_undo[0] = chess_board_key_64[0];
+
+    is_moove_legal = do_moves_mm(chess_board_0x88, chess_board_key_64, type_move, from, to, piece_color);
 
     if (is_moove_legal == 0) { // король под шахом. отменяем ход и пропускаем этот цикл
-      undo_moves_um(chess_board_0x88, chess_board_key_64, chess_board_key_64_undo, undo, type_move, from, to, name_capture_piece, piece_color);
+
+      chess_board_0x88.set(chess_board_save);
+      chess_board_key_64[0] = chess_board_key_64_undo[0];
+
       continue;
     } else if (is_moove_legal == 2) {// нелегальные рокировки не генерируются. просто пропускаем ход
       continue;
@@ -172,7 +193,8 @@ const quiescence_search = function (alpha, beta, chess_board_0x88, chess_board_k
 
     score = -quiescence_search(-beta, -alpha, chess_board_0x88, chess_board_key_64, (depth + 1));
 
-    undo_moves_um(chess_board_0x88, chess_board_key_64, chess_board_key_64_undo, undo, type_move, from, to, name_capture_piece, piece_color);
+    chess_board_0x88.set(chess_board_save);
+    chess_board_key_64[0] = chess_board_key_64_undo[0];
 
     /*
         if( score >= beta )
@@ -183,19 +205,19 @@ const quiescence_search = function (alpha, beta, chess_board_0x88, chess_board_k
             alpha = score;
     */
     if (score >= beta) {
-        return score;
+      return score;
     }
-    if (score > best_value) 
-        best_value = score;
+    if (score > best_value)
+      best_value = score;
 
-    if (score > alpha) 
-        alpha = score;
+    if (score > alpha)
+      alpha = score;
   }
 
   return best_value;
 }
 
-export { quiescence_search };
+export { quiescence_search, ini_stack_qs };
 
 /*
 https://www.chessprogramming.org/Quiescence_Search

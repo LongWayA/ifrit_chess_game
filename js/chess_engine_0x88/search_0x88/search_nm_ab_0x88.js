@@ -12,7 +12,7 @@ import {
   test_print_any_0x88_cb, test_print_piese_0x88_cb, test_print_piese_color_0x88_cb, test_print_piese_in_line_0x88_cb,
   test_compare_chess_board_0x88_cb, save_chess_board_0x88_cb, set_board_from_fen_0x88_cb, set_fen_from_0x88_cb,
   searching_king_cb, iniStartPositionForWhite_cb, letter_to_x_coordinate_cb,
-  IND_MAX_CB, SIDE_TO_MOVE_CB, LET_COOR_CB,
+  BOARD_SIZE_CB, SIDE_TO_MOVE_CB, LET_COOR_CB,
   BLACK_CB, WHITE_CB, PIECE_NO_CB, W_PAWN_CB, W_KNIGHT_CB, W_BISHOP_CB, W_ROOK_CB, W_QUEEN_CB, W_KING_CB, B_PAWN_CB,
   B_KNIGHT_CB, B_BISHOP_CB, B_ROOK_CB, B_QUEEN_CB, B_KING_CB, IND_CASTLING_Q_CB, IND_CASTLING_q_CB, IND_CASTLING_K_CB,
   IND_CASTLING_k_CB, IND_HALFMOVE_CLOCK_CB, IND_FULLMOVE_NUMBER_CB, PIECE_NAME_CB, IND_EN_PASSANT_YES_CB,
@@ -60,13 +60,10 @@ import {
 } from "../move_generator_0x88/move_generator_quiet_0x88.js";
 
 import { do_moves_mm } from "../move_generator_0x88/make_move_0x88.js";
-import { undo_moves_um } from "../move_generator_0x88/unmake_move_0x88.js";
-
-import { UNDO_MAX } from "../move_generator_0x88/undo_0x88.js";
 
 import { score_position_e, PAWN_SCORE_E } from "./evaluate_0x88.js";
 
-import { quiescence_search } from "./quiescence_search_0x88.js";
+import { quiescence_search, ini_stack_qs } from "./quiescence_search_0x88.js";
 
 import { clear_packing_moves_kh, add_move_kh, MAX_DEPTH_KH, IND_DEPTH_KH } from "../for_sorting_move_0x88/killer_heuristic_0x88.js";
 
@@ -137,7 +134,7 @@ const set_node_in_0_ab = function () {
 let packing_moves_k1 = new Int32Array(MAX_DEPTH_KH).fill(MOVE_NO_ML);// список ходов. ход упакован в одно число Uint32
 let packing_moves_k2 = new Int32Array(MAX_DEPTH_KH).fill(MOVE_NO_ML);// список ходов. ход упакован в одно число Uint32
 
-let chess_board_0x88_test = new Int32Array(IND_MAX_CB).fill(0);// записываем доску с ходом
+let chess_board_0x88_test = new Int32Array(BOARD_SIZE_CB).fill(0);// записываем доску с ходом
 
 let new_depth_max = 0;
 let i_lmr = 0;
@@ -174,6 +171,24 @@ const clear_test_tt = function () {
   //use_score_test_tt = 0;
 }
 
+const MAX_DEPTH_SEARCH = 128;
+
+let packing_moves_stack = new Array(MAX_DEPTH_SEARCH);
+let best_packing_pv_line_stack = new Array(MAX_DEPTH_SEARCH);
+let chess_board_key_64_undo_stack = new Array(MAX_DEPTH_SEARCH);
+let chess_board_save_stack = new Array(MAX_DEPTH_SEARCH);
+
+const ini_stack_ab = function () {
+
+  for (let depth = 0; depth < MAX_DEPTH_SEARCH; depth++) {
+
+    packing_moves_stack[depth] = new Int32Array(LENGTH_LIST_ML).fill(MOVE_NO_ML);
+    best_packing_pv_line_stack[depth] = new Int32Array(MAX_DEPTH_PV).fill(MOVE_NO_ML);
+    chess_board_key_64_undo_stack[depth] = new BigUint64Array(1);
+    chess_board_save_stack[depth] = new Int32Array(BOARD_SIZE_CB).fill(MOVE_NO_ML);
+  }
+}
+
 
 // searching_alpha_beta_fail_soft
 /**
@@ -190,11 +205,11 @@ const clear_test_tt = function () {
 
 const searching_negamax_alpha_beta_id_ab = function (alpha, beta, chess_board_0x88, chess_board_key_64, packing_pv_line, depth, depth_max, isPV) {
 
-  let packing_moves = new Int32Array(LENGTH_LIST_ML).fill(MOVE_NO_ML);// список ходов. ход упакован в одно число Uint32
-  let best_packing_pv_line = new Int32Array(MAX_DEPTH_PV).fill(MOVE_NO_ML);// линия лучших ходов для конкретного узла
-  let undo = new Int32Array(UNDO_MAX).fill(0);// для отмены хода
+  let packing_moves = packing_moves_stack[depth];// список ходов. ход упакован в одно число Uint32
+  let best_packing_pv_line = best_packing_pv_line_stack[depth];// линия лучших ходов для конкретного узла
+  let chess_board_0x88_save = chess_board_save_stack[depth];
 
-  const chess_board_key_64_undo = new BigUint64Array(1);
+  const chess_board_key_64_undo = chess_board_key_64_undo_stack[depth];
 
   let number_move_legal = 0;// колличество легальных ходов
 
@@ -391,7 +406,10 @@ const searching_negamax_alpha_beta_id_ab = function (alpha, beta, chess_board_0x
     name_capture_piece = get_name_capture_piece_ml(move_i, packing_moves);
     piece_color = packing_moves[IND_PIESE_COLOR_ML];
 
-    is_moove_legal = do_moves_mm(chess_board_0x88, chess_board_key_64, chess_board_key_64_undo, undo, type_move, from, to, piece_color);
+    chess_board_0x88_save.set(chess_board_0x88);
+    chess_board_key_64_undo[0] = chess_board_key_64[0];
+
+    is_moove_legal = do_moves_mm(chess_board_0x88, chess_board_key_64, type_move, from, to, piece_color);
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //set_key_from_board_0x88_tk(chess_board_0x88, chess_board_key_64_testab);
@@ -399,8 +417,10 @@ const searching_negamax_alpha_beta_id_ab = function (alpha, beta, chess_board_0x
 
 
     if (is_moove_legal == 0) { // король под шахом. отменяем ход и пропускаем этот цикл
-      undo_moves_um(chess_board_0x88, chess_board_key_64, chess_board_key_64_undo, undo,
-        type_move, from, to, name_capture_piece, piece_color);
+
+      chess_board_0x88.set(chess_board_0x88_save);
+      chess_board_key_64[0] = chess_board_key_64_undo[0];
+
       continue;
     } else if (is_moove_legal == 2) {// нелегальные рокировки и взятия короля не генерируются. просто пропускаем ход
       continue;
@@ -445,7 +465,8 @@ const searching_negamax_alpha_beta_id_ab = function (alpha, beta, chess_board_0x
 
 
     // восстановили доску
-    undo_moves_um(chess_board_0x88, chess_board_key_64, chess_board_key_64_undo, undo, type_move, from, to, name_capture_piece, piece_color);
+    chess_board_0x88.set(chess_board_0x88_save);
+    chess_board_key_64[0] = chess_board_key_64_undo[0];
 
     // alpha < value < beta => exact value
     if (score > best_score) {
@@ -539,7 +560,7 @@ const searching_negamax_alpha_beta_id_ab = function (alpha, beta, chess_board_0x
 
 export {
   searching_negamax_alpha_beta_id_ab, set_stop_search_in_1_ab, set_stop_search_in_0_ab, set_node_in_0_ab,
-  node_ab, is_history_heuristic_use_ab,
+  node_ab, is_history_heuristic_use_ab, ini_stack_ab,
   INIT_EVAL_AB,
   save_alpha_up_test_tt, save_beta_cut_test_tt, //save_score_up_test_tt,
   use_alpha_up_test_tt, use_beta_cut_test_tt, //use_score_test_tt,

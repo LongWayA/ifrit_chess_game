@@ -30,7 +30,7 @@ import {
   test_print_any_0x88_cb, test_print_piese_0x88_cb, test_print_piese_color_0x88_cb, test_print_piese_in_line_0x88_cb,
   test_compare_chess_board_0x88_cb, save_chess_board_0x88_cb, set_board_from_fen_0x88_cb, set_fen_from_0x88_cb,
   searching_king_cb, iniStartPositionForWhite_cb, letter_to_x_coordinate_cb,
-  IND_MAX_CB, SIDE_TO_MOVE_CB, LET_COOR_CB,
+  BOARD_SIZE_CB, SIDE_TO_MOVE_CB, LET_COOR_CB,
   BLACK_CB, WHITE_CB, PIECE_NO_CB, W_PAWN_CB, W_KNIGHT_CB, W_BISHOP_CB, W_ROOK_CB, W_QUEEN_CB, W_KING_CB, B_PAWN_CB,
   B_KNIGHT_CB, B_BISHOP_CB, B_ROOK_CB, B_QUEEN_CB, B_KING_CB, IND_CASTLING_Q_CB, IND_CASTLING_q_CB, IND_CASTLING_K_CB,
   IND_CASTLING_k_CB, IND_HALFMOVE_CLOCK_CB, IND_FULLMOVE_NUMBER_CB, PIECE_NAME_CB, IND_EN_PASSANT_YES_CB,
@@ -48,7 +48,6 @@ import {
   A8_MGQ, B8_MGQ, C8_MGQ, D8_MGQ, E8_MGQ, F8_MGQ, G8_MGQ, H8_MGQ
 } from "../move_generator_0x88/move_generator_quiet_0x88.js";
 
-import { set_undo } from "./undo_0x88.js";
 
 import {
   ini_random_key_array_64_tk, ini_key_array_64_tk, set_key_from_board_0x88_tk, test_chess_board_key_64_tk,
@@ -79,22 +78,20 @@ const MOOVE_IS_NOT_LEGAL_CASTLING_MM = 2;
 /** делаем ход на доске chess_board_0x88
 * @param {Int32Array} chess_board_0x88
 * @param {BigUint64Array} chess_board_key_64
-* @param {BigUint64Array} chess_board_key_64_save
-* @param {Int32Array} undo
 * @param {number} type_move
 * @param {number} from
 * @param {number} to
 * @param {number} piece_color
 * @returns {number}
 */
-const do_moves_mm = function (chess_board_0x88, chess_board_key_64, chess_board_key_64_save, undo, type_move, from, to, piece_color) {
+const do_moves_mm = function (chess_board_0x88, chess_board_key_64, type_move, from, to, piece_color) {
   //console.log("Make_move_0x88_C->do_moves  move_i " + move_i);
 
   let is_moove_legal = MOOVE_IS_LEGAL_MM;// по умолчанию ход считаем легальным.
 
-  set_undo(undo, chess_board_0x88);// заполняем вспогательную структуру для возврата хода
+  //set_undo(undo, chess_board_0x88);// заполняем вспогательную структуру для возврата хода
 
-  chess_board_key_64_save[0] = chess_board_key_64[0];
+  //chess_board_key_64_save[0] = chess_board_key_64[0];
 
   // смотрим 
   switch (type_move) {
