@@ -6,6 +6,8 @@
  * @version created 24.01m.2026 
 */
 
+//+
+
 /**
  * НАЗНАЧЕНИЕ
  * 
@@ -71,15 +73,11 @@
  * x_07 = s_0x88 & 7;
  * y_07 = s_0x88 >> 4; // s_0x88 / 16
  * 
- * 📌 Соглашение о суффиксах:
+ * Соглашение о суффиксах:
  *    _cb → chess_board (разграничение экспортов в многомодульной сборке)
  * 
  * что тут еще? Вроде все. Никаких списков фигур, вся доска только в этом маленьком массиве. 
 */
-
-// нативное копирование массива
-//dest.set(src);
-//chess_board_0x88_to.set(chess_board_0x88_from);
 
 //
 const BLACK_CB = 0;
@@ -225,13 +223,6 @@ const set_board_from_fen_0x88_cb = function (fen, chess_board_0x88) {
     let void_f = 0;
     let x07_en_passant = -1;
     let y07_en_passant = -1;
-
-    //if (!fen || typeof fen !== 'string') throw new Error('Invalid FEN string');
-    //  if (!fen || typeof fen !== 'string') console.log('set_board_from_fen_0x88_cb->Invalid FEN string');
-
-    //const parts = fen.trim().split(/\s+/);
-    //if (parts.length < 4) throw new Error('FEN must contain at least [position, side, castling, enpassant]');
-    //if (parts.length < 4) console.log('set_board_from_fen_0x88_cb->FEN must contain at least [position, side, castling, enpassant]');
 
     iniPositionFor_0_cb(chess_board_0x88);
 
@@ -679,8 +670,8 @@ const test_print_piese_0x88_cb = function (chess_board_0x88) {
     let line = "";//
     // бежим по доске и добавляем в линию фигуры с доски. как достигли 
     // конца доски с фигурами печатаем линию и все по новой
-    for (let i = 0; i < 128; i++) {
-        if ((i & 136) == 0) {// 136 0x88
+    for (let i = 0; i < BOARD_SIZE_CB; i++) {
+        if ((i & OUT_OF_BOUNDS_MASK_CB) == 0) {// 136 0x88
             l = 1;
             line = line + "|" + String(chess_board_0x88[i]);
         } else if (l == 1) {
@@ -705,8 +696,8 @@ const test_print_piese_color_0x88_cb = function (chess_board_0x88) {
     let line = "";//
     let color = 0;
 
-    for (let i = 0; i < 128; i++) {
-        if ((i & 136) == 0) {// 136 0x88
+    for (let i = 0; i < BOARD_SIZE_CB; i++) {
+        if ((i & OUT_OF_BOUNDS_MASK_CB) == 0) {// 136 0x88
             l = 1;
 
             // если имя фигуры больше 6 то это черная фигура так как они 9-черная пешка, и т.д.
@@ -732,8 +723,8 @@ const test_print_piese_color_0x88_cb = function (chess_board_0x88) {
 const test_print_piese_in_line_0x88_cb = function (chess_board_0x88) {
     console.log("test_print_0x88_line ****************");
     let line = "";//
-    for (let i = 0; i < 128; i++) {
-        if ((i & 136) == 0) {// 136 0x88       
+    for (let i = 0; i < BOARD_SIZE_CB; i++) {
+        if ((i & OUT_OF_BOUNDS_MASK_CB) == 0) {// 136 0x88       
             line = line + String(chess_board_0x88[i]) + ",";
         }
     }
@@ -751,7 +742,7 @@ const test_compare_chess_board_0x88_cb = function (chess_board_0x88_original, ch
 
     let is_test_ok = 1;
     //console.log("test_compare_chess_board_0x88****************");
-    for (let i = 0; i < 128; i++) {
+    for (let i = 0; i < BOARD_SIZE_CB; i++) {
         if (chess_board_0x88_original[i] != chess_board_0x88[i]) {
             is_test_ok = 0;
             console.log("this piece chess_board_0x88_original[" + i + "] " + chess_board_0x88_original[i]);
@@ -829,8 +820,8 @@ const test_compare_chess_board_0x88_cb = function (chess_board_0x88_original, ch
 */
 const searching_king_cb = function (chess_board_0x88, piece_color) {
 
-    for (let i = 0; i < 128; i++) {
-        if ((i & 136) == 0) {// 136 0x88
+    for (let i = 0; i < BOARD_SIZE_CB; i++) {
+        if ((i & OUT_OF_BOUNDS_MASK_CB) == 0) {// 136 0x88
             if (chess_board_0x88[i] == W_KING_CB) {
                 if (piece_color == 1) {
                     return i;

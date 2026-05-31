@@ -177,6 +177,7 @@ let packing_moves_stack = new Array(MAX_DEPTH_SEARCH);
 let best_packing_pv_line_stack = new Array(MAX_DEPTH_SEARCH);
 let chess_board_key_64_undo_stack = new Array(MAX_DEPTH_SEARCH);
 let chess_board_save_stack = new Array(MAX_DEPTH_SEARCH);
+let packing_moves_1_tt_stack = new Array(MAX_DEPTH_SEARCH);
 
 const ini_stack_ab = function () {
 
@@ -186,6 +187,7 @@ const ini_stack_ab = function () {
     best_packing_pv_line_stack[depth] = new Int32Array(MAX_DEPTH_PV).fill(MOVE_NO_ML);
     chess_board_key_64_undo_stack[depth] = new BigUint64Array(1);
     chess_board_save_stack[depth] = new Int32Array(BOARD_SIZE_CB).fill(MOVE_NO_ML);
+    packing_moves_1_tt_stack[depth] = new Int32Array(1).fill(MOVE_NO_ML);
   }
 }
 
@@ -229,9 +231,9 @@ const searching_negamax_alpha_beta_id_ab = function (alpha, beta, chess_board_0x
 
   let out_tt = [-1, -1, -1];
 
-  let packing_moves_1_tt = new Int32Array(1).fill(MOVE_NO_ML);// список ходов. ход упакован в одно число Uint32
+  let packing_moves_1_tt = packing_moves_1_tt_stack[depth];// список ходов. ход упакован в одно число Uint32
 
-  let fen;
+  let fen = "";
 
   // экстренный выход
   if (stop_search == 1) return 0;
@@ -269,7 +271,8 @@ const searching_negamax_alpha_beta_id_ab = function (alpha, beta, chess_board_0x
   if (is_TT_use == 1) {
 
     // ищем позицию в хеш таблице
-    fen = set_fen_from_0x88_cb(chess_board_0x88);
+    // *************************************************************************************************************fen
+    //fen = set_fen_from_0x88_cb(chess_board_0x88);
     out_tt = get_position_from_tt(chess_board_key_64, packing_moves_1_tt, depth, depth_max, fen);
 
     //test
@@ -505,7 +508,8 @@ const searching_negamax_alpha_beta_id_ab = function (alpha, beta, chess_board_0x
 
           // записываем ход в хеш   
           if (is_TT_use == 1) {
-            fen = set_fen_from_0x88_cb(chess_board_0x88);
+            // *************************************************************************************************************fen
+            //fen = set_fen_from_0x88_cb(chess_board_0x88);
             set_position_in_tt(chess_board_key_64, packing_moves, BETA_CUT_TT, score, depth, depth_max, move_i, fen);
             save_beta_cut_test_tt = save_beta_cut_test_tt + 1;
           }
@@ -518,7 +522,8 @@ const searching_negamax_alpha_beta_id_ab = function (alpha, beta, chess_board_0x
 
           if (is_TT_use == 1) {
             // записываем ход в хеш 
-            fen = set_fen_from_0x88_cb(chess_board_0x88);
+            // *************************************************************************************************************fen
+            //fen = set_fen_from_0x88_cb(chess_board_0x88);
             set_position_in_tt(chess_board_key_64, packing_moves, ALPHA_UPDATE_TT, score, depth, depth_max, move_i, fen);
             save_alpha_up_test_tt = save_alpha_up_test_tt + 1;
           }
