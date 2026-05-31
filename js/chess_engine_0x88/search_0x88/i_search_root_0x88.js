@@ -127,13 +127,13 @@ import { quiescence_search, ini_stack_qs } from "./quiescence_search_0x88.js";
 */
 
 /**
-    * 
-    * @typedef {Object} uci_return_search
-    * @property {string} fen_start - начальная позиция в виде fen передаваемая на вход движка
-    * @property {string} fen_end - конечная позиция в виде fen возникшая после хода движка
-    * @property {string} info - info depth 1 score cp 17 nodes 20 nps 20000 pv e2e4 
-    * @property {string} best_move - bestmove e2e4 ponder e7e6
-    */
+* 
+* @typedef {Object} uci_return_search
+* @property {string} fen_start - начальная позиция в виде fen передаваемая на вход движка
+* @property {string} fen_end - конечная позиция в виде fen возникшая после хода движка
+* @property {string} info - info depth 1 score cp 17 nodes 20 nps 20000 pv e2e4 
+* @property {string} best_move - bestmove e2e4 ponder e7e6
+*/
 
 const ALPHA_SCORE_R = -50000;
 const BETA_SCORE_R = 50000;
@@ -206,6 +206,10 @@ const start_search_negamax_r = function (fen_start, depth_max) {
   chess_board_0x88.set(chess_board_0x88_start);
   chess_board_0x88_save_test.set(chess_board_0x88);
   chess_board_0x88_get_move.set(chess_board_0x88);
+
+  chess_board_key_64[0] = 0n;
+  // по позиции генерируем ключ
+  set_key_from_board_0x88_tk(chess_board_0x88, chess_board_key_64);
 
   console.log("start_search_negamax_r -> start_search_negamax ");
   console.log("start_search_negamax_r -> =========================================================================");

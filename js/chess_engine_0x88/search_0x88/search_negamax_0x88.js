@@ -67,6 +67,13 @@ import {
 
 import { score_position_e } from "./evaluate_0x88.js";
 
+import {
+  ini_random_key_array_64_tk, ini_key_array_64_tk, set_key_from_board_0x88_tk, test_chess_board_key_64_tk,
+  key_update_do_move_0x88_tk, key_update_ep_move_0x88_tk, key_update_promo_move_0x88_tk,
+  key_update_castle_move_0x88_tk, key_update_ep_0x88_tk, key_update_ep_sq_0x88_tk, key_update_QqKk_0x88_tk,
+  test_generation_key_64_tk
+} from "../for_sorting_move_0x88/transposition_key_0x88.js";
+
 
 const MAX_DEPTH_SEARCH = 128;
 
@@ -85,6 +92,8 @@ const ini_stack = function () {
     chess_board_save_stack[depth] = new Int32Array(BOARD_SIZE_CB).fill(MOVE_NO_ML);
   }
 }
+
+let chess_board_key_64_test = new BigUint64Array(1);
 
 
 const MATE = -30000;
@@ -136,6 +145,11 @@ const searching_negamax = function (packing_pv_line, chess_board_0x88, chess_boa
     //console.log("searching_minmax->found_score " + found_score);
     found_score = 0;
     node_mm = node_mm + 1;
+
+ // сравниваем ключи сохраненный и измененный
+
+    // set_key_from_board_0x88_tk(chess_board_0x88, chess_board_key_64_test);
+    // test_chess_board_key_64_tk(chess_board_key_64_test, chess_board_key_64);
 
     return found_score;
 
