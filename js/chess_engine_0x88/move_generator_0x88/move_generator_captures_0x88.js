@@ -60,7 +60,7 @@ const STOP_BEAM_FALSE_MGC = 0;
 */
 // ходы короля. так же ходит ферзь
 const moves_king_mgc = new Int32Array([-16, -15, 1, 17, 16, 15, -1, -17]);
-const moves_queen = moves_king_mgc;
+const moves_queen_mgc = moves_king_mgc;
 /*
  1      
 16 17 18
@@ -265,14 +265,14 @@ const generated_captures_moves_queen_mgc = function (piece_name, piece_color, fr
     let stop_beam;
 
     for (let j = 0; j < 8; j++) {
-        to = from + moves_queen[j];
+        to = from + moves_queen_mgc[j];
         if ((to & 136) == 0) {// если мы не вышли за пределы доски
             while (true) {
                 // проверяем каждую клетку хода на фигуру. если есть фигура противника то добавляем взятие
                 // в список, если это наша фигура то прерываем поиск на этом луче иначе идем дальше
                 stop_beam = add_captures_move_mgc(piece_name, piece_color, from, to, chess_board_0x88, packing_moves);
                 if (stop_beam == STOP_BEAM_TRUE_MGC) break;// уперлись в фигуру
-                to = to + moves_queen[j];
+                to = to + moves_queen_mgc[j];
                 if ((to & 136) != 0) break;// конец доски прерываем поиск на этом луче
             }
         }
@@ -385,7 +385,8 @@ const generated_captures_moves_pawn_mgc = function (piece_name, piece_color, fro
 * @returns {void}
 */
 const generated_captures_moves_pawn_white_mgc = function (piece_name, piece_color, from, chess_board_0x88, packing_moves) {
-    if (Math.floor(from / 16) == 1) {// белая пешка на на предпоследней позиции(7-ая линия из 8). можно смотреть взятие с превращением
+    // Math.floor(from / 16) == 1
+    if ((from >> 4) == 1) {// белая пешка на на предпоследней позиции(7-ая линия из 8). можно смотреть взятие с превращением
         // смотрим и если есть добавляем взятия пешкой с превращением
         generated_captures_moves_pawn_promo_mgc(piece_name, from, (from - 17), (from - 15),
             piece_color, chess_board_0x88, packing_moves);
@@ -406,7 +407,8 @@ const generated_captures_moves_pawn_white_mgc = function (piece_name, piece_colo
 * @returns {void}
 */
 const generated_captures_moves_pawn_black_mgc = function (piece_name, piece_color, from, chess_board_0x88, packing_moves) {
-    if (Math.floor(from / 16) == 6) {// черная пешка на на предпоследней позиции(2-ая линия из 8). можно смотреть взятие с превращением
+    // Math.floor(from / 16) == 6
+    if ((from >> 4) == 6) {// черная пешка на на предпоследней позиции(2-ая линия из 8). можно смотреть взятие с превращением
         generated_captures_moves_pawn_promo_mgc(piece_name, from, (from + 15), (from + 17),
             piece_color, chess_board_0x88, packing_moves);
     } else {
@@ -526,32 +528,7 @@ const generated_captures_moves_pawn_promo_mgc = function (piece_name, from, to_l
 ////////////////////////////////
 // детектор шахов
 
-/** у нас нету хода взятия короля, поэтому пришлось специально прописывать функцию обнаружения короля на дистанции хода короля
-* @param {number} from
-* @param {number} piece_color 
-* @param {Int32Array} chess_board_0x88
-* @returns {number}
-*/
-const check_detected_generated_moves_king_mgc = function (from, piece_color, chess_board_0x88) {
-    let to;
-    let check = -1;
 
-    for (let j = 0; j < 8; j++) {
-        to = from + moves_king_mgc[j];
-        if ((to & 136) == 0) {// если мы не вышли за пределы доски
-            // если на клетке хода обнаружили короля проверим цвет, так как детектором и рокировки проверяем, а там свой король тусуется :)
-            if ((chess_board_0x88[to] == B_KING_CB) && (piece_color == WHITE_CB)) {
-                check = B_KING_CB;
-                return check;
-            }
-            if ((chess_board_0x88[to] == W_KING_CB) && (piece_color == BLACK_CB)) {
-                check = W_KING_CB;
-                return check;
-            }
-        }
-    }
-    return check;
-}
 
 /** ищем шахи (прямая проверка лучей без генерации списков)
  * оптимизация предложенная Qwen3.7-Max, с прямой генерацией лучей.
@@ -804,5 +781,32 @@ export {
 
 //     }
 //     check = 0;// нет шаха
+//     return check;
+// }
+
+// /** у нас нету хода взятия короля, поэтому пришлось специально прописывать функцию обнаружения короля на дистанции хода короля
+// * @param {number} from
+// * @param {number} piece_color 
+// * @param {Int32Array} chess_board_0x88
+// * @returns {number}
+// */
+// const check_detected_generated_moves_king_mgc = function (from, piece_color, chess_board_0x88) {
+//     let to;
+//     let check = -1;
+
+//     for (let j = 0; j < 8; j++) {
+//         to = from + moves_king_mgc[j];
+//         if ((to & 136) == 0) {// если мы не вышли за пределы доски
+//             // если на клетке хода обнаружили короля проверим цвет, так как детектором и рокировки проверяем, а там свой король тусуется :)
+//             if ((chess_board_0x88[to] == B_KING_CB) && (piece_color == WHITE_CB)) {
+//                 check = B_KING_CB;
+//                 return check;
+//             }
+//             if ((chess_board_0x88[to] == W_KING_CB) && (piece_color == BLACK_CB)) {
+//                 check = W_KING_CB;
+//                 return check;
+//             }
+//         }
+//     }
 //     return check;
 // }

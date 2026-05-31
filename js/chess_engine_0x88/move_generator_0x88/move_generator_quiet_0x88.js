@@ -84,7 +84,7 @@ const H8_MGQ = 7;
 */
 // ходы короля. так же ходит ферзь
 const moves_king_mgq = new Int32Array([-16, -15, 1, 17, 16, 15, -1, -17]);
-const moves_queen = moves_king_mgq;
+const moves_queen_mgq = moves_king_mgq;
 /*
  1      
 16 17 18
@@ -266,12 +266,12 @@ const generated_quiet_moves_queen_mgq = function (piece_name, from, chess_board_
     let stop_beam;
 
     for (let j = 0; j < 8; j++) {
-        to = from + moves_queen[j];
+        to = from + moves_queen_mgq[j];
         if ((to & 136) == 0) {// если мы не вышли за пределы доски
             while (true) {
                 stop_beam = add_quiet_move_mgq(piece_name, from, to, chess_board_0x88, packing_moves);
                 if (stop_beam == STOP_BEAM_TRUE_MGQ) break;// уперлись в фигуру
-                to = to + moves_queen[j];
+                to = to + moves_queen_mgq[j];
                 if ((to & 136) != 0) break;// конец доски
             }
         }
@@ -442,12 +442,13 @@ const generated_quiet_moves_pawn_mgq = function (piece_color, from, chess_board_
 * @returns {void}
 */
 const generated_quiet_moves_pawn_white_mgq = function (from, chess_board_0x88, packing_moves) {
-
-    if (Math.floor(from / 16) == 6) {// белая пешка на стартовой позиции(2-ая линия снизу). можно ходить на две клетки
+    // Math.floor(from / 16) == 6
+    if ((from >> 4) == 6) {// белая пешка на стартовой позиции(2-ая линия снизу). можно ходить на две клетки
         generated_moves_pawn_double_mgq(from, (from - 16), (from - 32),
             chess_board_0x88, packing_moves);
     }
-    if (Math.floor(from / 16) == 1) {// белая пешка на предпоследней позиции(7-ая линия снизу). можно ходить с превращением
+    //Math.floor(from / 16) == 1
+    if ((from >> 4) == 1) {// белая пешка на предпоследней позиции(7-ая линия снизу). можно ходить с превращением
         generated_quiet_moves_pawn_promo_mgq(from, (from - 16),
             chess_board_0x88, packing_moves);
     } else { //ходы белой пешки на одну клетку
@@ -465,11 +466,13 @@ const generated_quiet_moves_pawn_white_mgq = function (from, chess_board_0x88, p
 */
 const generated_quiet_moves_pawn_black_mgq = function (from, chess_board_0x88, packing_moves) {
 
-    if (Math.floor(from / 16) == 1) {// черная пешка на стартовой позиции(7-ая линия снизу). можно ходить на две клетки
+    // Math.floor(from / 16) == 1
+    if ((from >> 4) == 1) {// черная пешка на стартовой позиции(7-ая линия снизу). можно ходить на две клетки
         generated_moves_pawn_double_mgq(from, (from + 16), (from + 32),
             chess_board_0x88, packing_moves);
     }
-    if (Math.floor(from / 16) == 6) {// черная пешка на предпоследней позиции(2-ая линия снизу). можно ходить с превращением
+    // Math.floor(from / 16) == 6
+    if ((from >> 4) == 6) {// черная пешка на предпоследней позиции(2-ая линия снизу). можно ходить с превращением
         generated_quiet_moves_pawn_promo_mgq(from, (from + 16),
             chess_board_0x88, packing_moves);
     } else { //ходы черной пешки на одну клетку
