@@ -92,13 +92,8 @@ import {
 
 */
 
-const MATE_AB = -30000;
-const INIT_EVAL_AB = -40000;// матовая оценка всегда должна обновлять INIT_EVAL 
-// и при - и при + на следющей глубине поиска (-30000 > -40000) и (30000 > -40000)
-
-let node_ab = 0;// считаем узлы
-
 ///////////////////////////////////////
+// флаги включения и отключения различных эвристик
 let is_quiescence_use = 1;// используем просмотр выгодных взятий до конца
 let is_ab_use = 1;// используем альфа-бета оптимизацию
 
@@ -115,33 +110,13 @@ let is_razoring_use = 0;// не смотрим очень плохие для н
 // 
 let is_lmr_use = 0;// уменьшаем глубину поиска ходов после всех взятий и двух киллеров, но не меньше 4 полухода 
 //let is_futility_pruning_use = 0;// not working
+///////////////////////////////////////
 
-let stop_search = 0;
-
-const set_stop_search_in_1_ab = function () {
-  stop_search = 1;
-}
-
-const set_stop_search_in_0_ab = function () {
-  stop_search = 0;
-}
-
-const set_node_in_0_ab = function () {
-  node_ab = 0;
-}
-
-// это два киллера
-let packing_moves_k1 = new Int32Array(MAX_DEPTH_KH).fill(MOVE_NO_ML);// список ходов. ход упакован в одно число Uint32
-let packing_moves_k2 = new Int32Array(MAX_DEPTH_KH).fill(MOVE_NO_ML);// список ходов. ход упакован в одно число Uint32
+///////////////////////////////////////
+// TEST
+//const chess_board_key_64_testab = new BigUint64Array(1);
 
 let chess_board_0x88_test = new Int32Array(BOARD_SIZE_CB).fill(0);// записываем доску с ходом
-
-let new_depth_max = 0;
-let i_lmr = 0;
-
-const chess_board_key_64_3_repetition = new BigUint64Array(20).fill(0n);
-
-//const chess_board_key_64_testab = new BigUint64Array(1);
 
 // test_tt
 let save_alpha_up_test_tt = 0;
@@ -158,6 +133,61 @@ let use_beta_cut_test_tt = 0;
 //   add_a_cnt_h_move_test_tt;
 //   add_b_cnt_h_move_test_tt;
 // }
+///////////////////////////////////////
+
+///////////////////////////////////////
+// константы
+const MATE_AB = -30000;
+const INIT_EVAL_AB = -40000;// матовая оценка всегда должна обновлять INIT_EVAL 
+// и при - и при + на следющей глубине поиска (-30000 > -40000) и (30000 > -40000)
+
+const MAX_DEPTH_SEARCH = 128;
+///////////////////////////////////////
+
+let node_ab = 0;// считаем узлы
+
+let stop_search = 0;
+
+let new_depth_max = 0;
+let i_lmr = 0;
+
+// это два киллера
+let packing_moves_k1 = new Int32Array(MAX_DEPTH_KH).fill(MOVE_NO_ML);// список ходов. ход упакован в одно число Uint32
+let packing_moves_k2 = new Int32Array(MAX_DEPTH_KH).fill(MOVE_NO_ML);// список ходов. ход упакован в одно число Uint32
+
+const chess_board_key_64_3_repetition = new BigUint64Array(20).fill(0n);
+
+let packing_moves_stack = new Array(MAX_DEPTH_SEARCH);
+let best_packing_pv_line_stack = new Array(MAX_DEPTH_SEARCH);
+let chess_board_key_64_undo_stack = new Array(MAX_DEPTH_SEARCH);
+let chess_board_save_stack = new Array(MAX_DEPTH_SEARCH);
+let packing_moves_1_tt_stack = new Array(MAX_DEPTH_SEARCH);
+let out_tt_stack = new Array(MAX_DEPTH_SEARCH);
+
+const ini_stack_ab = function () {
+
+  for (let depth = 0; depth < MAX_DEPTH_SEARCH; depth++) {
+
+    packing_moves_stack[depth] = new Int32Array(LENGTH_LIST_ML).fill(MOVE_NO_ML);
+    best_packing_pv_line_stack[depth] = new Int32Array(MAX_DEPTH_PV).fill(MOVE_NO_ML);
+    chess_board_key_64_undo_stack[depth] = new BigUint64Array(1);
+    chess_board_save_stack[depth] = new Int32Array(BOARD_SIZE_CB).fill(MOVE_NO_ML);
+    packing_moves_1_tt_stack[depth] = new Int32Array(1).fill(MOVE_NO_ML);
+    out_tt_stack[depth] = [-1, -1, -1];
+  }
+}
+
+const set_stop_search_in_1_ab = function () {
+  stop_search = 1;
+}
+
+const set_stop_search_in_0_ab = function () {
+  stop_search = 0;
+}
+
+const set_node_in_0_ab = function () {
+  node_ab = 0;
+}
 
 const clear_test_tt = function () {
   save_alpha_up_test_tt = 0;//
@@ -171,29 +201,8 @@ const clear_test_tt = function () {
   //use_score_test_tt = 0;
 }
 
-const MAX_DEPTH_SEARCH = 128;
-
-let packing_moves_stack = new Array(MAX_DEPTH_SEARCH);
-let best_packing_pv_line_stack = new Array(MAX_DEPTH_SEARCH);
-let chess_board_key_64_undo_stack = new Array(MAX_DEPTH_SEARCH);
-let chess_board_save_stack = new Array(MAX_DEPTH_SEARCH);
-let packing_moves_1_tt_stack = new Array(MAX_DEPTH_SEARCH);
-
-const ini_stack_ab = function () {
-
-  for (let depth = 0; depth < MAX_DEPTH_SEARCH; depth++) {
-
-    packing_moves_stack[depth] = new Int32Array(LENGTH_LIST_ML).fill(MOVE_NO_ML);
-    best_packing_pv_line_stack[depth] = new Int32Array(MAX_DEPTH_PV).fill(MOVE_NO_ML);
-    chess_board_key_64_undo_stack[depth] = new BigUint64Array(1);
-    chess_board_save_stack[depth] = new Int32Array(BOARD_SIZE_CB).fill(MOVE_NO_ML);
-    packing_moves_1_tt_stack[depth] = new Int32Array(1).fill(MOVE_NO_ML);
-  }
-}
-
-
-// searching_alpha_beta_fail_soft
 /**
+ * searching_alpha_beta_fail_soft
  * @param {number} alpha
  * @param {number} beta
  * @param {Int32Array} chess_board_0x88
@@ -229,7 +238,7 @@ const searching_negamax_alpha_beta_id_ab = function (alpha, beta, chess_board_0x
   let isPV_node = 1;// является ли узел основным вариантом
   let type_move_k;
 
-  let out_tt = [-1, -1, -1];
+  let out_tt = out_tt_stack[depth];
 
   let packing_moves_1_tt = packing_moves_1_tt_stack[depth];// список ходов. ход упакован в одно число Uint32
 
