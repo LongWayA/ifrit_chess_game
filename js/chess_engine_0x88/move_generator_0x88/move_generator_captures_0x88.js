@@ -12,7 +12,8 @@ import {
     test_print_any_0x88_cb, test_print_piese_0x88_cb, test_print_piese_color_0x88_cb, test_print_piese_in_line_0x88_cb,
     test_compare_chess_board_0x88_cb, set_board_from_fen_0x88_cb, set_fen_from_0x88_cb,
     searching_king_cb, iniStartPositionForWhite_cb, letter_to_x_coordinate_cb,
-    BOARD_SIZE_CB, SIDE_TO_MOVE_CB, LET_COOR_CB,
+    s_0x88_out_of_bounds_cb, get_piece_color_cb, get_piece_type_cb, create_piece_cb,
+    BOARD_SIZE_CB, OUT_OF_BOUNDS_MASK_CB, SIDE_TO_MOVE_CB, LET_COOR_CB,
     BLACK_CB, WHITE_CB, PIECE_NO_CB, W_PAWN_CB, W_KNIGHT_CB, W_BISHOP_CB, W_ROOK_CB, W_QUEEN_CB, W_KING_CB, B_PAWN_CB,
     B_KNIGHT_CB, B_BISHOP_CB, B_ROOK_CB, B_QUEEN_CB, B_KING_CB, IND_CASTLING_Q_CB, IND_CASTLING_q_CB, IND_CASTLING_K_CB,
     IND_CASTLING_k_CB, IND_HALFMOVE_CLOCK_CB, IND_FULLMOVE_NUMBER_CB, PIECE_NAME_CB, IND_EN_PASSANT_YES_CB,
@@ -99,9 +100,9 @@ const generated_pseudo_legal_captures_mgc = function (chess_board_0x88, packing_
     packing_moves[IND_PIESE_COLOR_ML] = side_to_move;
 
     // бежим по доске
-    for (let from = 0; from < 128; from++) {
+    for (let from = 0; from < BOARD_SIZE_CB; from++) {
         // если мы не вышли за пределы доски
-        if ((from & 136) == 0) {// 136 0x88
+        if ((from & OUT_OF_BOUNDS_MASK_CB) == 0) {// 136 0x88
             generated_pseudo_legal_captures_one_piece_mgc(from, side_to_move, chess_board_0x88, packing_moves);
         }
     }
@@ -123,7 +124,7 @@ const generated_pseudo_legal_captures_one_piece_for_gui_mgc = function (from, ch
     clear_list_ml(packing_moves);
     packing_moves[IND_PIESE_COLOR_ML] = side_to_move;
     // если мы не вышли за пределы доски
-    if ((from & 136) == 0) {// 136 0x88
+    if ((from & OUT_OF_BOUNDS_MASK_CB) == 0) {// 136 0x88
         generated_pseudo_legal_captures_one_piece_mgc(from, side_to_move, chess_board_0x88, packing_moves);
     }
 }
@@ -244,7 +245,7 @@ const generated_captures_moves_king_mgc = function (piece_name, piece_color, fro
     // просматриваем все поля вокруг короля
     for (let j = 0; j < 8; j++) {
         to = from + moves_king_mgc[j];
-        if ((to & 136) == 0) {// если мы не вышли за пределы доски
+        if ((to & OUT_OF_BOUNDS_MASK_CB) == 0) {// если мы не вышли за пределы доски
             stop_beam = add_captures_move_mgc(piece_name, piece_color, from, to, chess_board_0x88, packing_moves);
         }
     }
@@ -266,14 +267,14 @@ const generated_captures_moves_queen_mgc = function (piece_name, piece_color, fr
 
     for (let j = 0; j < 8; j++) {
         to = from + moves_queen_mgc[j];
-        if ((to & 136) == 0) {// если мы не вышли за пределы доски
+        if ((to & OUT_OF_BOUNDS_MASK_CB) == 0) {// если мы не вышли за пределы доски
             while (true) {
                 // проверяем каждую клетку хода на фигуру. если есть фигура противника то добавляем взятие
                 // в список, если это наша фигура то прерываем поиск на этом луче иначе идем дальше
                 stop_beam = add_captures_move_mgc(piece_name, piece_color, from, to, chess_board_0x88, packing_moves);
                 if (stop_beam == STOP_BEAM_TRUE_MGC) break;// уперлись в фигуру
                 to = to + moves_queen_mgc[j];
-                if ((to & 136) != 0) break;// конец доски прерываем поиск на этом луче
+                if ((to & OUT_OF_BOUNDS_MASK_CB) != 0) break;// конец доски прерываем поиск на этом луче
             }
         }
     }
@@ -295,12 +296,12 @@ const generated_captures_moves_rook_mgc = function (piece_name, piece_color, fro
 
     for (let j = 0; j < 4; j++) {
         to = from + moves_rook_mgc[j];
-        if ((to & 136) == 0) {// если мы не вышли за пределы доски
+        if ((to & OUT_OF_BOUNDS_MASK_CB) == 0) {// если мы не вышли за пределы доски
             while (true) {
                 stop_beam = add_captures_move_mgc(piece_name, piece_color, from, to, chess_board_0x88, packing_moves);
                 if (stop_beam == STOP_BEAM_TRUE_MGC) break;
                 to = to + moves_rook_mgc[j];
-                if ((to & 136) != 0) break;
+                if ((to & OUT_OF_BOUNDS_MASK_CB) != 0) break;
             }
         }
     }
@@ -322,12 +323,12 @@ const generated_captures_moves_bishop_mgc = function (piece_name, piece_color, f
 
     for (let j = 0; j < 4; j++) {
         to = from + moves_bishop_mgc[j];
-        if ((to & 136) == 0) {// если мы не вышли за пределы доски
+        if ((to & OUT_OF_BOUNDS_MASK_CB) == 0) {// если мы не вышли за пределы доски
             while (true) {
                 stop_beam = add_captures_move_mgc(piece_name, piece_color, from, to, chess_board_0x88, packing_moves);
                 if (stop_beam == STOP_BEAM_TRUE_MGC) break;
                 to = to + moves_bishop_mgc[j];
-                if ((to & 136) != 0) break;
+                if ((to & OUT_OF_BOUNDS_MASK_CB) != 0) break;
             }
         }
     }
@@ -350,7 +351,7 @@ const generated_captures_moves_knight_mgc = function (piece_name, piece_color, f
 
     for (let j = 0; j < 8; j++) {
         to = from + moves_knight_mgc[j];
-        if ((to & 136) == 0) {// если мы не вышли за пределы доски
+        if ((to & OUT_OF_BOUNDS_MASK_CB) == 0) {// если мы не вышли за пределы доски
             stop_beam = add_captures_move_mgc(piece_name, piece_color, from, to, chess_board_0x88, packing_moves);
         }
     }
@@ -434,7 +435,7 @@ const generated_moves_pawn_captures_mgc = function (piece_name, from, to_left, t
     let piece_captures;
     let type_move;
 
-    if ((to_left & 136) == 0) {// взятия налево если мы на доске
+    if ((to_left & OUT_OF_BOUNDS_MASK_CB) == 0) {// взятия налево если мы на доске
         piece_captures = chess_board_0x88[to_left];
         //piece_color_captures = (chess_board_0x88[to_left] > W_KING) ? BLACK : WHITE;
         piece_color_captures = 1 - (chess_board_0x88[to_left] >> 3);
@@ -450,7 +451,7 @@ const generated_moves_pawn_captures_mgc = function (piece_name, from, to_left, t
             add_packing_move_ml(packing_moves, type_move, from, to_left, piece_captures);
         }
     }
-    if ((to_right & 136) == 0) {// 136 0x88    
+    if ((to_right & OUT_OF_BOUNDS_MASK_CB) == 0) {// 136 0x88    
         piece_captures = chess_board_0x88[to_right];
         //piece_color_captures = (chess_board_0x88[to_right] > W_KING) ? BLACK : WHITE;
         piece_color_captures = 1 - (chess_board_0x88[to_right] >> 3);
@@ -484,7 +485,7 @@ const generated_captures_moves_pawn_promo_mgc = function (piece_name, from, to_l
     let type_move;
 
     // взятие пешкой влево с превращением
-    if ((to_left & 136) == 0) {// 136 0x88                
+    if ((to_left & OUT_OF_BOUNDS_MASK_CB) == 0) {// 136 0x88                
         piece_captures = chess_board_0x88[to_left];
         //piece_color_captures = (chess_board_0x88[to_left] > W_KING) ? BLACK : WHITE;
         piece_color_captures = 1 - (chess_board_0x88[to_left] >> 3);
@@ -505,7 +506,7 @@ const generated_captures_moves_pawn_promo_mgc = function (piece_name, from, to_l
         }
     }
     // взятие пешкой вправо с превращением
-    if ((to_right & 136) == 0) {// 136 0x88      
+    if ((to_right & OUT_OF_BOUNDS_MASK_CB) == 0) {// 136 0x88      
         piece_captures = chess_board_0x88[to_right];
         //piece_color_captures = (chess_board_0x88[to_right] > W_KING) ? BLACK : WHITE;
         piece_color_captures = 1 - (chess_board_0x88[to_right] >> 3);

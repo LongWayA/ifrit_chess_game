@@ -397,12 +397,18 @@ PROMO_PIECE_LUT[CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT_ML] = "n";
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const clear_list_ml = function (packing_moves) {
-
+const clear_list_ml = (packing_moves) => {
     packing_moves[IND_NUMBER_MOVE_ML] = 0;
     packing_moves[IND_NUMBER_CAPTURES_MOVE_ML] = 0;
     packing_moves[IND_PIESE_COLOR_ML] = 0;
-}
+};
+
+// const clear_list_ml = function (packing_moves) {
+
+//     packing_moves[IND_NUMBER_MOVE_ML] = 0;
+//     packing_moves[IND_NUMBER_CAPTURES_MOVE_ML] = 0;
+//     packing_moves[IND_PIESE_COLOR_ML] = 0;
+// }
 
 /**
 * добавляем ход в список
@@ -414,91 +420,89 @@ const clear_list_ml = function (packing_moves) {
 * @param {number} name_capture_piece
 * @returns {void}
 */
-const add_packing_move_ml = function (packing_moves, type_move, from, to, name_capture_piece) {
+const add_packing_move_ml = (packing_moves, type_move, from, to, name_capture_piece) => {
     //console.log('add_move->');
 
     const move = (name_capture_piece << 24) | (to << 16) | (from << 8) | type_move;
 
-    // let move = 0; // 
+    let i = packing_moves[IND_NUMBER_MOVE_ML]; // количество уже записанных ходов. используем как индекс для нового хода
 
-    // //name_capture_piece
-    // move = move | name_capture_piece;
-    // move = move << 8;
-
-    // //to
-    // move = move | to;
-    // move = move << 8;
-
-    // //from
-    // move = move | from;
-    // move = move << 8;
-
-    // // type_move
-    // move = move | type_move;
-
-    let i = packing_moves[IND_NUMBER_MOVE_ML];// количество уже записанных ходов. используем как индекс для нового хода
-
-    packing_moves[i] = move;// сохраняем ход
+    packing_moves[i] = move; // сохраняем ход
 
     packing_moves[IND_NUMBER_MOVE_ML] = i + 1; // увеличиваем количество ходов
-}
+};
 
-//const get_type_move_ml = (i, m) => m[i] & 0xFF;
-//const get_from_ml = (i, m) => (m[i] >> 8) & 0xFF;
-//const get_to_ml = (i, m) => (m[i] >> 16) & 0xFF;
-//const get_name_capture_piece_ml = (i, m) => (m[i] >>> 24) & 0xFF;
+// const add_packing_move_ml = function (packing_moves, type_move, from, to, name_capture_piece) {
+//     //console.log('add_move->');
 
+//     const move = (name_capture_piece << 24) | (to << 16) | (from << 8) | type_move;
 
-/**
- * @param {number} i
- * @param {Int32Array} packing_moves
- * @returns {number}
- */
-const get_type_move_ml = function (i, packing_moves) {
-    //255 это 8 бит ->  11111111
-    let move = packing_moves[i]; //
-    let type_move = move & 255;
-    return type_move;
-}
+//     let i = packing_moves[IND_NUMBER_MOVE_ML];// количество уже записанных ходов. используем как индекс для нового хода
+
+//     packing_moves[i] = move;// сохраняем ход
+
+//     packing_moves[IND_NUMBER_MOVE_ML] = i + 1; // увеличиваем количество ходов
+// }
+
 
 /**
  * @param {number} i
  * @param {Int32Array} packing_moves
  * @returns {number}
  */
-const get_from_ml = function (i, packing_moves) {
-    //255 это 8 бит ->  11111111
-    let move = packing_moves[i]; //
-    move = move >> 8;
-    let from = move & 255;
-    return from;
-}
+const get_type_move_ml = (i, packing_moves) => packing_moves[i] & 0xFF;//0xFF =255 это 8 бит ->  11111111
+
+// const get_type_move_ml = function (i, packing_moves) {
+//     //255 это 8 бит ->  11111111
+//     let move = packing_moves[i]; //
+//     let type_move = move & 255;
+//     return type_move;
+// }
 
 /**
  * @param {number} i
  * @param {Int32Array} packing_moves
  * @returns {number}
  */
-const get_to_ml = function (i, packing_moves) {
-    //255 это 8 бит ->  11111111
-    let move = packing_moves[i]; //
-    move = move >> 16;
-    let to = move & 255;
-    return to;
-}
+const get_from_ml = (i, packing_moves) => (packing_moves[i] >> 8) & 0xFF;
+
+// const get_from_ml = function (i, packing_moves) {
+//     //255 это 8 бит ->  11111111
+//     let move = packing_moves[i]; //
+//     move = move >> 8;
+//     let from = move & 255;
+//     return from;
+// }
 
 /**
  * @param {number} i
  * @param {Int32Array} packing_moves
  * @returns {number}
  */
-const get_name_capture_piece_ml = function (i, packing_moves) {
-    //255 это 8 бит ->  11111111
-    let move = packing_moves[i]; //
-    move = move >> 24;
-    let name_capture_piece = move & 255;
-    return name_capture_piece;
-}
+const get_to_ml = (i, packing_moves) => (packing_moves[i] >> 16) & 0xFF;
+
+// const get_to_ml = function (i, packing_moves) {
+//     //255 это 8 бит ->  11111111
+//     let move = packing_moves[i]; //
+//     move = move >> 16;
+//     let to = move & 255;
+//     return to;
+// }
+
+/**
+ * @param {number} i
+ * @param {Int32Array} packing_moves
+ * @returns {number}
+ */
+const get_name_capture_piece_ml = (i, packing_moves) => (packing_moves[i] >>> 24) & 0xFF;
+
+// const get_name_capture_piece_ml = function (i, packing_moves) {
+//     //255 это 8 бит ->  11111111
+//     let move = packing_moves[i]; //
+//     move = move >> 24;
+//     let name_capture_piece = move & 255;
+//     return name_capture_piece;
+// }
 
 /**
  * присвоить списку цвет фигуры он же цвет ходящей стороны
@@ -506,9 +510,13 @@ const get_name_capture_piece_ml = function (i, packing_moves) {
  * @param {number} piece_color
  * @returns {void}
  */
-const set_color_ml = function (packing_moves, piece_color) {
+const set_color_ml = (packing_moves, piece_color) => {
     packing_moves[IND_PIESE_COLOR_ML] = piece_color;
 }
+
+// const set_color_ml = function (packing_moves, piece_color) {
+//     packing_moves[IND_PIESE_COLOR_ML] = piece_color;
+// }
 
 /**
  * присвоить количество взятий в списке
@@ -516,9 +524,13 @@ const set_color_ml = function (packing_moves, piece_color) {
  * @param {number} number_captures_move
  * @returns {void}
  */
-const set_number_captures_move_ml = function (packing_moves, number_captures_move) {
+const set_number_captures_move_ml = (packing_moves, number_captures_move) => {
     packing_moves[IND_NUMBER_CAPTURES_MOVE_ML] = number_captures_move;
 }
+
+// const set_number_captures_move_ml = function (packing_moves, number_captures_move) {
+//     packing_moves[IND_NUMBER_CAPTURES_MOVE_ML] = number_captures_move;
+// }
 
 
 // SORTING
@@ -743,17 +755,21 @@ const set_move_in_0_ml = function (packing_moves, packing_moves_1_tt) {
 * @param {Int32Array} packing_moves_from
 * @returns {void}
 */
-const save_list_from_ml = function (packing_moves_to, packing_moves_from) {
-
-    // let number_move_from = LENGTH_LIST_ML;
-
-    // for (let i = 0; i < number_move_from; i++) {
-    //     packing_moves_to[i] = packing_moves_from[i];
-    // }
-
+const save_list_from_ml = (packing_moves_to, packing_moves_from) => {
     packing_moves_to.set(packing_moves_from);
-
 }
+
+// const save_list_from_ml = function (packing_moves_to, packing_moves_from) {
+
+//     // let number_move_from = LENGTH_LIST_ML;
+
+//     // for (let i = 0; i < number_move_from; i++) {
+//     //     packing_moves_to[i] = packing_moves_from[i];
+//     // }
+
+//     packing_moves_to.set(packing_moves_from);
+
+// }
 
 /**
  * если ход from, to 
@@ -871,9 +887,12 @@ PROMO_KNIGHT = CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT;
 @param {number} piece_name_captures
 @returns {Int32Array}
 */
-const return_type_captures_pawn_promo_ml = function (piece_name_captures) {
-    return PROMO_CAPTURES_LUT2[piece_name_captures] || DEFAULT_PROMO_ARRAY;;
-}
+const return_type_captures_pawn_promo_ml = (piece_name_captures) => 
+    PROMO_CAPTURES_LUT2[piece_name_captures] || DEFAULT_PROMO_ARRAY;
+
+// const return_type_captures_pawn_promo_ml = function (piece_name_captures) {
+//     return PROMO_CAPTURES_LUT2[piece_name_captures] || DEFAULT_PROMO_ARRAY;;
+// }
 
 // это нужно для работы генератора взятий. это очень важная функция и конечно полностью проверена
 // возвращаем название хода превращения пешки со взятием по взятой фигуре 
@@ -934,9 +953,12 @@ const return_type_captures_pawn_promo_ml = function (piece_name_captures) {
 * @returns {number}
 */
 //+
-const return_type_simple_move_ml = function (piece_name, piece_name_captures) {
-    return SIMPLE_MOVE_LUT[piece_name * PIECE_LUT_SIZE + piece_name_captures];
-}
+const return_type_simple_move_ml = (piece_name, piece_name_captures) => 
+    SIMPLE_MOVE_LUT[piece_name * PIECE_LUT_SIZE + piece_name_captures];
+
+// const return_type_simple_move_ml = function (piece_name, piece_name_captures) {
+//     return SIMPLE_MOVE_LUT[piece_name * PIECE_LUT_SIZE + piece_name_captures];
+// }
 
 
 // очень важная функция. используется в генераторе взятий и тихих ходов.
@@ -1205,9 +1227,11 @@ const type_move_to_name_piese_f_ml = function (type_move) {
 * @param {number} type_move
 * @returns {string}
 */
-const return_promo_piece_from_type_move_ml = function (type_move) {
-    return PROMO_PIECE_LUT[type_move] || "";
-}
+const return_promo_piece_from_type_move_ml = (type_move) => PROMO_PIECE_LUT[type_move] || "";
+
+// const return_promo_piece_from_type_move_ml = function (type_move) {
+//     return PROMO_PIECE_LUT[type_move] || "";
+// }
 
 
 // возвращаем фигуру в которую превращается пешка по типу хода

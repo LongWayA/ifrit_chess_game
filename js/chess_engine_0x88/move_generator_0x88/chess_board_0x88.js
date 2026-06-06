@@ -21,7 +21,7 @@
  * 
  * Int32Array	Целое 32-бит
  * 
- *  let chess_board_0x88 = new Int32Array(140).fill(0);// доска 0x88 с фигурами
+ *  let chess_board_0x88 = new Int32Array(128).fill(0);// доска 0x88 с фигурами
  * 
  * Имена фигур закодированы цифрами: 
  * 0- нет фигуры, 

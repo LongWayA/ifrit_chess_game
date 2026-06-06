@@ -146,109 +146,107 @@ const searching_negamax = function (packing_pv_line, chess_board_0x88, chess_boa
     found_score = 0;
     node_mm = node_mm + 1;
 
- // сравниваем ключи сохраненный и измененный
+    // сравниваем ключи сохраненный и измененный
 
-    // set_key_from_board_0x88_tk(chess_board_0x88, chess_board_key_64_test);
-    // test_chess_board_key_64_tk(chess_board_key_64_test, chess_board_key_64);
+     //set_key_from_board_0x88_tk(chess_board_0x88, chess_board_key_64_test);
+     //test_chess_board_key_64_tk(chess_board_key_64_test, chess_board_key_64);
 
     return found_score;
 
-  } else {
-    //console.log("searching_minmax->depth " + depth);
+  }
+  //console.log("searching_minmax->depth " + depth);
 
-    found_score = INIT_EVAL;// минимальная стартовая оценка позиции
+  found_score = INIT_EVAL;// минимальная стартовая оценка позиции
 
-    generated_pseudo_legal_captures_mgc(chess_board_0x88, packing_moves);
-    generated_pseudo_legal_quiet_moves_mgq(chess_board_0x88, packing_moves);
+  generated_pseudo_legal_captures_mgc(chess_board_0x88, packing_moves);
+  generated_pseudo_legal_quiet_moves_mgq(chess_board_0x88, packing_moves);
 
-    for (let move_number = 0; move_number < packing_moves[IND_NUMBER_MOVE_ML]; move_number++) {
+  for (let move_number = 0; move_number < packing_moves[IND_NUMBER_MOVE_ML]; move_number++) {
 
-      type_move = get_type_move_ml(move_number, packing_moves);// тип хода
-      from = get_from_ml(move_number, packing_moves);
-      to = get_to_ml(move_number, packing_moves);
-      name_capture_piece = get_name_capture_piece_ml(move_number, packing_moves);
-      piece_color = packing_moves[IND_PIESE_COLOR_ML];
+    type_move = get_type_move_ml(move_number, packing_moves);// тип хода
+    from = get_from_ml(move_number, packing_moves);
+    to = get_to_ml(move_number, packing_moves);
+    name_capture_piece = get_name_capture_piece_ml(move_number, packing_moves);
+    piece_color = packing_moves[IND_PIESE_COLOR_ML];
 
-      chess_board_save.set(chess_board_0x88);
-      chess_board_key_64_undo[0] = chess_board_key_64[0];
+    chess_board_save.set(chess_board_0x88);
+    chess_board_key_64_undo[0] = chess_board_key_64[0];
 
-      is_moove_legal = do_moves_mm(chess_board_0x88, chess_board_key_64, type_move, from, to, piece_color);
-
-
-      if (is_moove_legal == 0) { // король под шахом. отменяем ход и пропускаем этот цикл
-        chess_board_0x88.set(chess_board_save);
-        chess_board_key_64[0] = chess_board_key_64_undo[0];
-        continue;
-
-      } else if (is_moove_legal == 2) {// нелегальные рокировки и взятия короля не генерируются. просто пропускаем ход
-        continue;
-      }
-
-      add_move_to_pv_line_pv(move_number, packing_moves, packing_pv_line, depth);
-
-      number_move_legal = number_move_legal + 1;
-
-      if (depth == 0) packing_pv_line[IND_TYPE_VARIANT_PV] = 1;
-
-      score = -searching_negamax(packing_pv_line, chess_board_0x88, chess_board_key_64, (depth + 1), depth_max);
+    is_moove_legal = do_moves_mm(chess_board_0x88, chess_board_key_64, type_move, from, to, piece_color);
 
 
-      if (score > found_score) {
-        found_score = score;
-        update_found_score = move_number;
-        save_pv_line_pv(best_packing_pv_line, packing_pv_line);
-        if (depth == 0) chess_board_0x88_end_original.set(chess_board_0x88);
-        //console.log("Search_0x88_C->score > max_score depth " + depth + " found_score " + found_score);
-      }//if (score > found_score) {
-
+    if (is_moove_legal == 0) { // король под шахом. отменяем ход и пропускаем этот цикл
       chess_board_0x88.set(chess_board_save);
       chess_board_key_64[0] = chess_board_key_64_undo[0];
+      continue;
+
+    } else if (is_moove_legal == 2) {// нелегальные рокировки и взятия короля не генерируются. просто пропускаем ход
+      continue;
+    }
+
+    add_move_to_pv_line_pv(move_number, packing_moves, packing_pv_line, depth);
+
+    number_move_legal = number_move_legal + 1;
+
+    if (depth == 0) packing_pv_line[IND_TYPE_VARIANT_PV] = 1;
+
+    score = -searching_negamax(packing_pv_line, chess_board_0x88, chess_board_key_64, (depth + 1), depth_max);
 
 
-    }//for (let move_number = 0; move_number < move_list_0x88_O.number_move; move_number++) {
+    if (score > found_score) {
+      found_score = score;
+      update_found_score = move_number;
+      save_pv_line_pv(best_packing_pv_line, packing_pv_line);
+      if (depth == 0) chess_board_0x88_end_original.set(chess_board_0x88);
+      //console.log("Search_0x88_C->score > max_score depth " + depth + " found_score " + found_score);
+    }//if (score > found_score) {
 
-    if (update_found_score != -1) save_pv_line_pv(packing_pv_line, best_packing_pv_line);
+    chess_board_0x88.set(chess_board_save);
+    chess_board_key_64[0] = chess_board_key_64_undo[0];
 
-    //это мат или пат
-    if (number_move_legal == 0) {
 
-      let mat = MATE + depth;
+  }//for (let move_number = 0; move_number < move_list_0x88_O.number_move; move_number++) {
 
-      if (chess_board_0x88[SIDE_TO_MOVE_CB] == WHITE_CB) {//
+  if (update_found_score != -1) save_pv_line_pv(packing_pv_line, best_packing_pv_line);
 
-        // ход белых. а ходов нет. это 0 пат, если же белый король под шахом это мат
-        if (check_detected_mgc(chess_board_0x88[IND_KING_FROM_WHITE_CB], WHITE_CB, chess_board_0x88) != 0) {
+  //это мат или пат
+  if (number_move_legal == 0) {
 
-          //console.log("searching_alpha_beta_id_ab-> W chek ");
+    let mat = MATE + depth;
 
-          packing_pv_line[IND_DEPTH_MAT_PV] = depth - 1 + 500;
+    if (chess_board_0x88[SIDE_TO_MOVE_CB] == WHITE_CB) {//
 
-          return mat;
-        }
+      // ход белых. а ходов нет. это 0 пат, если же белый король под шахом это мат
+      if (check_detected_mgc(chess_board_0x88[IND_KING_FROM_WHITE_CB], WHITE_CB, chess_board_0x88) != 0) {
+
+        //console.log("searching_alpha_beta_id_ab-> W chek ");
+
         packing_pv_line[IND_DEPTH_MAT_PV] = depth - 1 + 500;
 
-        return 0;
+        return mat;
+      }
+      packing_pv_line[IND_DEPTH_MAT_PV] = depth - 1 + 500;
 
-      } else {//if (chess_board_0x88_O.side_to_move == 1) {
-        //  console.log("Search_0x88_C-> B pat ");
-        if (check_detected_mgc(chess_board_0x88[IND_KING_FROM_BLACK_CB], BLACK_CB, chess_board_0x88) != 0) {
+      return 0;
 
-          //console.log("searching_alpha_beta_id_ab-> B chek ");
+    } else {//if (chess_board_0x88_O.side_to_move == 1) {
+      //  console.log("Search_0x88_C-> B pat ");
+      if (check_detected_mgc(chess_board_0x88[IND_KING_FROM_BLACK_CB], BLACK_CB, chess_board_0x88) != 0) {
 
-          packing_pv_line[IND_DEPTH_MAT_PV] = depth - 1 + 500;// обхожу ноль. так как на 1 глубине -> depth - 1 = 0
+        //console.log("searching_alpha_beta_id_ab-> B chek ");
 
-          return mat;
-        }
+        packing_pv_line[IND_DEPTH_MAT_PV] = depth - 1 + 500;// обхожу ноль. так как на 1 глубине -> depth - 1 = 0
 
-        packing_pv_line[IND_DEPTH_MAT_PV] = depth - 1 + 500;
+        return mat;
+      }
 
-        return 0;
-      }//if (chess_board_0x88_O.side_to_move == 1) {
-    }// if (number_move_legal == 0) {
+      packing_pv_line[IND_DEPTH_MAT_PV] = depth - 1 + 500;
 
-    return found_score;
+      return 0;
+    }//if (chess_board_0x88_O.side_to_move == 1) {
+  }// if (number_move_legal == 0) {
 
-  }//if (depth >= depth_max) {
+  return found_score;
 
 }//searching_minmax(pv_line_0x88_O, chess_board_0x88,
 

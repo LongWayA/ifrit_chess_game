@@ -7,16 +7,17 @@
 */
 
 import {
-    x07_y07_to_0x88_cb, s_0x88_to_x07_cb, s_0x88_to_y07_cb,
-    test_print_any_0x88_cb, test_print_piese_0x88_cb, test_print_piese_color_0x88_cb, test_print_piese_in_line_0x88_cb, 
-    test_compare_chess_board_0x88_cb, set_board_from_fen_0x88_cb, set_fen_from_0x88_cb, 
+   x07_y07_to_0x88_cb, s_0x88_to_x07_cb, s_0x88_to_y07_cb,
+    test_print_any_0x88_cb, test_print_piese_0x88_cb, test_print_piese_color_0x88_cb, test_print_piese_in_line_0x88_cb,
+    test_compare_chess_board_0x88_cb, set_board_from_fen_0x88_cb, set_fen_from_0x88_cb,
     searching_king_cb, iniStartPositionForWhite_cb, letter_to_x_coordinate_cb,
-    BOARD_SIZE_CB, SIDE_TO_MOVE_CB, LET_COOR_CB,
-    BLACK_CB, WHITE_CB, PIECE_NO_CB, W_PAWN_CB, W_KNIGHT_CB, W_BISHOP_CB, W_ROOK_CB, W_QUEEN_CB, W_KING_CB, B_PAWN_CB, 
+    s_0x88_out_of_bounds_cb, get_piece_color_cb, get_piece_type_cb, create_piece_cb,
+    BOARD_SIZE_CB, OUT_OF_BOUNDS_MASK_CB, SIDE_TO_MOVE_CB, LET_COOR_CB,
+    BLACK_CB, WHITE_CB, PIECE_NO_CB, W_PAWN_CB, W_KNIGHT_CB, W_BISHOP_CB, W_ROOK_CB, W_QUEEN_CB, W_KING_CB, B_PAWN_CB,
     B_KNIGHT_CB, B_BISHOP_CB, B_ROOK_CB, B_QUEEN_CB, B_KING_CB, IND_CASTLING_Q_CB, IND_CASTLING_q_CB, IND_CASTLING_K_CB,
-    IND_CASTLING_k_CB, IND_HALFMOVE_CLOCK_CB, IND_FULLMOVE_NUMBER_CB, PIECE_NAME_CB, IND_EN_PASSANT_YES_CB, 
+    IND_CASTLING_k_CB, IND_HALFMOVE_CLOCK_CB, IND_FULLMOVE_NUMBER_CB, PIECE_NAME_CB, IND_EN_PASSANT_YES_CB,
     IND_EN_PASSANT_TARGET_SQUARE_CB, IND_KING_FROM_WHITE_CB, IND_KING_FROM_BLACK_CB, IND_SCORE_CB,
-    SQUARE_64_to_128_CB,  SQUARE_128_to_64_CB
+    SQUARE_64_to_128_CB, SQUARE_128_to_64_CB
 } from "./chess_board_0x88.js";
 
 import {
@@ -118,9 +119,9 @@ const moves_knight_mgq = new Int32Array([-33, -31, -14, 18, 33, 31, 14, -18]);
 const generated_pseudo_legal_quiet_moves_mgq = function (chess_board_0x88, packing_moves) {
     //console.log('Move_generator_quiet_0x88_С->generated_pseudo_legal_moves');
     let side_to_move = chess_board_0x88[SIDE_TO_MOVE_CB];
-    for (let from = 0; from < 128; from++) {
+    for (let from = 0; from < BOARD_SIZE_CB; from++) {
         // если мы не вышли за пределы доски
-        if ((from & 136) == 0) {// 136 0x88
+        if ((from & OUT_OF_BOUNDS_MASK_CB) == 0) {// 136 0x88
             generated_pseudo_legal_quiet_moves_one_piece_mgq(from, side_to_move, chess_board_0x88, packing_moves);
         }
     }
@@ -137,7 +138,7 @@ const generated_pseudo_legal_quiet_moves_one_piece_for_gui_mgq = function (from,
     //console.log('Move_generator_quiet_0x88_С->generated_pseudo_legal_moves');
     let side_to_move = chess_board_0x88[SIDE_TO_MOVE_CB];
     // если мы не вышли за пределы доски
-    if ((from & 136) == 0) {// 136 0x88
+    if ((from & OUT_OF_BOUNDS_MASK_CB) == 0) {// 136 0x88
         generated_pseudo_legal_quiet_moves_one_piece_mgq(from, side_to_move, chess_board_0x88, packing_moves);
     }
 }
@@ -245,7 +246,7 @@ const generated_quiet_moves_king_mgq = function (piece_name, from, chess_board_0
     let stop_beam;
     for (let j = 0; j < 8; j++) {
         to = from + moves_king_mgq[j];
-        if ((to & 136) == 0) {// если мы не вышли за пределы доски
+        if ((to & OUT_OF_BOUNDS_MASK_CB) == 0) {// если мы не вышли за пределы доски
             stop_beam = add_quiet_move_mgq(piece_name, from, to, chess_board_0x88, packing_moves);
         }
     }
@@ -267,12 +268,12 @@ const generated_quiet_moves_queen_mgq = function (piece_name, from, chess_board_
 
     for (let j = 0; j < 8; j++) {
         to = from + moves_queen_mgq[j];
-        if ((to & 136) == 0) {// если мы не вышли за пределы доски
+        if ((to & OUT_OF_BOUNDS_MASK_CB) == 0) {// если мы не вышли за пределы доски
             while (true) {
                 stop_beam = add_quiet_move_mgq(piece_name, from, to, chess_board_0x88, packing_moves);
                 if (stop_beam == STOP_BEAM_TRUE_MGQ) break;// уперлись в фигуру
                 to = to + moves_queen_mgq[j];
-                if ((to & 136) != 0) break;// конец доски
+                if ((to & OUT_OF_BOUNDS_MASK_CB) != 0) break;// конец доски
             }
         }
     }
@@ -293,12 +294,12 @@ const generated_quiet_moves_rook_mgq = function (piece_name, from, chess_board_0
 
     for (let j = 0; j < 4; j++) {
         to = from + moves_rook_mgq[j];
-        if ((to & 136) == 0) {// если мы не вышли за пределы доски
+        if ((to & OUT_OF_BOUNDS_MASK_CB) == 0) {// если мы не вышли за пределы доски
             while (true) {
                 stop_beam = add_quiet_move_mgq(piece_name, from, to, chess_board_0x88, packing_moves);
                 if (stop_beam == STOP_BEAM_TRUE_MGQ) break;
                 to = to + moves_rook_mgq[j];
-                if ((to & 136) != 0) break;
+                if ((to & OUT_OF_BOUNDS_MASK_CB) != 0) break;
             }
         }
     }
@@ -319,12 +320,12 @@ const generated_quiet_moves_bishop_mgq = function (piece_name, from, chess_board
 
     for (let j = 0; j < 4; j++) {
         to = from + moves_bishop_mgq[j];
-        if ((to & 136) == 0) {// если мы не вышли за пределы доски
+        if ((to & OUT_OF_BOUNDS_MASK_CB) == 0) {// если мы не вышли за пределы доски
             while (true) {
                 stop_beam = add_quiet_move_mgq(piece_name, from, to, chess_board_0x88, packing_moves);
                 if (stop_beam == STOP_BEAM_TRUE_MGQ) break;
                 to = to + moves_bishop_mgq[j];
-                if ((to & 136) != 0) break;
+                if ((to & OUT_OF_BOUNDS_MASK_CB) != 0) break;
             }
         }
     }
@@ -345,7 +346,7 @@ const generated_quiet_moves_knight_mgq = function (piece_name, from, chess_board
 
     for (let j = 0; j < 8; j++) {
         to = from + moves_knight_mgq[j];
-        if ((to & 136) == 0) {// если мы не вышли за пределы доски
+        if ((to & OUT_OF_BOUNDS_MASK_CB) == 0) {// если мы не вышли за пределы доски
             stop_beam = add_quiet_move_mgq(piece_name, from, to, chess_board_0x88, packing_moves);
         }
     }

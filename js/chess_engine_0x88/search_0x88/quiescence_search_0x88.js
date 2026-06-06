@@ -55,7 +55,7 @@ import {
 
 import { do_moves_mm } from "../move_generator_0x88/make_move_0x88.js";
 
-import { score_position_e } from "./evaluate_0x88.js";
+import { score_position_e, PAWN_SCORE_E, PIECE_SCORE_E } from "./evaluate_0x88.js";
 
 /**
 * НАЗНАЧЕНИЕ
@@ -63,6 +63,11 @@ import { score_position_e } from "./evaluate_0x88.js";
 */
 
 let node_qs = 0;
+
+// Стоимость фигур (примерная)
+const PIECE_VALUES = [0, 100, 300, 325, 500, 975, 10000]; 
+
+const SAFETY_MARGIN = 200; // запас на случай позиционных изменений (например, проход пешки)
 
 const MAX_DEPTH_SEARCH = 128;
 
@@ -112,19 +117,13 @@ const quiescence_search = function (alpha, beta, chess_board_0x88, chess_board_k
   let name_capture_piece;// имя взятой фигуры
   let piece_color;// цвет хода
 
+  // Защита от переполнения стека
+  if (depth >= MAX_DEPTH_SEARCH - 1) {
+    return score_position_e(chess_board_0x88, chess_board_key_64);
+  }
 
   node_qs = node_qs + 1;
 
-  /*
-      int static_eval = Evaluate();
-
-      // Stand Pat
-      int best_value = static_eval;
-      if( best_value >= beta )
-          return best_value;
-      if( best_value > alpha )
-          alpha = best_value;
-  */
   // Stand Pat =====================================
   let static_eval = score_position_e(chess_board_0x88, chess_board_key_64);
 
@@ -137,8 +136,6 @@ const quiescence_search = function (alpha, beta, chess_board_0x88, chess_board_k
     alpha = best_value;
   // ===================================== Stand Pat
 
-
-  //clear_list(packing_moves);
   generated_pseudo_legal_captures_mgc(chess_board_0x88, packing_moves);
 
   // если ходов нет
@@ -159,22 +156,11 @@ const quiescence_search = function (alpha, beta, chess_board_0x88, chess_board_k
     name_capture_piece = get_name_capture_piece_ml(move_i, packing_moves);
     piece_color = packing_moves[IND_PIESE_COLOR_ML];
 
-    // TEST 
-    // if ((type_move == MOVE_NO) || (type_move < MOVE_NO) || (type_move > MOVE_KING_QUEEN_CASTLE)) {
-    //   console.log("quiescence_search-> type_move !!!! depth " + depth + " type_move " + type_move);
-    //   console.log("quiescence_search-> depth " + depth + " packing_moves[" + move_i + "] = " + packing_moves[move_i]);
-
-    //   //test_print_piese_0x88(chess_board_0x88);
-    //   //test_print_any_0x88(chess_board_0x88);
-    // }
-    // if (name_capture_piece == 0) {
-    //   console.log("quiescence_search-> name_capture_piece == 0 depth " + depth);
-    // }
-
-    // if (from == to) {
-    //   console.log("quiescence_search-> from == to depth " + depth + " type_move " + type_move + " from " + from);
-    // }
-
+    // Delta Pruning
+    // Если текущая оценка + стоимость съедаемой фигуры + запас все равно меньше alpha
+    if (static_eval + PIECE_SCORE_E[name_capture_piece] + SAFETY_MARGIN < alpha) {
+      continue; // Этот ход можно даже не делать и не проверять легальность!
+    }
 
     chess_board_save.set(chess_board_0x88);
     chess_board_key_64_undo[0] = chess_board_key_64[0];
@@ -187,6 +173,7 @@ const quiescence_search = function (alpha, beta, chess_board_0x88, chess_board_k
       chess_board_key_64[0] = chess_board_key_64_undo[0];
 
       continue;
+
     } else if (is_moove_legal == 2) {// нелегальные рокировки не генерируются. просто пропускаем ход
       continue;
     }
@@ -196,14 +183,6 @@ const quiescence_search = function (alpha, beta, chess_board_0x88, chess_board_k
     chess_board_0x88.set(chess_board_save);
     chess_board_key_64[0] = chess_board_key_64_undo[0];
 
-    /*
-        if( score >= beta )
-            return score;
-        if( score > best_value )
-            best_value = score;
-        if( score > alpha )
-            alpha = score;
-    */
     if (score >= beta) {
       return score;
     }

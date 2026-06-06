@@ -89,10 +89,6 @@ const do_moves_mm = function (chess_board_0x88, chess_board_key_64, type_move, f
 
   let is_moove_legal = MOOVE_IS_LEGAL_MM;// по умолчанию ход считаем легальным.
 
-  //set_undo(undo, chess_board_0x88);// заполняем вспогательную структуру для возврата хода
-
-  //chess_board_key_64_save[0] = chess_board_key_64[0];
-
   // смотрим 
   switch (type_move) {
 
