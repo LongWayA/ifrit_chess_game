@@ -232,10 +232,9 @@ const ALL_EG_PST = [
  * ИСПРАВЛЕНО: теперь базовый материал добавляется ОТДЕЛЬНО от PST.
  *
  * @param {Int32Array} chess_board_0x88
- * @param {BigUint64Array} chess_board_key_64
  * @returns {number} оценка в сантипешках (с точки зрения ходящей стороны)
  */
-const score_position_e = function (chess_board_0x88, chess_board_key_64) {
+const score_position_e = function (chess_board_0x88) {
     let mg_score = 0;
     let eg_score = 0;
     let game_phase = 0;

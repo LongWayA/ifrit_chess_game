@@ -11,17 +11,10 @@
 // проверить: sorting_list_history_heuristic_ml
 
 import {
-    x07_y07_to_0x88_cb, s_0x88_to_x07_cb, s_0x88_to_y07_cb,
-    test_print_any_0x88_cb, test_print_piece_0x88_cb, test_print_piece_color_0x88_cb, test_print_piece_in_line_0x88_cb,
-    test_compare_chess_board_0x88_cb, set_board_from_fen_0x88_cb, set_fen_from_0x88_cb,
-    searching_king_cb, iniStartPositionForWhite_cb, letter_to_x_coordinate_cb,
-    s_0x88_out_of_bounds_cb, get_piece_color_cb, get_piece_type_cb, create_piece_cb,
-    BOARD_SIZE_CB, OUT_OF_BOUNDS_MASK_CB, SIDE_TO_MOVE_CB, LET_COOR_CB,
-    BLACK_CB, WHITE_CB, PIECE_NO_CB, W_PAWN_CB, W_KNIGHT_CB, W_BISHOP_CB, W_ROOK_CB, W_QUEEN_CB, W_KING_CB, B_PAWN_CB,
-    B_KNIGHT_CB, B_BISHOP_CB, B_ROOK_CB, B_QUEEN_CB, B_KING_CB, IND_CASTLING_Q_CB, IND_CASTLING_q_CB, IND_CASTLING_K_CB,
-    IND_CASTLING_k_CB, IND_HALFMOVE_CLOCK_CB, IND_FULLMOVE_NUMBER_CB, PIECE_NAME_CB, IND_EN_PASSANT_YES_CB,
-    IND_EN_PASSANT_TARGET_SQUARE_CB, IND_KING_FROM_WHITE_CB, IND_KING_FROM_BLACK_CB, IND_SCORE_CB,
-    SQUARE_64_to_128_CB, SQUARE_128_to_64_CB
+    s_0x88_to_x07_cb, s_0x88_to_y07_cb,
+    LET_COOR_CB,
+    PIECE_NO_CB, W_PAWN_CB, W_KNIGHT_CB, W_BISHOP_CB, W_ROOK_CB, W_QUEEN_CB, W_KING_CB, B_PAWN_CB,
+    B_KNIGHT_CB, B_BISHOP_CB, B_ROOK_CB, B_QUEEN_CB, B_KING_CB, SQUARE_128_to_64_CB
 } from "./chess_board_0x88.js";
 
 
@@ -254,7 +247,7 @@ const TYPE_MOVE_NAME_ML = [
 // используем в функции return_type_simple_move_ml
 // 1. Создаем плоский массив. 
 // Размер: 16x16 = 256. (Предполагаем, что ID фигур не превышают 15. Если B_KING_CB больше, увеличь до 32).
-const PIECE_LUT_SIZE = 16; 
+const PIECE_LUT_SIZE = 16;
 const SIMPLE_MOVE_LUT = new Int32Array(PIECE_LUT_SIZE * PIECE_LUT_SIZE).fill(MOVE_NO_ML);
 
 // Вспомогательная функция для удобного заполнения (вызывается только при инициализации модуля)
@@ -267,56 +260,56 @@ const L = (p1, p2, val) => { SIMPLE_MOVE_LUT[p1 * PIECE_LUT_SIZE + p2] = val; };
 
 // Заполняем LUT
 // Короли
-L(W_KING_CB, PIECE_NO_CB, MOVE_KING_ML); 
+L(W_KING_CB, PIECE_NO_CB, MOVE_KING_ML);
 L(W_KING_CB, B_QUEEN_CB, CAPTURES_KING_QUEEN_ML);
 L(W_KING_CB, B_ROOK_CB, CAPTURES_KING_ROOK_ML); L(W_KING_CB, B_BISHOP_CB, CAPTURES_KING_BISHOP_ML);
 L(W_KING_CB, B_KNIGHT_CB, CAPTURES_KING_KNIGHT_ML); L(W_KING_CB, B_PAWN_CB, CAPTURES_KING_PAWN_ML);
 
-L(B_KING_CB, PIECE_NO_CB, MOVE_KING_ML); 
+L(B_KING_CB, PIECE_NO_CB, MOVE_KING_ML);
 L(B_KING_CB, W_QUEEN_CB, CAPTURES_KING_QUEEN_ML);
 L(B_KING_CB, W_ROOK_CB, CAPTURES_KING_ROOK_ML); L(B_KING_CB, W_BISHOP_CB, CAPTURES_KING_BISHOP_ML);
 L(B_KING_CB, W_KNIGHT_CB, CAPTURES_KING_KNIGHT_ML); L(B_KING_CB, W_PAWN_CB, CAPTURES_KING_PAWN_ML);
 
 // Ферзи
-L(W_QUEEN_CB, PIECE_NO_CB, MOVE_QUEEN_ML); 
+L(W_QUEEN_CB, PIECE_NO_CB, MOVE_QUEEN_ML);
 L(W_QUEEN_CB, B_QUEEN_CB, CAPTURES_QUEEN_QUEEN_ML);
 L(W_QUEEN_CB, B_ROOK_CB, CAPTURES_QUEEN_ROOK_ML); L(W_QUEEN_CB, B_BISHOP_CB, CAPTURES_QUEEN_BISHOP_ML);
 L(W_QUEEN_CB, B_KNIGHT_CB, CAPTURES_QUEEN_KNIGHT_ML); L(W_QUEEN_CB, B_PAWN_CB, CAPTURES_QUEEN_PAWN_ML);
 
-L(B_QUEEN_CB, PIECE_NO_CB, MOVE_QUEEN_ML); 
+L(B_QUEEN_CB, PIECE_NO_CB, MOVE_QUEEN_ML);
 L(B_QUEEN_CB, W_QUEEN_CB, CAPTURES_QUEEN_QUEEN_ML);
 L(B_QUEEN_CB, W_ROOK_CB, CAPTURES_QUEEN_ROOK_ML); L(B_QUEEN_CB, W_BISHOP_CB, CAPTURES_QUEEN_BISHOP_ML);
 L(B_QUEEN_CB, W_KNIGHT_CB, CAPTURES_QUEEN_KNIGHT_ML); L(B_QUEEN_CB, W_PAWN_CB, CAPTURES_QUEEN_PAWN_ML);
 
 // Ладьи
-L(W_ROOK_CB, PIECE_NO_CB, MOVE_ROOK_ML); 
+L(W_ROOK_CB, PIECE_NO_CB, MOVE_ROOK_ML);
 L(W_ROOK_CB, B_QUEEN_CB, CAPTURES_ROOK_QUEEN_ML);
 L(W_ROOK_CB, B_ROOK_CB, CAPTURES_ROOK_ROOK_ML); L(W_ROOK_CB, B_BISHOP_CB, CAPTURES_ROOK_BISHOP_ML);
 L(W_ROOK_CB, B_KNIGHT_CB, CAPTURES_ROOK_KNIGHT_ML); L(W_ROOK_CB, B_PAWN_CB, CAPTURES_ROOK_PAWN_ML);
 
-L(B_ROOK_CB, PIECE_NO_CB, MOVE_ROOK_ML); 
+L(B_ROOK_CB, PIECE_NO_CB, MOVE_ROOK_ML);
 L(B_ROOK_CB, W_QUEEN_CB, CAPTURES_ROOK_QUEEN_ML);
 L(B_ROOK_CB, W_ROOK_CB, CAPTURES_ROOK_ROOK_ML); L(B_ROOK_CB, W_BISHOP_CB, CAPTURES_ROOK_BISHOP_ML);
 L(B_ROOK_CB, W_KNIGHT_CB, CAPTURES_ROOK_KNIGHT_ML); L(B_ROOK_CB, W_PAWN_CB, CAPTURES_ROOK_PAWN_ML);
 
 // Слоны
-L(W_BISHOP_CB, PIECE_NO_CB, MOVE_BISHOP_ML); 
+L(W_BISHOP_CB, PIECE_NO_CB, MOVE_BISHOP_ML);
 L(W_BISHOP_CB, B_QUEEN_CB, CAPTURES_BISHOP_QUEEN_ML);
 L(W_BISHOP_CB, B_ROOK_CB, CAPTURES_BISHOP_ROOK_ML); L(W_BISHOP_CB, B_BISHOP_CB, CAPTURES_BISHOP_BISHOP_ML);
 L(W_BISHOP_CB, B_KNIGHT_CB, CAPTURES_BISHOP_KNIGHT_ML); L(W_BISHOP_CB, B_PAWN_CB, CAPTURES_BISHOP_PAWN_ML);
 
-L(B_BISHOP_CB, PIECE_NO_CB, MOVE_BISHOP_ML); 
+L(B_BISHOP_CB, PIECE_NO_CB, MOVE_BISHOP_ML);
 L(B_BISHOP_CB, W_QUEEN_CB, CAPTURES_BISHOP_QUEEN_ML);
 L(B_BISHOP_CB, W_ROOK_CB, CAPTURES_BISHOP_ROOK_ML); L(B_BISHOP_CB, W_BISHOP_CB, CAPTURES_BISHOP_BISHOP_ML);
 L(B_BISHOP_CB, W_KNIGHT_CB, CAPTURES_BISHOP_KNIGHT_ML); L(B_BISHOP_CB, W_PAWN_CB, CAPTURES_BISHOP_PAWN_ML);
 
 // Кони
-L(W_KNIGHT_CB, PIECE_NO_CB, MOVE_KNIGHT_ML); 
+L(W_KNIGHT_CB, PIECE_NO_CB, MOVE_KNIGHT_ML);
 L(W_KNIGHT_CB, B_QUEEN_CB, CAPTURES_KNIGHT_QUEEN_ML);
 L(W_KNIGHT_CB, B_ROOK_CB, CAPTURES_KNIGHT_ROOK_ML); L(W_KNIGHT_CB, B_BISHOP_CB, CAPTURES_KNIGHT_BISHOP_ML);
 L(W_KNIGHT_CB, B_KNIGHT_CB, CAPTURES_KNIGHT_KNIGHT_ML); L(W_KNIGHT_CB, B_PAWN_CB, CAPTURES_KNIGHT_PAWN_ML);
 
-L(B_KNIGHT_CB, PIECE_NO_CB, MOVE_KNIGHT_ML); 
+L(B_KNIGHT_CB, PIECE_NO_CB, MOVE_KNIGHT_ML);
 L(B_KNIGHT_CB, W_QUEEN_CB, CAPTURES_KNIGHT_QUEEN_ML);
 L(B_KNIGHT_CB, W_ROOK_CB, CAPTURES_KNIGHT_ROOK_ML); L(B_KNIGHT_CB, W_BISHOP_CB, CAPTURES_KNIGHT_BISHOP_ML);
 L(B_KNIGHT_CB, W_KNIGHT_CB, CAPTURES_KNIGHT_KNIGHT_ML); L(B_KNIGHT_CB, W_PAWN_CB, CAPTURES_KNIGHT_PAWN_ML);
@@ -327,12 +320,12 @@ L(B_KNIGHT_CB, W_KNIGHT_CB, CAPTURES_KNIGHT_KNIGHT_ML); L(B_KNIGHT_CB, W_PAWN_CB
 // Но при взятии на проходе целевая клетка пуста, а тип хода должен быть EP_CAPTURES_ML!"
 
 //Я: Замечание правильное. Обрабатываю этот случай в реализаторе ходов. 
-L(W_PAWN_CB, PIECE_NO_CB, MOVE_PAWN_ML); 
+L(W_PAWN_CB, PIECE_NO_CB, MOVE_PAWN_ML);
 L(W_PAWN_CB, B_QUEEN_CB, CAPTURES_PAWN_QUEEN_ML);
 L(W_PAWN_CB, B_ROOK_CB, CAPTURES_PAWN_ROOK_ML); L(W_PAWN_CB, B_BISHOP_CB, CAPTURES_PAWN_BISHOP_ML);
 L(W_PAWN_CB, B_KNIGHT_CB, CAPTURES_PAWN_KNIGHT_ML); L(W_PAWN_CB, B_PAWN_CB, CAPTURES_PAWN_PAWN_ML);
 
-L(B_PAWN_CB, PIECE_NO_CB, MOVE_PAWN_ML); 
+L(B_PAWN_CB, PIECE_NO_CB, MOVE_PAWN_ML);
 L(B_PAWN_CB, W_QUEEN_CB, CAPTURES_PAWN_QUEEN_ML);
 L(B_PAWN_CB, W_ROOK_CB, CAPTURES_PAWN_ROOK_ML); L(B_PAWN_CB, W_BISHOP_CB, CAPTURES_PAWN_BISHOP_ML);
 L(B_PAWN_CB, W_KNIGHT_CB, CAPTURES_PAWN_KNIGHT_ML); L(B_PAWN_CB, W_PAWN_CB, CAPTURES_PAWN_PAWN_ML);
@@ -655,29 +648,29 @@ const sorting_list_history_heuristic_ml = function (packing_moves, history) {
     const number_move = packing_moves[IND_NUMBER_MOVE_ML];
     const start = packing_moves[IND_NUMBER_CAPTURES_MOVE_ML];
     const count = number_move - start;
-    
+
     if (count < 2) return; // Нечего сортировать
-    
+
     // Кэшируем смещение цвета (color * 4096)
     const color_shift = packing_moves[IND_PIECE_COLOR_ML] << 12;
 
     // Insertion Sort — идеален для малых массивов
     for (let i = start + 1; i < number_move; i++) {
         const move_i = packing_moves[i];
-        
+
         // Быстрый доступ к плоскому массиву: color*4096 + from*64 + to
-        const hist_i = history[color_shift | 
-            (SQUARE_128_to_64_CB[(move_i >> 8) & 255] << 6) | 
+        const hist_i = history[color_shift |
+            (SQUARE_128_to_64_CB[(move_i >> 8) & 255] << 6) |
             SQUARE_128_to_64_CB[(move_i >> 16) & 255]];
 
         let j = i - 1;
-        
+
         while (j >= start) {
             const move_j = packing_moves[j];
-            const hist_j = history[color_shift | 
-                (SQUARE_128_to_64_CB[(move_j >> 8) & 255] << 6) | 
+            const hist_j = history[color_shift |
+                (SQUARE_128_to_64_CB[(move_j >> 8) & 255] << 6) |
                 SQUARE_128_to_64_CB[(move_j >> 16) & 255]];
-            
+
             if (hist_j > hist_i) {
                 packing_moves[j + 1] = move_j;
                 j--;
@@ -701,12 +694,12 @@ const sorting_list_history_heuristic_ml = function (packing_moves, history) {
 //         let from_128 = (move_i >> 8) & 255;
 //         let to_128 = (move_i >> 16) & 255;
 //         let hist_i = history[piece_color][SQUARE_128_to_64_CB[from_128]][SQUARE_128_to_64_CB[to_128]];
-        
+
 //         let j = i - 1;
 //         while (j >= start) {
 //             let move_j = packing_moves[j];
 //             let hist_j = history[piece_color][SQUARE_128_to_64_CB[(move_j >> 8) & 255]][SQUARE_128_to_64_CB[(move_j >> 16) & 255]];
-            
+
 //             if (hist_j < hist_i) {
 //                 packing_moves[j + 1] = move_j;
 //                 j--;
@@ -963,7 +956,7 @@ PROMO_KNIGHT = CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT;
 @param {number} piece_name_captures
 @returns {Int32Array}
 */
-const return_type_captures_pawn_promo_ml = (piece_name_captures) => 
+const return_type_captures_pawn_promo_ml = (piece_name_captures) =>
     PROMO_CAPTURES_LUT[piece_name_captures] || DEFAULT_PROMO_ARRAY;
 
 // это нужно для работы генератора взятий. это очень важная функция и конечно полностью проверена
@@ -1028,7 +1021,7 @@ const return_type_captures_pawn_promo_ml = (piece_name_captures) =>
 // Qwen3.7-Max AI: "Взятие на проходе (En Passant) не работает через LUT
 // Ваш SIMPLE_MOVE_LUT для пешки, бьющей на пустую клетку (W_PAWN_CB, PIECE_NO_CB), вернет MOVE_PAWN_ML (обычный ход)."
 // Я: это понятно и в реализаторе ходов это учтено. Получается, что простой ход пешкой может быть взятием на проходе.
-const return_type_simple_move_ml = (piece_name, piece_name_captures) => 
+const return_type_simple_move_ml = (piece_name, piece_name_captures) =>
     SIMPLE_MOVE_LUT[piece_name * PIECE_LUT_SIZE + piece_name_captures];
 
 
@@ -1283,7 +1276,7 @@ const test_compare_list_from_ml = function (packing_moves_original, packing_move
         if (found) {
             number_move_equal = number_move_equal + 1;
         } else {
-            number_move_not_equal = number_move_not_equal +1;
+            number_move_not_equal = number_move_not_equal + 1;
         }
     }
 
