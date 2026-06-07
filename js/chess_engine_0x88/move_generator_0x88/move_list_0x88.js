@@ -8,7 +8,7 @@
 */
 
 //+
-// проверить: sorting_list_ml, sorting_list_history_heuristic_ml
+// проверить: sorting_list_history_heuristic_ml
 
 import {
     x07_y07_to_0x88_cb, s_0x88_to_x07_cb, s_0x88_to_y07_cb,
@@ -34,6 +34,13 @@ import {
  Ход содержит:
 
  let packing_moves = new Int32Array(LENGTH_LIST = 260).fill(MOVE_NO);
+
+ Каждый ход упакован в одно 32-битное число по такой схеме: 
+ Биты:  31........24  23.......16  15.......8   7.......0
+        ┌──────────┐  ┌─────────┐  ┌────────┐  ┌────────┐
+        │ capture  │  │   to    │  │  from  │  │  type  │
+        │  (8 бит) │  │ (8 бит) │  │ (8 бит)│  │ (8 бит)│
+        └──────────┘  └─────────┘  └────────┘  └────────┘
 
   индексы массива от 0 до 256 зарезервированы для упакованого хода:
   packing_moves[i]
@@ -528,6 +535,42 @@ const set_number_captures_move_ml = (packing_moves, number_captures_move) => {
 // дальше простые ходы пешек
 // и самые последние рокировки 
 // взятия раньше других ходов для удобства поиска и сортировки тихих ходов
+
+//В шахматных движках для сортировки ходов используют 
+//Insertion Sort (Сортировка вставками) или просто встроенный 
+//Array.prototype.sort(), который в V8 оптимизирован (Timsort).
+/* 
+Каждый ход упакован в одно 32-битное число по такой схеме: 
+Биты:  31........24  23.......16  15.......8   7.......0
+       ┌──────────┐  ┌─────────┐  ┌────────┐  ┌────────┐
+       │ capture  │  │   to    │  │  from  │  │  type  │
+       │  (8 бит) │  │ (8 бит) │  │ (8 бит)│  │ (8 бит)│
+       └──────────┘  └─────────┘  └────────┘  └────────┘
+type_move занимает младшие 8 бит (биты 0-7). Именно по нему мы хотим сортировать, 
+потому что в type_move уже зашита эвристика MVV/LVA:
+1-20 — взятия с превращением (самый высокий приоритет)
+21-51 — обычные взятия
+52-60 — тихие ходы
+
+arr.subarray это НЕ копирование данных! Это создание представления (view) на часть исходного Int32Array
+const arr = new Int32Array([10, 20, 30, 40, 50, 99, 99]);
+const view = arr.subarray(0, 3);  // [10, 20, 30]
+
+view[0] = 100;  // Меняем через view
+console.log(arr[0]);  // 100 — оригинал тоже изменился!
+
+0xFF в двоичном виде — это 00000000 00000000 00000000 11111111 (255 в десятичной).
+Операция битовое И (&) с маской 0xFF обнуляет все биты, кроме младших 8. 
+То есть из 32-битного упакованного хода мы "вытаскиваем" только type_move.
+
+Мы получили type_move = 21 за одну CPU-инструкцию вместо вызова функции get_type_move_ml()
+
+Компаратор (a & 0xFF) - (b & 0xFF)
+Это стандартный трюк для сортировки по возрастанию:
+Если результат < 0 → a ставится перед b
+Если результат = 0 → порядок не меняется
+Если результат > 0 → b ставится перед a
+*/
 /**
  * сортировка по типу хода
  * чем меньше число, тем выше приоритет хода
@@ -535,11 +578,6 @@ const set_number_captures_move_ml = (packing_moves, number_captures_move) => {
  * @param {Int32Array} packing_moves
  * @returns {void}
  */
-//В шахматных движках для сортировки ходов используют 
-//Insertion Sort (Сортировка вставками) или просто встроенный 
-//Array.prototype.sort(), который в V8 оптимизирован (Timsort).
-
-// Я: надо проверять предложенную Qwen3.7-Max AI оптимизацию
 const sorting_list_ml = function (packing_moves) {
     const number_move = packing_moves[IND_NUMBER_MOVE_ML];
     // Встроенная сортировка V8 работает на Int32Array очень быстро
@@ -547,50 +585,6 @@ const sorting_list_ml = function (packing_moves) {
     const subArray = packing_moves.subarray(0, number_move);
     subArray.sort((a, b) => (a & 0xFF) - (b & 0xFF));
 }
-
-
-// сортировка по типу хода. 
-// взятия с превращением самые первые 
-// дальше просто превращения
-// дальше хорошие взятия (т.е.взятая фигура дороже чем та, что берет)
-// дальше нейтральные взятия (т.е.взятая фигура равнозначна той, что берет)
-// дальше плохие взятия (т.е.взятая фигура дешевле чем та, что берет)
-// дальше взятия королем
-// дальше взятия пешек   
-// дальше простые ходы фигур 
-// дальше простые ходы пешек
-// и самые последние рокировки 
-// взятия раньше других ходов для удобства поиска и сортировки тихих ходов
-// /**
-//  * сортировка по типу хода
-//  * чем меньше число, тем выше приоритет хода
-//  * исправленная Qwen3.7-Max AI версия
-//  * @param {Int32Array} packing_moves
-//  * @returns {void}
-//  */
-// const sorting_list_ml = function (packing_moves) {
-//     let number_move = packing_moves[IND_NUMBER_MOVE_ML];
-
-//     for (let i = 0; i < number_move; i++) {
-//         let min_idx = i;
-//         let min_type = packing_moves[i] & 255; // Инлайн вместо get_type_move_ml
-
-//         for (let j = i + 1; j < number_move; j++) {
-//             let type_j = packing_moves[j] & 255; // Инлайн
-//             if (type_j < min_type) {
-//                 min_type = type_j; // Обновляем эталон минимума!
-//                 min_idx = j;
-//             }
-//         }
-
-//         if (min_idx !== i) {
-//             let temp = packing_moves[i];
-//             packing_moves[i] = packing_moves[min_idx];
-//             packing_moves[min_idx] = temp;
-//         }
-//     }
-// }
-
 
 // это для киллеров. 
 // находм ход по from, to
@@ -650,36 +644,41 @@ const set_move_after_the_captures_ml = function (packing_moves, packing_moves_k,
 }//
 
 /**
-* это для сортировки по истории
-* сортируем все не взятия по оценке присвоенной в массиве истории.
-* чем больше оценка тем выше ход но не выше всех взятий, даже плохих
-* потому что так быстрее и движуху смотрим в первую очередь.
-* что такое эвристика истории смотреть в файле с этой эвристикой.
-* исправленная Qwen3.7-Max AI версия
-* @param {Int32Array} packing_moves
-* @param {Int32Array[][]} history
-* @returns {void}
-*/
-//Qwen3.7-Max AI: "Сначала распакуйте все ходы и их оценки в временный массив, отсортируйте его, 
-//а затем переставьте элементы в packing_moves. Или используйте Insertion Sort, который делает меньше обменов"
+ * Сортировка тихих ходов по эвристике истории.
+ * Оптимизированная версия: Insertion Sort + плоский массив + кэширование.
+ * 
+ * @param {Int32Array} packing_moves
+ * @param {Int32Array} history - плоский массив [2 * 64 * 64]
+ * @returns {void}
+ */
 const sorting_list_history_heuristic_ml = function (packing_moves, history) {
-    let piece_color = packing_moves[IND_PIECE_COLOR_ML];
-    let number_move = packing_moves[IND_NUMBER_MOVE_ML];
-    let start = packing_moves[IND_NUMBER_CAPTURES_MOVE_ML];
+    const number_move = packing_moves[IND_NUMBER_MOVE_ML];
+    const start = packing_moves[IND_NUMBER_CAPTURES_MOVE_ML];
+    const count = number_move - start;
+    
+    if (count < 2) return; // Нечего сортировать
+    
+    // Кэшируем смещение цвета (color * 4096)
+    const color_shift = packing_moves[IND_PIECE_COLOR_ML] << 12;
 
-    // Insertion Sort (намного быстрее на малых массивах)
+    // Insertion Sort — идеален для малых массивов
     for (let i = start + 1; i < number_move; i++) {
-        let move_i = packing_moves[i];
-        let from_128 = (move_i >> 8) & 255;
-        let to_128 = (move_i >> 16) & 255;
-        let hist_i = history[piece_color][SQUARE_128_to_64_CB[from_128]][SQUARE_128_to_64_CB[to_128]];
+        const move_i = packing_moves[i];
         
+        // Быстрый доступ к плоскому массиву: color*4096 + from*64 + to
+        const hist_i = history[color_shift | 
+            (SQUARE_128_to_64_CB[(move_i >> 8) & 255] << 6) | 
+            SQUARE_128_to_64_CB[(move_i >> 16) & 255]];
+
         let j = i - 1;
+        
         while (j >= start) {
-            let move_j = packing_moves[j];
-            let hist_j = history[piece_color][SQUARE_128_to_64_CB[(move_j >> 8) & 255]][SQUARE_128_to_64_CB[(move_j >> 16) & 255]];
+            const move_j = packing_moves[j];
+            const hist_j = history[color_shift | 
+                (SQUARE_128_to_64_CB[(move_j >> 8) & 255] << 6) | 
+                SQUARE_128_to_64_CB[(move_j >> 16) & 255]];
             
-            if (hist_j < hist_i) {
+            if (hist_j > hist_i) {
                 packing_moves[j + 1] = move_j;
                 j--;
             } else {
@@ -689,6 +688,35 @@ const sorting_list_history_heuristic_ml = function (packing_moves, history) {
         packing_moves[j + 1] = move_i;
     }
 }
+
+
+// const sorting_list_history_heuristic_ml = function (packing_moves, history) {
+//     let piece_color = packing_moves[IND_PIECE_COLOR_ML];
+//     let number_move = packing_moves[IND_NUMBER_MOVE_ML];
+//     let start = packing_moves[IND_NUMBER_CAPTURES_MOVE_ML];
+
+//     // Insertion Sort (намного быстрее на малых массивах)
+//     for (let i = start + 1; i < number_move; i++) {
+//         let move_i = packing_moves[i];
+//         let from_128 = (move_i >> 8) & 255;
+//         let to_128 = (move_i >> 16) & 255;
+//         let hist_i = history[piece_color][SQUARE_128_to_64_CB[from_128]][SQUARE_128_to_64_CB[to_128]];
+        
+//         let j = i - 1;
+//         while (j >= start) {
+//             let move_j = packing_moves[j];
+//             let hist_j = history[piece_color][SQUARE_128_to_64_CB[(move_j >> 8) & 255]][SQUARE_128_to_64_CB[(move_j >> 16) & 255]];
+            
+//             if (hist_j < hist_i) {
+//                 packing_moves[j + 1] = move_j;
+//                 j--;
+//             } else {
+//                 break;
+//             }
+//         }
+//         packing_moves[j + 1] = move_i;
+//     }
+// }
 
 // /**
 // * это для сортировки по истории
@@ -817,17 +845,6 @@ const save_list_from_ml = (packing_moves_to, packing_moves_from) => {
     packing_moves_to.set(packing_moves_from);
 }
 
-// const save_list_from_ml = function (packing_moves_to, packing_moves_from) {
-
-//     // let number_move_from = LENGTH_LIST_ML;
-
-//     // for (let i = 0; i < number_move_from; i++) {
-//     //     packing_moves_to[i] = packing_moves_from[i];
-//     // }
-
-//     packing_moves_to.set(packing_moves_from);
-
-// }
 
 /**
  * если ход from, to 
