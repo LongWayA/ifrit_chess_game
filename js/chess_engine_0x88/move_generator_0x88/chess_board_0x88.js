@@ -4,7 +4,7 @@
  * @author AnBr75
  * @name chess_board_0x88.js
  * @version created 24.01m.2026 
- * Code review: Gemini AI
+ * Code review: Gemini AI, Qwen3.7-Max AI
 */
 
 //+
@@ -13,7 +13,7 @@
  * НАЗНАЧЕНИЕ
  * 
  * Что бы не делать много работы для проверки выхода за пределы доски
- * делаем только одну операцию проверяем SquareIndex & 0x88 == 0 если
+ * делаем только одну операцию проверяем SquareIndex & 0x88 === 0 если
  * равно 0 значит мы на доске, иначе вышли за пределы.
  * * Например: 7 & 0x88 = 0, 8 & 0x88 = 8, 10 & 0x88 = 8, 18 & 0x88 = 0
  * 
@@ -47,7 +47,7 @@
  * 
  * т.е диапазон от 0 до 127 используем для доски записи фигур. это 128 позиций
  * 
- * так как мы проверяем (index & 0x88) == 0, а значит никогда не используем часть клеток доски
+ * так как мы проверяем (index & 0x88) === 0, а значит никогда не используем часть клеток доски
  * то я решил хранить в них дополнительные данные позиции
  * 
  *  8 это side_to_move, цвет хода 0-1 (0 - черные 1 - белые)
@@ -70,7 +70,7 @@
  *  27 score, оценка позиции
  * 
  * 
- * Перевод координат доски ху в линейную: 
+ * Перевод координат доски х и у в линейную: 
  * s_0x88 = 16 * y_07 + x_07;
  * И обратно:
  * x_07 = s_0x88 & 7;
@@ -112,7 +112,7 @@ const PIECE_NAME_CB = [
     "B_PAWN_CB", "B_KNIGHT_CB", "B_BISHOP_CB", "B_ROOK_CB", "B_QUEEN_CB", "B_KING_CB"
 ];
 
-// так как мы проверяем (index & 0x88) == 0 и значит никогда не используем часть клеток доски
+// так как мы проверяем (index & 0x88) === 0 и значит никогда не используем часть клеток доски
 // то я решил использовать их для хранения данных позиции
 
 const SIDE_TO_MOVE_CB = 8; // положение в массиве цвета хода 0-1
@@ -125,8 +125,8 @@ const IND_CASTLING_k_CB = 12; // положение в массиве рокир
 const IND_EN_PASSANT_YES_CB = 13; // положение в массиве разрешение взятия на проходе 0-1
 const IND_EN_PASSANT_TARGET_SQUARE_CB = 14; // положение в массиве координата битого поля от 0 до 119
 
-const IND_KING_FROM_WHITE_CB = 15; // положение в массиве положения белого короля от 0 до 119
-const IND_KING_FROM_BLACK_CB = 24; // положение в массиве положения черного короля от 0 до 119
+const IND_KING_FROM_WHITE_CB = 15; // индекс в массиве для позиции белого короля от 0 до 119
+const IND_KING_FROM_BLACK_CB = 24; // индекс в массиве положения черного короля от 0 до 119
 
 const IND_HALFMOVE_CLOCK_CB = 25; // The number of halfmoves since the last capture or pawn advance,
 // used for the fifty-move rule.(from wikipedia)
@@ -148,7 +148,7 @@ const LET_COOR_CB = [
     "a", "b", "c", "d", "e", "f", "g", "h"
 ];
 
-// перевод 64 позиций в 127
+// перевод 64 позиций в 128
 const SQUARE_64_to_128_CB = [
     0, 1, 2, 3, 4, 5, 6, 7,
     16, 17, 18, 19, 20, 21, 22, 23,
@@ -173,22 +173,22 @@ const SQUARE_128_to_64_CB = [
 ];
 
 // Создаем быстрый типизированный массив для всех ASCII символов (выносим в глобальную область)
-const FEN_PIECES_ARRAY_CB = new Int32Array(128); 
+const FEN_PIECES_ARRAY_CB = new Int32Array(128);
 // По умолчанию заполняем нулями (или -1), чтобы отличать цифры от фигур
 // Заполняем его один раз при старте движка:
 FEN_PIECES_ARRAY_CB[107] = B_KING_CB;   // 'k'.charCodeAt(0) === 107
 FEN_PIECES_ARRAY_CB[113] = B_QUEEN_CB;  // 'q'.charCodeAt(0) === 113
 FEN_PIECES_ARRAY_CB[114] = B_ROOK_CB;   // 'r'.charCodeAt(0) === 114
-FEN_PIECES_ARRAY_CB[98]  = B_BISHOP_CB; // 'b'.charCodeAt(0) === 98
+FEN_PIECES_ARRAY_CB[98] = B_BISHOP_CB; // 'b'.charCodeAt(0) === 98
 FEN_PIECES_ARRAY_CB[110] = B_KNIGHT_CB; // 'n'.charCodeAt(0) === 110
 FEN_PIECES_ARRAY_CB[112] = B_PAWN_CB;   // 'p'.charCodeAt(0) === 112
 
-FEN_PIECES_ARRAY_CB[75]  = W_KING_CB;   // 'K'.charCodeAt(0) === 75
-FEN_PIECES_ARRAY_CB[81]  = W_QUEEN_CB;  // 'Q'.charCodeAt(0) === 81
-FEN_PIECES_ARRAY_CB[82]  = W_ROOK_CB;   // 'R'.charCodeAt(0) === 82
-FEN_PIECES_ARRAY_CB[66]  = W_BISHOP_CB; // 'B'.charCodeAt(0) === 66
-FEN_PIECES_ARRAY_CB[78]  = W_KNIGHT_CB; // 'N'.charCodeAt(0) === 78
-FEN_PIECES_ARRAY_CB[80]  = W_PAWN_CB;   // 'P'.charCodeAt(0) === 80
+FEN_PIECES_ARRAY_CB[75] = W_KING_CB;   // 'K'.charCodeAt(0) === 75
+FEN_PIECES_ARRAY_CB[81] = W_QUEEN_CB;  // 'Q'.charCodeAt(0) === 81
+FEN_PIECES_ARRAY_CB[82] = W_ROOK_CB;   // 'R'.charCodeAt(0) === 82
+FEN_PIECES_ARRAY_CB[66] = W_BISHOP_CB; // 'B'.charCodeAt(0) === 66
+FEN_PIECES_ARRAY_CB[78] = W_KNIGHT_CB; // 'N'.charCodeAt(0) === 78
+FEN_PIECES_ARRAY_CB[80] = W_PAWN_CB;   // 'P'.charCodeAt(0) === 80
 
 
 /**
@@ -287,17 +287,18 @@ const set_board_from_fen_0x88_cb = (fen, chess_board_0x88) => {
         } else {
             const piece = FEN_PIECES_ARRAY_CB[code];
 
-            if (piece === 0) {
+            if (code >= 48 && code <= 57) { // Цифры '1'-'8'
                 x += (code - 48); // Из ASCII кода цифры получаем число ('1'-'8')
-            } else {
-                const z_0x88 = (y << 4) + x;
+            } else if (piece !== 0) {
+                const z_0x88 = (y << 4) | x; // Битовое ИЛИ
                 chess_board_0x88[z_0x88] = piece;
 
                 // Быстрое обновление индексов королей
                 if (piece === W_KING_CB) chess_board_0x88[IND_KING_FROM_WHITE_CB] = z_0x88;
                 else if (piece === B_KING_CB) chess_board_0x88[IND_KING_FROM_BLACK_CB] = z_0x88;
-
                 x++;
+            } else {
+                console.warn(`Недопустимый символ в FEN: ${String.fromCharCode(code)}`);
             }
         }
     }
@@ -322,7 +323,7 @@ const set_board_from_fen_0x88_cb = (fen, chess_board_0x88) => {
     if (enPassant && enPassant !== '-') {
         const ep_x = enPassant.charCodeAt(0) - 97;         // 'a'-'h' -> 0-7
         const ep_y = 8 - (enPassant.charCodeAt(1) - 48);    // '1'-'8' -> Инвертируем под вашу разметку доски
-        
+
         chess_board_0x88[IND_EN_PASSANT_YES_CB] = 1;
         chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE_CB] = (ep_y << 4) + ep_x;
     } else {
@@ -344,6 +345,7 @@ const letter_to_x_coordinate_cb = (letter) => {
 // Индексы:               0   1    2    3    4    5    6   7   8    9    10   11   12   13   14
 const PIECES_CHARS_CB = ["", "P", "N", "B", "R", "Q", "K", "", "", "p", "n", "b", "r", "q", "k"];
 
+// "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 /**
  * Генерируем FEN-строку по текущей позиции на доске 0x88
  * @param {Int32Array} chess_board_0x88 
@@ -356,7 +358,7 @@ const set_fen_from_0x88_cb = (chess_board_0x88) => {
     // --- 1. СБОРКА ФИГУР ---
     for (let y = 0; y < 8; y++) {
         const rowOffset = y << 4; // Инлайним (y * 16) для скорости
-        
+
         for (let x = 0; x < 8; x++) {
             const z = rowOffset + x;
             const piece = chess_board_0x88[z];
@@ -391,7 +393,7 @@ const set_fen_from_0x88_cb = (chess_board_0x88) => {
     if (chess_board_0x88[IND_CASTLING_Q_CB] === 1) castlingRights += "Q";
     if (chess_board_0x88[IND_CASTLING_k_CB] === 1) castlingRights += "k";
     if (chess_board_0x88[IND_CASTLING_q_CB] === 1) castlingRights += "q";
-    
+
     fenParts.push(castlingRights || "-");
     fenParts.push(" ");
 
@@ -400,14 +402,18 @@ const set_fen_from_0x88_cb = (chess_board_0x88) => {
         const epSquare = chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE_CB];
         const ep_x = epSquare & 7;       // Быстрое s_0x88_to_x07
         const ep_y = 8 - (epSquare >> 4); // Быстрое 8 - s_0x88_to_y07
-        
+
         fenParts.push(LET_COOR_CB[ep_x], ep_y);
     } else {
         fenParts.push("-");
     }
 
-    // Добавляем финальный пробел в конце строки
     fenParts.push(" ");
+
+    // --- 5 и 6. СЧЕТЧИКИ (Обязательно для валидного FEN) ---
+    fenParts.push(chess_board_0x88[IND_HALFMOVE_CLOCK_CB] || 0);
+    fenParts.push(" ");
+    fenParts.push(chess_board_0x88[IND_FULLMOVE_NUMBER_CB] || 1);
 
     return fenParts.join('');
 };
@@ -526,18 +532,18 @@ const test_print_any_0x88_cb = function (chess_board_0x88) {
 * @param {Int32Array} chess_board_0x88
 * @returns {void}
 */
-const test_print_piese_0x88_cb = function (chess_board_0x88) {
-    console.log("test_print_piese_0x88 ****************");
+const test_print_piece_0x88_cb = function (chess_board_0x88) {
+    console.log("test_print_piece_0x88 ****************");
     /** @type {number} */
     let l = 0;// 
     let line = "";//
     // бежим по доске и добавляем в линию фигуры с доски. как достигли 
     // конца доски с фигурами печатаем линию и все по новой
     for (let i = 0; i < BOARD_SIZE_CB; i++) {
-        if ((i & OUT_OF_BOUNDS_MASK_CB) == 0) {// 136 0x88
+        if ((i & OUT_OF_BOUNDS_MASK_CB) === 0) {// 136 0x88
             l = 1;
             line = line + "|" + String(chess_board_0x88[i]);
-        } else if (l == 1) {
+        } else if (l === 1) {
             l = 0;
             console.log(line);
             //console.log( "\n");
@@ -553,14 +559,14 @@ const test_print_piese_0x88_cb = function (chess_board_0x88) {
 * @param {Int32Array} chess_board_0x88
 * @returns {void}
 */
-const test_print_piese_color_0x88_cb = function (chess_board_0x88) {
+const test_print_piece_color_0x88_cb = function (chess_board_0x88) {
     console.log("test_print_0x88_color ****************");
     let l = 0;// только один раз должен сработать перевод строки
     let line = "";//
     let color = 0;
 
     for (let i = 0; i < BOARD_SIZE_CB; i++) {
-        if ((i & OUT_OF_BOUNDS_MASK_CB) == 0) {// 136 0x88
+        if ((i & OUT_OF_BOUNDS_MASK_CB) === 0) {// 136 0x88
             l = 1;
 
             // если имя фигуры больше 6 то это черная фигура так как они 9-черная пешка, и т.д.
@@ -569,7 +575,7 @@ const test_print_piese_color_0x88_cb = function (chess_board_0x88) {
 
 
             line = line + "|" + String(color);
-        } else if (l == 1) {
+        } else if (l === 1) {
             l = 0;
             console.log(line);
             line = "";
@@ -583,11 +589,11 @@ const test_print_piese_color_0x88_cb = function (chess_board_0x88) {
 * @param {Int32Array} chess_board_0x88
 * @returns {void}
 */
-const test_print_piese_in_line_0x88_cb = function (chess_board_0x88) {
+const test_print_piece_in_line_0x88_cb = function (chess_board_0x88) {
     console.log("test_print_0x88_line ****************");
     let line = "";//
     for (let i = 0; i < BOARD_SIZE_CB; i++) {
-        if ((i & OUT_OF_BOUNDS_MASK_CB) == 0) {// 136 0x88       
+        if ((i & OUT_OF_BOUNDS_MASK_CB) === 0) {// 136 0x88       
             line = line + String(chess_board_0x88[i]) + ",";
         }
     }
@@ -625,7 +631,7 @@ const test_compare_chess_board_0x88_cb = function (chess_board_0x88_original, ch
         console.log("out en_passant_yes " + chess_board_0x88[IND_EN_PASSANT_YES_CB]);
     };
 
-    if (chess_board_0x88_original[IND_EN_PASSANT_YES_CB] == 1) {
+    if (chess_board_0x88_original[IND_EN_PASSANT_YES_CB] === 1) {
         if (chess_board_0x88_original[IND_EN_PASSANT_TARGET_SQUARE_CB] != chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE_CB]) {
             is_test_ok = 0;
             console.log("this en_passant_target_square original " + chess_board_0x88_original[IND_EN_PASSANT_TARGET_SQUARE_CB]);
@@ -685,14 +691,14 @@ const test_compare_chess_board_0x88_cb = function (chess_board_0x88_original, ch
 const searching_king_cb = function (chess_board_0x88, piece_color) {
 
     for (let i = 0; i < BOARD_SIZE_CB; i++) {
-        if ((i & OUT_OF_BOUNDS_MASK_CB) == 0) {// 136 0x88
-            if (chess_board_0x88[i] == W_KING_CB) {
-                if (piece_color == 1) {
+        if ((i & OUT_OF_BOUNDS_MASK_CB) === 0) {// 136 0x88
+            if (chess_board_0x88[i] === W_KING_CB) {
+                if (piece_color === 1) {
                     return i;
                 }
             }
-            if (chess_board_0x88[i] == B_KING_CB) {
-                if (piece_color == 0) {
+            if (chess_board_0x88[i] === B_KING_CB) {
+                if (piece_color === 0) {
                     return i;
                 }
             }
@@ -706,7 +712,7 @@ const searching_king_cb = function (chess_board_0x88, piece_color) {
 
 export {
     x07_y07_to_0x88_cb, s_0x88_to_x07_cb, s_0x88_to_y07_cb,
-    test_print_any_0x88_cb, test_print_piese_0x88_cb, test_print_piese_color_0x88_cb, test_print_piese_in_line_0x88_cb,
+    test_print_any_0x88_cb, test_print_piece_0x88_cb, test_print_piece_color_0x88_cb, test_print_piece_in_line_0x88_cb,
     test_compare_chess_board_0x88_cb, set_board_from_fen_0x88_cb, set_fen_from_0x88_cb,
     searching_king_cb, iniStartPositionForWhite_cb, letter_to_x_coordinate_cb,
     s_0x88_out_of_bounds_cb, get_piece_color_cb, get_piece_type_cb, create_piece_cb,

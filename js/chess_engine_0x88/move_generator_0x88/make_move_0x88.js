@@ -4,10 +4,13 @@
  * @author AnBr75
  * @name make_move_0x88.js
  * @version created 24.01m.2026 
+ * Code review: Qwen3.7-Max AI
 */
 
+//+
+
 import {
-  LENGTH_LIST_ML, IND_PIESE_COLOR_ML, IND_NUMBER_CAPTURES_MOVE_ML, IND_NUMBER_MOVE_ML,
+  LENGTH_LIST_ML, IND_PIECE_COLOR_ML, IND_NUMBER_CAPTURES_MOVE_ML, IND_NUMBER_MOVE_ML,
   IND_PROMO_QUEEN_ML, IND_PROMO_ROOK_ML, IND_PROMO_BISHOP_ML, IND_PROMO_KNIGHT_ML,
   MOVE_NO_ML, CAPTURES_PAWN_QUEEN_PROMO_QUEEN_ML, CAPTURES_PAWN_ROOK_PROMO_QUEEN_ML, CAPTURES_PAWN_BISHOP_PROMO_QUEEN_ML,
   CAPTURES_PAWN_KNIGHT_PROMO_QUEEN_ML, CAPTURES_PAWN_QUEEN_PROMO_ROOK_ML, CAPTURES_PAWN_ROOK_PROMO_ROOK_ML,
@@ -26,16 +29,17 @@ import {
 } from "./move_list_0x88.js";
 
 import {
-  x07_y07_to_0x88_cb, s_0x88_to_x07_cb, s_0x88_to_y07_cb,
-  test_print_any_0x88_cb, test_print_piese_0x88_cb, test_print_piese_color_0x88_cb, test_print_piese_in_line_0x88_cb,
-  test_compare_chess_board_0x88_cb, set_board_from_fen_0x88_cb, set_fen_from_0x88_cb,
-  searching_king_cb, iniStartPositionForWhite_cb, letter_to_x_coordinate_cb,
-  BOARD_SIZE_CB, SIDE_TO_MOVE_CB, LET_COOR_CB,
-  BLACK_CB, WHITE_CB, PIECE_NO_CB, W_PAWN_CB, W_KNIGHT_CB, W_BISHOP_CB, W_ROOK_CB, W_QUEEN_CB, W_KING_CB, B_PAWN_CB,
-  B_KNIGHT_CB, B_BISHOP_CB, B_ROOK_CB, B_QUEEN_CB, B_KING_CB, IND_CASTLING_Q_CB, IND_CASTLING_q_CB, IND_CASTLING_K_CB,
-  IND_CASTLING_k_CB, IND_HALFMOVE_CLOCK_CB, IND_FULLMOVE_NUMBER_CB, PIECE_NAME_CB, IND_EN_PASSANT_YES_CB,
-  IND_EN_PASSANT_TARGET_SQUARE_CB, IND_KING_FROM_WHITE_CB, IND_KING_FROM_BLACK_CB, IND_SCORE_CB,
-  SQUARE_64_to_128_CB, SQUARE_128_to_64_CB
+    x07_y07_to_0x88_cb, s_0x88_to_x07_cb, s_0x88_to_y07_cb,
+    test_print_any_0x88_cb, test_print_piece_0x88_cb, test_print_piece_color_0x88_cb, test_print_piece_in_line_0x88_cb,
+    test_compare_chess_board_0x88_cb, set_board_from_fen_0x88_cb, set_fen_from_0x88_cb,
+    searching_king_cb, iniStartPositionForWhite_cb, letter_to_x_coordinate_cb,
+    s_0x88_out_of_bounds_cb, get_piece_color_cb, get_piece_type_cb, create_piece_cb,
+    BOARD_SIZE_CB, OUT_OF_BOUNDS_MASK_CB, SIDE_TO_MOVE_CB, LET_COOR_CB,
+    BLACK_CB, WHITE_CB, PIECE_NO_CB, W_PAWN_CB, W_KNIGHT_CB, W_BISHOP_CB, W_ROOK_CB, W_QUEEN_CB, W_KING_CB, B_PAWN_CB,
+    B_KNIGHT_CB, B_BISHOP_CB, B_ROOK_CB, B_QUEEN_CB, B_KING_CB, IND_CASTLING_Q_CB, IND_CASTLING_q_CB, IND_CASTLING_K_CB,
+    IND_CASTLING_k_CB, IND_HALFMOVE_CLOCK_CB, IND_FULLMOVE_NUMBER_CB, PIECE_NAME_CB, IND_EN_PASSANT_YES_CB,
+    IND_EN_PASSANT_TARGET_SQUARE_CB, IND_KING_FROM_WHITE_CB, IND_KING_FROM_BLACK_CB, IND_SCORE_CB,
+    SQUARE_64_to_128_CB, SQUARE_128_to_64_CB
 } from "./chess_board_0x88.js";
 
 import {
@@ -62,9 +66,9 @@ import {
 */
 
 /*
-если в результате хода король под шахом то is_moove_legal = 0  
-если сделать рокировку не смогли из за битых полей то is_moove_legal = 2
-если ход прошел то is_moove_legal = 1
+если в результате хода король под шахом то is_move_legal = 0  
+если сделать рокировку не смогли из за битых полей то is_move_legal = 2
+если ход прошел то is_move_legal = 1
 есть три случая: 
   1 - ход легальный. мы сделали ход и король не под шахом 
   2 - ход не легальный мы не сделали рокировку из за битых полей. мы просто не делаем ход 
@@ -87,14 +91,14 @@ const MOOVE_IS_NOT_LEGAL_CASTLING_MM = 2;
 const do_moves_mm = function (chess_board_0x88, chess_board_key_64, type_move, from, to, piece_color) {
   //console.log("Make_move_0x88_C->do_moves  move_i " + move_i);
 
-  let is_moove_legal = MOOVE_IS_LEGAL_MM;// по умолчанию ход считаем легальным.
+  let is_move_legal = MOOVE_IS_LEGAL_MM;// по умолчанию ход считаем легальным.
 
   // смотрим 
   switch (type_move) {
 
     case MOVE_NO_ML:// хода нет
       // это трюк. мы не сделали ход так же как и в случае неудачной рокировки
-      is_moove_legal = MOOVE_IS_NOT_LEGAL_CASTLING_MM;
+      is_move_legal = MOOVE_IS_NOT_LEGAL_CASTLING_MM;
       break;
     // взятие на проходе обнуляю вообще везде, кроме регистрации при двойном ходе пешки. как по другому пока не знаю
 
@@ -303,9 +307,9 @@ const do_moves_mm = function (chess_board_0x88, chess_board_key_64, type_move, f
     //////////////////////////////////////////////
     case MOVE_KING_CASTLE_ML:// специальные ходы рокировки. отмена рокировки прописана внутри функций
 
-      is_moove_legal = make_king_castle_move_0x88_mm(chess_board_0x88, chess_board_key_64, from, to, piece_color);
+      is_move_legal = make_king_castle_move_0x88_mm(chess_board_0x88, chess_board_key_64, from, to, piece_color);
 
-      if (is_moove_legal != MOOVE_IS_NOT_LEGAL_CASTLING_MM) {
+      if (is_move_legal != MOOVE_IS_NOT_LEGAL_CASTLING_MM) {
 
         if (piece_color == 1) {
           chess_board_0x88[IND_KING_FROM_WHITE_CB] = to;
@@ -321,9 +325,9 @@ const do_moves_mm = function (chess_board_0x88, chess_board_key_64, type_move, f
 
     case MOVE_KING_QUEEN_CASTLE_ML:
 
-      is_moove_legal = make_king_queen_castle_move_0x88_mm(chess_board_0x88, chess_board_key_64, from, to, piece_color);
+      is_move_legal = make_king_queen_castle_move_0x88_mm(chess_board_0x88, chess_board_key_64, from, to, piece_color);
 
-      if (is_moove_legal != MOOVE_IS_NOT_LEGAL_CASTLING_MM) {
+      if (is_move_legal != MOOVE_IS_NOT_LEGAL_CASTLING_MM) {
 
         if (piece_color == 1) {
           chess_board_0x88[IND_KING_FROM_WHITE_CB] = to;
@@ -566,7 +570,7 @@ const do_moves_mm = function (chess_board_0x88, chess_board_key_64, type_move, f
 
   // если легальность хода не обнулили выше тогда остается проверить не под шахом ли наш король 
   // легальность отменяется если рокировки не прошли т.к. поля или король под боем
-  if (is_moove_legal == MOOVE_IS_LEGAL_MM) {
+  if (is_move_legal == MOOVE_IS_LEGAL_MM) {
 
     let from_king = 0;
 
@@ -582,7 +586,7 @@ const do_moves_mm = function (chess_board_0x88, chess_board_key_64, type_move, f
 
       //console.log("check_detected " + check_detected(from_king, piece_color_king, chess_board_0x88));
 
-      is_moove_legal = MOOVE_IS_NOT_LEGAL_CHECK_MM;
+      is_move_legal = MOOVE_IS_NOT_LEGAL_CHECK_MM;
     }
   }
 
@@ -591,7 +595,7 @@ const do_moves_mm = function (chess_board_0x88, chess_board_key_64, type_move, f
   // 2 - ход не легальный мы не сделали рокировку из за битых полей 
   // 0 - ход не легальный. мы сделали ход а король оказался или остался под шахом
 
-  return is_moove_legal;
+  return is_move_legal;
 }
 
 /**  
@@ -788,25 +792,26 @@ const stop_king_castle_move_king_0x88_mm = function (chess_board_0x88, chess_boa
  * @param {number} piece_color  
  * @returns {number}
  */
+// Qwen3.7-Max AI: В make_king_castle_move_0x88_mm вы дважды вычисляете цвет
 const make_king_castle_move_0x88_mm = function (chess_board_0x88, chess_board_key_64, from, to, piece_color) {
 
-  let is_moove_legal = MOOVE_IS_LEGAL_MM;
+  let is_move_legal = MOOVE_IS_LEGAL_MM;
 
   //let piece_color_sq = (chess_board_0x88[from] > W_KING) ? BLACK : WHITE;
   let piece_color_sq = 1 - (chess_board_0x88[from] >> 3);
 
   // проверяем не под шахом ли поля
   if (piece_color_sq == 1) {
-    if (check_detected_mgc(E1_MGQ, piece_color_sq, chess_board_0x88) != 0) is_moove_legal = MOOVE_IS_NOT_LEGAL_CASTLING_MM;
-    if (check_detected_mgc(F1_MGQ, piece_color_sq, chess_board_0x88) != 0) is_moove_legal = MOOVE_IS_NOT_LEGAL_CASTLING_MM;
-    if (check_detected_mgc(G1_MGQ, piece_color_sq, chess_board_0x88) != 0) is_moove_legal = MOOVE_IS_NOT_LEGAL_CASTLING_MM;
+    if (check_detected_mgc(E1_MGQ, piece_color_sq, chess_board_0x88) != 0) is_move_legal = MOOVE_IS_NOT_LEGAL_CASTLING_MM;
+    if (check_detected_mgc(F1_MGQ, piece_color_sq, chess_board_0x88) != 0) is_move_legal = MOOVE_IS_NOT_LEGAL_CASTLING_MM;
+    if (check_detected_mgc(G1_MGQ, piece_color_sq, chess_board_0x88) != 0) is_move_legal = MOOVE_IS_NOT_LEGAL_CASTLING_MM;
   } else {
-    if (check_detected_mgc(E8_MGQ, piece_color_sq, chess_board_0x88) != 0) is_moove_legal = MOOVE_IS_NOT_LEGAL_CASTLING_MM;
-    if (check_detected_mgc(F8_MGQ, piece_color_sq, chess_board_0x88) != 0) is_moove_legal = MOOVE_IS_NOT_LEGAL_CASTLING_MM;
-    if (check_detected_mgc(G8_MGQ, piece_color_sq, chess_board_0x88) != 0) is_moove_legal = MOOVE_IS_NOT_LEGAL_CASTLING_MM;
+    if (check_detected_mgc(E8_MGQ, piece_color_sq, chess_board_0x88) != 0) is_move_legal = MOOVE_IS_NOT_LEGAL_CASTLING_MM;
+    if (check_detected_mgc(F8_MGQ, piece_color_sq, chess_board_0x88) != 0) is_move_legal = MOOVE_IS_NOT_LEGAL_CASTLING_MM;
+    if (check_detected_mgc(G8_MGQ, piece_color_sq, chess_board_0x88) != 0) is_move_legal = MOOVE_IS_NOT_LEGAL_CASTLING_MM;
   }
 
-  if (is_moove_legal == MOOVE_IS_LEGAL_MM) {
+  if (is_move_legal == MOOVE_IS_LEGAL_MM) {
 
     // перемещаем короля. его ход прописан в списке ходов
     // записываем имя фигуры на новом месте
@@ -869,7 +874,7 @@ const make_king_castle_move_0x88_mm = function (chess_board_0x88, chess_board_ke
 
     }
   }
-  return is_moove_legal;
+  return is_move_legal;
 }
 
 
@@ -883,23 +888,23 @@ const make_king_castle_move_0x88_mm = function (chess_board_0x88, chess_board_ke
  */
 const make_king_queen_castle_move_0x88_mm = function (chess_board_0x88, chess_board_key_64, from, to, piece_color) {
 
-  let is_moove_legal = MOOVE_IS_LEGAL_MM;
+  let is_move_legal = MOOVE_IS_LEGAL_MM;
 
   //let piece_color_sq = (chess_board_0x88[from] > W_KING) ? BLACK : WHITE;
   let piece_color_sq = 1 - (chess_board_0x88[from] >> 3);// тут магия 8( в битах это 00001000) (подсказал ИИ от Гугла) 1 для белых и 0 для черных.
 
   if (piece_color_sq == 1) {
-    if (check_detected_mgc(E1_MGQ, piece_color_sq, chess_board_0x88) != 0) is_moove_legal = MOOVE_IS_NOT_LEGAL_CASTLING_MM;
-    if (check_detected_mgc(D1_MGQ, piece_color_sq, chess_board_0x88) != 0) is_moove_legal = MOOVE_IS_NOT_LEGAL_CASTLING_MM;
-    if (check_detected_mgc(C1_MGQ, piece_color_sq, chess_board_0x88) != 0) is_moove_legal = MOOVE_IS_NOT_LEGAL_CASTLING_MM;
+    if (check_detected_mgc(E1_MGQ, piece_color_sq, chess_board_0x88) != 0) is_move_legal = MOOVE_IS_NOT_LEGAL_CASTLING_MM;
+    if (check_detected_mgc(D1_MGQ, piece_color_sq, chess_board_0x88) != 0) is_move_legal = MOOVE_IS_NOT_LEGAL_CASTLING_MM;
+    if (check_detected_mgc(C1_MGQ, piece_color_sq, chess_board_0x88) != 0) is_move_legal = MOOVE_IS_NOT_LEGAL_CASTLING_MM;
   } else {
-    if (check_detected_mgc(E8_MGQ, piece_color_sq, chess_board_0x88) != 0) is_moove_legal = MOOVE_IS_NOT_LEGAL_CASTLING_MM;
-    if (check_detected_mgc(D8_MGQ, piece_color_sq, chess_board_0x88) != 0) is_moove_legal = MOOVE_IS_NOT_LEGAL_CASTLING_MM;
-    if (check_detected_mgc(C8_MGQ, piece_color_sq, chess_board_0x88) != 0) is_moove_legal = MOOVE_IS_NOT_LEGAL_CASTLING_MM;
+    if (check_detected_mgc(E8_MGQ, piece_color_sq, chess_board_0x88) != 0) is_move_legal = MOOVE_IS_NOT_LEGAL_CASTLING_MM;
+    if (check_detected_mgc(D8_MGQ, piece_color_sq, chess_board_0x88) != 0) is_move_legal = MOOVE_IS_NOT_LEGAL_CASTLING_MM;
+    if (check_detected_mgc(C8_MGQ, piece_color_sq, chess_board_0x88) != 0) is_move_legal = MOOVE_IS_NOT_LEGAL_CASTLING_MM;
   }//if (piece_color_sq == 1) {
 
   // проверяем не под шахом ли поля
-  if (is_moove_legal == MOOVE_IS_LEGAL_MM) {
+  if (is_move_legal == MOOVE_IS_LEGAL_MM) {
 
 
     // перемещаем короля. его ход прописан в списке ходов
@@ -962,9 +967,9 @@ const make_king_queen_castle_move_0x88_mm = function (chess_board_0x88, chess_bo
 
 
     }// if (packing_moves.piece_color == 1) {
-  } // if (is_moove_legal == 1) {
+  } // if (is_move_legal == 1) {
 
-  return is_moove_legal;
+  return is_move_legal;
 }
 
 // пешки

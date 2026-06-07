@@ -7,14 +7,16 @@
  * Code review: Qwen3.7-Max AI
 */
 
-// думать еще надо
+//+
+// проверить: sorting_list_ml, sorting_list_history_heuristic_ml
 
 import {
     x07_y07_to_0x88_cb, s_0x88_to_x07_cb, s_0x88_to_y07_cb,
-    test_print_any_0x88_cb, test_print_piese_0x88_cb, test_print_piese_color_0x88_cb, test_print_piese_in_line_0x88_cb,
+    test_print_any_0x88_cb, test_print_piece_0x88_cb, test_print_piece_color_0x88_cb, test_print_piece_in_line_0x88_cb,
     test_compare_chess_board_0x88_cb, set_board_from_fen_0x88_cb, set_fen_from_0x88_cb,
     searching_king_cb, iniStartPositionForWhite_cb, letter_to_x_coordinate_cb,
-    BOARD_SIZE_CB, SIDE_TO_MOVE_CB, LET_COOR_CB,
+    s_0x88_out_of_bounds_cb, get_piece_color_cb, get_piece_type_cb, create_piece_cb,
+    BOARD_SIZE_CB, OUT_OF_BOUNDS_MASK_CB, SIDE_TO_MOVE_CB, LET_COOR_CB,
     BLACK_CB, WHITE_CB, PIECE_NO_CB, W_PAWN_CB, W_KNIGHT_CB, W_BISHOP_CB, W_ROOK_CB, W_QUEEN_CB, W_KING_CB, B_PAWN_CB,
     B_KNIGHT_CB, B_BISHOP_CB, B_ROOK_CB, B_QUEEN_CB, B_KING_CB, IND_CASTLING_Q_CB, IND_CASTLING_q_CB, IND_CASTLING_K_CB,
     IND_CASTLING_k_CB, IND_HALFMOVE_CLOCK_CB, IND_FULLMOVE_NUMBER_CB, PIECE_NAME_CB, IND_EN_PASSANT_YES_CB,
@@ -54,7 +56,7 @@ import {
 
 const LENGTH_LIST_ML = 260;// максимально возможная длина списка ходов
 
-const IND_PIESE_COLOR_ML = 257; // индекс для цвета ходящей стороны
+const IND_PIECE_COLOR_ML = 257; // индекс для цвета ходящей стороны
 const IND_NUMBER_CAPTURES_MOVE_ML = 258; // индекс для колличества взятий
 const IND_NUMBER_MOVE_ML = 259; // индекс для количества ходов
 
@@ -105,24 +107,44 @@ const CAPTURES_PAWN_QUEEN_ML = 21;// пешка берет ферзь
 const CAPTURES_PAWN_ROOK_ML = 22;//
 const CAPTURES_PAWN_BISHOP_ML = 23;//
 const CAPTURES_PAWN_KNIGHT_ML = 24;//
+
 const CAPTURES_KNIGHT_QUEEN_ML = 25;//
 const CAPTURES_KNIGHT_ROOK_ML = 26;//
+
 const CAPTURES_BISHOP_QUEEN_ML = 27;//
 const CAPTURES_BISHOP_ROOK_ML = 28;//
+
 const CAPTURES_ROOK_QUEEN_ML = 29;//
+
 // фигуры равнозначны
 const CAPTURES_KNIGHT_BISHOP_ML = 30;//  
 const CAPTURES_KNIGHT_KNIGHT_ML = 31;//
+
 const CAPTURES_BISHOP_BISHOP_ML = 32;//
 const CAPTURES_BISHOP_KNIGHT_ML = 33;//
+
 const CAPTURES_ROOK_ROOK_ML = 34;//
 const CAPTURES_QUEEN_QUEEN_ML = 35;//
+
 // взятая фигура дешевле той что берет
 const CAPTURES_ROOK_BISHOP_ML = 36;//
 const CAPTURES_ROOK_KNIGHT_ML = 37;//
+
 const CAPTURES_QUEEN_ROOK_ML = 38;//
 const CAPTURES_QUEEN_BISHOP_ML = 39;//
 const CAPTURES_QUEEN_KNIGHT_ML = 40;//
+/* 
+Qwen3.7-Max AI:
+"В реальности QxP (выигрыш материала + безопасность) — это отличный ход, 
+а KxN — почти всегда нелегальный ход (конь под защитой), который ведет к потере короля.
+По правилу MVV/LVA (Most Valuable Victim / Least Valuable Attacker), атакующий 
+Король — самая дорогая фигура, поэтому взятия королем должны иметь САМЫЙ НИЗКИЙ 
+приоритет среди всех взятий (стоять в самом конце списка взятий, перед тихими ходами)."
+
+Я пока оставлю как есть.
+Взятия королем случай очень редкий и не думаю что это как то скажется на скорости игры.
+*/
+
 // взятия королем
 const CAPTURES_KING_QUEEN_ML = 41;//
 const CAPTURES_KING_ROOK_ML = 42;//
@@ -222,6 +244,7 @@ const TYPE_MOVE_NAME_ML = [
 
 //--------------------------------------------------------------
 // код от Qwen3.7-Max AI
+// используем в функции return_type_simple_move_ml
 // 1. Создаем плоский массив. 
 // Размер: 16x16 = 256. (Предполагаем, что ID фигур не превышают 15. Если B_KING_CB больше, увеличь до 32).
 const PIECE_LUT_SIZE = 16; 
@@ -229,73 +252,90 @@ const SIMPLE_MOVE_LUT = new Int32Array(PIECE_LUT_SIZE * PIECE_LUT_SIZE).fill(MOV
 
 // Вспомогательная функция для удобного заполнения (вызывается только при инициализации модуля)
 /**
-* @param {number} p1
-* @param {number} p2
-* @param {number} val
+* @param {number} p1 - фигура которая ходит
+* @param {number} p2 - взятая фигура, или пустая клетка
+* @param {number} val - тип хода
 */
 const L = (p1, p2, val) => { SIMPLE_MOVE_LUT[p1 * PIECE_LUT_SIZE + p2] = val; };
 
-// Заполняем LUT (просто скопируй это в начало файла после объявления констант)
+// Заполняем LUT
 // Короли
-L(W_KING_CB, PIECE_NO_CB, MOVE_KING_ML); L(W_KING_CB, B_QUEEN_CB, CAPTURES_KING_QUEEN_ML);
+L(W_KING_CB, PIECE_NO_CB, MOVE_KING_ML); 
+L(W_KING_CB, B_QUEEN_CB, CAPTURES_KING_QUEEN_ML);
 L(W_KING_CB, B_ROOK_CB, CAPTURES_KING_ROOK_ML); L(W_KING_CB, B_BISHOP_CB, CAPTURES_KING_BISHOP_ML);
 L(W_KING_CB, B_KNIGHT_CB, CAPTURES_KING_KNIGHT_ML); L(W_KING_CB, B_PAWN_CB, CAPTURES_KING_PAWN_ML);
 
-L(B_KING_CB, PIECE_NO_CB, MOVE_KING_ML); L(B_KING_CB, W_QUEEN_CB, CAPTURES_KING_QUEEN_ML);
+L(B_KING_CB, PIECE_NO_CB, MOVE_KING_ML); 
+L(B_KING_CB, W_QUEEN_CB, CAPTURES_KING_QUEEN_ML);
 L(B_KING_CB, W_ROOK_CB, CAPTURES_KING_ROOK_ML); L(B_KING_CB, W_BISHOP_CB, CAPTURES_KING_BISHOP_ML);
 L(B_KING_CB, W_KNIGHT_CB, CAPTURES_KING_KNIGHT_ML); L(B_KING_CB, W_PAWN_CB, CAPTURES_KING_PAWN_ML);
 
 // Ферзи
-L(W_QUEEN_CB, PIECE_NO_CB, MOVE_QUEEN_ML); L(W_QUEEN_CB, B_QUEEN_CB, CAPTURES_QUEEN_QUEEN_ML);
+L(W_QUEEN_CB, PIECE_NO_CB, MOVE_QUEEN_ML); 
+L(W_QUEEN_CB, B_QUEEN_CB, CAPTURES_QUEEN_QUEEN_ML);
 L(W_QUEEN_CB, B_ROOK_CB, CAPTURES_QUEEN_ROOK_ML); L(W_QUEEN_CB, B_BISHOP_CB, CAPTURES_QUEEN_BISHOP_ML);
 L(W_QUEEN_CB, B_KNIGHT_CB, CAPTURES_QUEEN_KNIGHT_ML); L(W_QUEEN_CB, B_PAWN_CB, CAPTURES_QUEEN_PAWN_ML);
 
-L(B_QUEEN_CB, PIECE_NO_CB, MOVE_QUEEN_ML); L(B_QUEEN_CB, W_QUEEN_CB, CAPTURES_QUEEN_QUEEN_ML);
+L(B_QUEEN_CB, PIECE_NO_CB, MOVE_QUEEN_ML); 
+L(B_QUEEN_CB, W_QUEEN_CB, CAPTURES_QUEEN_QUEEN_ML);
 L(B_QUEEN_CB, W_ROOK_CB, CAPTURES_QUEEN_ROOK_ML); L(B_QUEEN_CB, W_BISHOP_CB, CAPTURES_QUEEN_BISHOP_ML);
 L(B_QUEEN_CB, W_KNIGHT_CB, CAPTURES_QUEEN_KNIGHT_ML); L(B_QUEEN_CB, W_PAWN_CB, CAPTURES_QUEEN_PAWN_ML);
 
 // Ладьи
-L(W_ROOK_CB, PIECE_NO_CB, MOVE_ROOK_ML); L(W_ROOK_CB, B_QUEEN_CB, CAPTURES_ROOK_QUEEN_ML);
+L(W_ROOK_CB, PIECE_NO_CB, MOVE_ROOK_ML); 
+L(W_ROOK_CB, B_QUEEN_CB, CAPTURES_ROOK_QUEEN_ML);
 L(W_ROOK_CB, B_ROOK_CB, CAPTURES_ROOK_ROOK_ML); L(W_ROOK_CB, B_BISHOP_CB, CAPTURES_ROOK_BISHOP_ML);
 L(W_ROOK_CB, B_KNIGHT_CB, CAPTURES_ROOK_KNIGHT_ML); L(W_ROOK_CB, B_PAWN_CB, CAPTURES_ROOK_PAWN_ML);
 
-L(B_ROOK_CB, PIECE_NO_CB, MOVE_ROOK_ML); L(B_ROOK_CB, W_QUEEN_CB, CAPTURES_ROOK_QUEEN_ML);
+L(B_ROOK_CB, PIECE_NO_CB, MOVE_ROOK_ML); 
+L(B_ROOK_CB, W_QUEEN_CB, CAPTURES_ROOK_QUEEN_ML);
 L(B_ROOK_CB, W_ROOK_CB, CAPTURES_ROOK_ROOK_ML); L(B_ROOK_CB, W_BISHOP_CB, CAPTURES_ROOK_BISHOP_ML);
 L(B_ROOK_CB, W_KNIGHT_CB, CAPTURES_ROOK_KNIGHT_ML); L(B_ROOK_CB, W_PAWN_CB, CAPTURES_ROOK_PAWN_ML);
 
 // Слоны
-L(W_BISHOP_CB, PIECE_NO_CB, MOVE_BISHOP_ML); L(W_BISHOP_CB, B_QUEEN_CB, CAPTURES_BISHOP_QUEEN_ML);
+L(W_BISHOP_CB, PIECE_NO_CB, MOVE_BISHOP_ML); 
+L(W_BISHOP_CB, B_QUEEN_CB, CAPTURES_BISHOP_QUEEN_ML);
 L(W_BISHOP_CB, B_ROOK_CB, CAPTURES_BISHOP_ROOK_ML); L(W_BISHOP_CB, B_BISHOP_CB, CAPTURES_BISHOP_BISHOP_ML);
 L(W_BISHOP_CB, B_KNIGHT_CB, CAPTURES_BISHOP_KNIGHT_ML); L(W_BISHOP_CB, B_PAWN_CB, CAPTURES_BISHOP_PAWN_ML);
 
-L(B_BISHOP_CB, PIECE_NO_CB, MOVE_BISHOP_ML); L(B_BISHOP_CB, W_QUEEN_CB, CAPTURES_BISHOP_QUEEN_ML);
+L(B_BISHOP_CB, PIECE_NO_CB, MOVE_BISHOP_ML); 
+L(B_BISHOP_CB, W_QUEEN_CB, CAPTURES_BISHOP_QUEEN_ML);
 L(B_BISHOP_CB, W_ROOK_CB, CAPTURES_BISHOP_ROOK_ML); L(B_BISHOP_CB, W_BISHOP_CB, CAPTURES_BISHOP_BISHOP_ML);
 L(B_BISHOP_CB, W_KNIGHT_CB, CAPTURES_BISHOP_KNIGHT_ML); L(B_BISHOP_CB, W_PAWN_CB, CAPTURES_BISHOP_PAWN_ML);
 
 // Кони
-L(W_KNIGHT_CB, PIECE_NO_CB, MOVE_KNIGHT_ML); L(W_KNIGHT_CB, B_QUEEN_CB, CAPTURES_KNIGHT_QUEEN_ML);
+L(W_KNIGHT_CB, PIECE_NO_CB, MOVE_KNIGHT_ML); 
+L(W_KNIGHT_CB, B_QUEEN_CB, CAPTURES_KNIGHT_QUEEN_ML);
 L(W_KNIGHT_CB, B_ROOK_CB, CAPTURES_KNIGHT_ROOK_ML); L(W_KNIGHT_CB, B_BISHOP_CB, CAPTURES_KNIGHT_BISHOP_ML);
 L(W_KNIGHT_CB, B_KNIGHT_CB, CAPTURES_KNIGHT_KNIGHT_ML); L(W_KNIGHT_CB, B_PAWN_CB, CAPTURES_KNIGHT_PAWN_ML);
 
-L(B_KNIGHT_CB, PIECE_NO_CB, MOVE_KNIGHT_ML); L(B_KNIGHT_CB, W_QUEEN_CB, CAPTURES_KNIGHT_QUEEN_ML);
+L(B_KNIGHT_CB, PIECE_NO_CB, MOVE_KNIGHT_ML); 
+L(B_KNIGHT_CB, W_QUEEN_CB, CAPTURES_KNIGHT_QUEEN_ML);
 L(B_KNIGHT_CB, W_ROOK_CB, CAPTURES_KNIGHT_ROOK_ML); L(B_KNIGHT_CB, W_BISHOP_CB, CAPTURES_KNIGHT_BISHOP_ML);
 L(B_KNIGHT_CB, W_KNIGHT_CB, CAPTURES_KNIGHT_KNIGHT_ML); L(B_KNIGHT_CB, W_PAWN_CB, CAPTURES_KNIGHT_PAWN_ML);
 
 // Пешки
-L(W_PAWN_CB, PIECE_NO_CB, MOVE_PAWN_ML); L(W_PAWN_CB, B_QUEEN_CB, CAPTURES_PAWN_QUEEN_ML);
+// Qwen3.7-Max AI:
+//"Ваш SIMPLE_MOVE_LUT для пешки, бьющей на пустую клетку (W_PAWN_CB, PIECE_NO_CB), вернет MOVE_PAWN_ML (обычный ход).
+// Но при взятии на проходе целевая клетка пуста, а тип хода должен быть EP_CAPTURES_ML!"
+
+//Я: Замечание правильное. Обрабатываю этот случай в реализаторе ходов. 
+L(W_PAWN_CB, PIECE_NO_CB, MOVE_PAWN_ML); 
+L(W_PAWN_CB, B_QUEEN_CB, CAPTURES_PAWN_QUEEN_ML);
 L(W_PAWN_CB, B_ROOK_CB, CAPTURES_PAWN_ROOK_ML); L(W_PAWN_CB, B_BISHOP_CB, CAPTURES_PAWN_BISHOP_ML);
 L(W_PAWN_CB, B_KNIGHT_CB, CAPTURES_PAWN_KNIGHT_ML); L(W_PAWN_CB, B_PAWN_CB, CAPTURES_PAWN_PAWN_ML);
 
-L(B_PAWN_CB, PIECE_NO_CB, MOVE_PAWN_ML); L(B_PAWN_CB, W_QUEEN_CB, CAPTURES_PAWN_QUEEN_ML);
+L(B_PAWN_CB, PIECE_NO_CB, MOVE_PAWN_ML); 
+L(B_PAWN_CB, W_QUEEN_CB, CAPTURES_PAWN_QUEEN_ML);
 L(B_PAWN_CB, W_ROOK_CB, CAPTURES_PAWN_ROOK_ML); L(B_PAWN_CB, W_BISHOP_CB, CAPTURES_PAWN_BISHOP_ML);
 L(B_PAWN_CB, W_KNIGHT_CB, CAPTURES_PAWN_KNIGHT_ML); L(B_PAWN_CB, W_PAWN_CB, CAPTURES_PAWN_PAWN_ML);
 
 //--------------------------------------------------------------
 // код от Qwen3.7-Max AI
-// Создаем LUT один раз при инициализации модуля
-// Это устранит создание миллионов массивов в горячем цикле
+// используем в функции return_type_captures_pawn_promo_ml
+
 /** @type {Array<Int32Array>} */
-const PROMO_CAPTURES_LUT2 = [];
+const PROMO_CAPTURES_LUT = [];
 
 // Вспомогательная функция для создания массива превращений
 // код от Qwen3.7-Max AI
@@ -316,40 +356,40 @@ const create_promo_array = (q, r, b, n) => {
 
 // Заполняем LUT для всех возможных взятых фигур
 // Ферзи
-PROMO_CAPTURES_LUT2[W_QUEEN_CB] = create_promo_array(
+PROMO_CAPTURES_LUT[W_QUEEN_CB] = create_promo_array(
     CAPTURES_PAWN_QUEEN_PROMO_QUEEN_ML,
     CAPTURES_PAWN_QUEEN_PROMO_ROOK_ML,
     CAPTURES_PAWN_QUEEN_PROMO_BISHOP_ML,
     CAPTURES_PAWN_QUEEN_PROMO_KNIGHT_ML
 );
-PROMO_CAPTURES_LUT2[B_QUEEN_CB] = PROMO_CAPTURES_LUT2[W_QUEEN_CB]; // Те же константы
+PROMO_CAPTURES_LUT[B_QUEEN_CB] = PROMO_CAPTURES_LUT[W_QUEEN_CB]; // Те же константы
 
 // Ладьи
-PROMO_CAPTURES_LUT2[W_ROOK_CB] = create_promo_array(
+PROMO_CAPTURES_LUT[W_ROOK_CB] = create_promo_array(
     CAPTURES_PAWN_ROOK_PROMO_QUEEN_ML,
     CAPTURES_PAWN_ROOK_PROMO_ROOK_ML,
     CAPTURES_PAWN_ROOK_PROMO_BISHOP_ML,
     CAPTURES_PAWN_ROOK_PROMO_KNIGHT_ML
 );
-PROMO_CAPTURES_LUT2[B_ROOK_CB] = PROMO_CAPTURES_LUT2[W_ROOK_CB];
+PROMO_CAPTURES_LUT[B_ROOK_CB] = PROMO_CAPTURES_LUT[W_ROOK_CB];
 
 // Слоны
-PROMO_CAPTURES_LUT2[W_BISHOP_CB] = create_promo_array(
+PROMO_CAPTURES_LUT[W_BISHOP_CB] = create_promo_array(
     CAPTURES_PAWN_BISHOP_PROMO_QUEEN_ML,
     CAPTURES_PAWN_BISHOP_PROMO_ROOK_ML,
     CAPTURES_PAWN_BISHOP_PROMO_BISHOP_ML,
     CAPTURES_PAWN_BISHOP_PROMO_KNIGHT_ML
 );
-PROMO_CAPTURES_LUT2[B_BISHOP_CB] = PROMO_CAPTURES_LUT2[W_BISHOP_CB];
+PROMO_CAPTURES_LUT[B_BISHOP_CB] = PROMO_CAPTURES_LUT[W_BISHOP_CB];
 
 // Кони
-PROMO_CAPTURES_LUT2[W_KNIGHT_CB] = create_promo_array(
+PROMO_CAPTURES_LUT[W_KNIGHT_CB] = create_promo_array(
     CAPTURES_PAWN_KNIGHT_PROMO_QUEEN_ML,
     CAPTURES_PAWN_KNIGHT_PROMO_ROOK_ML,
     CAPTURES_PAWN_KNIGHT_PROMO_BISHOP_ML,
     CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT_ML
 );
-PROMO_CAPTURES_LUT2[B_KNIGHT_CB] = PROMO_CAPTURES_LUT2[W_KNIGHT_CB];
+PROMO_CAPTURES_LUT[B_KNIGHT_CB] = PROMO_CAPTURES_LUT[W_KNIGHT_CB];
 
 // Добавь в конец инициализации PROMO_CAPTURES_LUT2:
 const DEFAULT_PROMO_ARRAY = create_promo_array(
@@ -361,7 +401,7 @@ const DEFAULT_PROMO_ARRAY = create_promo_array(
 
 //--------------------------------------------------------------
 // код от Qwen3.7-Max AI
-
+// используем в функции return_promo_piece_from_type_move_ml
 // Создаём массив строк для всех типов ходов
 const PROMO_PIECE_LUT = new Array(61).fill("");
 
@@ -400,15 +440,8 @@ PROMO_PIECE_LUT[CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT_ML] = "n";
 const clear_list_ml = (packing_moves) => {
     packing_moves[IND_NUMBER_MOVE_ML] = 0;
     packing_moves[IND_NUMBER_CAPTURES_MOVE_ML] = 0;
-    packing_moves[IND_PIESE_COLOR_ML] = 0;
+    packing_moves[IND_PIECE_COLOR_ML] = 0;
 };
-
-// const clear_list_ml = function (packing_moves) {
-
-//     packing_moves[IND_NUMBER_MOVE_ML] = 0;
-//     packing_moves[IND_NUMBER_CAPTURES_MOVE_ML] = 0;
-//     packing_moves[IND_PIESE_COLOR_ML] = 0;
-// }
 
 /**
 * добавляем ход в список
@@ -432,32 +465,12 @@ const add_packing_move_ml = (packing_moves, type_move, from, to, name_capture_pi
     packing_moves[IND_NUMBER_MOVE_ML] = i + 1; // увеличиваем количество ходов
 };
 
-// const add_packing_move_ml = function (packing_moves, type_move, from, to, name_capture_piece) {
-//     //console.log('add_move->');
-
-//     const move = (name_capture_piece << 24) | (to << 16) | (from << 8) | type_move;
-
-//     let i = packing_moves[IND_NUMBER_MOVE_ML];// количество уже записанных ходов. используем как индекс для нового хода
-
-//     packing_moves[i] = move;// сохраняем ход
-
-//     packing_moves[IND_NUMBER_MOVE_ML] = i + 1; // увеличиваем количество ходов
-// }
-
-
 /**
  * @param {number} i
  * @param {Int32Array} packing_moves
  * @returns {number}
  */
 const get_type_move_ml = (i, packing_moves) => packing_moves[i] & 0xFF;//0xFF =255 это 8 бит ->  11111111
-
-// const get_type_move_ml = function (i, packing_moves) {
-//     //255 это 8 бит ->  11111111
-//     let move = packing_moves[i]; //
-//     let type_move = move & 255;
-//     return type_move;
-// }
 
 /**
  * @param {number} i
@@ -466,28 +479,12 @@ const get_type_move_ml = (i, packing_moves) => packing_moves[i] & 0xFF;//0xFF =2
  */
 const get_from_ml = (i, packing_moves) => (packing_moves[i] >> 8) & 0xFF;
 
-// const get_from_ml = function (i, packing_moves) {
-//     //255 это 8 бит ->  11111111
-//     let move = packing_moves[i]; //
-//     move = move >> 8;
-//     let from = move & 255;
-//     return from;
-// }
-
 /**
  * @param {number} i
  * @param {Int32Array} packing_moves
  * @returns {number}
  */
 const get_to_ml = (i, packing_moves) => (packing_moves[i] >> 16) & 0xFF;
-
-// const get_to_ml = function (i, packing_moves) {
-//     //255 это 8 бит ->  11111111
-//     let move = packing_moves[i]; //
-//     move = move >> 16;
-//     let to = move & 255;
-//     return to;
-// }
 
 /**
  * @param {number} i
@@ -496,14 +493,6 @@ const get_to_ml = (i, packing_moves) => (packing_moves[i] >> 16) & 0xFF;
  */
 const get_name_capture_piece_ml = (i, packing_moves) => (packing_moves[i] >>> 24) & 0xFF;
 
-// const get_name_capture_piece_ml = function (i, packing_moves) {
-//     //255 это 8 бит ->  11111111
-//     let move = packing_moves[i]; //
-//     move = move >> 24;
-//     let name_capture_piece = move & 255;
-//     return name_capture_piece;
-// }
-
 /**
  * присвоить списку цвет фигуры он же цвет ходящей стороны
  * @param {Int32Array} packing_moves
@@ -511,12 +500,8 @@ const get_name_capture_piece_ml = (i, packing_moves) => (packing_moves[i] >>> 24
  * @returns {void}
  */
 const set_color_ml = (packing_moves, piece_color) => {
-    packing_moves[IND_PIESE_COLOR_ML] = piece_color;
+    packing_moves[IND_PIECE_COLOR_ML] = piece_color;
 }
-
-// const set_color_ml = function (packing_moves, piece_color) {
-//     packing_moves[IND_PIESE_COLOR_ML] = piece_color;
-// }
 
 /**
  * присвоить количество взятий в списке
@@ -528,12 +513,8 @@ const set_number_captures_move_ml = (packing_moves, number_captures_move) => {
     packing_moves[IND_NUMBER_CAPTURES_MOVE_ML] = number_captures_move;
 }
 
-// const set_number_captures_move_ml = function (packing_moves, number_captures_move) {
-//     packing_moves[IND_NUMBER_CAPTURES_MOVE_ML] = number_captures_move;
-// }
-
-
 // SORTING
+/////////////////////////////////////////////////////////////////////////
 
 // сортировка по типу хода. 
 // взятия с превращением самые первые 
@@ -554,28 +535,62 @@ const set_number_captures_move_ml = (packing_moves, number_captures_move) => {
  * @param {Int32Array} packing_moves
  * @returns {void}
  */
+//В шахматных движках для сортировки ходов используют 
+//Insertion Sort (Сортировка вставками) или просто встроенный 
+//Array.prototype.sort(), который в V8 оптимизирован (Timsort).
+
+// Я: надо проверять предложенную Qwen3.7-Max AI оптимизацию
 const sorting_list_ml = function (packing_moves) {
-    let number_move = packing_moves[IND_NUMBER_MOVE_ML];
-
-    for (let i = 0; i < number_move; i++) {
-        let min_idx = i;
-        let min_type = packing_moves[i] & 255; // Инлайн вместо get_type_move_ml
-
-        for (let j = i + 1; j < number_move; j++) {
-            let type_j = packing_moves[j] & 255; // Инлайн
-            if (type_j < min_type) {
-                min_type = type_j; // Обновляем эталон минимума!
-                min_idx = j;
-            }
-        }
-
-        if (min_idx !== i) {
-            let temp = packing_moves[i];
-            packing_moves[i] = packing_moves[min_idx];
-            packing_moves[min_idx] = temp;
-        }
-    }
+    const number_move = packing_moves[IND_NUMBER_MOVE_ML];
+    // Встроенная сортировка V8 работает на Int32Array очень быстро
+    // Мы сортируем только занятую часть массива
+    const subArray = packing_moves.subarray(0, number_move);
+    subArray.sort((a, b) => (a & 0xFF) - (b & 0xFF));
 }
+
+
+// сортировка по типу хода. 
+// взятия с превращением самые первые 
+// дальше просто превращения
+// дальше хорошие взятия (т.е.взятая фигура дороже чем та, что берет)
+// дальше нейтральные взятия (т.е.взятая фигура равнозначна той, что берет)
+// дальше плохие взятия (т.е.взятая фигура дешевле чем та, что берет)
+// дальше взятия королем
+// дальше взятия пешек   
+// дальше простые ходы фигур 
+// дальше простые ходы пешек
+// и самые последние рокировки 
+// взятия раньше других ходов для удобства поиска и сортировки тихих ходов
+// /**
+//  * сортировка по типу хода
+//  * чем меньше число, тем выше приоритет хода
+//  * исправленная Qwen3.7-Max AI версия
+//  * @param {Int32Array} packing_moves
+//  * @returns {void}
+//  */
+// const sorting_list_ml = function (packing_moves) {
+//     let number_move = packing_moves[IND_NUMBER_MOVE_ML];
+
+//     for (let i = 0; i < number_move; i++) {
+//         let min_idx = i;
+//         let min_type = packing_moves[i] & 255; // Инлайн вместо get_type_move_ml
+
+//         for (let j = i + 1; j < number_move; j++) {
+//             let type_j = packing_moves[j] & 255; // Инлайн
+//             if (type_j < min_type) {
+//                 min_type = type_j; // Обновляем эталон минимума!
+//                 min_idx = j;
+//             }
+//         }
+
+//         if (min_idx !== i) {
+//             let temp = packing_moves[i];
+//             packing_moves[i] = packing_moves[min_idx];
+//             packing_moves[min_idx] = temp;
+//         }
+//     }
+// }
+
 
 // это для киллеров. 
 // находм ход по from, to
@@ -645,55 +660,96 @@ const set_move_after_the_captures_ml = function (packing_moves, packing_moves_k,
 * @param {Int32Array[][]} history
 * @returns {void}
 */
+//Qwen3.7-Max AI: "Сначала распакуйте все ходы и их оценки в временный массив, отсортируйте его, 
+//а затем переставьте элементы в packing_moves. Или используйте Insertion Sort, который делает меньше обменов"
 const sorting_list_history_heuristic_ml = function (packing_moves, history) {
-    let piece_color = packing_moves[IND_PIESE_COLOR_ML];
+    let piece_color = packing_moves[IND_PIECE_COLOR_ML];
     let number_move = packing_moves[IND_NUMBER_MOVE_ML];
     let start = packing_moves[IND_NUMBER_CAPTURES_MOVE_ML];
 
-    // выводим в начало списка тихих ходов ходы с максимальной оценкой по истории.
-    // т.е. отсортированные тихие ходы идут после взятий
-    for (let i = start; i < number_move; i++) {
-        // Инлайним распаковку вместо вызовов функций
+    // Insertion Sort (намного быстрее на малых массивах)
+    for (let i = start + 1; i < number_move; i++) {
         let move_i = packing_moves[i];
-        let from_128_i = (move_i >> 8) & 255;
-        let to_128_i = (move_i >> 16) & 255;
-
-        let from_64_i = SQUARE_128_to_64_CB[from_128_i];
-        let to_64_i = SQUARE_128_to_64_CB[to_128_i];
-
-        // Кэшируем значение истории для текущего элемента
-        let hist_i = history[piece_color][from_64_i][to_64_i];
-
-        // Ищем глобальный максимум в оставшейся части массива
-        let max_idx = i;
-        let max_hist = hist_i;
-
-        for (let j = i + 1; j < number_move; j++) {
-            // Инлайним распаковку
+        let from_128 = (move_i >> 8) & 255;
+        let to_128 = (move_i >> 16) & 255;
+        let hist_i = history[piece_color][SQUARE_128_to_64_CB[from_128]][SQUARE_128_to_64_CB[to_128]];
+        
+        let j = i - 1;
+        while (j >= start) {
             let move_j = packing_moves[j];
-            let from_128_j = (move_j >> 8) & 255;
-            let to_128_j = (move_j >> 16) & 255;
-
-            let from_64_j = SQUARE_128_to_64_CB[from_128_j];
-            let to_64_j = SQUARE_128_to_64_CB[to_128_j];
-
-            let hist_j = history[piece_color][from_64_j][to_64_j];
-
-            // Ищем ГЛОБАЛЬНЫЙ максимум, а не просто "лучше чем i"
-            if (hist_j > max_hist) {
-                max_hist = hist_j;
-                max_idx = j;
+            let hist_j = history[piece_color][SQUARE_128_to_64_CB[(move_j >> 8) & 255]][SQUARE_128_to_64_CB[(move_j >> 16) & 255]];
+            
+            if (hist_j < hist_i) {
+                packing_moves[j + 1] = move_j;
+                j--;
+            } else {
+                break;
             }
         }
-
-        // Делаем swap только один раз за проход, если нашли элемент лучше
-        if (max_idx !== i) {
-            let temp = packing_moves[i];
-            packing_moves[i] = packing_moves[max_idx];
-            packing_moves[max_idx] = temp;
-        }
+        packing_moves[j + 1] = move_i;
     }
 }
+
+// /**
+// * это для сортировки по истории
+// * сортируем все не взятия по оценке присвоенной в массиве истории.
+// * чем больше оценка тем выше ход но не выше всех взятий, даже плохих
+// * потому что так быстрее и движуху смотрим в первую очередь.
+// * что такое эвристика истории смотреть в файле с этой эвристикой.
+// * исправленная Qwen3.7-Max AI версия
+// * @param {Int32Array} packing_moves
+// * @param {Int32Array[][]} history
+// * @returns {void}
+// */
+// const sorting_list_history_heuristic_ml = function (packing_moves, history) {
+//     let piece_color = packing_moves[IND_PIECE_COLOR_ML];
+//     let number_move = packing_moves[IND_NUMBER_MOVE_ML];
+//     let start = packing_moves[IND_NUMBER_CAPTURES_MOVE_ML];
+
+//     // выводим в начало списка тихих ходов ходы с максимальной оценкой по истории.
+//     // т.е. отсортированные тихие ходы идут после взятий
+//     for (let i = start; i < number_move; i++) {
+//         // Инлайним распаковку вместо вызовов функций
+//         let move_i = packing_moves[i];
+//         let from_128_i = (move_i >> 8) & 255;
+//         let to_128_i = (move_i >> 16) & 255;
+
+//         let from_64_i = SQUARE_128_to_64_CB[from_128_i];
+//         let to_64_i = SQUARE_128_to_64_CB[to_128_i];
+
+//         // Кэшируем значение истории для текущего элемента
+//         let hist_i = history[piece_color][from_64_i][to_64_i];
+
+//         // Ищем глобальный максимум в оставшейся части массива
+//         let max_idx = i;
+//         let max_hist = hist_i;
+
+//         for (let j = i + 1; j < number_move; j++) {
+//             // Инлайним распаковку
+//             let move_j = packing_moves[j];
+//             let from_128_j = (move_j >> 8) & 255;
+//             let to_128_j = (move_j >> 16) & 255;
+
+//             let from_64_j = SQUARE_128_to_64_CB[from_128_j];
+//             let to_64_j = SQUARE_128_to_64_CB[to_128_j];
+
+//             let hist_j = history[piece_color][from_64_j][to_64_j];
+
+//             // Ищем ГЛОБАЛЬНЫЙ максимум, а не просто "лучше чем i"
+//             if (hist_j > max_hist) {
+//                 max_hist = hist_j;
+//                 max_idx = j;
+//             }
+//         }
+
+//         // Делаем swap только один раз за проход, если нашли элемент лучше
+//         if (max_idx !== i) {
+//             let temp = packing_moves[i];
+//             packing_moves[i] = packing_moves[max_idx];
+//             packing_moves[max_idx] = temp;
+//         }
+//     }
+// }
 
 /**
  * это вставки хода из кеш таблицы на первое место
@@ -746,7 +802,9 @@ const set_move_in_0_ml = function (packing_moves, packing_moves_1_tt) {
     return 0;
 }//
 
-///////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////
+// SORTING
+
 
 /**
  * копируем в наш список список из параметров функции
@@ -794,7 +852,7 @@ const move_is_found_ml = function (packing_moves, from, to) {
         from_i = get_from_ml(i, packing_moves);
         to_i = get_to_ml(i, packing_moves);
 
-        if ((from_i == from) && (to_i == to)) {
+        if ((from_i === from) && (to_i === to)) {
             found = true;
             return found;
         }
@@ -827,7 +885,7 @@ const return_i_move_ml = function (packing_moves, from, to, promo = "") {
         to_i = get_to_ml(i, packing_moves);
 
 
-        if ((from_i == from) && (to_i == to)) {
+        if ((from_i === from) && (to_i === to)) {
             if (promo == "") {
                 i_move = i;
                 return i_move;
@@ -835,7 +893,7 @@ const return_i_move_ml = function (packing_moves, from, to, promo = "") {
 
                 type_move_i = get_type_move_ml(i, packing_moves);
 
-                if (promo == return_promo_piece_from_type_move_ml(type_move_i)) {
+                if (promo === return_promo_piece_from_type_move_ml(type_move_i)) {
                     i_move = i;
                     return i_move;
                 }
@@ -875,6 +933,7 @@ const move_to_string_uci_ml = function (i, packing_moves) {
 
 // код от Qwen3.7-Max AI
 /**
+это нужно для работы генератора взятий. это очень важная функция и конечно полностью проверена
 возвращаем название хода превращения пешки со взятием по взятой фигуре
 т.е. пешка берет коня KNIGHT тогда будет множестов превращений со взятием коня,
 это
@@ -888,11 +947,7 @@ PROMO_KNIGHT = CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT;
 @returns {Int32Array}
 */
 const return_type_captures_pawn_promo_ml = (piece_name_captures) => 
-    PROMO_CAPTURES_LUT2[piece_name_captures] || DEFAULT_PROMO_ARRAY;
-
-// const return_type_captures_pawn_promo_ml = function (piece_name_captures) {
-//     return PROMO_CAPTURES_LUT2[piece_name_captures] || DEFAULT_PROMO_ARRAY;;
-// }
+    PROMO_CAPTURES_LUT[piece_name_captures] || DEFAULT_PROMO_ARRAY;
 
 // это нужно для работы генератора взятий. это очень важная функция и конечно полностью проверена
 // возвращаем название хода превращения пешки со взятием по взятой фигуре 
@@ -953,131 +1008,12 @@ const return_type_captures_pawn_promo_ml = (piece_name_captures) =>
 * @returns {number}
 */
 //+
+// Qwen3.7-Max AI: "Взятие на проходе (En Passant) не работает через LUT
+// Ваш SIMPLE_MOVE_LUT для пешки, бьющей на пустую клетку (W_PAWN_CB, PIECE_NO_CB), вернет MOVE_PAWN_ML (обычный ход)."
+// Я: это понятно и в реализаторе ходов это учтено. Получается, что простой ход пешкой может быть взятием на проходе.
 const return_type_simple_move_ml = (piece_name, piece_name_captures) => 
     SIMPLE_MOVE_LUT[piece_name * PIECE_LUT_SIZE + piece_name_captures];
 
-// const return_type_simple_move_ml = function (piece_name, piece_name_captures) {
-//     return SIMPLE_MOVE_LUT[piece_name * PIECE_LUT_SIZE + piece_name_captures];
-// }
-
-
-// очень важная функция. используется в генераторе взятий и тихих ходов.
-// возвращем тип хода взятия по ходящей фигуре и по взятой фигуре
-// например KING, QUEEN -> CAPTURES_KING_QUEEN
-// /**
-// * @param {number} piece_name
-// * @param {number} piece_name_captures
-// * @returns {number}
-// */
-// //+
-// const return_type_simple_move_ml = function (piece_name, piece_name_captures) {
-//     switch (piece_name) {
-//         case W_KING_CB://
-//             if (piece_name_captures == PIECE_NO_CB) return MOVE_KING_ML;
-//             if (piece_name_captures == B_QUEEN_CB) return CAPTURES_KING_QUEEN_ML;
-//             if (piece_name_captures == B_ROOK_CB) return CAPTURES_KING_ROOK_ML;
-//             if (piece_name_captures == B_BISHOP_CB) return CAPTURES_KING_BISHOP_ML;
-//             if (piece_name_captures == B_KNIGHT_CB) return CAPTURES_KING_KNIGHT_ML;
-//             if (piece_name_captures == B_PAWN_CB) return CAPTURES_KING_PAWN_ML;
-//             break;
-//         case B_KING_CB://
-//             if (piece_name_captures == PIECE_NO_CB) return MOVE_KING_ML;
-//             if (piece_name_captures == W_QUEEN_CB) return CAPTURES_KING_QUEEN_ML;
-//             if (piece_name_captures == W_ROOK_CB) return CAPTURES_KING_ROOK_ML;
-//             if (piece_name_captures == W_BISHOP_CB) return CAPTURES_KING_BISHOP_ML;
-//             if (piece_name_captures == W_KNIGHT_CB) return CAPTURES_KING_KNIGHT_ML;
-//             if (piece_name_captures == W_PAWN_CB) return CAPTURES_KING_PAWN_ML;
-//             break;
-
-//         case W_QUEEN_CB://
-//             if (piece_name_captures == PIECE_NO_CB) return MOVE_QUEEN_ML;
-//             if (piece_name_captures == B_QUEEN_CB) return CAPTURES_QUEEN_QUEEN_ML;
-//             if (piece_name_captures == B_ROOK_CB) return CAPTURES_QUEEN_ROOK_ML;
-//             if (piece_name_captures == B_BISHOP_CB) return CAPTURES_QUEEN_BISHOP_ML;
-//             if (piece_name_captures == B_KNIGHT_CB) return CAPTURES_QUEEN_KNIGHT_ML;
-//             if (piece_name_captures == B_PAWN_CB) return CAPTURES_QUEEN_PAWN_ML;
-//             break;
-//         case B_QUEEN_CB://
-//             if (piece_name_captures == PIECE_NO_CB) return MOVE_QUEEN_ML;
-//             if (piece_name_captures == W_QUEEN_CB) return CAPTURES_QUEEN_QUEEN_ML;
-//             if (piece_name_captures == W_ROOK_CB) return CAPTURES_QUEEN_ROOK_ML;
-//             if (piece_name_captures == W_BISHOP_CB) return CAPTURES_QUEEN_BISHOP_ML;
-//             if (piece_name_captures == W_KNIGHT_CB) return CAPTURES_QUEEN_KNIGHT_ML;
-//             if (piece_name_captures == W_PAWN_CB) return CAPTURES_QUEEN_PAWN_ML;
-//             break;
-
-//         case W_ROOK_CB://
-//             if (piece_name_captures == PIECE_NO_CB) return MOVE_ROOK_ML;
-//             if (piece_name_captures == B_QUEEN_CB) return CAPTURES_ROOK_QUEEN_ML;
-//             if (piece_name_captures == B_ROOK_CB) return CAPTURES_ROOK_ROOK_ML;
-//             if (piece_name_captures == B_BISHOP_CB) return CAPTURES_ROOK_BISHOP_ML;
-//             if (piece_name_captures == B_KNIGHT_CB) return CAPTURES_ROOK_KNIGHT_ML;
-//             if (piece_name_captures == B_PAWN_CB) return CAPTURES_ROOK_PAWN_ML;
-//             break;
-//         case B_ROOK_CB://
-//             if (piece_name_captures == PIECE_NO_CB) return MOVE_ROOK_ML;
-//             if (piece_name_captures == W_QUEEN_CB) return CAPTURES_ROOK_QUEEN_ML;
-//             if (piece_name_captures == W_ROOK_CB) return CAPTURES_ROOK_ROOK_ML;
-//             if (piece_name_captures == W_BISHOP_CB) return CAPTURES_ROOK_BISHOP_ML;
-//             if (piece_name_captures == W_KNIGHT_CB) return CAPTURES_ROOK_KNIGHT_ML;
-//             if (piece_name_captures == W_PAWN_CB) return CAPTURES_ROOK_PAWN_ML;
-//             break;
-
-//         case W_BISHOP_CB://
-//             if (piece_name_captures == PIECE_NO_CB) return MOVE_BISHOP_ML;
-//             if (piece_name_captures == B_QUEEN_CB) return CAPTURES_BISHOP_QUEEN_ML;
-//             if (piece_name_captures == B_ROOK_CB) return CAPTURES_BISHOP_ROOK_ML;
-//             if (piece_name_captures == B_BISHOP_CB) return CAPTURES_BISHOP_BISHOP_ML;
-//             if (piece_name_captures == B_KNIGHT_CB) return CAPTURES_BISHOP_KNIGHT_ML;
-//             if (piece_name_captures == B_PAWN_CB) return CAPTURES_BISHOP_PAWN_ML;
-//             break;
-//         case B_BISHOP_CB://
-//             if (piece_name_captures == PIECE_NO_CB) return MOVE_BISHOP_ML;
-//             if (piece_name_captures == W_QUEEN_CB) return CAPTURES_BISHOP_QUEEN_ML;
-//             if (piece_name_captures == W_ROOK_CB) return CAPTURES_BISHOP_ROOK_ML;
-//             if (piece_name_captures == W_BISHOP_CB) return CAPTURES_BISHOP_BISHOP_ML;
-//             if (piece_name_captures == W_KNIGHT_CB) return CAPTURES_BISHOP_KNIGHT_ML;
-//             if (piece_name_captures == W_PAWN_CB) return CAPTURES_BISHOP_PAWN_ML;
-//             break;
-
-//         case W_KNIGHT_CB://
-//             if (piece_name_captures == PIECE_NO_CB) return MOVE_KNIGHT_ML;
-//             if (piece_name_captures == B_QUEEN_CB) return CAPTURES_KNIGHT_QUEEN_ML;
-//             if (piece_name_captures == B_ROOK_CB) return CAPTURES_KNIGHT_ROOK_ML;
-//             if (piece_name_captures == B_BISHOP_CB) return CAPTURES_KNIGHT_BISHOP_ML;
-//             if (piece_name_captures == B_KNIGHT_CB) return CAPTURES_KNIGHT_KNIGHT_ML;
-//             if (piece_name_captures == B_PAWN_CB) return CAPTURES_KNIGHT_PAWN_ML;
-//             break;
-//         case B_KNIGHT_CB://
-//             if (piece_name_captures == PIECE_NO_CB) return MOVE_KNIGHT_ML;
-//             if (piece_name_captures == W_QUEEN_CB) return CAPTURES_KNIGHT_QUEEN_ML;
-//             if (piece_name_captures == W_ROOK_CB) return CAPTURES_KNIGHT_ROOK_ML;
-//             if (piece_name_captures == W_BISHOP_CB) return CAPTURES_KNIGHT_BISHOP_ML;
-//             if (piece_name_captures == W_KNIGHT_CB) return CAPTURES_KNIGHT_KNIGHT_ML;
-//             if (piece_name_captures == W_PAWN_CB) return CAPTURES_KNIGHT_PAWN_ML;
-//             break;
-
-//         case W_PAWN_CB://
-//             if (piece_name_captures == PIECE_NO_CB) return MOVE_PAWN_ML;
-//             if (piece_name_captures == B_QUEEN_CB) return CAPTURES_PAWN_QUEEN_ML;
-//             if (piece_name_captures == B_ROOK_CB) return CAPTURES_PAWN_ROOK_ML;
-//             if (piece_name_captures == B_BISHOP_CB) return CAPTURES_PAWN_BISHOP_ML;
-//             if (piece_name_captures == B_KNIGHT_CB) return CAPTURES_PAWN_KNIGHT_ML;
-//             if (piece_name_captures == B_PAWN_CB) return CAPTURES_PAWN_PAWN_ML;
-//             break;
-//         case B_PAWN_CB://
-//             if (piece_name_captures == PIECE_NO_CB) return MOVE_PAWN_ML;
-//             if (piece_name_captures == W_QUEEN_CB) return CAPTURES_PAWN_QUEEN_ML;
-//             if (piece_name_captures == W_ROOK_CB) return CAPTURES_PAWN_ROOK_ML;
-//             if (piece_name_captures == W_BISHOP_CB) return CAPTURES_PAWN_BISHOP_ML;
-//             if (piece_name_captures == W_KNIGHT_CB) return CAPTURES_PAWN_KNIGHT_ML;
-//             if (piece_name_captures == W_PAWN_CB) return CAPTURES_PAWN_PAWN_ML;
-//             break;
-//         default://
-//         // console.log("default");
-//     }
-//     return MOVE_NO_ML;
-// }
 
 // используем для строкового представления фигуры в ходах
 /**
@@ -1085,7 +1021,7 @@ const return_type_simple_move_ml = (piece_name, piece_name_captures) =>
 * @returns {string}
 */
 //+
-const type_move_to_name_piese_ml = function (type_move) {
+const type_move_to_name_piece_ml = function (type_move) {
     if (type_move == MOVE_NO_ML) return "NO";
     if (type_move == CAPTURES_PAWN_QUEEN_PROMO_QUEEN_ML) return "P";
     if (type_move == CAPTURES_PAWN_ROOK_PROMO_QUEEN_ML) return "P";
@@ -1155,7 +1091,7 @@ const type_move_to_name_piese_ml = function (type_move) {
 * @returns {string}
 */
 //+
-const type_move_to_name_piese_f_ml = function (type_move) {
+const type_move_to_name_piece_f_ml = function (type_move) {
     if (type_move == MOVE_NO_ML) return "NO";
     if (type_move == CAPTURES_PAWN_QUEEN_PROMO_QUEEN_ML) return "PAWN";
     if (type_move == CAPTURES_PAWN_ROOK_PROMO_QUEEN_ML) return "PAWN";
@@ -1229,11 +1165,6 @@ const type_move_to_name_piese_f_ml = function (type_move) {
 */
 const return_promo_piece_from_type_move_ml = (type_move) => PROMO_PIECE_LUT[type_move] || "";
 
-// const return_promo_piece_from_type_move_ml = function (type_move) {
-//     return PROMO_PIECE_LUT[type_move] || "";
-// }
-
-
 // возвращаем фигуру в которую превращается пешка по типу хода
 // /**
 // * @param {number} type_move
@@ -1269,8 +1200,8 @@ const return_promo_piece_from_type_move_ml = (type_move) => PROMO_PIECE_LUT[type
 //     return "";
 // }
 
-///////////////////////////////////////////////////////////////////
 // TEST
+///////////////////////////////////////////////////////////////////
 
 /**
 * сравнение двух списков ходов.
@@ -1287,8 +1218,8 @@ const test_compare_list_from_ml = function (packing_moves_original, packing_move
     let number_captures_move_original = packing_moves_original[IND_NUMBER_CAPTURES_MOVE_ML];
     let number_captures_move = packing_moves[IND_NUMBER_CAPTURES_MOVE_ML];
 
-    let piece_color_original = packing_moves_original[IND_PIESE_COLOR_ML];
-    let piece_color = packing_moves[IND_PIESE_COLOR_ML];
+    let piece_color_original = packing_moves_original[IND_PIECE_COLOR_ML];
+    let piece_color = packing_moves[IND_PIECE_COLOR_ML];
 
     let type_move_or_i;
     let type_move_j;
@@ -1377,7 +1308,7 @@ const test_print_i_move_list_ml = function (i, packing_moves) {
 
     let number_move = packing_moves[IND_NUMBER_MOVE_ML];
     let number_captures_move = packing_moves[IND_NUMBER_CAPTURES_MOVE_ML];
-    let piece_color = packing_moves[IND_PIESE_COLOR_ML];
+    let piece_color = packing_moves[IND_PIECE_COLOR_ML];
 
 
     console.log("test_print_i_move_list ********");
@@ -1413,7 +1344,7 @@ const test_print_list_ml = function (packing_moves) {
 
     let number_move = packing_moves[IND_NUMBER_MOVE_ML];
     let number_captures_move = packing_moves[IND_NUMBER_CAPTURES_MOVE_ML];
-    let piece_color = packing_moves[IND_PIESE_COLOR_ML];
+    let piece_color = packing_moves[IND_PIECE_COLOR_ML];
 
 
     console.log("test_print_list ********");
@@ -1444,7 +1375,7 @@ const test_print_list_ml = function (packing_moves) {
 }
 
 //////////////////////////////////////////////////
-
+// TEST
 
 
 
@@ -1453,9 +1384,9 @@ export {
     clear_list_ml, add_packing_move_ml, get_type_move_ml, get_from_ml, get_to_ml, get_name_capture_piece_ml, set_color_ml,
     set_number_captures_move_ml, sorting_list_ml, test_compare_list_from_ml, test_print_i_move_list_ml, test_print_list_ml,
     save_list_from_ml, move_is_found_ml, return_i_move_ml, move_to_string_uci_ml, return_type_captures_pawn_promo_ml,
-    return_type_simple_move_ml, type_move_to_name_piese_ml, type_move_to_name_piese_f_ml, return_promo_piece_from_type_move_ml,
+    return_type_simple_move_ml, type_move_to_name_piece_ml, type_move_to_name_piece_f_ml, return_promo_piece_from_type_move_ml,
     set_move_after_the_captures_ml, sorting_list_history_heuristic_ml, set_move_in_0_ml,
-    LENGTH_LIST_ML, IND_PIESE_COLOR_ML, IND_NUMBER_CAPTURES_MOVE_ML, IND_NUMBER_MOVE_ML,
+    LENGTH_LIST_ML, IND_PIECE_COLOR_ML, IND_NUMBER_CAPTURES_MOVE_ML, IND_NUMBER_MOVE_ML,
     IND_PROMO_QUEEN_ML, IND_PROMO_ROOK_ML, IND_PROMO_BISHOP_ML, IND_PROMO_KNIGHT_ML,
     MOVE_NO_ML, CAPTURES_PAWN_QUEEN_PROMO_QUEEN_ML, CAPTURES_PAWN_ROOK_PROMO_QUEEN_ML, CAPTURES_PAWN_BISHOP_PROMO_QUEEN_ML,
     CAPTURES_PAWN_KNIGHT_PROMO_QUEEN_ML, CAPTURES_PAWN_QUEEN_PROMO_ROOK_ML, CAPTURES_PAWN_ROOK_PROMO_ROOK_ML,
