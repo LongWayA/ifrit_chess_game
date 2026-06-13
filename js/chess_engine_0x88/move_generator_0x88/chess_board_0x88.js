@@ -7,7 +7,8 @@
  * Code review: Gemini AI, Qwen3.7-Max AI
 */
 
-//+
+// test +
+// review +
 
 /**
  * НАЗНАЧЕНИЕ
@@ -65,11 +66,18 @@
  * 
  *  25 halfmove_clock, The number of halfmoves since the last capture or pawn advance,
  *      used for the fifty-move rule.(from wikipedia)
+ *  +1 каждый полуход
+ *  Поскольку правило говорит о 50 полных ходах (ход белых + ход черных), ничью можно требовать, 
+ *  когда этот счетчик в FEN достигает значения 100 (50 ходов × 2 игрока = 100 полуходов).
+ *  Сбрасывается при взятии или ходе пешки.
  * 
- *  26 fullmove_number, The number of the full moves. It starts at 1 and is incremented after Black's move.(from wikipedia)
+ *  26 fullmove_number, The number of the full moves. It starts at 1 and is incremented after Black's move.(from wikipedia) 
+ *  Старт с единицы: В самом начале партии (в стартовой позиции) это поле всегда равно 1.
+ *  Шаг белых: Счетчик увеличивается на 1 только после того, как свой ход сделают черные. 
+ *  То есть полный ход считается завершенным, когда сходили оба игрока.
+ * 
  *  27 score, оценка позиции
- * 
- * 
+ *  
  * Перевод координат доски х и у в линейную: 
  * s_0x88 = 16 * y_07 + x_07;
  * И обратно:
@@ -140,9 +148,6 @@ const IND_SCORE_CB = 27; // положение в массиве оценки п
 const BOARD_SIZE_CB = 128;// размер доски: от 0 до 127
 const OUT_OF_BOUNDS_MASK_CB = 0x88; // 136 в десятичной, но лучше использовать hex для читаемости битовой логики
 
-const PIECE_TYPE_MASK_CB = 0x07;     // 00000111
-const COLOR_SHIFT_CB = 3;
-
 // нужно для взятия на проходе при переводе позиции в фен
 const LET_COOR_CB = [
     "a", "b", "c", "d", "e", "f", "g", "h"
@@ -192,6 +197,8 @@ FEN_PIECES_ARRAY_CB[80] = W_PAWN_CB;   // 'P'.charCodeAt(0) === 80
 
 
 /**
+* t 
+*
 * переводим координаты х и у в линейную координату доски 128(0x88)
 * @example 
 * x07_y07_to_0x88_cb(rank07, file07); // return s_0x88
@@ -203,27 +210,39 @@ FEN_PIECES_ARRAY_CB[80] = W_PAWN_CB;   // 'P'.charCodeAt(0) === 80
 const x07_y07_to_0x88_cb = (x07, y07) => (y07 << 4) + x07;
 
 /**
+* t 
+*
 * переводим линейную координату доски 128(0x88) в х
 * @param {number} s_0x88
 * @returns {number}
 */
 const s_0x88_to_x07_cb = (s_0x88) => s_0x88 & 7;
 
-/** 
- * переводим линейную координату доски 128(0x88) в у
+/**
+* t 
+*
+* переводим линейную координату доски 128(0x88) в у
 * @param {number} s_0x88
 * @returns {number}
 */
 const s_0x88_to_y07_cb = (s_0x88) => s_0x88 >> 4;
 
-/** 
- * смотрим валидность клетки доски 128(0x88) если 0 то мы на доске
+/**
+* тест не нужен 
+*
+* смотрим валидность клетки доски 128(0x88) если 0 то мы на доске
 * @param {number} index
 * @returns {number}
 */
 const s_0x88_out_of_bounds_cb = (index) => index & 0x88;
 
 /**
+ * тест не нужен.
+ * изначально фигуры выбраны с учетом бита цвета:
+ * 1- пешка, 2-конь, 3-слон, 4-ладья,  5-ферзь,  6-король <- белые фигуры 
+ * 9- пешка, 10-конь, 11-слон, 12-ладья, 13-ферзь, 14-король <- черные фигуры 
+ * если кодировка фигур поменяется то функция сломается, но менять ее я не планирую
+ * 
  * Получаем цвет фигуры (1 - белый, 0 - черный)
  * @param {number} piece 
  * @returns {number}
@@ -231,6 +250,12 @@ const s_0x88_out_of_bounds_cb = (index) => index & 0x88;
 const get_piece_color_cb = (piece) => (piece >> 3) ^ 1;
 
 /**
+ * тест не нужен.
+ * пока кодировка в таком виде:
+ * 1- пешка, 2-конь, 3-слон, 4-ладья,  5-ферзь,  6-король <- белые фигуры 
+ * 9- пешка, 10-конь, 11-слон, 12-ладья, 13-ферзь, 14-король <- черные фигуры 
+ * если кодировка фигур поменяется то функция сломается, но менять ее я не планирую 
+ * 
  * Получаем тип фигуры (0 - пусто, 1 - пешка, ..., 6 - король)
  * @param {number} piece 
  * @returns {number}
@@ -238,6 +263,7 @@ const get_piece_color_cb = (piece) => (piece >> 3) ^ 1;
 const get_piece_type_cb = (piece) => piece & 7;
 
 /**
+ * пока не использую.
  * Создаем код фигуры по её типу и цвету (1 - белый, 0 - черный)
  * @param {number} type - тип от 1 до 6
  * @param {number} color - 1 (белый) или 0 (черный)
@@ -249,8 +275,10 @@ const create_piece_cb = (type, color) => ((color ^ 1) << 3) | type;
 
 // https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
 // "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-// 
+// Пятое поле — это цифра 0 перед единицей. Это и есть счетчик для правила 50 ходов.
 /**
+ * t
+ * 
  * Инициализируем позицию из FEN-строки
  * @param {string} fen 
  * @param {Int32Array} chess_board_0x88
@@ -268,7 +296,7 @@ const set_board_from_fen_0x88_cb = (fen, chess_board_0x88) => {
     const enPassant = parts[3];
     // Поля 4 и 5 (счетчики) пока не используются
     const halfmoves = parts[4];
-    const fullmove = parts[5]; // undefined
+    const fullmove = parts[5];
 
     //console.log('set_board_from_fen_0x88_cb->halfmoves = ' + halfmoves);
     //console.log('set_board_from_fen_0x88_cb->fullmove = ' + fullmove);
@@ -330,9 +358,22 @@ const set_board_from_fen_0x88_cb = (fen, chess_board_0x88) => {
         chess_board_0x88[IND_EN_PASSANT_YES_CB] = 0;
         chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE_CB] = 0;
     }
+
+    chess_board_0x88[IND_HALFMOVE_CLOCK_CB] = 0;
+    chess_board_0x88[IND_FULLMOVE_NUMBER_CB] = 1;
+
+    if (halfmoves !== undefined) {
+        chess_board_0x88[IND_HALFMOVE_CLOCK_CB] = Number(halfmoves);
+    }
+
+    if (fullmove !== undefined) {
+        chess_board_0x88[IND_FULLMOVE_NUMBER_CB] = Number(fullmove);
+    }
+
 };
 
 /**
+ * отдельно тестировать не нужно
  * Переводим букву вертикали (a-h) в координату X (0-7)
  * @param {string} letter
  * @returns {number} Координата от 0 до 7, или -1 если символ некорректный
@@ -346,7 +387,10 @@ const letter_to_x_coordinate_cb = (letter) => {
 const PIECES_CHARS_CB = ["", "P", "N", "B", "R", "Q", "K", "", "", "p", "n", "b", "r", "q", "k"];
 
 // "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+// Пятое поле — это цифра 0 перед единицей. Это и есть счетчик для правила 50 ходов.
 /**
+ * t
+ * 
  * Генерируем FEN-строку по текущей позиции на доске 0x88
  * @param {Int32Array} chess_board_0x88 
  * @returns {string} FEN-строка
@@ -411,6 +455,7 @@ const set_fen_from_0x88_cb = (chess_board_0x88) => {
     fenParts.push(" ");
 
     // --- 5 и 6. СЧЕТЧИКИ (Обязательно для валидного FEN) ---
+    // Пятое поле — это цифра 0 перед единицей. Это и есть счетчик для правила 50 ходов.
     fenParts.push(chess_board_0x88[IND_HALFMOVE_CLOCK_CB] || 0);
     fenParts.push(" ");
     fenParts.push(chess_board_0x88[IND_FULLMOVE_NUMBER_CB] || 1);
@@ -421,6 +466,7 @@ const set_fen_from_0x88_cb = (chess_board_0x88) => {
 //  -------------------------------------------------------------------------FEN
 
 /**
+ * отдельно тестировать не нужно
  * стартовая позиция
  * @param {Int32Array} chess_board_0x88 
  * @returns {void}
@@ -463,9 +509,13 @@ const iniStartPositionForWhite_cb = function (chess_board_0x88) {
     chess_board_0x88[IND_KING_FROM_BLACK_CB] = 4;
 
     chess_board_0x88[IND_SCORE_CB] = -1;
+
+    chess_board_0x88[IND_HALFMOVE_CLOCK_CB] = 0;
+    chess_board_0x88[IND_FULLMOVE_NUMBER_CB] = 1;
 }
 
 /**
+ * отдельно тестировать не нужно
  * нулевая позиция. нужна когда мы раставляем фигуры по фену
  * @param {Int32Array} chess_board_0x88 
  * @returns {void}
@@ -503,11 +553,15 @@ const iniPositionFor_0_cb = function (chess_board_0x88) {
     chess_board_0x88[IND_CASTLING_k_CB] = 0;
 
     chess_board_0x88[IND_SCORE_CB] = -1;
+
+    chess_board_0x88[IND_HALFMOVE_CLOCK_CB] = 0;
+    chess_board_0x88[IND_FULLMOVE_NUMBER_CB] = 0;
 }
 
 // FOR TEST----------------------------------------------------------------------
 
 /**
+* использую для тестов и через это тестирую
 * выводим дополнительную информацию по позиции на консоль браузера (для тестирования)
 * @param {Int32Array} chess_board_0x88
 * @returns {void}
@@ -528,6 +582,7 @@ const test_print_any_0x88_cb = function (chess_board_0x88) {
 }
 
 /**
+* использую для тестов и через это тестирую
 * печатаем имена фигур на позиции в консоле браузера (для тестирования)
 * @param {Int32Array} chess_board_0x88
 * @returns {void}
@@ -555,53 +610,7 @@ const test_print_piece_0x88_cb = function (chess_board_0x88) {
 }
 
 /**
-* печатаем цвета фигур на позиции в консоле браузера (для тестирования)
-* @param {Int32Array} chess_board_0x88
-* @returns {void}
-*/
-const test_print_piece_color_0x88_cb = function (chess_board_0x88) {
-    console.log("test_print_0x88_color ****************");
-    let l = 0;// только один раз должен сработать перевод строки
-    let line = "";//
-    let color = 0;
-
-    for (let i = 0; i < BOARD_SIZE_CB; i++) {
-        if ((i & OUT_OF_BOUNDS_MASK_CB) === 0) {// 136 0x88
-            l = 1;
-
-            // если имя фигуры больше 6 то это черная фигура так как они 9-черная пешка, и т.д.
-            //color = (chess_board_0x88[i] > W_KING) ? BLACK : WHITE;
-            color = 1 - (chess_board_0x88[i] >> 3);// тут магия 8( в битах это 00001000) (подсказал ИИ от Гугла) 1 для белых и 0 для черных.
-
-
-            line = line + "|" + String(color);
-        } else if (l === 1) {
-            l = 0;
-            console.log(line);
-            line = "";
-        }
-    }
-    console.log("**************** test_print_0x88_color");
-}
-
-/**
-* выводим позицию в одну линию на консоль браузера (для тестирования)
-* @param {Int32Array} chess_board_0x88
-* @returns {void}
-*/
-const test_print_piece_in_line_0x88_cb = function (chess_board_0x88) {
-    console.log("test_print_0x88_line ****************");
-    let line = "";//
-    for (let i = 0; i < BOARD_SIZE_CB; i++) {
-        if ((i & OUT_OF_BOUNDS_MASK_CB) === 0) {// 136 0x88       
-            line = line + String(chess_board_0x88[i]) + ",";
-        }
-    }
-    console.log(line);
-    console.log("**************** test_print_0x88_line");
-}
-
-/**
+* использую для тестов и через это тестирую
 * проверяем совпадение двух позиций. нужно для тестирования
 * @param {Int32Array} chess_board_0x88_original
 * @param {Int32Array} chess_board_0x88
@@ -675,12 +684,93 @@ const test_compare_chess_board_0x88_cb = function (chess_board_0x88_original, ch
         console.log("out score " + chess_board_0x88[IND_SCORE_CB]);
     };
 
+    //Пятое поле — это цифра 0 перед единицей. Это и есть счетчик для правила 50 ходов.
+    // halfmove_clock, The number of halfmoves since the last capture or pawn advance,
+    // used for the fifty-move rule.(from wikipedia)
+    /*
+    Игрок может потребовать ничью, если в течение последних 50 ходов каждого из соперников 
+    (суммарно 100 полуходов) одновременно соблюдены два условия:Ни один из игроков не сходил пешкой.
+    Ни один из игроков не взял ни одну фигуру (или пешку).Если за эти 50 ходов происходит хотя бы 
+    одно движение пешки или любое взятие, счетчик ходов обнуляется, и отсчет 50 ходов начинается заново.
+    */
+    if (chess_board_0x88_original[IND_HALFMOVE_CLOCK_CB] != chess_board_0x88[IND_HALFMOVE_CLOCK_CB]) {
+        is_test_ok = 0;
+        console.log("this halfmove_clock original " + chess_board_0x88_original[IND_HALFMOVE_CLOCK_CB]);// fifty-move rule
+        console.log("out halfmove_clock " + chess_board_0x88[IND_HALFMOVE_CLOCK_CB]);
+    };
+
+    // fullmove_number, The number of the full moves. It starts at 1 and is incremented after Black's move.(from wikipedia)
+    // score, оценка позиции
+    /* 
+    Старт с единицы: В самом начале партии (в стартовой позиции) это поле всегда равно 1.
+    Шаг белых: Счетчик увеличивается на 1 только после того, как свой ход сделают черные. 
+    То есть полный ход считается завершенным, когда сходили оба игрока.
+    */
+    if (chess_board_0x88_original[IND_FULLMOVE_NUMBER_CB] != chess_board_0x88[IND_FULLMOVE_NUMBER_CB]) {
+        is_test_ok = 0;
+        console.log("this fullmove_number original " + chess_board_0x88_original[IND_FULLMOVE_NUMBER_CB]);// full moves
+        console.log("out fullmove_number " + chess_board_0x88[IND_FULLMOVE_NUMBER_CB]);
+    };
+
     //console.log("**************** test_compare_chess_board_0x88");
 
     return is_test_ok;
 }
 
+/**
+* не использую для тестов и не тестирую
+* печатаем цвета фигур на позиции в консоле браузера (для тестирования)
+* @param {Int32Array} chess_board_0x88
+* @returns {void}
+*/
+const test_print_piece_color_0x88_cb = function (chess_board_0x88) {
+    console.log("test_print_0x88_color ****************");
+    let l = 0;// только один раз должен сработать перевод строки
+    let line = "";//
+    let color = 0;
+
+    for (let i = 0; i < BOARD_SIZE_CB; i++) {
+        if ((i & OUT_OF_BOUNDS_MASK_CB) === 0) {// 136 0x88
+            l = 1;
+
+            // если имя фигуры больше 6 то это черная фигура так как они 9-черная пешка, и т.д.
+            //color = (chess_board_0x88[i] > W_KING) ? BLACK : WHITE;
+            color = 1 - (chess_board_0x88[i] >> 3);// тут магия 8( в битах это 00001000) (подсказал ИИ от Гугла) 1 для белых и 0 для черных.
+
+
+            line = line + "|" + String(color);
+        } else if (l === 1) {
+            l = 0;
+            console.log(line);
+            line = "";
+        }
+    }
+    console.log("**************** test_print_0x88_color");
+}
+
+// не тестировал
+// -----------------------------------------------------------------------
+
+/**
+* не использую для тестов и не тестирую
+* выводим позицию в одну линию на консоль браузера (для тестирования)
+* @param {Int32Array} chess_board_0x88
+* @returns {void}
+*/
+const test_print_piece_in_line_0x88_cb = function (chess_board_0x88) {
+    console.log("test_print_0x88_line ****************");
+    let line = "";//
+    for (let i = 0; i < BOARD_SIZE_CB; i++) {
+        if ((i & OUT_OF_BOUNDS_MASK_CB) === 0) {// 136 0x88       
+            line = line + String(chess_board_0x88[i]) + ",";
+        }
+    }
+    console.log(line);
+    console.log("**************** test_print_0x88_line");
+}
+
 // только для тестов
+// не тестирую отдельно. смысла не вижу
 /**
  * ищем короля заданного цвета. нужно для обнаружения шаха
  * эта функция нужна для тестирования верности записи положения королей
@@ -715,7 +805,8 @@ export {
     test_print_any_0x88_cb, test_print_piece_0x88_cb, test_print_piece_color_0x88_cb, test_print_piece_in_line_0x88_cb,
     test_compare_chess_board_0x88_cb, set_board_from_fen_0x88_cb, set_fen_from_0x88_cb,
     searching_king_cb, iniStartPositionForWhite_cb, letter_to_x_coordinate_cb,
-    s_0x88_out_of_bounds_cb, get_piece_color_cb, get_piece_type_cb, create_piece_cb,
+    s_0x88_out_of_bounds_cb, get_piece_color_cb, get_piece_type_cb,
+    //create_piece_cb,
     BOARD_SIZE_CB, OUT_OF_BOUNDS_MASK_CB, SIDE_TO_MOVE_CB, LET_COOR_CB,
     BLACK_CB, WHITE_CB, PIECE_NO_CB, W_PAWN_CB, W_KNIGHT_CB, W_BISHOP_CB, W_ROOK_CB, W_QUEEN_CB, W_KING_CB, B_PAWN_CB,
     B_KNIGHT_CB, B_BISHOP_CB, B_ROOK_CB, B_QUEEN_CB, B_KING_CB, IND_CASTLING_Q_CB, IND_CASTLING_q_CB, IND_CASTLING_K_CB,

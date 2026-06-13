@@ -36,7 +36,7 @@ import {
   test_print_any_0x88_cb, test_print_piece_0x88_cb, test_print_piece_color_0x88_cb, test_print_piece_in_line_0x88_cb,
   test_compare_chess_board_0x88_cb, set_board_from_fen_0x88_cb, set_fen_from_0x88_cb,
   searching_king_cb, iniStartPositionForWhite_cb, letter_to_x_coordinate_cb,
-  s_0x88_out_of_bounds_cb, get_piece_color_cb, get_piece_type_cb, create_piece_cb,
+  s_0x88_out_of_bounds_cb, get_piece_color_cb, get_piece_type_cb,
   BOARD_SIZE_CB, OUT_OF_BOUNDS_MASK_CB, SIDE_TO_MOVE_CB, LET_COOR_CB,
   BLACK_CB, WHITE_CB, PIECE_NO_CB, W_PAWN_CB, W_KNIGHT_CB, W_BISHOP_CB, W_ROOK_CB, W_QUEEN_CB, W_KING_CB, B_PAWN_CB,
   B_KNIGHT_CB, B_BISHOP_CB, B_ROOK_CB, B_QUEEN_CB, B_KING_CB, IND_CASTLING_Q_CB, IND_CASTLING_q_CB, IND_CASTLING_K_CB,
@@ -418,12 +418,6 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
 
       // сохраняем ключ доски для последующего сравнения
       chess_board_key_64_save_test[0] = chess_board_key_64[0];
-
-      // score = searching_alpha_beta_id_ab(alpha, beta, chess_board_0x88, chess_board_key_64, packing_pv_line,
-      //   (depth + 1), depth_max_current, isPV_node);
-
-      // score = -searching_negamax_alpha_beta_id_ab(-beta, -alpha, chess_board_0x88, chess_board_key_64, packing_pv_line,
-      //   (depth + 1), depth_max_current, isPV_node);
 
       score = -searching_negamax_alpha_beta_id_ab(-beta, -alpha, chess_board_0x88, chess_board_key_64, packing_pv_line,
         (depth + 1), depth_max_current, isPV_node);
