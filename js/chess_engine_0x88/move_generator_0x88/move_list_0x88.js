@@ -433,6 +433,8 @@ PROMO_PIECE_LUT[CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT_ML] = "n";
 //--------------------------------------------------------------
 
 /**
+* не тестирую
+* 
 * очищаем список ходов
 * @param {Int32Array} packing_moves
 * @returns {void}
@@ -444,6 +446,8 @@ const clear_list_ml = (packing_moves) => {
 };
 
 /**
+* 
+* 
 * добавляем ход в список
 * количество ходов увеличиваем на один
 * @param {Int32Array} packing_moves
@@ -451,10 +455,12 @@ const clear_list_ml = (packing_moves) => {
 * @param {number} from
 * @param {number} to
 * @param {number} name_capture_piece
-* @returns {void}
+* @returns {number}
 */
 const add_packing_move_ml = (packing_moves, type_move, from, to, name_capture_piece) => {
     //console.log('add_move->');
+
+    //if (name_capture_piece == -1) console.log('WARNING!!! add_packing_move_ml->name_capture_piece = ' + name_capture_piece);
 
     const move = (name_capture_piece << 24) | (to << 16) | (from << 8) | type_move;
 
@@ -462,38 +468,18 @@ const add_packing_move_ml = (packing_moves, type_move, from, to, name_capture_pi
 
     packing_moves[i] = move; // сохраняем ход
 
+    // if (name_capture_piece != 0) {
+    //     packing_moves[IND_NUMBER_CAPTURES_MOVE_ML] = packing_moves[IND_NUMBER_CAPTURES_MOVE_ML] + 1; // увеличиваем количество взятий
+    // }
+
     packing_moves[IND_NUMBER_MOVE_ML] = i + 1; // увеличиваем количество ходов
+
+    return packing_moves[IND_NUMBER_MOVE_ML];
 };
 
 /**
- * @param {number} i
- * @param {Int32Array} packing_moves
- * @returns {number}
- */
-const get_type_move_ml = (i, packing_moves) => packing_moves[i] & 0xFF;//0xFF =255 это 8 бит ->  11111111
-
-/**
- * @param {number} i
- * @param {Int32Array} packing_moves
- * @returns {number}
- */
-const get_from_ml = (i, packing_moves) => (packing_moves[i] >> 8) & 0xFF;
-
-/**
- * @param {number} i
- * @param {Int32Array} packing_moves
- * @returns {number}
- */
-const get_to_ml = (i, packing_moves) => (packing_moves[i] >> 16) & 0xFF;
-
-/**
- * @param {number} i
- * @param {Int32Array} packing_moves
- * @returns {number}
- */
-const get_name_capture_piece_ml = (i, packing_moves) => (packing_moves[i] >>> 24) & 0xFF;
-
-/**
+ * тестирую совместно с add_packing_move_ml 
+ * 
  * присвоить списку цвет фигуры он же цвет ходящей стороны
  * @param {Int32Array} packing_moves
  * @param {number} piece_color
@@ -504,6 +490,8 @@ const set_color_ml = (packing_moves, piece_color) => {
 }
 
 /**
+ * тестирую совместно с add_packing_move_ml 
+ * 
  * присвоить количество взятий в списке
  * @param {Int32Array} packing_moves
  * @param {number} number_captures_move
@@ -512,6 +500,43 @@ const set_color_ml = (packing_moves, piece_color) => {
 const set_number_captures_move_ml = (packing_moves, number_captures_move) => {
     packing_moves[IND_NUMBER_CAPTURES_MOVE_ML] = number_captures_move;
 }
+
+
+/**
+ * тестирую совместно с add_packing_move_ml
+ * 
+ * @param {number} i
+ * @param {Int32Array} packing_moves
+ * @returns {number}
+ */
+const get_type_move_ml = (i, packing_moves) => packing_moves[i] & 0xFF;//0xFF =255 это 8 бит ->  11111111
+
+/**
+ * тестирую совместно с add_packing_move_ml
+ * 
+ * @param {number} i
+ * @param {Int32Array} packing_moves
+ * @returns {number}
+ */
+const get_from_ml = (i, packing_moves) => (packing_moves[i] >> 8) & 0xFF;
+
+/**
+ * тестирую совместно с add_packing_move_ml 
+ * 
+ * @param {number} i
+ * @param {Int32Array} packing_moves
+ * @returns {number}
+ */
+const get_to_ml = (i, packing_moves) => (packing_moves[i] >> 16) & 0xFF;
+
+/**
+ * тестирую совместно с add_packing_move_ml 
+ * 
+ * @param {number} i
+ * @param {Int32Array} packing_moves
+ * @returns {number}
+ */
+const get_name_capture_piece_ml = (i, packing_moves) => (packing_moves[i] >>> 24) & 0xFF;
 
 // SORTING
 /////////////////////////////////////////////////////////////////////////
@@ -1214,6 +1239,8 @@ const return_promo_piece_from_type_move_ml = (type_move) => PROMO_PIECE_LUT[type
 ///////////////////////////////////////////////////////////////////
 
 /**
+* тестирую совместно с add_packing_move_ml 
+* 
 * сравнение двух списков ходов.
 * если есть отличия то печатем в консоль предупреждение
 * @param {Int32Array} packing_moves_original
@@ -1280,26 +1307,29 @@ const test_compare_list_from_ml = function (packing_moves_original, packing_move
         }
     }
 
-
+    // цвет хода
     if (piece_color_original != piece_color) {
-        console.log("test_compare_list_from->piece_color original" + piece_color_original +
-            "test_compare_list_from->piece_color  " + piece_color);
+        console.log("test_compare_list_from->piece_color original = " + piece_color_original);
+        console.log("test_compare_list_from->piece_color          = " + piece_color);            
     }
 
+    // количество взятий
     if (number_captures_move_original != number_captures_move) {
-        console.log("test_compare_list_from->number_captures_move original" + number_captures_move_original +
-            "test_compare_list_from->number_captures_move  " + number_captures_move);
+        console.log("test_compare_list_from->number_captures_move original = " + number_captures_move_original);
+        console.log("test_compare_list_from->number_captures_move          = " + number_captures_move);            
     }
 
+    // количество ходов
     if (number_move_original != number_move) {
-        console.log("test_compare_list_from->number_move original" + number_move_original +
-            "test_compare_list_from->number_move  " + number_move);
+        console.log("test_compare_list_from->number_move original = " + number_move_original);
+        console.log("test_compare_list_from->number_move          = " + number_move);          
     }
 
+    // нашли несовпадающие ходы
     if (number_move_original != number_move_equal) {
-        console.log('Move_list_0x88_С->this.number_move ' + number_move_original);
-        console.log('Move_list_0x88_С->number_move_equal ' + number_move_equal);
-        console.log('Move_list_0x88_С->number_move_not_equal ' + number_move_not_equal);
+        console.log('Move_list_0x88_С->this.number_move      = ' + number_move_original);
+        console.log('Move_list_0x88_С->number_move_equal     = ' + number_move_equal);
+        console.log('Move_list_0x88_С->number_move_not_equal = ' + number_move_not_equal);
     }
 }
 
@@ -1341,6 +1371,8 @@ const test_print_i_move_list_ml = function (i, packing_moves) {
 }
 
 /**
+ * тестирую совместно с add_packing_move_ml 
+ * 
  * печатаем в консоль весь список ходов
  * @param {Int32Array} packing_moves
  * @returns {void}

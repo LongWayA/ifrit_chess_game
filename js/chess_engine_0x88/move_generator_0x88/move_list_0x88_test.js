@@ -7,6 +7,29 @@
  * 
 */
 
+import {
+    clear_list_ml, add_packing_move_ml, get_type_move_ml, get_from_ml, get_to_ml, get_name_capture_piece_ml, set_color_ml,
+    set_number_captures_move_ml, sorting_list_ml, test_compare_list_from_ml, test_print_i_move_list_ml, test_print_list_ml,
+    save_list_from_ml, move_is_found_ml, return_i_move_ml, move_to_string_uci_ml, return_type_captures_pawn_promo_ml,
+    return_type_simple_move_ml, type_move_to_name_piece_ml, type_move_to_name_piece_f_ml, return_promo_piece_from_type_move_ml,
+    set_move_after_the_captures_ml, sorting_list_history_heuristic_ml, set_move_in_0_ml,
+    LENGTH_LIST_ML, IND_PIECE_COLOR_ML, IND_NUMBER_CAPTURES_MOVE_ML, IND_NUMBER_MOVE_ML,
+    IND_PROMO_QUEEN_ML, IND_PROMO_ROOK_ML, IND_PROMO_BISHOP_ML, IND_PROMO_KNIGHT_ML,
+    MOVE_NO_ML, CAPTURES_PAWN_QUEEN_PROMO_QUEEN_ML, CAPTURES_PAWN_ROOK_PROMO_QUEEN_ML, CAPTURES_PAWN_BISHOP_PROMO_QUEEN_ML,
+    CAPTURES_PAWN_KNIGHT_PROMO_QUEEN_ML, CAPTURES_PAWN_QUEEN_PROMO_ROOK_ML, CAPTURES_PAWN_ROOK_PROMO_ROOK_ML,
+    CAPTURES_PAWN_BISHOP_PROMO_ROOK_ML, CAPTURES_PAWN_KNIGHT_PROMO_ROOK_ML, CAPTURES_PAWN_QUEEN_PROMO_BISHOP_ML,
+    CAPTURES_PAWN_ROOK_PROMO_BISHOP_ML, CAPTURES_PAWN_BISHOP_PROMO_BISHOP_ML, CAPTURES_PAWN_KNIGHT_PROMO_BISHOP_ML,
+    CAPTURES_PAWN_QUEEN_PROMO_KNIGHT_ML, CAPTURES_PAWN_ROOK_PROMO_KNIGHT_ML, CAPTURES_PAWN_BISHOP_PROMO_KNIGHT_ML,
+    CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT_ML, MOVE_PAWN_PROMO_QUEEN_ML, MOVE_PAWN_PROMO_ROOK_ML, MOVE_PAWN_PROMO_BISHOP_ML,
+    MOVE_PAWN_PROMO_KNIGHT_ML, CAPTURES_PAWN_QUEEN_ML, CAPTURES_PAWN_ROOK_ML, CAPTURES_PAWN_BISHOP_ML, CAPTURES_PAWN_KNIGHT_ML,
+    CAPTURES_KNIGHT_QUEEN_ML, CAPTURES_KNIGHT_ROOK_ML, CAPTURES_BISHOP_QUEEN_ML, CAPTURES_BISHOP_ROOK_ML, CAPTURES_ROOK_QUEEN_ML,
+    CAPTURES_KNIGHT_BISHOP_ML, CAPTURES_KNIGHT_KNIGHT_ML, CAPTURES_BISHOP_BISHOP_ML, CAPTURES_BISHOP_KNIGHT_ML, CAPTURES_ROOK_ROOK_ML,
+    CAPTURES_QUEEN_QUEEN_ML, CAPTURES_ROOK_BISHOP_ML, CAPTURES_ROOK_KNIGHT_ML, CAPTURES_QUEEN_ROOK_ML, CAPTURES_QUEEN_BISHOP_ML,
+    CAPTURES_QUEEN_KNIGHT_ML, CAPTURES_KING_QUEEN_ML, CAPTURES_KING_ROOK_ML, CAPTURES_KING_BISHOP_ML, CAPTURES_KING_KNIGHT_ML,
+    CAPTURES_PAWN_PAWN_ML, EP_CAPTURES_ML, CAPTURES_KNIGHT_PAWN_ML, CAPTURES_BISHOP_PAWN_ML, CAPTURES_ROOK_PAWN_ML,
+    CAPTURES_QUEEN_PAWN_ML, CAPTURES_KING_PAWN_ML, MOVE_QUEEN_ML, MOVE_ROOK_ML, MOVE_BISHOP_ML, MOVE_KNIGHT_ML, MOVE_KING_ML, MOVE_PAWN_ML,
+    MOVE_DOUBLE_PAWN_ML, MOVE_KING_CASTLE_ML, MOVE_KING_QUEEN_CASTLE_ML, TYPE_MOVE_NAME_ML
+} from "../move_generator_0x88/move_list_0x88.js";
 
 /**
  * НАЗНАЧЕНИЕ
@@ -19,7 +42,7 @@
  */
 class Move_list_0x88_TEST_С {
 
- 
+
     static NAME = "Move_list_0x88_TEST_С";
 
 
@@ -28,11 +51,184 @@ class Move_list_0x88_TEST_С {
     }
 
     iniM() {
- 
+
     }
 
+    /**
+    * 
+    * 
+    * 
+    * @param {Int32Array} packing_moves
+    * @param {number} j
+    * @param {number} type_move
+    * @param {number} from
+    * @param {number} to
+    * @param {number} name_capture_piece
+    * @returns {number}
+    */
+    test_compare_parametr_from_unpack(packing_moves, j, type_move, from, to, name_capture_piece) {
+
+        let w = 0;
+
+        let type_move_un = get_type_move_ml(j, packing_moves);
+        let from_un = get_from_ml(j, packing_moves);
+        let to_un = get_to_ml(j, packing_moves);
+        let name_capture_piece_un = get_name_capture_piece_ml(j, packing_moves);
+
+        if (type_move_un != type_move) {
+            w = 1;
+            console.log("Move_list_0x88_TEST_С -> add_packing_move_ml_test-> j = " + j);
+            console.log("Move_list_0x88_TEST_С -> add_packing_move_ml_test-> type_move = " + type_move);
+            console.log("Move_list_0x88_TEST_С -> add_packing_move_ml_test-> type_move_un = " + type_move_un);
+        }
+
+        if (from_un != from) {
+            w = 1;
+            console.log("Move_list_0x88_TEST_С -> add_packing_move_ml_test-> j = " + j);
+            console.log("Move_list_0x88_TEST_С -> add_packing_move_ml_test-> from = " + from);
+            console.log("Move_list_0x88_TEST_С -> add_packing_move_ml_test-> from_un = " + from_un);
+        }
+
+        if (to_un != to) {
+            w = 1;
+            console.log("Move_list_0x88_TEST_С -> add_packing_move_ml_test-> j = " + j);
+            console.log("Move_list_0x88_TEST_С -> add_packing_move_ml_test-> to = " + to);
+            console.log("Move_list_0x88_TEST_С -> add_packing_move_ml_test-> to_un = " + to_un);
+        }
+
+        if (name_capture_piece_un != name_capture_piece) {
+            w = 1;
+            console.log("Move_list_0x88_TEST_С -> add_packing_move_ml_test-> j = " + j);
+            console.log("Move_list_0x88_TEST_С -> add_packing_move_ml_test-> name_capture_piece = " + name_capture_piece);
+            console.log("Move_list_0x88_TEST_С -> add_packing_move_ml_test-> name_capture_piece_un = " + name_capture_piece_un);
+        }
+
+        return w;
+
+    }
+
+
+    //=======================================================================================
+    /*
+    * добавляем ход в список
+    * количество ходов увеличиваем на один
+    */
+    add_packing_move_ml_test() {
+
+        //Каждый ход упакован в одно 32-битное число по такой схеме: 
+        // Биты:  31........24  23.......16  15.......8   7.......0
+        //        ┌──────────┐  ┌─────────┐  ┌────────┐  ┌────────┐
+        //        │ capture  │  │   to    │  │  from  │  │  type  │
+        //        │  (8 бит) │  │ (8 бит) │  │ (8 бит)│  │ (8 бит)│
+        //        └──────────┘  └─────────┘  └────────┘  └────────┘
+        let packing_moves = new Int32Array(LENGTH_LIST_ML).fill(MOVE_NO_ML);
+        let packing_moves_true = new Int32Array(LENGTH_LIST_ML).fill(MOVE_NO_ML);
+
+        let type_move = 0;// тип хода 0..60
+        let from = 0;// откуда ход 0..119
+        let to = 0;// куда ход 0..119
+        let name_capture_piece = 0;// имя взятой фигуры
+
+        let piece_color = 0;// чей ход черных(0) или белых(1)
+        let number_captures_move = 0;// количество взятий        
+
+        let j = 0;
+
+        let w = 0;
+
+        //------------------------------------------------------------------------------------
+        // e2-e4
+        j = 0;
+        type_move = MOVE_PAWN_ML;
+        from = 100;
+        to = 84;
+        name_capture_piece = 0;
+
+        piece_color = 1;
+        number_captures_move = 0;
+
+        packing_moves_true[j] = 5530681;// запакованый ход (int 32)
+        packing_moves_true[IND_PIECE_COLOR_ML] = piece_color;
+        packing_moves_true[IND_NUMBER_CAPTURES_MOVE_ML] = number_captures_move;
+        packing_moves_true[IND_NUMBER_MOVE_ML] = j + 1;// количество ходов      
+
+        // добавляем ход в список
+        j = add_packing_move_ml(packing_moves, type_move, from, to, name_capture_piece);
+
+        j = j - 1;// из количества ходов делаем индекс последнего хода 
+
+        set_color_ml(packing_moves, piece_color);
+
+        set_number_captures_move_ml(packing_moves, number_captures_move);
+
+        if (packing_moves_true[j] != packing_moves[j]) {
+            w = w + 1;
+            console.log("Move_list_0x88_TEST_С -> add_packing_move_ml_test-> packing_moves_true[" + j + "] = " + packing_moves_true[j]);
+            console.log("Move_list_0x88_TEST_С -> add_packing_move_ml_test-> packing_moves[" + j + "] = " + packing_moves[j]);
+        }
+
+        // сравнение двух списков ходов
+        // если есть отличия то печатем в консоль предупреждение
+        test_compare_list_from_ml(packing_moves_true, packing_moves);
+
+        // сравниваем парамтеры type_move, from, to, name_capture_piece до и после запаковки. 
+        // если есть отличия то печатаем их 
+        w = w + this.test_compare_parametr_from_unpack(packing_moves, j, type_move, from, to, name_capture_piece);
+        //------------------------------------------------------------------------------------
+
+        //------------------------------------------------------------------------------------
+        // e7-e5
+        j = 1;
+        type_move = MOVE_DOUBLE_PAWN_ML;
+        from = 20;
+        to = 52;
+        name_capture_piece = 0;
+
+        piece_color = 0;
+        number_captures_move = 0;
+
+        packing_moves_true[j] = 3413050;
+        packing_moves_true[IND_PIECE_COLOR_ML] = piece_color;
+        packing_moves_true[IND_NUMBER_CAPTURES_MOVE_ML] = number_captures_move;
+        packing_moves_true[IND_NUMBER_MOVE_ML] = j + 1;
+
+        // добавляем ход в список
+        j = add_packing_move_ml(packing_moves, type_move, from, to, name_capture_piece);
+
+        j = j - 1;// из количества ходов делаем индекс последнего хода 
+
+        set_color_ml(packing_moves, piece_color);
+
+        set_number_captures_move_ml(packing_moves, number_captures_move);
+
+        if (packing_moves_true[j] != packing_moves[j]) {
+            w = w + 1;
+            console.log("Move_list_0x88_TEST_С -> add_packing_move_ml_test-> packing_moves_true[" + j + "] = " + packing_moves_true[j]);
+            console.log("Move_list_0x88_TEST_С -> add_packing_move_ml_test-> packing_moves[" + j + "] = " + packing_moves[j]);
+        }
+
+        // сравнение двух списков ходов
+        // если есть отличия то печатем в консоль предупреждение
+        test_compare_list_from_ml(packing_moves_true, packing_moves);
+
+        // сравниваем парамтеры type_move, from, to, name_capture_piece до и после запаковки. 
+        // если есть отличия то печатаем их 
+        w = w + this.test_compare_parametr_from_unpack(packing_moves, j, type_move, from, to, name_capture_piece);
+        //------------------------------------------------------------------------------------
+
+        if (w != 0) {
+            console.log("Move_list_0x88_TEST_С -> add_packing_move_ml_test-> PRINT LIST");
+            // печатаем в консоль весь список ходов
+            test_print_list_ml(packing_moves);
+        }
+
+    }
+    //=======================================================================================
+
     go() {
- 
+
+        this.add_packing_move_ml_test();
+
     }
 
 
