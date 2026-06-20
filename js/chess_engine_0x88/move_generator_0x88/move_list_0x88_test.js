@@ -31,9 +31,13 @@ import {
     MOVE_DOUBLE_PAWN_ML, MOVE_KING_CASTLE_ML, MOVE_KING_QUEEN_CASTLE_ML, TYPE_MOVE_NAME_ML
 } from "../move_generator_0x88/move_list_0x88.js";
 
+import {
+    packing_moves, packing_moves_sorting_true, packing_moves_capture_in_0_true, packing_moves_move_in_0_true
+} from "../move_generator_0x88/move_list_pm_0x88_test.js";
+
 /**
  * НАЗНАЧЕНИЕ
-   // Тестируем модуль шахматной доски chess_board_0x88.js
+ * Тестируем модуль списка ходов move_list_0x88.js
 */
 
 /**
@@ -54,9 +58,10 @@ class Move_list_0x88_TEST_С {
 
     }
 
+    //=======================================================================================
     /**
-    * 
-    * 
+    * сравниваем параметры type_move, from, to, name_capture_piece до и после запаковки. 
+    * если есть отличия то печатаем их 
     * 
     * @param {Int32Array} packing_moves
     * @param {number} j
@@ -106,7 +111,7 @@ class Move_list_0x88_TEST_С {
         return w;
 
     }
-
+    //=======================================================================================
 
     //=======================================================================================
     /*
@@ -171,7 +176,7 @@ class Move_list_0x88_TEST_С {
         // если есть отличия то печатем в консоль предупреждение
         test_compare_list_from_ml(packing_moves_true, packing_moves);
 
-        // сравниваем парамтеры type_move, from, to, name_capture_piece до и после запаковки. 
+        // сравниваем параметры type_move, from, to, name_capture_piece до и после запаковки. 
         // если есть отличия то печатаем их 
         w = w + this.test_compare_parametr_from_unpack(packing_moves, j, type_move, from, to, name_capture_piece);
         //------------------------------------------------------------------------------------
@@ -211,7 +216,7 @@ class Move_list_0x88_TEST_С {
         // если есть отличия то печатем в консоль предупреждение
         test_compare_list_from_ml(packing_moves_true, packing_moves);
 
-        // сравниваем парамтеры type_move, from, to, name_capture_piece до и после запаковки. 
+        // сравниваем параметры type_move, from, to, name_capture_piece до и после запаковки. 
         // если есть отличия то печатаем их 
         w = w + this.test_compare_parametr_from_unpack(packing_moves, j, type_move, from, to, name_capture_piece);
         //------------------------------------------------------------------------------------
@@ -225,11 +230,150 @@ class Move_list_0x88_TEST_С {
     }
     //=======================================================================================
 
+    //=======================================================================================
+    /*
+    * сортировка по типу хода
+    * чем меньше число, тем выше приоритет хода
+    * 
+    */
+    sorting_list_ml_test() {
+
+        let is_print = 0;
+
+        let packing_moves_save = new Int32Array(LENGTH_LIST_ML).fill(MOVE_NO_ML);
+
+        //записываем список до сортировки что бы потом можно было распечатать исходный если есть ошибки
+        save_list_from_ml(packing_moves_save, packing_moves);
+
+        // проверяем работу функции save_list_from_ml
+        test_compare_list_from_ml(packing_moves_save, packing_moves);
+
+        //----------------------------------------------------------
+        sorting_list_ml(packing_moves);
+        //----------------------------------------------------------
+
+        for (let i = 0; i < packing_moves[IND_NUMBER_MOVE_ML]; i++) {
+
+            if (packing_moves_sorting_true[i] != packing_moves[i]) {
+
+                is_print = 1;
+                console.log("Move_list_0x88_TEST_С -> sorting_list_ml_test-> packing_moves_sorting_true[" + i + "] = " + packing_moves_sorting_true[i]);
+                console.log("Move_list_0x88_TEST_С -> sorting_list_ml_test-> packing_moves[" + i + "] = " + packing_moves[i]);
+            }
+
+        }
+
+        if (is_print == 1) {
+            console.log("-----------");
+            console.log("Move_list_0x88_TEST_С -> sorting_list_ml_test-> packing_moves");
+            test_print_list_ml(packing_moves);
+            console.log("-----------");
+            console.log("Move_list_0x88_TEST_С -> sorting_list_ml_test-> PRINT packing_moves_save");
+            test_print_list_ml(packing_moves_save);
+            console.log("-----------");
+            console.log("test_compare_list-----------");
+            test_compare_list_from_ml(packing_moves_sorting_true, packing_moves);
+        }
+
+
+    }
+    //=======================================================================================
+
+    //=======================================================================================
+    /*
+    * это вставки хода из кеш таблицы на первое место
+    * 
+    */
+    set_move_in_0_ml_test() {
+
+        let packing_moves_1_tt = new Int32Array(1).fill(MOVE_NO_ML);
+
+        let packing_moves_save = new Int32Array(LENGTH_LIST_ML).fill(MOVE_NO_ML);
+
+        let is_print = 0;
+
+        // записываем в начало взятие
+
+        //записываем список до сортировки что бы потом можно было распечатать исходный если есть ошибки
+        save_list_from_ml(packing_moves_save, packing_moves_sorting_true);
+
+        // type_move[5] = 47 nm = CAPTURES_KNIGHT_PAWN_ML
+        // from[5] = 52
+        // to[5] = 21
+        // name_capture_piece_i[5] = 9
+        // e5-f7
+        packing_moves_1_tt[0] = 152384559;
+        set_move_in_0_ml(packing_moves_save, packing_moves_1_tt);
+
+        //
+        for (let i = 0; i < packing_moves_save[IND_NUMBER_MOVE_ML]; i++) {
+
+            if (packing_moves_capture_in_0_true[i] != packing_moves_save[i]) {
+
+                is_print = 1;
+                console.log("Move_list_0x88_TEST_С -> set_move_in_0_ml_test-> packing_moves_capture_in_0_true[" + i + "] = "
+                    + packing_moves_capture_in_0_true[i]);
+                console.log("Move_list_0x88_TEST_С -> set_move_in_0_ml_test-> packing_moves_save[" + i + "] = " + packing_moves_save[i]);
+            }
+
+        }
+
+        if (is_print == 1) {
+            console.log("-----------");
+            console.log("capture-----------");
+            test_print_list_ml(packing_moves_save);
+        }
+
+        // записываем в начало простой ход
+
+        //записываем список до сортировки что бы потом можно было распечатать исходный если есть ошибки
+        save_list_from_ml(packing_moves_save, packing_moves_sorting_true);
+
+        // type_move[11] = 52 nm = MOVE_QUEEN_ML
+        // from[11] = 85
+        // to[11] = 55
+        // name_capture_piece_i[11] = 0
+        // f3-h5
+        packing_moves_1_tt[0] = 3626292;
+        set_move_in_0_ml(packing_moves_save, packing_moves_1_tt);
+
+        is_print = 0;
+
+        //
+        for (let i = 0; i < packing_moves_save[IND_NUMBER_MOVE_ML]; i++) {
+
+            if (packing_moves_move_in_0_true[i] != packing_moves_save[i]) {
+
+                is_print = 1;
+                console.log("Move_list_0x88_TEST_С -> set_move_in_0_ml_test-> packing_moves_move_in_0_true[" + i + "] = "
+                    + packing_moves_move_in_0_true[i]);
+                console.log("Move_list_0x88_TEST_С -> set_move_in_0_ml_test-> packing_moves_save[" + i + "] = " + packing_moves_save[i]);
+            }
+
+        }
+
+        if (is_print == 1) {
+            console.log("-----------");
+            console.log("move-----------");
+            test_print_list_ml(packing_moves_save);
+        }
+
+
+    }
+    //=======================================================================================
+
+
+    
+    //=======================================================================================
+
     go() {
 
         this.add_packing_move_ml_test();
+        this.sorting_list_ml_test();
+        this.set_move_in_0_ml_test();
 
     }
+    //=======================================================================================
 
 
 }

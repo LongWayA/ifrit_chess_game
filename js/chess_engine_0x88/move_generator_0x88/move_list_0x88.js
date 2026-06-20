@@ -24,6 +24,8 @@ import {
  Список содержит псевдолегальные ходы, т.е. есть ходы под шах, открывающие шах
  и рокировки через битые поля.
 
+ Максимальное значение для 32-битного знакового числа составляет 2 147 483 647 
+
  Ход содержит:
 
  let packing_moves = new Int32Array(LENGTH_LIST = 260).fill(MOVE_NO);
@@ -432,6 +434,10 @@ PROMO_PIECE_LUT[CAPTURES_PAWN_KNIGHT_PROMO_BISHOP_ML] = "b";
 PROMO_PIECE_LUT[CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT_ML] = "n";
 //--------------------------------------------------------------
 
+//////////////////////////////
+// ПРЯМАЯ РАБОТА СО СПИСКОМ //
+//////////////////////////////
+
 /**
 * не тестирую
 * 
@@ -446,7 +452,7 @@ const clear_list_ml = (packing_moves) => {
 };
 
 /**
-* 
+* t
 * 
 * добавляем ход в список
 * количество ходов увеличиваем на один
@@ -478,6 +484,7 @@ const add_packing_move_ml = (packing_moves, type_move, from, to, name_capture_pi
 };
 
 /**
+ * t
  * тестирую совместно с add_packing_move_ml 
  * 
  * присвоить списку цвет фигуры он же цвет ходящей стороны
@@ -490,6 +497,7 @@ const set_color_ml = (packing_moves, piece_color) => {
 }
 
 /**
+ * t
  * тестирую совместно с add_packing_move_ml 
  * 
  * присвоить количество взятий в списке
@@ -503,6 +511,7 @@ const set_number_captures_move_ml = (packing_moves, number_captures_move) => {
 
 
 /**
+ * t
  * тестирую совместно с add_packing_move_ml
  * 
  * @param {number} i
@@ -512,6 +521,7 @@ const set_number_captures_move_ml = (packing_moves, number_captures_move) => {
 const get_type_move_ml = (i, packing_moves) => packing_moves[i] & 0xFF;//0xFF =255 это 8 бит ->  11111111
 
 /**
+ * t
  * тестирую совместно с add_packing_move_ml
  * 
  * @param {number} i
@@ -521,6 +531,7 @@ const get_type_move_ml = (i, packing_moves) => packing_moves[i] & 0xFF;//0xFF =2
 const get_from_ml = (i, packing_moves) => (packing_moves[i] >> 8) & 0xFF;
 
 /**
+ * t
  * тестирую совместно с add_packing_move_ml 
  * 
  * @param {number} i
@@ -530,6 +541,7 @@ const get_from_ml = (i, packing_moves) => (packing_moves[i] >> 8) & 0xFF;
 const get_to_ml = (i, packing_moves) => (packing_moves[i] >> 16) & 0xFF;
 
 /**
+ * t
  * тестирую совместно с add_packing_move_ml 
  * 
  * @param {number} i
@@ -537,6 +549,118 @@ const get_to_ml = (i, packing_moves) => (packing_moves[i] >> 16) & 0xFF;
  * @returns {number}
  */
 const get_name_capture_piece_ml = (i, packing_moves) => (packing_moves[i] >>> 24) & 0xFF;
+
+/**
+ * t
+ *  тестирую совместно с sorting_list_ml
+ * 
+ * копируем в наш список список из параметров функции
+ * т.е. тот что задан в скобках тот и копируем
+* @param {Int32Array} packing_moves_to
+* @param {Int32Array} packing_moves_from
+* @returns {void}
+*/
+const save_list_from_ml = (packing_moves_to, packing_moves_from) => {
+    packing_moves_to.set(packing_moves_from);
+}
+
+
+//////////////////////////////
+// ОЧЕНЬ ВАЖНЫЕ ФУНКЦИИ     //
+// И ОЧЕНЬ СЛОЖНЫЕ ДЛЯ МЕНЯ //
+//////////////////////////////
+
+// код от Qwen3.7-Max AI
+/**
+* 
+* 
+* это нужно для работы генератора взятий. это очень важная функция и конечно полностью проверена
+* возвращаем название хода превращения пешки со взятием по взятой фигуре
+* т.е. пешка берет коня KNIGHT тогда будет множестов превращений со взятием коня,
+* это
+* PROMO_QUEEN = CAPTURES_PAWN_KNIGHT_PROMO_QUEEN;
+* PROMO_ROOK = CAPTURES_PAWN_KNIGHT_PROMO_ROOK;
+* PROMO_BISHOP = CAPTURES_PAWN_KNIGHT_PROMO_BISHOP;
+* PROMO_KNIGHT = CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT;
+*
+* ВАЖНО: Возвращает ссылку на существующий массив, НЕ создаёт новый!
+@param {number} piece_name_captures
+@returns {Int32Array}
+*/
+const return_type_captures_pawn_promo_ml = (piece_name_captures) =>
+    PROMO_CAPTURES_LUT[piece_name_captures] || DEFAULT_PROMO_ARRAY;
+
+// это нужно для работы генератора взятий. это очень важная функция и конечно полностью проверена
+// возвращаем название хода превращения пешки со взятием по взятой фигуре 
+// т.е. пешка берет коня KNIGHT тогда будет множестов превращений со взятием коня, 
+// это 
+// PROMO_QUEEN = CAPTURES_PAWN_KNIGHT_PROMO_QUEEN;
+// PROMO_ROOK = CAPTURES_PAWN_KNIGHT_PROMO_ROOK;
+// PROMO_BISHOP = CAPTURES_PAWN_KNIGHT_PROMO_BISHOP;
+// PROMO_KNIGHT = CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT;
+// 
+// /**
+// * @param {number} piece_name_captures
+// * @returns {out}
+// */
+// //+
+// const return_type_captures_pawn_promo_ml = function (piece_name_captures) {
+
+//     let out = [0, 0, 0, 0];
+
+//     if ((piece_name_captures == W_QUEEN_CB) || (piece_name_captures == B_QUEEN_CB)) {
+//         out[IND_PROMO_QUEEN_ML] = CAPTURES_PAWN_QUEEN_PROMO_QUEEN_ML;
+//         out[IND_PROMO_ROOK_ML] = CAPTURES_PAWN_QUEEN_PROMO_ROOK_ML;
+//         out[IND_PROMO_BISHOP_ML] = CAPTURES_PAWN_QUEEN_PROMO_BISHOP_ML;
+//         out[IND_PROMO_KNIGHT_ML] = CAPTURES_PAWN_QUEEN_PROMO_KNIGHT_ML;
+//     };
+
+//     if ((piece_name_captures == W_ROOK_CB) || (piece_name_captures == B_ROOK_CB)) {
+//         out[IND_PROMO_QUEEN_ML] = CAPTURES_PAWN_ROOK_PROMO_QUEEN_ML;
+//         out[IND_PROMO_ROOK_ML] = CAPTURES_PAWN_ROOK_PROMO_ROOK_ML;
+//         out[IND_PROMO_BISHOP_ML] = CAPTURES_PAWN_ROOK_PROMO_BISHOP_ML;
+//         out[IND_PROMO_KNIGHT_ML] = CAPTURES_PAWN_ROOK_PROMO_KNIGHT_ML;
+//     };
+
+//     if ((piece_name_captures == W_BISHOP_CB) || (piece_name_captures == B_BISHOP_CB)) {
+//         out[IND_PROMO_QUEEN_ML] = CAPTURES_PAWN_BISHOP_PROMO_QUEEN_ML;
+//         out[IND_PROMO_ROOK_ML] = CAPTURES_PAWN_BISHOP_PROMO_ROOK_ML;
+//         out[IND_PROMO_BISHOP_ML] = CAPTURES_PAWN_BISHOP_PROMO_BISHOP_ML;
+//         out[IND_PROMO_KNIGHT_ML] = CAPTURES_PAWN_BISHOP_PROMO_KNIGHT_ML;
+//     };
+
+//     if ((piece_name_captures == W_KNIGHT_CB) || (piece_name_captures == B_KNIGHT_CB)) {
+//         out[IND_PROMO_QUEEN_ML] = CAPTURES_PAWN_KNIGHT_PROMO_QUEEN_ML;
+//         out[IND_PROMO_ROOK_ML] = CAPTURES_PAWN_KNIGHT_PROMO_ROOK_ML;
+//         out[IND_PROMO_BISHOP_ML] = CAPTURES_PAWN_KNIGHT_PROMO_BISHOP_ML;
+//         out[IND_PROMO_KNIGHT_ML] = CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT_ML;
+//     };
+
+//     return out;
+// }
+
+
+// код от Qwen3.7-Max AI
+// Qwen3.7-Max AI: "Взятие на проходе (En Passant) не работает через LUT
+// Ваш SIMPLE_MOVE_LUT для пешки, бьющей на пустую клетку (W_PAWN_CB, PIECE_NO_CB), вернет MOVE_PAWN_ML (обычный ход)."
+// Я: это понятно и в реализаторе ходов это учтено. Получается, что простой ход пешкой может быть взятием на проходе.
+/**
+* 
+* 
+* очень важная функция. используется в генераторе взятий и тихих ходов.
+* возвращем тип хода взятия по ходящей фигуре и по взятой фигуре
+* например KING, QUEEN -> CAPTURES_KING_QUEEN
+* @param {number} piece_name
+* @param {number} piece_name_captures
+* @returns {number}
+*/
+const return_type_simple_move_ml = (piece_name, piece_name_captures) =>
+    SIMPLE_MOVE_LUT[piece_name * PIECE_LUT_SIZE + piece_name_captures];
+
+
+///////////////////////
+// СОРТИРОВКА СПИСКА //
+///////////////////////
 
 // SORTING
 /////////////////////////////////////////////////////////////////////////
@@ -590,6 +714,8 @@ console.log(arr[0]);  // 100 — оригинал тоже изменился!
 Если результат > 0 → b ставится перед a
 */
 /**
+ * t
+ * 
  * сортировка по типу хода
  * чем меньше число, тем выше приоритет хода
  * исправленная Qwen3.7-Max AI версия
@@ -603,12 +729,56 @@ const sorting_list_ml = function (packing_moves) {
     const subArray = packing_moves.subarray(0, number_move);
     subArray.sort((a, b) => (a & 0xFF) - (b & 0xFF));
 }
-
-// это для киллеров. 
-// находм ход по from, to
-// и ставим сразу после взятий. 
+ 
 /**
+ * t
+ * 
+ * это вставки хода из кеш таблицы на первое место
+ * @param {Int32Array} packing_moves
+ * @param {Int32Array} packing_moves_1_tt
+ * @returns {number}
+ */
+// не понятно почему я первый ход передаю в виде массива. может что бы не потерять оптимизацию?
+const set_move_in_0_ml = function (packing_moves, packing_moves_1_tt) {
+
+    let save_move = -1;
+    let s_m;
+
+    let number_move = packing_moves[IND_NUMBER_MOVE_ML];
+    let start = 0;
+    let move_tt = packing_moves_1_tt[0];
+
+    if (packing_moves[start] == move_tt) return -1;// ход и так на первом месте(после всех взятий)
+
+    // 1 ищем ход в списке
+    for (s_m = start; s_m < number_move; s_m++) {// 
+        if (packing_moves[s_m] == move_tt) {
+            // ход нашли и записали
+            save_move = packing_moves[s_m];
+            break;
+        }
+    }
+
+    // ход не нашли
+    if (save_move == -1) return -1;
+
+    // array.copyWithin(target, start, end)
+    // Сдвигает элементы [start, s_m) на позицию start + 1
+    packing_moves.copyWithin(start + 1, start, s_m);
+
+    // сюда пишем начальную позицию. т.о. две позиции меняются местами
+    packing_moves[start] = save_move;
+
+    return 0;
+}//
+
+/**
+ * 
+ * 
  * это для киллеров
+ * находм ход по from, to
+ * и ставим сразу после взятий.
+ * 
  * @param {Int32Array} packing_moves
  * @param {Int32Array} packing_moves_k
  * @param {number} depth
@@ -797,74 +967,13 @@ const sorting_list_history_heuristic_ml = function (packing_moves, history) {
 //     }
 // }
 
-/**
- * это вставки хода из кеш таблицы на первое место
- * @param {Int32Array} packing_moves
- * @param {Int32Array} packing_moves_1_tt
- * @returns {number}
- */
-
-const set_move_in_0_ml = function (packing_moves, packing_moves_1_tt) {
-
-    let save_move = -1;
-    let s_m;
-
-    let number_move = packing_moves[IND_NUMBER_MOVE_ML];
-    let start = 0;
-    let move_tt = packing_moves_1_tt[0];
-
-    if (packing_moves[start] == move_tt) return -1;// ход и так на первом месте(после всех взятий)
-
-    //console.log("Move_list_0x88_С-> UP -----------------------------------");
-    // 1 ищем ход в списке
-    for (s_m = start; s_m < number_move; s_m++) {// 
-        if (packing_moves[s_m] == move_tt) {
-            // ход нашли и записали
-            save_move = packing_moves[s_m];
-            break;
-        }
-    }
-    // console.log("Move_list_0x88_С-> UP 2 start " + start);
-    //console.log("Move_list_0x88_С-> UP 2 s_m " + s_m);
-
-    // ход не нашли
-    if (save_move == -1) return -1;
-
-    // // 2 сдвигаем позиции выше найденной вниз
-    // for (let i = s_m; i > start; i--) {
-    //     // если на позиции есть взятая фигура
-    //     // пишем на позицию
-    //     packing_moves[i] = packing_moves[i - 1];
-    // }
-
-    // array.copyWithin(target, start, end)
-    // Сдвигает элементы [start, s_m) на позицию start + 1
-    packing_moves.copyWithin(start + 1, start, s_m);
-
-
-    // сюда пишем начальную позицию. т.о. две позиции меняются местами
-    packing_moves[start] = save_move;
-
-    return 0;
-}//
-
 /////////////////////////////////////////////////////////////////////////
 // SORTING
 
 
 /**
- * копируем в наш список список из параметров функции
- * т.е. тот что задан в скобках тот и копируем
-* @param {Int32Array} packing_moves_to
-* @param {Int32Array} packing_moves_from
-* @returns {void}
-*/
-const save_list_from_ml = (packing_moves_to, packing_moves_from) => {
-    packing_moves_to.set(packing_moves_from);
-}
-
-
-/**
+ * 
+ * 
  * если ход from, to 
  * нашли в списке ходов
  * в случае превращений это первое попавшееся
@@ -897,6 +1006,8 @@ const move_is_found_ml = function (packing_moves, from, to) {
 }
 
 /**
+* 
+* 
 * находим и возвращаем порядковый номер хода
 * по ходу from, to, promo
 * в том числе и в случае превращений
@@ -941,6 +1052,8 @@ const return_i_move_ml = function (packing_moves, from, to, promo = "") {
 }
 
 /**
+* 
+* 
 * возвращем ход из списка на заданной позиции
 * в виде строки вида e2e4, e7e8q
 * @param {number} i
@@ -965,93 +1078,11 @@ const move_to_string_uci_ml = function (i, packing_moves) {
     return move_str;
 }
 
-
-// код от Qwen3.7-Max AI
-/**
-это нужно для работы генератора взятий. это очень важная функция и конечно полностью проверена
-возвращаем название хода превращения пешки со взятием по взятой фигуре
-т.е. пешка берет коня KNIGHT тогда будет множестов превращений со взятием коня,
-это
-PROMO_QUEEN = CAPTURES_PAWN_KNIGHT_PROMO_QUEEN;
-PROMO_ROOK = CAPTURES_PAWN_KNIGHT_PROMO_ROOK;
-PROMO_BISHOP = CAPTURES_PAWN_KNIGHT_PROMO_BISHOP;
-PROMO_KNIGHT = CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT;
-
-ВАЖНО: Возвращает ссылку на существующий массив, НЕ создаёт новый!
-@param {number} piece_name_captures
-@returns {Int32Array}
-*/
-const return_type_captures_pawn_promo_ml = (piece_name_captures) =>
-    PROMO_CAPTURES_LUT[piece_name_captures] || DEFAULT_PROMO_ARRAY;
-
-// это нужно для работы генератора взятий. это очень важная функция и конечно полностью проверена
-// возвращаем название хода превращения пешки со взятием по взятой фигуре 
-// т.е. пешка берет коня KNIGHT тогда будет множестов превращений со взятием коня, 
-// это 
-// PROMO_QUEEN = CAPTURES_PAWN_KNIGHT_PROMO_QUEEN;
-// PROMO_ROOK = CAPTURES_PAWN_KNIGHT_PROMO_ROOK;
-// PROMO_BISHOP = CAPTURES_PAWN_KNIGHT_PROMO_BISHOP;
-// PROMO_KNIGHT = CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT;
-// 
-// /**
-// * @param {number} piece_name_captures
-// * @returns {out}
-// */
-// //+
-// const return_type_captures_pawn_promo_ml = function (piece_name_captures) {
-
-//     let out = [0, 0, 0, 0];
-
-//     if ((piece_name_captures == W_QUEEN_CB) || (piece_name_captures == B_QUEEN_CB)) {
-//         out[IND_PROMO_QUEEN_ML] = CAPTURES_PAWN_QUEEN_PROMO_QUEEN_ML;
-//         out[IND_PROMO_ROOK_ML] = CAPTURES_PAWN_QUEEN_PROMO_ROOK_ML;
-//         out[IND_PROMO_BISHOP_ML] = CAPTURES_PAWN_QUEEN_PROMO_BISHOP_ML;
-//         out[IND_PROMO_KNIGHT_ML] = CAPTURES_PAWN_QUEEN_PROMO_KNIGHT_ML;
-//     };
-
-//     if ((piece_name_captures == W_ROOK_CB) || (piece_name_captures == B_ROOK_CB)) {
-//         out[IND_PROMO_QUEEN_ML] = CAPTURES_PAWN_ROOK_PROMO_QUEEN_ML;
-//         out[IND_PROMO_ROOK_ML] = CAPTURES_PAWN_ROOK_PROMO_ROOK_ML;
-//         out[IND_PROMO_BISHOP_ML] = CAPTURES_PAWN_ROOK_PROMO_BISHOP_ML;
-//         out[IND_PROMO_KNIGHT_ML] = CAPTURES_PAWN_ROOK_PROMO_KNIGHT_ML;
-//     };
-
-//     if ((piece_name_captures == W_BISHOP_CB) || (piece_name_captures == B_BISHOP_CB)) {
-//         out[IND_PROMO_QUEEN_ML] = CAPTURES_PAWN_BISHOP_PROMO_QUEEN_ML;
-//         out[IND_PROMO_ROOK_ML] = CAPTURES_PAWN_BISHOP_PROMO_ROOK_ML;
-//         out[IND_PROMO_BISHOP_ML] = CAPTURES_PAWN_BISHOP_PROMO_BISHOP_ML;
-//         out[IND_PROMO_KNIGHT_ML] = CAPTURES_PAWN_BISHOP_PROMO_KNIGHT_ML;
-//     };
-
-//     if ((piece_name_captures == W_KNIGHT_CB) || (piece_name_captures == B_KNIGHT_CB)) {
-//         out[IND_PROMO_QUEEN_ML] = CAPTURES_PAWN_KNIGHT_PROMO_QUEEN_ML;
-//         out[IND_PROMO_ROOK_ML] = CAPTURES_PAWN_KNIGHT_PROMO_ROOK_ML;
-//         out[IND_PROMO_BISHOP_ML] = CAPTURES_PAWN_KNIGHT_PROMO_BISHOP_ML;
-//         out[IND_PROMO_KNIGHT_ML] = CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT_ML;
-//     };
-
-//     return out;
-// }
-
-// очень важная функция. используется в генераторе взятий и тихих ходов.
-// возвращем тип хода взятия по ходящей фигуре и по взятой фигуре
-// например KING, QUEEN -> CAPTURES_KING_QUEEN
-// код от Qwen3.7-Max AI
-/**
-* @param {number} piece_name
-* @param {number} piece_name_captures
-* @returns {number}
-*/
-//+
-// Qwen3.7-Max AI: "Взятие на проходе (En Passant) не работает через LUT
-// Ваш SIMPLE_MOVE_LUT для пешки, бьющей на пустую клетку (W_PAWN_CB, PIECE_NO_CB), вернет MOVE_PAWN_ML (обычный ход)."
-// Я: это понятно и в реализаторе ходов это учтено. Получается, что простой ход пешкой может быть взятием на проходе.
-const return_type_simple_move_ml = (piece_name, piece_name_captures) =>
-    SIMPLE_MOVE_LUT[piece_name * PIECE_LUT_SIZE + piece_name_captures];
-
-
 // используем для строкового представления фигуры в ходах
 /**
+* 
+* 
+*
 * @param {number} type_move
 * @returns {string}
 */
@@ -1122,6 +1153,9 @@ const type_move_to_name_piece_ml = function (type_move) {
 }
 
 /**
+* 
+* 
+* 
 * @param {number} type_move
 * @returns {string}
 */
@@ -1235,11 +1269,16 @@ const return_promo_piece_from_type_move_ml = (type_move) => PROMO_PIECE_LUT[type
 //     return "";
 // }
 
+
+//////////////////////////////
+// ФУНКЦИИ ДЛЯ ТЕСТИРОВАНИЯ //
+//////////////////////////////
+
 // TEST
 ///////////////////////////////////////////////////////////////////
 
 /**
-* тестирую совместно с add_packing_move_ml 
+* тестирую совместно с add_packing_move_ml, sorting_list_ml 
 * 
 * сравнение двух списков ходов.
 * если есть отличия то печатем в консоль предупреждение
@@ -1371,7 +1410,7 @@ const test_print_i_move_list_ml = function (i, packing_moves) {
 }
 
 /**
- * тестирую совместно с add_packing_move_ml 
+ * тестирую совместно с add_packing_move_ml, sorting_list_ml 
  * 
  * печатаем в консоль весь список ходов
  * @param {Int32Array} packing_moves
@@ -1397,6 +1436,7 @@ const test_print_list_ml = function (packing_moves) {
         to_i = get_to_ml(i, packing_moves);
         name_capture_piece_i = get_name_capture_piece_ml(i, packing_moves);
 
+        console.log("move[" + i + "] = " + packing_moves[i] );
         console.log("type_move[" + i + "] = " + type_move_i + " nm = " + TYPE_MOVE_NAME_ML[type_move_i]);
         console.log("from[" + i + "] = " + from_i);
         console.log("to[" + i + "] = " + to_i);

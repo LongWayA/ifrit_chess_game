@@ -162,6 +162,25 @@ const searching_negamax = function (packing_pv_line, chess_board_0x88, chess_boa
   generated_pseudo_legal_captures_mgc(chess_board_0x88, packing_moves);
   generated_pseudo_legal_quiet_moves_mgq(chess_board_0x88, packing_moves);
 
+  if (depth == 0){
+
+  console.log("searching_negamax -> before sorting_list");
+
+  // печатаем в консоль весь список ходов
+  test_print_list_ml(packing_moves);
+
+  // сортировка списка ходов по типу хода
+  sorting_list_ml(packing_moves);
+
+  console.log("searching_negamax -> after sorting_list");
+
+  // печатаем в консоль весь список ходов
+  test_print_list_ml(packing_moves);
+
+
+  }
+
+
   for (let move_number = 0; move_number < packing_moves[IND_NUMBER_MOVE_ML]; move_number++) {
 
     type_move = get_type_move_ml(move_number, packing_moves);// тип хода
