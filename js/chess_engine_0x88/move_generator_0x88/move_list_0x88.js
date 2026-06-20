@@ -434,11 +434,15 @@ PROMO_PIECE_LUT[CAPTURES_PAWN_KNIGHT_PROMO_BISHOP_ML] = "b";
 PROMO_PIECE_LUT[CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT_ML] = "n";
 //--------------------------------------------------------------
 
+
+
+
 //////////////////////////////
 // ПРЯМАЯ РАБОТА СО СПИСКОМ //
 //////////////////////////////
 
 /**
+* gc
 * не тестирую
 * 
 * очищаем список ходов
@@ -452,7 +456,8 @@ const clear_list_ml = (packing_moves) => {
 };
 
 /**
-* t
+* g - использую в генераторе ходов 
+* t - протестировал
 * 
 * добавляем ход в список
 * количество ходов увеличиваем на один
@@ -484,6 +489,7 @@ const add_packing_move_ml = (packing_moves, type_move, from, to, name_capture_pi
 };
 
 /**
+ * - 
  * t
  * тестирую совместно с add_packing_move_ml 
  * 
@@ -497,6 +503,7 @@ const set_color_ml = (packing_moves, piece_color) => {
 }
 
 /**
+ * -
  * t
  * тестирую совместно с add_packing_move_ml 
  * 
@@ -511,6 +518,7 @@ const set_number_captures_move_ml = (packing_moves, number_captures_move) => {
 
 
 /**
+ * 
  * t
  * тестирую совместно с add_packing_move_ml
  * 
@@ -521,6 +529,7 @@ const set_number_captures_move_ml = (packing_moves, number_captures_move) => {
 const get_type_move_ml = (i, packing_moves) => packing_moves[i] & 0xFF;//0xFF =255 это 8 бит ->  11111111
 
 /**
+ * 
  * t
  * тестирую совместно с add_packing_move_ml
  * 
@@ -531,6 +540,7 @@ const get_type_move_ml = (i, packing_moves) => packing_moves[i] & 0xFF;//0xFF =2
 const get_from_ml = (i, packing_moves) => (packing_moves[i] >> 8) & 0xFF;
 
 /**
+ * 
  * t
  * тестирую совместно с add_packing_move_ml 
  * 
@@ -541,6 +551,7 @@ const get_from_ml = (i, packing_moves) => (packing_moves[i] >> 8) & 0xFF;
 const get_to_ml = (i, packing_moves) => (packing_moves[i] >> 16) & 0xFF;
 
 /**
+ * 
  * t
  * тестирую совместно с add_packing_move_ml 
  * 
@@ -551,6 +562,7 @@ const get_to_ml = (i, packing_moves) => (packing_moves[i] >> 16) & 0xFF;
 const get_name_capture_piece_ml = (i, packing_moves) => (packing_moves[i] >>> 24) & 0xFF;
 
 /**
+ * -
  * t
  *  тестирую совместно с sorting_list_ml
  * 
@@ -572,7 +584,8 @@ const save_list_from_ml = (packing_moves_to, packing_moves_from) => {
 
 // код от Qwen3.7-Max AI
 /**
-* 
+* gc
+*
 * 
 * это нужно для работы генератора взятий. это очень важная функция и конечно полностью проверена
 * возвращаем название хода превращения пешки со взятием по взятой фигуре
@@ -645,7 +658,8 @@ const return_type_captures_pawn_promo_ml = (piece_name_captures) =>
 // Ваш SIMPLE_MOVE_LUT для пешки, бьющей на пустую клетку (W_PAWN_CB, PIECE_NO_CB), вернет MOVE_PAWN_ML (обычный ход)."
 // Я: это понятно и в реализаторе ходов это учтено. Получается, что простой ход пешкой может быть взятием на проходе.
 /**
-* 
+* g
+*
 * 
 * очень важная функция. используется в генераторе взятий и тихих ходов.
 * возвращем тип хода взятия по ходящей фигуре и по взятой фигуре
@@ -714,6 +728,7 @@ console.log(arr[0]);  // 100 — оригинал тоже изменился!
 Если результат > 0 → b ставится перед a
 */
 /**
+ * 
  * t
  * 
  * сортировка по типу хода
@@ -731,6 +746,7 @@ const sorting_list_ml = function (packing_moves) {
 }
  
 /**
+ * 
  * t
  * 
  * это вставки хода из кеш таблицы на первое место
@@ -972,6 +988,7 @@ const sorting_list_history_heuristic_ml = function (packing_moves, history) {
 
 
 /**
+ * gui
  * 
  * 
  * если ход from, to 
@@ -1006,7 +1023,7 @@ const move_is_found_ml = function (packing_moves, from, to) {
 }
 
 /**
-* 
+* gui, i_serch
 * 
 * находим и возвращаем порядковый номер хода
 * по ходу from, to, promo
@@ -1052,7 +1069,7 @@ const return_i_move_ml = function (packing_moves, from, to, promo = "") {
 }
 
 /**
-* 
+*  gui, i_serch
 * 
 * возвращем ход из списка на заданной позиции
 * в виде строки вида e2e4, e7e8q
@@ -1080,7 +1097,7 @@ const move_to_string_uci_ml = function (i, packing_moves) {
 
 // используем для строкового представления фигуры в ходах
 /**
-* 
+* -
 * 
 *
 * @param {number} type_move
@@ -1153,7 +1170,7 @@ const type_move_to_name_piece_ml = function (type_move) {
 }
 
 /**
-* 
+* -
 * 
 * 
 * @param {number} type_move
@@ -1229,6 +1246,9 @@ const type_move_to_name_piece_f_ml = function (type_move) {
 // код от Qwen3.7-Max AI
 // возвращаем фигуру в которую превращается пешка по типу хода
 /**
+ * pv_line
+ * 
+ * 
 * @param {number} type_move
 * @returns {string}
 */
@@ -1278,6 +1298,8 @@ const return_promo_piece_from_type_move_ml = (type_move) => PROMO_PIECE_LUT[type
 ///////////////////////////////////////////////////////////////////
 
 /**
+ * in test mod
+ * 
 * тестирую совместно с add_packing_move_ml, sorting_list_ml 
 * 
 * сравнение двух списков ходов.
@@ -1373,6 +1395,8 @@ const test_compare_list_from_ml = function (packing_moves_original, packing_move
 }
 
 /**
+ * tk
+ * 
  * печатаем в консоль ход из списка под заданным номером
  * @param {number} i
  * @param {Int32Array} packing_moves
@@ -1410,6 +1434,8 @@ const test_print_i_move_list_ml = function (i, packing_moves) {
 }
 
 /**
+ * i_search, ser_neg, test mod
+ * 
  * тестирую совместно с add_packing_move_ml, sorting_list_ml 
  * 
  * печатаем в консоль весь список ходов

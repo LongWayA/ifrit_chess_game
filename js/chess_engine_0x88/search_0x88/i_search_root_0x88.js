@@ -8,55 +8,31 @@
 
 
 import {
-  clear_list_ml, add_packing_move_ml, get_type_move_ml, get_from_ml, get_to_ml, get_name_capture_piece_ml, set_color_ml,
-  set_number_captures_move_ml, sorting_list_ml, test_compare_list_from_ml, test_print_i_move_list_ml, test_print_list_ml,
-  save_list_from_ml, move_is_found_ml, return_i_move_ml, move_to_string_uci_ml, return_type_captures_pawn_promo_ml,
-  return_type_simple_move_ml, type_move_to_name_piece_ml, type_move_to_name_piece_f_ml, return_promo_piece_from_type_move_ml,
-  set_move_after_the_captures_ml, sorting_list_history_heuristic_ml, set_move_in_0_ml,
-  LENGTH_LIST_ML, IND_PIECE_COLOR_ML, IND_NUMBER_CAPTURES_MOVE_ML, IND_NUMBER_MOVE_ML,
-  IND_PROMO_QUEEN_ML, IND_PROMO_ROOK_ML, IND_PROMO_BISHOP_ML, IND_PROMO_KNIGHT_ML,
-  MOVE_NO_ML, CAPTURES_PAWN_QUEEN_PROMO_QUEEN_ML, CAPTURES_PAWN_ROOK_PROMO_QUEEN_ML, CAPTURES_PAWN_BISHOP_PROMO_QUEEN_ML,
-  CAPTURES_PAWN_KNIGHT_PROMO_QUEEN_ML, CAPTURES_PAWN_QUEEN_PROMO_ROOK_ML, CAPTURES_PAWN_ROOK_PROMO_ROOK_ML,
-  CAPTURES_PAWN_BISHOP_PROMO_ROOK_ML, CAPTURES_PAWN_KNIGHT_PROMO_ROOK_ML, CAPTURES_PAWN_QUEEN_PROMO_BISHOP_ML,
-  CAPTURES_PAWN_ROOK_PROMO_BISHOP_ML, CAPTURES_PAWN_BISHOP_PROMO_BISHOP_ML, CAPTURES_PAWN_KNIGHT_PROMO_BISHOP_ML,
-  CAPTURES_PAWN_QUEEN_PROMO_KNIGHT_ML, CAPTURES_PAWN_ROOK_PROMO_KNIGHT_ML, CAPTURES_PAWN_BISHOP_PROMO_KNIGHT_ML,
-  CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT_ML, MOVE_PAWN_PROMO_QUEEN_ML, MOVE_PAWN_PROMO_ROOK_ML, MOVE_PAWN_PROMO_BISHOP_ML,
-  MOVE_PAWN_PROMO_KNIGHT_ML, CAPTURES_PAWN_QUEEN_ML, CAPTURES_PAWN_ROOK_ML, CAPTURES_PAWN_BISHOP_ML, CAPTURES_PAWN_KNIGHT_ML,
-  CAPTURES_KNIGHT_QUEEN_ML, CAPTURES_KNIGHT_ROOK_ML, CAPTURES_BISHOP_QUEEN_ML, CAPTURES_BISHOP_ROOK_ML, CAPTURES_ROOK_QUEEN_ML,
-  CAPTURES_KNIGHT_BISHOP_ML, CAPTURES_KNIGHT_KNIGHT_ML, CAPTURES_BISHOP_BISHOP_ML, CAPTURES_BISHOP_KNIGHT_ML, CAPTURES_ROOK_ROOK_ML,
-  CAPTURES_QUEEN_QUEEN_ML, CAPTURES_ROOK_BISHOP_ML, CAPTURES_ROOK_KNIGHT_ML, CAPTURES_QUEEN_ROOK_ML, CAPTURES_QUEEN_BISHOP_ML,
-  CAPTURES_QUEEN_KNIGHT_ML, CAPTURES_KING_QUEEN_ML, CAPTURES_KING_ROOK_ML, CAPTURES_KING_BISHOP_ML, CAPTURES_KING_KNIGHT_ML,
-  CAPTURES_PAWN_PAWN_ML, EP_CAPTURES_ML, CAPTURES_KNIGHT_PAWN_ML, CAPTURES_BISHOP_PAWN_ML, CAPTURES_ROOK_PAWN_ML,
-  CAPTURES_QUEEN_PAWN_ML, CAPTURES_KING_PAWN_ML, MOVE_QUEEN_ML, MOVE_ROOK_ML, MOVE_BISHOP_ML, MOVE_KNIGHT_ML, MOVE_KING_ML, MOVE_PAWN_ML,
-  MOVE_DOUBLE_PAWN_ML, MOVE_KING_CASTLE_ML, MOVE_KING_QUEEN_CASTLE_ML, TYPE_MOVE_NAME_ML
+  get_type_move_ml, get_from_ml, get_to_ml, get_name_capture_piece_ml,
+  sorting_list_ml,
+  return_i_move_ml, move_to_string_uci_ml,
+  LENGTH_LIST_ML, IND_PIECE_COLOR_ML, IND_NUMBER_MOVE_ML,
+  MOVE_NO_ML
 } from "../move_generator_0x88/move_list_0x88.js";
 
 import {
-  x07_y07_to_0x88_cb, s_0x88_to_x07_cb, s_0x88_to_y07_cb,
-  test_print_any_0x88_cb, test_print_piece_0x88_cb, test_print_piece_color_0x88_cb, test_print_piece_in_line_0x88_cb,
+  x07_y07_to_0x88_cb,
+  test_print_piece_0x88_cb,
   test_compare_chess_board_0x88_cb, set_board_from_fen_0x88_cb, set_fen_from_0x88_cb,
-  searching_king_cb, iniStartPositionForWhite_cb, letter_to_x_coordinate_cb,
-  s_0x88_out_of_bounds_cb, get_piece_color_cb, get_piece_type_cb,
-  BOARD_SIZE_CB, OUT_OF_BOUNDS_MASK_CB, SIDE_TO_MOVE_CB, LET_COOR_CB,
-  BLACK_CB, WHITE_CB, PIECE_NO_CB, W_PAWN_CB, W_KNIGHT_CB, W_BISHOP_CB, W_ROOK_CB, W_QUEEN_CB, W_KING_CB, B_PAWN_CB,
-  B_KNIGHT_CB, B_BISHOP_CB, B_ROOK_CB, B_QUEEN_CB, B_KING_CB, IND_CASTLING_Q_CB, IND_CASTLING_q_CB, IND_CASTLING_K_CB,
-  IND_CASTLING_k_CB, IND_HALFMOVE_CLOCK_CB, IND_FULLMOVE_NUMBER_CB, PIECE_NAME_CB, IND_EN_PASSANT_YES_CB,
-  IND_EN_PASSANT_TARGET_SQUARE_CB, IND_KING_FROM_WHITE_CB, IND_KING_FROM_BLACK_CB, IND_SCORE_CB,
-  SQUARE_64_to_128_CB, SQUARE_128_to_64_CB
+  letter_to_x_coordinate_cb,
+  BOARD_SIZE_CB
 } from "../move_generator_0x88/chess_board_0x88.js";
 
 import {
-  clear_pv_line_pv, add_move_to_pv_line_pv, save_pv_line_pv, test_print_pv_line_pv, pv_line_to_uci_string_pv,
-  MAX_DEPTH_PV, IND_TYPE_VARIANT_PV, IND_DEPTH_MAT_PV, IND_DEPTH_PV
+  clear_pv_line_pv, add_move_to_pv_line_pv, save_pv_line_pv, pv_line_to_uci_string_pv,
+  MAX_DEPTH_PV, IND_TYPE_VARIANT_PV
 } from "./pv_line_0x88.js";
 
 import {
-  generated_pseudo_legal_captures_mgc, generated_pseudo_legal_captures_one_piece_for_gui_mgc, check_detected_mgc
+  generated_pseudo_legal_captures_mgc
 } from "../move_generator_0x88/move_generator_captures_0x88.js";
 import {
-  generated_pseudo_legal_quiet_moves_mgq, generated_pseudo_legal_quiet_moves_one_piece_for_gui_mgq,
-  A1_MGQ, B1_MGQ, C1_MGQ, D1_MGQ, E1_MGQ, F1_MGQ, G1_MGQ, H1_MGQ,
-  A8_MGQ, B8_MGQ, C8_MGQ, D8_MGQ, E8_MGQ, F8_MGQ, G8_MGQ, H8_MGQ
+  generated_pseudo_legal_quiet_moves_mgq
 } from "../move_generator_0x88/move_generator_quiet_0x88.js";
 
 import { do_moves_mm } from "../move_generator_0x88/make_move_0x88.js";
@@ -75,33 +51,27 @@ import {
 } from "./search_nm_ab_0x88.js";
 
 import {
-  sorting_list_top_max_score_lr, sorting_list_top_min_score_lr, add_score_lr, clear_list_lr,
-  LENGTH_LIST_LR, IND_NUMBER_MOVE_LR
+  sorting_list_top_max_score_lr, add_score_lr
 } from "./move_list_root_0x88.js";
 
 import {
-  ini_Array_hh, clear_history_hh, ini_test_history_hh, history_good_save_hh, get_history_hh,
-  MAX_COLOR_HH, MAX_COORDINATE_HH, MAX_HISTORY_HH
+  ini_Array_hh
 } from "../for_sorting_move_0x88/history_heuristic_0x88.js";
 
 import {
-  ini_random_key_array_64_tk, ini_key_array_64_tk, set_key_from_board_0x88_tk, test_chess_board_key_64_tk,
-  key_update_do_move_0x88_tk, key_update_ep_move_0x88_tk, key_update_promo_move_0x88_tk,
-  key_update_castle_move_0x88_tk, key_update_ep_0x88_tk, key_update_ep_sq_0x88_tk, key_update_QqKk_0x88_tk,
+  ini_random_key_array_64_tk, set_key_from_board_0x88_tk, test_chess_board_key_64_tk,
   test_generation_key_64_tk
 } from "../for_sorting_move_0x88/transposition_key_0x88.js";
 
 import {
-  clear_out_tt, ini_tt, clear_hash_tt, test_uses_hash_tt, set_position_in_tt, get_position_from_tt, print_test_set_get_position_tt,
-  MAX_TABLE_LENTH_TT, MAX_SCORE_UPDATE_TT, ALPHA_UPDATE_TT, BETA_CUT_TT,
-  IND_TN_TT, IND_SC_TT, IND_DD_TT
+  ini_tt, test_uses_hash_tt, print_test_set_get_position_tt,
 } from "../for_sorting_move_0x88/transposition_table_0x88.js";
 
 import { Timer_C } from "../../browser/timer.js";
 
 import { ChessEngine_0x88_С } from "../i_chess_engine_0x88.js";
 
-import { quiescence_search, ini_stack_qs } from "./quiescence_search_0x88.js";
+import { ini_stack_qs } from "./quiescence_search_0x88.js";
 
 /**
 * НАЗНАЧЕНИЕ
