@@ -586,7 +586,8 @@ const save_list_from_ml = (packing_moves_to, packing_moves_from) => {
 /**
 * gc
 *
-* 
+* t 
+*
 * это нужно для работы генератора взятий. это очень важная функция и конечно полностью проверена
 * возвращаем название хода превращения пешки со взятием по взятой фигуре
 * т.е. пешка берет коня KNIGHT тогда будет множестов превращений со взятием коня,
@@ -790,6 +791,7 @@ const set_move_in_0_ml = function (packing_moves, packing_moves_1_tt) {
 
 /**
  * 
+ * t
  * 
  * это для киллеров
  * находм ход по from, to
@@ -811,7 +813,6 @@ const set_move_after_the_captures_ml = function (packing_moves, packing_moves_k,
 
     if (packing_moves[start] == move_k) return -1;// ход и так на первом месте(после всех взятий)
 
-    //console.log("Move_list_0x88_С-> UP -----------------------------------");
     // 1 ищем ход в списке
     for (s_m = start; s_m < number_move; s_m++) {// 
         if (packing_moves[s_m] == move_k) {
@@ -820,22 +821,9 @@ const set_move_after_the_captures_ml = function (packing_moves, packing_moves_k,
             break;
         }
     }
-    // console.log("Move_list_0x88_С-> UP 2 start " + start);
-    //console.log("Move_list_0x88_С-> UP 2 s_m " + s_m);
 
     // ход не нашли
     if (save_move == -1) return -1;
-
-    // вот мы нашли ход на каком то индексе s_m и записали его
-    // теперь надо все позиции сдвинуть вниз до стартовой. start
-    // первым мы перезаписываем ячейку s_m значением из s_m-1
-
-    // 2 сдвигаем позиции выше найденной вниз
-    // for (let i = s_m; i > start; i--) {
-    //     // если на позиции есть взятая фигура
-    //     // пишем на позицию
-    //     packing_moves[i] = packing_moves[i - 1];
-    // }
 
     // array.copyWithin(target, start, end)
     // Сдвигает элементы [start, s_m) на позицию start + 1
@@ -848,6 +836,9 @@ const set_move_after_the_captures_ml = function (packing_moves, packing_moves_k,
 }//
 
 /**
+ * 
+ * t
+ * 
  * Сортировка тихих ходов по эвристике истории.
  * Оптимизированная версия: Insertion Sort + плоский массив + кэширование.
  * 
@@ -892,96 +883,6 @@ const sorting_list_history_heuristic_ml = function (packing_moves, history) {
         packing_moves[j + 1] = move_i;
     }
 }
-
-
-// const sorting_list_history_heuristic_ml = function (packing_moves, history) {
-//     let piece_color = packing_moves[IND_PIECE_COLOR_ML];
-//     let number_move = packing_moves[IND_NUMBER_MOVE_ML];
-//     let start = packing_moves[IND_NUMBER_CAPTURES_MOVE_ML];
-
-//     // Insertion Sort (намного быстрее на малых массивах)
-//     for (let i = start + 1; i < number_move; i++) {
-//         let move_i = packing_moves[i];
-//         let from_128 = (move_i >> 8) & 255;
-//         let to_128 = (move_i >> 16) & 255;
-//         let hist_i = history[piece_color][SQUARE_128_to_64_CB[from_128]][SQUARE_128_to_64_CB[to_128]];
-
-//         let j = i - 1;
-//         while (j >= start) {
-//             let move_j = packing_moves[j];
-//             let hist_j = history[piece_color][SQUARE_128_to_64_CB[(move_j >> 8) & 255]][SQUARE_128_to_64_CB[(move_j >> 16) & 255]];
-
-//             if (hist_j < hist_i) {
-//                 packing_moves[j + 1] = move_j;
-//                 j--;
-//             } else {
-//                 break;
-//             }
-//         }
-//         packing_moves[j + 1] = move_i;
-//     }
-// }
-
-// /**
-// * это для сортировки по истории
-// * сортируем все не взятия по оценке присвоенной в массиве истории.
-// * чем больше оценка тем выше ход но не выше всех взятий, даже плохих
-// * потому что так быстрее и движуху смотрим в первую очередь.
-// * что такое эвристика истории смотреть в файле с этой эвристикой.
-// * исправленная Qwen3.7-Max AI версия
-// * @param {Int32Array} packing_moves
-// * @param {Int32Array[][]} history
-// * @returns {void}
-// */
-// const sorting_list_history_heuristic_ml = function (packing_moves, history) {
-//     let piece_color = packing_moves[IND_PIECE_COLOR_ML];
-//     let number_move = packing_moves[IND_NUMBER_MOVE_ML];
-//     let start = packing_moves[IND_NUMBER_CAPTURES_MOVE_ML];
-
-//     // выводим в начало списка тихих ходов ходы с максимальной оценкой по истории.
-//     // т.е. отсортированные тихие ходы идут после взятий
-//     for (let i = start; i < number_move; i++) {
-//         // Инлайним распаковку вместо вызовов функций
-//         let move_i = packing_moves[i];
-//         let from_128_i = (move_i >> 8) & 255;
-//         let to_128_i = (move_i >> 16) & 255;
-
-//         let from_64_i = SQUARE_128_to_64_CB[from_128_i];
-//         let to_64_i = SQUARE_128_to_64_CB[to_128_i];
-
-//         // Кэшируем значение истории для текущего элемента
-//         let hist_i = history[piece_color][from_64_i][to_64_i];
-
-//         // Ищем глобальный максимум в оставшейся части массива
-//         let max_idx = i;
-//         let max_hist = hist_i;
-
-//         for (let j = i + 1; j < number_move; j++) {
-//             // Инлайним распаковку
-//             let move_j = packing_moves[j];
-//             let from_128_j = (move_j >> 8) & 255;
-//             let to_128_j = (move_j >> 16) & 255;
-
-//             let from_64_j = SQUARE_128_to_64_CB[from_128_j];
-//             let to_64_j = SQUARE_128_to_64_CB[to_128_j];
-
-//             let hist_j = history[piece_color][from_64_j][to_64_j];
-
-//             // Ищем ГЛОБАЛЬНЫЙ максимум, а не просто "лучше чем i"
-//             if (hist_j > max_hist) {
-//                 max_hist = hist_j;
-//                 max_idx = j;
-//             }
-//         }
-
-//         // Делаем swap только один раз за проход, если нашли элемент лучше
-//         if (max_idx !== i) {
-//             let temp = packing_moves[i];
-//             packing_moves[i] = packing_moves[max_idx];
-//             packing_moves[max_idx] = temp;
-//         }
-//     }
-// }
 
 /////////////////////////////////////////////////////////////////////////
 // SORTING
@@ -1099,7 +1000,6 @@ const move_to_string_uci_ml = function (i, packing_moves) {
 /**
 * -
 * 
-*
 * @param {number} type_move
 * @returns {string}
 */
@@ -1171,7 +1071,6 @@ const type_move_to_name_piece_ml = function (type_move) {
 
 /**
 * -
-* 
 * 
 * @param {number} type_move
 * @returns {string}
@@ -1247,7 +1146,6 @@ const type_move_to_name_piece_f_ml = function (type_move) {
 // возвращаем фигуру в которую превращается пешка по типу хода
 /**
  * pv_line
- * 
  * 
 * @param {number} type_move
 * @returns {string}
@@ -1475,6 +1373,54 @@ const test_print_list_ml = function (packing_moves) {
 
         console.log("---- ");
     }
+}
+
+/**
+ * i_search, ser_neg, test mod
+ * 
+ * тестирую совместно с add_packing_move_ml, sorting_list_ml 
+ * 
+ * печатаем в консоль весь список ходов
+ * @param {Int32Array} packing_moves
+ * @param {Int32Array} history
+ * 
+ * @returns {void}
+ */
+const test_print_list_history_ml = function (packing_moves, history) {
+
+    let type_move_i;
+    let from_i;
+    let to_i;
+    let name_capture_piece_i;
+
+    let number_move = packing_moves[IND_NUMBER_MOVE_ML];
+    let number_captures_move = packing_moves[IND_NUMBER_CAPTURES_MOVE_ML];
+    let piece_color = packing_moves[IND_PIECE_COLOR_ML];
+
+    console.log("test_print_list ********");
+    for (let i = 0; i < number_move; i++) {
+
+        type_move_i = get_type_move_ml(i, packing_moves);
+        from_i = get_from_ml(i, packing_moves);
+        to_i = get_to_ml(i, packing_moves);
+        name_capture_piece_i = get_name_capture_piece_ml(i, packing_moves);
+
+        console.log("move[" + i + "] = " + packing_moves[i] );
+        console.log("type_move[" + i + "] = " + type_move_i + " nm = " + TYPE_MOVE_NAME_ML[type_move_i]);
+        console.log("from[" + i + "] = " + from_i);
+        console.log("to[" + i + "] = " + to_i);
+        console.log("name_capture_piece_i[" + i + "] = " + name_capture_piece_i);
+
+        console.log(LET_COOR_CB[s_0x88_to_x07_cb(from_i)] + "" +
+            (8 - s_0x88_to_y07_cb(from_i)) + "-" +
+            LET_COOR_CB[s_0x88_to_x07_cb(to_i)] + "" +
+            (8 - s_0x88_to_y07_cb(to_i)));
+
+        // color * 4096, from * 64
+        console.log("h[" + i + "](" + SQUARE_128_to_64_CB[from_i] + "," + SQUARE_128_to_64_CB[to_i] + ") = " + 
+            history[( piece_color << 12) | (SQUARE_128_to_64_CB[from_i] << 6) | SQUARE_128_to_64_CB[to_i]]);    
+        console.log("---- ");
+    }
 
     console.log("piece_color = " + piece_color);
     console.log("number_captures_move = " + number_captures_move);
@@ -1493,7 +1439,7 @@ export {
     set_number_captures_move_ml, sorting_list_ml, test_compare_list_from_ml, test_print_i_move_list_ml, test_print_list_ml,
     save_list_from_ml, move_is_found_ml, return_i_move_ml, move_to_string_uci_ml, return_type_captures_pawn_promo_ml,
     return_type_simple_move_ml, type_move_to_name_piece_ml, type_move_to_name_piece_f_ml, return_promo_piece_from_type_move_ml,
-    set_move_after_the_captures_ml, sorting_list_history_heuristic_ml, set_move_in_0_ml,
+    set_move_after_the_captures_ml, sorting_list_history_heuristic_ml, set_move_in_0_ml, test_print_list_history_ml,
     LENGTH_LIST_ML, IND_PIECE_COLOR_ML, IND_NUMBER_CAPTURES_MOVE_ML, IND_NUMBER_MOVE_ML,
     IND_PROMO_QUEEN_ML, IND_PROMO_ROOK_ML, IND_PROMO_BISHOP_ML, IND_PROMO_KNIGHT_ML,
     MOVE_NO_ML, CAPTURES_PAWN_QUEEN_PROMO_QUEEN_ML, CAPTURES_PAWN_ROOK_PROMO_QUEEN_ML, CAPTURES_PAWN_BISHOP_PROMO_QUEEN_ML,

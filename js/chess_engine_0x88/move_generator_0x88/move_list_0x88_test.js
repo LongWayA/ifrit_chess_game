@@ -12,7 +12,7 @@ import {
     set_number_captures_move_ml, sorting_list_ml, test_compare_list_from_ml, test_print_i_move_list_ml, test_print_list_ml,
     save_list_from_ml, move_is_found_ml, return_i_move_ml, move_to_string_uci_ml, return_type_captures_pawn_promo_ml,
     return_type_simple_move_ml, type_move_to_name_piece_ml, type_move_to_name_piece_f_ml, return_promo_piece_from_type_move_ml,
-    set_move_after_the_captures_ml, sorting_list_history_heuristic_ml, set_move_in_0_ml,
+    set_move_after_the_captures_ml, sorting_list_history_heuristic_ml, set_move_in_0_ml, test_print_list_history_ml,
     LENGTH_LIST_ML, IND_PIECE_COLOR_ML, IND_NUMBER_CAPTURES_MOVE_ML, IND_NUMBER_MOVE_ML,
     IND_PROMO_QUEEN_ML, IND_PROMO_ROOK_ML, IND_PROMO_BISHOP_ML, IND_PROMO_KNIGHT_ML,
     MOVE_NO_ML, CAPTURES_PAWN_QUEEN_PROMO_QUEEN_ML, CAPTURES_PAWN_ROOK_PROMO_QUEEN_ML, CAPTURES_PAWN_BISHOP_PROMO_QUEEN_ML,
@@ -32,7 +32,8 @@ import {
 } from "../move_generator_0x88/move_list_0x88.js";
 
 import {
-    packing_moves, packing_moves_sorting_true, packing_moves_capture_in_0_true, packing_moves_move_in_0_true
+    packing_moves, packing_moves_sorting_true, packing_moves_capture_in_0_true,
+    packing_moves_move_in_0_true, packing_moves_k1_k2_true, packing_moves_history_true
 } from "../move_generator_0x88/move_list_pm_0x88_test.js";
 
 /**
@@ -362,15 +363,520 @@ class Move_list_0x88_TEST_С {
     }
     //=======================================================================================
 
+    //=======================================================================================
+    /*
+     * это для киллеров
+     * находм ход по from, to
+     * и ставим сразу после взятий.
+    */
+    set_move_after_the_captures_ml_test() {
 
-    
+        let packing_moves_k = new Int32Array(1).fill(MOVE_NO_ML);// список ходов. ход упакован в одно число Uint32        
+
+        let move_k1 = 5530422; // 54 nm = MOVE_BISHOP_ML
+        let move_k2 = 5461300; // 52 nm = MOVE_QUEEN_ML        
+
+        let depth = 0;
+
+        let is_print = 0;
+
+        packing_moves_k[depth] = move_k1;// ход киллер
+        set_move_after_the_captures_ml(packing_moves_sorting_true, packing_moves_k, depth);
+
+        packing_moves_k[depth] = move_k2;// ход киллер
+        set_move_after_the_captures_ml(packing_moves_sorting_true, packing_moves_k, depth);
+
+        //
+        for (let i = 0; i < packing_moves_sorting_true[IND_NUMBER_MOVE_ML]; i++) {
+
+            if (packing_moves_k1_k2_true[i] != packing_moves_sorting_true[i]) {
+
+                is_print = 1;
+                console.log("Move_list_0x88_TEST_С -> set_move_after_the_captures_ml_test-> packing_moves_k1_k2_true[" + i + "] = "
+                    + packing_moves_k1_k2_true[i]);
+                console.log("Move_list_0x88_TEST_С -> set_move_after_the_captures_ml_test-> packing_moves_sorting_true[" + i + "] = "
+                    + packing_moves_sorting_true[i]);
+            }
+
+        }
+
+        if (is_print == 1) {
+            console.log("-----------");
+            console.log("move killer-----------");
+            test_print_list_ml(packing_moves_sorting_true);
+        }
+
+
+    }
     //=======================================================================================
 
+    //=======================================================================================
+    /*
+     * Сортировка тихих ходов по эвристике истории.
+     * Оптимизированная версия: Insertion Sort + плоский массив + кэширование.
+    */
+    sorting_list_history_heuristic_ml_test() {
+
+        const MAX_COLOR_HH = 2;          // 0 - черные, 1 - белые
+        const MAX_COORDINATE_HH = 64;    // размер 64-клеточной доски
+
+        // Размер плоского массива: 2 * 64 * 64 = 8192
+        const HISTORY_ARRAY_SIZE = MAX_COLOR_HH * MAX_COORDINATE_HH * MAX_COORDINATE_HH;//8192
+
+        let history = new Int32Array(HISTORY_ARRAY_SIZE);
+
+        let h = 0;
+
+        let is_print = 0;
+
+        for (let color = 0; color < MAX_COLOR_HH; color++) {
+            const color_shift = color << 12;  // color * 4096
+            for (let from = 0; from < MAX_COORDINATE_HH; from++) {
+                const from_shift = from << 6; // from * 64
+                for (let to = 0; to < MAX_COORDINATE_HH; to++) {
+                    h = 100 * from + to;
+                    history[color_shift | from_shift | to] = h;
+                    //console.log("h(" + from + "," + to + ") = " + h);
+                }
+            }
+        }
+
+
+        sorting_list_history_heuristic_ml(packing_moves_sorting_true, history);
+
+        //
+        for (let i = 0; i < packing_moves_sorting_true[IND_NUMBER_MOVE_ML]; i++) {
+
+            if (packing_moves_history_true[i] != packing_moves_sorting_true[i]) {
+
+                is_print = 1;
+                console.log("Move_list_0x88_TEST_С -> sorting_list_history_heuristic_ml_test-> packing_moves_history_true[" + i + "] = "
+                    + packing_moves_history_true[i]);
+                console.log("Move_list_0x88_TEST_С -> sorting_list_history_heuristic_ml_test-> packing_moves_sorting_true[" + i + "] = "
+                    + packing_moves_sorting_true[i]);
+            }
+
+        }
+
+        if (is_print == 1) {
+            console.log("-----------");
+            console.log("history-----------");
+            //test_print_list_ml(packing_moves_sorting_true);
+            test_print_list_history_ml(packing_moves_sorting_true, history);
+        }
+
+    }
+    //=======================================================================================    
+
+    //=======================================================================================
+    /*
+    * это нужно для работы генератора взятий. это очень важная функция и конечно полностью проверена
+    * возвращаем название хода превращения пешки со взятием по взятой фигуре
+    * т.е. пешка берет коня KNIGHT тогда будет множестов превращений со взятием коня,
+    * это
+    * PROMO_QUEEN = CAPTURES_PAWN_KNIGHT_PROMO_QUEEN;
+    * PROMO_ROOK = CAPTURES_PAWN_KNIGHT_PROMO_ROOK;
+    * PROMO_BISHOP = CAPTURES_PAWN_KNIGHT_PROMO_BISHOP;
+    * PROMO_KNIGHT = CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT;
+    *
+    * ВАЖНО: Возвращает ссылку на существующий массив, НЕ создаёт новый!
+    * 
+    * функция используется только в генераторе взятий и случай нет взятой фигуры невозможен
+    * также как взятая пешка и взятый король.
+    * тем не менее эти случаи обрабатываются. надо подумать чтобы их убрать.
+    * 
+    */
+    return_type_captures_pawn_promo_ml_test() {
+
+        // 
+        const PIECE_NO_CB = 0; // нет фигуры
+
+        // WHITE PIECE
+        const W_PAWN_CB = 1;     // пешка 
+        const W_KNIGHT_CB = 2;   // конь
+        const W_BISHOP_CB = 3;   // слон
+        const W_ROOK_CB = 4;     // ладья
+        const W_QUEEN_CB = 5;    // ферзь
+        const W_KING_CB = 6;     // король
+
+        // BLACK PIECE
+        const B_PAWN_CB = 9;     // пешка 
+        const B_KNIGHT_CB = 10;   // конь
+        const B_BISHOP_CB = 11;   // слон
+        const B_ROOK_CB = 12;     // ладья
+        const B_QUEEN_CB = 13;    // ферзь
+        const B_KING_CB = 14;     // король
+
+        let type_move;
+        let piece_name_captures;
+        let out;
+
+
+        //--------------------------------------------
+        // как будто просто ход        
+        piece_name_captures = PIECE_NO_CB;// нет фигуры
+        //console.log("-----------");        
+        //console.log("piece_name_captures = " + piece_name_captures);
+
+        out = return_type_captures_pawn_promo_ml(piece_name_captures);
+
+        type_move = out[IND_PROMO_QUEEN_ML];// взятие с превращением в ферзь
+        if (type_move != 17) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        type_move = out[IND_PROMO_ROOK_ML];// взятие с превращением в ладью
+        if (type_move != 18) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        type_move = out[IND_PROMO_BISHOP_ML];
+        if (type_move != 19) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        type_move = out[IND_PROMO_KNIGHT_ML];
+        if (type_move != 20) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        //--------------------------------------------
+        // невозможный ход взятие пешки с превращением такое же как будто просто ход
+        piece_name_captures = W_PAWN_CB;//
+        //console.log("-----------");          
+        //console.log("piece_name_captures = " + piece_name_captures);
+
+        out = return_type_captures_pawn_promo_ml(piece_name_captures);
+
+        type_move = out[IND_PROMO_QUEEN_ML];// взятие с превращением в ферзь
+        if (type_move != 17) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        type_move = out[IND_PROMO_ROOK_ML];// взятие с превращением в ладью
+        if (type_move != 18) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        type_move = out[IND_PROMO_BISHOP_ML];
+        if (type_move != 19) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        type_move = out[IND_PROMO_KNIGHT_ML];
+        if (type_move != 20) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        //--------------------------------------------
+        piece_name_captures = W_KNIGHT_CB;
+        //console.log("-----------");         
+        //console.log("piece_name_captures = " + piece_name_captures);
+
+        out = return_type_captures_pawn_promo_ml(piece_name_captures);
+
+        type_move = out[IND_PROMO_QUEEN_ML];// взятие с превращением в ферзь
+        if (type_move != 4) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        type_move = out[IND_PROMO_ROOK_ML];// взятие с превращением в ладью
+        if (type_move != 8) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        type_move = out[IND_PROMO_BISHOP_ML];
+        if (type_move != 12) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        type_move = out[IND_PROMO_KNIGHT_ML];
+        if (type_move != 16) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        //--------------------------------------------
+        piece_name_captures = W_BISHOP_CB;
+        //console.log("-----------");         
+        //console.log("piece_name_captures = " + piece_name_captures);
+
+        out = return_type_captures_pawn_promo_ml(piece_name_captures);
+
+        type_move = out[IND_PROMO_QUEEN_ML];// взятие с превращением в ферзь
+        if (type_move != 3) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        type_move = out[IND_PROMO_ROOK_ML];// взятие с превращением в ладью
+        if (type_move != 7) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        type_move = out[IND_PROMO_BISHOP_ML];
+        if (type_move != 11) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        type_move = out[IND_PROMO_KNIGHT_ML];
+        if (type_move != 15) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        //--------------------------------------------
+        piece_name_captures = W_ROOK_CB;
+        //console.log("-----------");         
+        //console.log("piece_name_captures = " + piece_name_captures);
+
+        out = return_type_captures_pawn_promo_ml(piece_name_captures);
+
+        type_move = out[IND_PROMO_QUEEN_ML];// взятие с превращением в ферзь
+        if (type_move != 2) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+        type_move = out[IND_PROMO_ROOK_ML];// взятие с превращением в ладью
+        if (type_move != 6) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        type_move = out[IND_PROMO_BISHOP_ML];
+        if (type_move != 10) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        type_move = out[IND_PROMO_KNIGHT_ML];
+        if (type_move != 14) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        //--------------------------------------------
+        piece_name_captures = W_QUEEN_CB;
+        //console.log("-----------");         
+        //console.log("piece_name_captures = " + piece_name_captures);
+
+        out = return_type_captures_pawn_promo_ml(piece_name_captures);
+
+        type_move = out[IND_PROMO_QUEEN_ML];// взятие с превращением в ферзь
+        if (type_move != 1) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        type_move = out[IND_PROMO_ROOK_ML];// взятие с превращением в ладью
+        if (type_move != 5) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        type_move = out[IND_PROMO_BISHOP_ML];
+        if (type_move != 9) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        type_move = out[IND_PROMO_KNIGHT_ML];
+        if (type_move != 13) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        //--------------------------------------------
+        // невозможный ход взятие короля с превращением такое же как будто просто ход        
+        piece_name_captures = W_KING_CB;
+        //console.log("-----------");         
+        //console.log("piece_name_captures = " + piece_name_captures);
+
+        out = return_type_captures_pawn_promo_ml(piece_name_captures);
+
+        type_move = out[IND_PROMO_QUEEN_ML];// взятие с превращением в ферзь
+        if (type_move != 17) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        type_move = out[IND_PROMO_ROOK_ML];// взятие с превращением в ладью
+        if (type_move != 18) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        type_move = out[IND_PROMO_BISHOP_ML];
+        if (type_move != 19) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        type_move = out[IND_PROMO_KNIGHT_ML];
+        if (type_move != 20) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        /////////////////////////////////////////////
+
+        //--------------------------------------------
+        piece_name_captures = B_PAWN_CB;//
+        //console.log("-----------");          
+        //console.log("piece_name_captures = " + piece_name_captures);
+
+        out = return_type_captures_pawn_promo_ml(piece_name_captures);
+
+        type_move = out[IND_PROMO_QUEEN_ML];// взятие с превращением в ферзь
+        if (type_move != 17) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        type_move = out[IND_PROMO_ROOK_ML];// взятие с превращением в ладью
+        if (type_move != 18) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        type_move = out[IND_PROMO_BISHOP_ML];
+        if (type_move != 19) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        type_move = out[IND_PROMO_KNIGHT_ML];
+        if (type_move != 20) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        //--------------------------------------------
+        piece_name_captures = B_KNIGHT_CB;
+        //console.log("-----------");         
+        //console.log("piece_name_captures = " + piece_name_captures);
+
+        out = return_type_captures_pawn_promo_ml(piece_name_captures);
+
+        type_move = out[IND_PROMO_QUEEN_ML];// взятие с превращением в ферзь
+        if (type_move != 4) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        type_move = out[IND_PROMO_ROOK_ML];// взятие с превращением в ладью
+        if (type_move != 8) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        type_move = out[IND_PROMO_BISHOP_ML];
+        if (type_move != 12) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        type_move = out[IND_PROMO_KNIGHT_ML];
+        if (type_move != 16) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        //--------------------------------------------
+        piece_name_captures = B_BISHOP_CB;
+        //console.log("-----------");         
+        //console.log("piece_name_captures = " + piece_name_captures);
+
+        out = return_type_captures_pawn_promo_ml(piece_name_captures);
+
+        type_move = out[IND_PROMO_QUEEN_ML];// взятие с превращением в ферзь
+        if (type_move != 3) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        type_move = out[IND_PROMO_ROOK_ML];// взятие с превращением в ладью
+        if (type_move != 7) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        type_move = out[IND_PROMO_BISHOP_ML];
+        if (type_move != 11) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        type_move = out[IND_PROMO_KNIGHT_ML];
+        if (type_move != 15) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        //--------------------------------------------
+        piece_name_captures = B_ROOK_CB;
+        //console.log("-----------");         
+        //console.log("piece_name_captures = " + piece_name_captures);
+
+        out = return_type_captures_pawn_promo_ml(piece_name_captures);
+
+        type_move = out[IND_PROMO_QUEEN_ML];// взятие с превращением в ферзь
+        if (type_move != 2) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+        type_move = out[IND_PROMO_ROOK_ML];// взятие с превращением в ладью
+        if (type_move != 6) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        type_move = out[IND_PROMO_BISHOP_ML];
+        if (type_move != 10) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        type_move = out[IND_PROMO_KNIGHT_ML];
+        if (type_move != 14) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        //--------------------------------------------
+        piece_name_captures = B_QUEEN_CB;
+        //console.log("-----------");         
+        //console.log("piece_name_captures = " + piece_name_captures);
+
+        out = return_type_captures_pawn_promo_ml(piece_name_captures);
+
+        type_move = out[IND_PROMO_QUEEN_ML];// взятие с превращением в ферзь
+        if (type_move != 1) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        type_move = out[IND_PROMO_ROOK_ML];// взятие с превращением в ладью
+        if (type_move != 5) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        type_move = out[IND_PROMO_BISHOP_ML];
+        if (type_move != 9) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        type_move = out[IND_PROMO_KNIGHT_ML];
+        if (type_move != 13) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        //--------------------------------------------
+        piece_name_captures = B_KING_CB;
+        //console.log("-----------");         
+        //console.log("piece_name_captures = " + piece_name_captures);
+
+        out = return_type_captures_pawn_promo_ml(piece_name_captures);
+
+        type_move = out[IND_PROMO_QUEEN_ML];// взятие с превращением в ферзь
+        if (type_move != 17) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        type_move = out[IND_PROMO_ROOK_ML];// взятие с превращением в ладью
+        if (type_move != 18) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        type_move = out[IND_PROMO_BISHOP_ML];
+        if (type_move != 19) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+
+        type_move = out[IND_PROMO_KNIGHT_ML];
+        if (type_move != 20) {
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+        }
+    }
+    //=======================================================================================   
+
+    //=======================================================================================
     go() {
 
         this.add_packing_move_ml_test();
         this.sorting_list_ml_test();
         this.set_move_in_0_ml_test();
+        this.set_move_after_the_captures_ml_test();
+        this.sorting_list_history_heuristic_ml_test();
+        this.return_type_captures_pawn_promo_ml_test();
 
     }
     //=======================================================================================
