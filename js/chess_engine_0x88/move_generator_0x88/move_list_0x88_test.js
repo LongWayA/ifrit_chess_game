@@ -1305,6 +1305,212 @@ class Move_list_0x88_TEST_С {
     }
     //=======================================================================================  
 
+
+    //=======================================================================================
+    /*
+     * очень важная функция. используется в генераторе взятий и тихих ходов.
+     * возвращем тип хода взятия по ходящей фигуре и по взятой фигуре
+     * например KING, QUEEN -> CAPTURES_KING_QUEEN
+     * 
+    */
+    return_promo_piece_from_type_move_ml_test() {    
+
+        let promo_piece = "-";
+        let type_move = 0; 
+        let promo_piece_true = "-";               
+
+        //-------------        
+        type_move = MOVE_PAWN_PROMO_QUEEN_ML;
+        promo_piece_true = "q";
+        promo_piece = return_promo_piece_from_type_move_ml(type_move);
+        if (promo_piece != promo_piece_true){ 
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+            console.log("promo_piece = " + promo_piece ); 
+            console.log("promo_piece_true = " + promo_piece_true);                   
+        }
+
+        type_move = MOVE_PAWN_PROMO_ROOK_ML;
+        promo_piece_true = "r";
+        promo_piece = return_promo_piece_from_type_move_ml(type_move);
+        if (promo_piece != promo_piece_true){ 
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+            console.log("promo_piece = " + promo_piece ); 
+            console.log("promo_piece_true = " + promo_piece_true);                   
+        }
+
+        type_move = MOVE_PAWN_PROMO_BISHOP_ML;
+        promo_piece_true = "b";
+        promo_piece = return_promo_piece_from_type_move_ml(type_move);
+        if (promo_piece != promo_piece_true){ 
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+            console.log("promo_piece = " + promo_piece ); 
+            console.log("promo_piece_true = " + promo_piece_true);                   
+        }
+
+        type_move = MOVE_PAWN_PROMO_KNIGHT_ML;
+        promo_piece_true = "n";
+        promo_piece = return_promo_piece_from_type_move_ml(type_move);
+        if (promo_piece != promo_piece_true){ 
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+            console.log("promo_piece = " + promo_piece ); 
+            console.log("promo_piece_true = " + promo_piece_true);                   
+        }
+        //------------- 
+
+        //-------------        
+        type_move = CAPTURES_PAWN_QUEEN_PROMO_QUEEN_ML;
+        promo_piece_true = "q";
+        promo_piece = return_promo_piece_from_type_move_ml(type_move);
+        if (promo_piece != promo_piece_true){ 
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+            console.log("promo_piece = " + promo_piece ); 
+            console.log("promo_piece_true = " + promo_piece_true);                   
+        }
+
+        type_move = CAPTURES_PAWN_QUEEN_PROMO_ROOK_ML;
+        promo_piece_true = "r";
+        promo_piece = return_promo_piece_from_type_move_ml(type_move);
+        if (promo_piece != promo_piece_true){ 
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+            console.log("promo_piece = " + promo_piece ); 
+            console.log("promo_piece_true = " + promo_piece_true);                   
+        }
+
+        type_move = CAPTURES_PAWN_QUEEN_PROMO_BISHOP_ML;
+        promo_piece_true = "b";
+        promo_piece = return_promo_piece_from_type_move_ml(type_move);
+        if (promo_piece != promo_piece_true){ 
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+            console.log("promo_piece = " + promo_piece ); 
+            console.log("promo_piece_true = " + promo_piece_true);                   
+        }
+
+        type_move = CAPTURES_PAWN_QUEEN_PROMO_KNIGHT_ML;
+        promo_piece_true = "n";
+        promo_piece = return_promo_piece_from_type_move_ml(type_move);
+        if (promo_piece != promo_piece_true){ 
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+            console.log("promo_piece = " + promo_piece ); 
+            console.log("promo_piece_true = " + promo_piece_true);                   
+        }
+        //------------- 
+
+        //-------------        
+        type_move = CAPTURES_PAWN_ROOK_PROMO_QUEEN_ML;
+        promo_piece_true = "q";
+        promo_piece = return_promo_piece_from_type_move_ml(type_move);
+        if (promo_piece != promo_piece_true){ 
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+            console.log("promo_piece = " + promo_piece ); 
+            console.log("promo_piece_true = " + promo_piece_true);                   
+        }
+
+        type_move = CAPTURES_PAWN_ROOK_PROMO_ROOK_ML;
+        promo_piece_true = "r";
+        promo_piece = return_promo_piece_from_type_move_ml(type_move);
+        if (promo_piece != promo_piece_true){ 
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+            console.log("promo_piece = " + promo_piece ); 
+            console.log("promo_piece_true = " + promo_piece_true);                   
+        }
+
+        type_move = CAPTURES_PAWN_ROOK_PROMO_BISHOP_ML;
+        promo_piece_true = "b";
+        promo_piece = return_promo_piece_from_type_move_ml(type_move);
+        if (promo_piece != promo_piece_true){ 
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+            console.log("promo_piece = " + promo_piece ); 
+            console.log("promo_piece_true = " + promo_piece_true);                   
+        }
+
+        type_move = CAPTURES_PAWN_ROOK_PROMO_KNIGHT_ML;
+        promo_piece_true = "n";
+        promo_piece = return_promo_piece_from_type_move_ml(type_move);
+        if (promo_piece != promo_piece_true){ 
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+            console.log("promo_piece = " + promo_piece ); 
+            console.log("promo_piece_true = " + promo_piece_true);                   
+        }
+        //------------- 
+
+        //-------------        
+        type_move = CAPTURES_PAWN_BISHOP_PROMO_QUEEN_ML;
+        promo_piece_true = "q";
+        promo_piece = return_promo_piece_from_type_move_ml(type_move);
+        if (promo_piece != promo_piece_true){ 
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+            console.log("promo_piece = " + promo_piece ); 
+            console.log("promo_piece_true = " + promo_piece_true);                   
+        }
+
+        type_move = CAPTURES_PAWN_BISHOP_PROMO_ROOK_ML;
+        promo_piece_true = "r";
+        promo_piece = return_promo_piece_from_type_move_ml(type_move);
+        if (promo_piece != promo_piece_true){ 
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+            console.log("promo_piece = " + promo_piece ); 
+            console.log("promo_piece_true = " + promo_piece_true);                   
+        }
+
+        type_move = CAPTURES_PAWN_BISHOP_PROMO_BISHOP_ML;
+        promo_piece_true = "b";
+        promo_piece = return_promo_piece_from_type_move_ml(type_move);
+        if (promo_piece != promo_piece_true){ 
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+            console.log("promo_piece = " + promo_piece ); 
+            console.log("promo_piece_true = " + promo_piece_true);                   
+        }
+
+        type_move = CAPTURES_PAWN_BISHOP_PROMO_KNIGHT_ML;
+        promo_piece_true = "n";
+        promo_piece = return_promo_piece_from_type_move_ml(type_move);
+        if (promo_piece != promo_piece_true){ 
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+            console.log("promo_piece = " + promo_piece ); 
+            console.log("promo_piece_true = " + promo_piece_true);                   
+        }
+        //------------- 
+
+        //-------------        
+        type_move = CAPTURES_PAWN_KNIGHT_PROMO_QUEEN_ML;
+        promo_piece_true = "q";
+        promo_piece = return_promo_piece_from_type_move_ml(type_move);
+        if (promo_piece != promo_piece_true){ 
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+            console.log("promo_piece = " + promo_piece ); 
+            console.log("promo_piece_true = " + promo_piece_true);                   
+        }
+
+        type_move = CAPTURES_PAWN_KNIGHT_PROMO_ROOK_ML;
+        promo_piece_true = "r";
+        promo_piece = return_promo_piece_from_type_move_ml(type_move);
+        if (promo_piece != promo_piece_true){ 
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+            console.log("promo_piece = " + promo_piece ); 
+            console.log("promo_piece_true = " + promo_piece_true);                   
+        }
+
+        type_move = CAPTURES_PAWN_KNIGHT_PROMO_BISHOP_ML;
+        promo_piece_true = "b";
+        promo_piece = return_promo_piece_from_type_move_ml(type_move);
+        if (promo_piece != promo_piece_true){ 
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+            console.log("promo_piece = " + promo_piece ); 
+            console.log("promo_piece_true = " + promo_piece_true);                   
+        }
+
+        type_move = CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT_ML;
+        promo_piece_true = "n";
+        promo_piece = return_promo_piece_from_type_move_ml(type_move);
+        if (promo_piece != promo_piece_true){ 
+            console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
+            console.log("promo_piece = " + promo_piece ); 
+            console.log("promo_piece_true = " + promo_piece_true);                   
+        }
+        //------------- 
+    }
+    //======================================================================================= 
+
     //=======================================================================================
     go() {
 
@@ -1315,6 +1521,7 @@ class Move_list_0x88_TEST_С {
         this.sorting_list_history_heuristic_ml_test();
         this.return_type_captures_pawn_promo_ml_test();
         this.return_type_simple_move_ml_test();
+        this.return_promo_piece_from_type_move_ml_test();
         
     }
     //=======================================================================================

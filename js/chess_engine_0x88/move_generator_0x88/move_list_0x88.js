@@ -468,13 +468,13 @@ PROMO_PIECE_LUT[CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT_ML] = "n";
 
 
 
-//////////////////////////////
-// ПРЯМАЯ РАБОТА СО СПИСКОМ //
-//////////////////////////////
+//////////////////////////////////
+// ИСПОЛЬЗУЮ В ГЕНЕРАТОРЕ ХОДОВ //
+//////////////////////////////////
 
 /**
 * gc
-* не тестирую
+* не тестирую(все очевидно)
 * 
 * очищаем список ходов
 * @param {Int32Array} packing_moves
@@ -519,101 +519,7 @@ const add_packing_move_ml = (packing_moves, type_move, from, to, name_capture_pi
     return packing_moves[IND_NUMBER_MOVE_ML];
 };
 
-/**
- * - 
- * t
- * тестирую совместно с add_packing_move_ml 
- * 
- * присвоить списку цвет фигуры он же цвет ходящей стороны
- * @param {Int32Array} packing_moves
- * @param {number} piece_color
- * @returns {void}
- */
-const set_color_ml = (packing_moves, piece_color) => {
-    packing_moves[IND_PIECE_COLOR_ML] = piece_color;
-}
-
-/**
- * -
- * t
- * тестирую совместно с add_packing_move_ml 
- * 
- * присвоить количество взятий в списке
- * @param {Int32Array} packing_moves
- * @param {number} number_captures_move
- * @returns {void}
- */
-const set_number_captures_move_ml = (packing_moves, number_captures_move) => {
-    packing_moves[IND_NUMBER_CAPTURES_MOVE_ML] = number_captures_move;
-}
-
-
-/**
- * 
- * t
- * тестирую совместно с add_packing_move_ml
- * 
- * @param {number} i
- * @param {Int32Array} packing_moves
- * @returns {number}
- */
-const get_type_move_ml = (i, packing_moves) => packing_moves[i] & 0xFF;//0xFF =255 это 8 бит ->  11111111
-
-/**
- * 
- * t
- * тестирую совместно с add_packing_move_ml
- * 
- * @param {number} i
- * @param {Int32Array} packing_moves
- * @returns {number}
- */
-const get_from_ml = (i, packing_moves) => (packing_moves[i] >> 8) & 0xFF;
-
-/**
- * 
- * t
- * тестирую совместно с add_packing_move_ml 
- * 
- * @param {number} i
- * @param {Int32Array} packing_moves
- * @returns {number}
- */
-const get_to_ml = (i, packing_moves) => (packing_moves[i] >> 16) & 0xFF;
-
-/**
- * 
- * t
- * тестирую совместно с add_packing_move_ml 
- * 
- * @param {number} i
- * @param {Int32Array} packing_moves
- * @returns {number}
- */
-const get_name_capture_piece_ml = (i, packing_moves) => (packing_moves[i] >>> 24) & 0xFF;
-
-/**
- * -
- * t
- *  тестирую совместно с sorting_list_ml
- * 
- * копируем в наш список список из параметров функции
- * т.е. тот что задан в скобках тот и копируем
-* @param {Int32Array} packing_moves_to
-* @param {Int32Array} packing_moves_from
-* @returns {void}
-*/
-const save_list_from_ml = (packing_moves_to, packing_moves_from) => {
-    packing_moves_to.set(packing_moves_from);
-}
-
-
-//////////////////////////////
-// ОЧЕНЬ ВАЖНЫЕ ФУНКЦИИ     //
-// И ОЧЕНЬ СЛОЖНЫЕ ДЛЯ МЕНЯ //
-//////////////////////////////
-
-// код от Qwen3.7-Max AI
+// Qwen3.7-Max AI
 /**
 * gc
 *
@@ -635,8 +541,7 @@ const save_list_from_ml = (packing_moves_to, packing_moves_from) => {
 const return_type_captures_pawn_promo_ml = (piece_name_captures) =>
     PROMO_CAPTURES_LUT[piece_name_captures] || DEFAULT_PROMO_ARRAY;
 
-
-// код от Qwen3.7-Max AI
+// Qwen3.7-Max AI
 // Qwen3.7-Max AI: "Взятие на проходе (En Passant) не работает через LUT
 // Ваш SIMPLE_MOVE_LUT для пешки, бьющей на пустую клетку (W_PAWN_CB, PIECE_NO_CB), вернет MOVE_PAWN_ML (обычный ход)."
 // Я: это понятно и в реализаторе ходов это учтено. Получается, что простой ход пешкой может быть взятием на проходе.
@@ -875,6 +780,7 @@ const sorting_list_history_heuristic_ml = function (packing_moves, history) {
  * gui
  * 
  * 
+ * 
  * если ход from, to 
  * нашли в списке ходов
  * в случае превращений это первое попавшееся
@@ -909,6 +815,8 @@ const move_is_found_ml = function (packing_moves, from, to) {
 /**
 * gui, i_serch
 * 
+*
+*
 * находим и возвращаем порядковый номер хода
 * по ходу from, to, promo
 * в том числе и в случае превращений
@@ -955,6 +863,8 @@ const return_i_move_ml = function (packing_moves, from, to, promo = "") {
 /**
 *  gui, i_serch
 * 
+*
+*
 * возвращем ход из списка на заданной позиции
 * в виде строки вида e2e4, e7e8q
 * @param {number} i
@@ -979,196 +889,62 @@ const move_to_string_uci_ml = function (i, packing_moves) {
     return move_str;
 }
 
-// используем для строкового представления фигуры в ходах
-/**
-* -
-* 
-* @param {number} type_move
-* @returns {string}
-*/
-//+
-const type_move_to_name_piece_ml = function (type_move) {
-    if (type_move == MOVE_NO_ML) return "NO";
-    if (type_move == CAPTURES_PAWN_QUEEN_PROMO_QUEEN_ML) return "P";
-    if (type_move == CAPTURES_PAWN_ROOK_PROMO_QUEEN_ML) return "P";
-    if (type_move == CAPTURES_PAWN_BISHOP_PROMO_QUEEN_ML) return "P";
-    if (type_move == CAPTURES_PAWN_KNIGHT_PROMO_QUEEN_ML) return "P";
-    if (type_move == CAPTURES_PAWN_QUEEN_PROMO_ROOK_ML) return "P";
-    if (type_move == CAPTURES_PAWN_ROOK_PROMO_ROOK_ML) return "P";
-    if (type_move == CAPTURES_PAWN_BISHOP_PROMO_ROOK_ML) return "P";
-    if (type_move == CAPTURES_PAWN_KNIGHT_PROMO_ROOK_ML) return "P";
-    if (type_move == CAPTURES_PAWN_QUEEN_PROMO_BISHOP_ML) return "P";
-    if (type_move == CAPTURES_PAWN_ROOK_PROMO_BISHOP_ML) return "P";
-    if (type_move == CAPTURES_PAWN_BISHOP_PROMO_BISHOP_ML) return "P";
-    if (type_move == CAPTURES_PAWN_KNIGHT_PROMO_BISHOP_ML) return "P";
-    if (type_move == CAPTURES_PAWN_QUEEN_PROMO_KNIGHT_ML) return "P";
-    if (type_move == CAPTURES_PAWN_ROOK_PROMO_KNIGHT_ML) return "P";
-    if (type_move == CAPTURES_PAWN_BISHOP_PROMO_KNIGHT_ML) return "P";
-    if (type_move == CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT_ML) return "P";
-    if (type_move == MOVE_PAWN_PROMO_QUEEN_ML) return "P";
-    if (type_move == MOVE_PAWN_PROMO_ROOK_ML) return "P";
-    if (type_move == MOVE_PAWN_PROMO_BISHOP_ML) return "P";
-    if (type_move == MOVE_PAWN_PROMO_KNIGHT_ML) return "P";
-    if (type_move == CAPTURES_PAWN_QUEEN_ML) return "P";
-    if (type_move == CAPTURES_PAWN_ROOK_ML) return "P";
-    if (type_move == CAPTURES_PAWN_BISHOP_ML) return "P";
-    if (type_move == CAPTURES_PAWN_KNIGHT_ML) return "P";
-    if (type_move == CAPTURES_KNIGHT_QUEEN_ML) return "N";
-    if (type_move == CAPTURES_KNIGHT_ROOK_ML) return "N";
-    if (type_move == CAPTURES_BISHOP_QUEEN_ML) return "B";
-    if (type_move == CAPTURES_BISHOP_ROOK_ML) return "B";
-    if (type_move == CAPTURES_ROOK_QUEEN_ML) return "R";
-    if (type_move == CAPTURES_KNIGHT_BISHOP_ML) return "N";
-    if (type_move == CAPTURES_KNIGHT_KNIGHT_ML) return "N";
-    if (type_move == CAPTURES_BISHOP_BISHOP_ML) return "B";
-    if (type_move == CAPTURES_BISHOP_KNIGHT_ML) return "B";
-    if (type_move == CAPTURES_ROOK_ROOK_ML) return "R";
-    if (type_move == CAPTURES_QUEEN_QUEEN_ML) return "Q";
-    if (type_move == CAPTURES_ROOK_BISHOP_ML) return "R";
-    if (type_move == CAPTURES_ROOK_KNIGHT_ML) return "R";
-    if (type_move == CAPTURES_QUEEN_ROOK_ML) return "Q";
-    if (type_move == CAPTURES_QUEEN_BISHOP_ML) return "Q";
-    if (type_move == CAPTURES_QUEEN_KNIGHT_ML) return "Q";
-    if (type_move == CAPTURES_KING_QUEEN_ML) return "K";
-    if (type_move == CAPTURES_KING_ROOK_ML) return "K";
-    if (type_move == CAPTURES_KING_BISHOP_ML) return "K";
-    if (type_move == CAPTURES_KING_KNIGHT_ML) return "K";
-    if (type_move == CAPTURES_PAWN_PAWN_ML) return "P";
-    if (type_move == EP_CAPTURES_ML) return "P";
-    if (type_move == CAPTURES_KNIGHT_PAWN_ML) return "N";
-    if (type_move == CAPTURES_BISHOP_PAWN_ML) return "B";
-    if (type_move == CAPTURES_ROOK_PAWN_ML) return "R";
-    if (type_move == CAPTURES_QUEEN_PAWN_ML) return "Q";
-    if (type_move == CAPTURES_KING_PAWN_ML) return "K";
-    if (type_move == MOVE_QUEEN_ML) return "Q";
-    if (type_move == MOVE_ROOK_ML) return "R";
-    if (type_move == MOVE_BISHOP_ML) return "B";
-    if (type_move == MOVE_KNIGHT_ML) return "N";
-    if (type_move == MOVE_KING_ML) return "K";
-    if (type_move == MOVE_PAWN_ML) return "P";
-    if (type_move == MOVE_DOUBLE_PAWN_ML) return "P";
-    if (type_move == MOVE_KING_CASTLE_ML) return "K";
-    if (type_move == MOVE_KING_QUEEN_CASTLE_ML) return "K";
-    return "";
-}
-
-/**
-* -
-* 
-* @param {number} type_move
-* @returns {string}
-*/
-//+
-const type_move_to_name_piece_f_ml = function (type_move) {
-    if (type_move == MOVE_NO_ML) return "NO";
-    if (type_move == CAPTURES_PAWN_QUEEN_PROMO_QUEEN_ML) return "PAWN";
-    if (type_move == CAPTURES_PAWN_ROOK_PROMO_QUEEN_ML) return "PAWN";
-    if (type_move == CAPTURES_PAWN_BISHOP_PROMO_QUEEN_ML) return "PAWN";
-    if (type_move == CAPTURES_PAWN_KNIGHT_PROMO_QUEEN_ML) return "PAWN";
-    if (type_move == CAPTURES_PAWN_QUEEN_PROMO_ROOK_ML) return "PAWN";
-    if (type_move == CAPTURES_PAWN_ROOK_PROMO_ROOK_ML) return "PAWN";
-    if (type_move == CAPTURES_PAWN_BISHOP_PROMO_ROOK_ML) return "PAWN";
-    if (type_move == CAPTURES_PAWN_KNIGHT_PROMO_ROOK_ML) return "PAWN";
-    if (type_move == CAPTURES_PAWN_QUEEN_PROMO_BISHOP_ML) return "PAWN";
-    if (type_move == CAPTURES_PAWN_ROOK_PROMO_BISHOP_ML) return "PAWN";
-    if (type_move == CAPTURES_PAWN_BISHOP_PROMO_BISHOP_ML) return "PAWN";
-    if (type_move == CAPTURES_PAWN_KNIGHT_PROMO_BISHOP_ML) return "PAWN";
-    if (type_move == CAPTURES_PAWN_QUEEN_PROMO_KNIGHT_ML) return "PAWN";
-    if (type_move == CAPTURES_PAWN_ROOK_PROMO_KNIGHT_ML) return "PAWN";
-    if (type_move == CAPTURES_PAWN_BISHOP_PROMO_KNIGHT_ML) return "PAWN";
-    if (type_move == CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT_ML) return "PAWN";
-    if (type_move == MOVE_PAWN_PROMO_QUEEN_ML) return "PAWN";
-    if (type_move == MOVE_PAWN_PROMO_ROOK_ML) return "PAWN";
-    if (type_move == MOVE_PAWN_PROMO_BISHOP_ML) return "PAWN";
-    if (type_move == MOVE_PAWN_PROMO_KNIGHT_ML) return "PAWN";
-    if (type_move == CAPTURES_PAWN_QUEEN_ML) return "PAWN";
-    if (type_move == CAPTURES_PAWN_ROOK_ML) return "PAWN";
-    if (type_move == CAPTURES_PAWN_BISHOP_ML) return "PAWN";
-    if (type_move == CAPTURES_PAWN_KNIGHT_ML) return "PAWN";
-    if (type_move == CAPTURES_KNIGHT_QUEEN_ML) return "KNIGHT";
-    if (type_move == CAPTURES_KNIGHT_ROOK_ML) return "KNIGHT";
-    if (type_move == CAPTURES_BISHOP_QUEEN_ML) return "BISHOP";
-    if (type_move == CAPTURES_BISHOP_ROOK_ML) return "BISHOP";
-    if (type_move == CAPTURES_ROOK_QUEEN_ML) return "ROOK";
-    if (type_move == CAPTURES_KNIGHT_BISHOP_ML) return "KNIGHT";
-    if (type_move == CAPTURES_KNIGHT_KNIGHT_ML) return "KNIGHT";
-    if (type_move == CAPTURES_BISHOP_BISHOP_ML) return "BISHOP";
-    if (type_move == CAPTURES_BISHOP_KNIGHT_ML) return "BISHOP";
-    if (type_move == CAPTURES_ROOK_ROOK_ML) return "ROOK";
-    if (type_move == CAPTURES_QUEEN_QUEEN_ML) return "QUEEN";
-    if (type_move == CAPTURES_ROOK_BISHOP_ML) return "ROOK";
-    if (type_move == CAPTURES_ROOK_KNIGHT_ML) return "ROOK";
-    if (type_move == CAPTURES_QUEEN_ROOK_ML) return "QUEEN";
-    if (type_move == CAPTURES_QUEEN_BISHOP_ML) return "QUEEN";
-    if (type_move == CAPTURES_QUEEN_KNIGHT_ML) return "QUEEN";
-    if (type_move == CAPTURES_KING_QUEEN_ML) return "KING";
-    if (type_move == CAPTURES_KING_ROOK_ML) return "KING";
-    if (type_move == CAPTURES_KING_BISHOP_ML) return "KING";
-    if (type_move == CAPTURES_KING_KNIGHT_ML) return "KING";
-    if (type_move == CAPTURES_PAWN_PAWN_ML) return "PAWN";
-    if (type_move == EP_CAPTURES_ML) return "PAWN";
-    if (type_move == CAPTURES_KNIGHT_PAWN_ML) return "KNIGHT";
-    if (type_move == CAPTURES_BISHOP_PAWN_ML) return "BISHOP";
-    if (type_move == CAPTURES_ROOK_PAWN_ML) return "ROOK";
-    if (type_move == CAPTURES_QUEEN_PAWN_ML) return "QUEEN";
-    if (type_move == CAPTURES_KING_PAWN_ML) return "KING";
-    if (type_move == MOVE_QUEEN_ML) return "QUEEN";
-    if (type_move == MOVE_ROOK_ML) return "ROOK";
-    if (type_move == MOVE_BISHOP_ML) return "BISHOP";
-    if (type_move == MOVE_KNIGHT_ML) return "KNIGHT";
-    if (type_move == MOVE_KING_ML) return "KING";
-    if (type_move == MOVE_PAWN_ML) return "PAWN";
-    if (type_move == MOVE_DOUBLE_PAWN_ML) return "PAWN";
-    if (type_move == MOVE_KING_CASTLE_ML) return "KING";
-    if (type_move == MOVE_KING_QUEEN_CASTLE_ML) return "KING";
-    return "";
-}
-
-
-// код от Qwen3.7-Max AI
+// Qwen3.7-Max AI
 // возвращаем фигуру в которую превращается пешка по типу хода
 /**
  * pv_line
+ * 
+ * t
  * 
 * @param {number} type_move
 * @returns {string}
 */
 const return_promo_piece_from_type_move_ml = (type_move) => PROMO_PIECE_LUT[type_move] || "";
 
-// возвращаем фигуру в которую превращается пешка по типу хода
-// /**
-// * @param {number} type_move
-// * @returns {string}
-// */
-// //+
-// const return_promo_piece_from_type_move_ml = function (type_move) {
+/**
+ * 
+ * t
+ * тестирую совместно с add_packing_move_ml
+ * 
+ * @param {number} i
+ * @param {Int32Array} packing_moves
+ * @returns {number}
+ */
+const get_type_move_ml = (i, packing_moves) => packing_moves[i] & 0xFF;//0xFF =255 это 8 бит ->  11111111
 
-//     if (type_move == MOVE_PAWN_PROMO_QUEEN_ML) return "q";
-//     if (type_move == MOVE_PAWN_PROMO_ROOK_ML) return "r";
-//     if (type_move == MOVE_PAWN_PROMO_BISHOP_ML) return "b";
-//     if (type_move == MOVE_PAWN_PROMO_KNIGHT_ML) return "n";
 
-//     if (type_move == CAPTURES_PAWN_QUEEN_PROMO_QUEEN_ML) return "q";
-//     if (type_move == CAPTURES_PAWN_QUEEN_PROMO_ROOK_ML) return "r";
-//     if (type_move == CAPTURES_PAWN_QUEEN_PROMO_BISHOP_ML) return "b";
-//     if (type_move == CAPTURES_PAWN_QUEEN_PROMO_KNIGHT_ML) return "n";
+/**
+ * 
+ * t
+ * тестирую совместно с add_packing_move_ml
+ * 
+ * @param {number} i
+ * @param {Int32Array} packing_moves
+ * @returns {number}
+ */
+const get_from_ml = (i, packing_moves) => (packing_moves[i] >> 8) & 0xFF;
 
-//     if (type_move == CAPTURES_PAWN_ROOK_PROMO_QUEEN_ML) return "q";
-//     if (type_move == CAPTURES_PAWN_ROOK_PROMO_ROOK_ML) return "r";
-//     if (type_move == CAPTURES_PAWN_ROOK_PROMO_BISHOP_ML) return "b";
-//     if (type_move == CAPTURES_PAWN_ROOK_PROMO_KNIGHT_ML) return "n";
+/**
+ * 
+ * t
+ * тестирую совместно с add_packing_move_ml 
+ * 
+ * @param {number} i
+ * @param {Int32Array} packing_moves
+ * @returns {number}
+ */
+const get_to_ml = (i, packing_moves) => (packing_moves[i] >> 16) & 0xFF;
 
-//     if (type_move == CAPTURES_PAWN_BISHOP_PROMO_QUEEN_ML) return "q";
-//     if (type_move == CAPTURES_PAWN_BISHOP_PROMO_ROOK_ML) return "r";
-//     if (type_move == CAPTURES_PAWN_BISHOP_PROMO_BISHOP_ML) return "b";
-//     if (type_move == CAPTURES_PAWN_BISHOP_PROMO_KNIGHT_ML) return "n";
-
-//     if (type_move == CAPTURES_PAWN_KNIGHT_PROMO_QUEEN_ML) return "q";
-//     if (type_move == CAPTURES_PAWN_KNIGHT_PROMO_ROOK_ML) return "r";
-//     if (type_move == CAPTURES_PAWN_KNIGHT_PROMO_BISHOP_ML) return "b";
-//     if (type_move == CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT_ML) return "n";
-//     return "";
-// }
+/**
+ * 
+ * t
+ * тестирую совместно с add_packing_move_ml 
+ * 
+ * @param {number} i
+ * @param {Int32Array} packing_moves
+ * @returns {number}
+ */
+const get_name_capture_piece_ml = (i, packing_moves) => (packing_moves[i] >>> 24) & 0xFF;
 
 
 //////////////////////////////
@@ -1363,7 +1139,7 @@ const test_print_list_ml = function (packing_moves) {
  * 
  * тестирую совместно с add_packing_move_ml, sorting_list_ml 
  * 
- * печатаем в консоль весь список ходов
+ * печатаем в консоль весь список ходов с историей
  * @param {Int32Array} packing_moves
  * @param {Int32Array} history
  * 
@@ -1414,6 +1190,199 @@ const test_print_list_history_ml = function (packing_moves, history) {
 //////////////////////////////////////////////////
 // TEST
 
+//////////////////
+// НЕ ИСПОЛЬЗУЮ //
+// кроме тестов //
+//////////////////
+
+/**
+ * - 
+ * t
+ * тестирую совместно с add_packing_move_ml 
+ * 
+ * присвоить списку цвет фигуры он же цвет ходящей стороны
+ * @param {Int32Array} packing_moves
+ * @param {number} piece_color
+ * @returns {void}
+ */
+const set_color_ml = (packing_moves, piece_color) => {
+    packing_moves[IND_PIECE_COLOR_ML] = piece_color;
+}
+
+/**
+ * -
+ * t
+ * тестирую совместно с add_packing_move_ml 
+ * 
+ * присвоить количество взятий в списке
+ * @param {Int32Array} packing_moves
+ * @param {number} number_captures_move
+ * @returns {void}
+ */
+const set_number_captures_move_ml = (packing_moves, number_captures_move) => {
+    packing_moves[IND_NUMBER_CAPTURES_MOVE_ML] = number_captures_move;
+}
+
+
+/**
+ * -
+ * t
+ *  тестирую совместно с sorting_list_ml
+ * 
+ * копируем в наш список список из параметров функции
+ * т.е. тот что задан в скобках тот и копируем
+* @param {Int32Array} packing_moves_to
+* @param {Int32Array} packing_moves_from
+* @returns {void}
+*/
+const save_list_from_ml = (packing_moves_to, packing_moves_from) => {
+    packing_moves_to.set(packing_moves_from);
+}
+
+/**
+* -
+* 
+* @param {number} type_move
+* @returns {string}
+*/
+//+
+const type_move_to_name_piece_f_ml = function (type_move) {
+    if (type_move == MOVE_NO_ML) return "NO";
+    if (type_move == CAPTURES_PAWN_QUEEN_PROMO_QUEEN_ML) return "PAWN";
+    if (type_move == CAPTURES_PAWN_ROOK_PROMO_QUEEN_ML) return "PAWN";
+    if (type_move == CAPTURES_PAWN_BISHOP_PROMO_QUEEN_ML) return "PAWN";
+    if (type_move == CAPTURES_PAWN_KNIGHT_PROMO_QUEEN_ML) return "PAWN";
+    if (type_move == CAPTURES_PAWN_QUEEN_PROMO_ROOK_ML) return "PAWN";
+    if (type_move == CAPTURES_PAWN_ROOK_PROMO_ROOK_ML) return "PAWN";
+    if (type_move == CAPTURES_PAWN_BISHOP_PROMO_ROOK_ML) return "PAWN";
+    if (type_move == CAPTURES_PAWN_KNIGHT_PROMO_ROOK_ML) return "PAWN";
+    if (type_move == CAPTURES_PAWN_QUEEN_PROMO_BISHOP_ML) return "PAWN";
+    if (type_move == CAPTURES_PAWN_ROOK_PROMO_BISHOP_ML) return "PAWN";
+    if (type_move == CAPTURES_PAWN_BISHOP_PROMO_BISHOP_ML) return "PAWN";
+    if (type_move == CAPTURES_PAWN_KNIGHT_PROMO_BISHOP_ML) return "PAWN";
+    if (type_move == CAPTURES_PAWN_QUEEN_PROMO_KNIGHT_ML) return "PAWN";
+    if (type_move == CAPTURES_PAWN_ROOK_PROMO_KNIGHT_ML) return "PAWN";
+    if (type_move == CAPTURES_PAWN_BISHOP_PROMO_KNIGHT_ML) return "PAWN";
+    if (type_move == CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT_ML) return "PAWN";
+    if (type_move == MOVE_PAWN_PROMO_QUEEN_ML) return "PAWN";
+    if (type_move == MOVE_PAWN_PROMO_ROOK_ML) return "PAWN";
+    if (type_move == MOVE_PAWN_PROMO_BISHOP_ML) return "PAWN";
+    if (type_move == MOVE_PAWN_PROMO_KNIGHT_ML) return "PAWN";
+    if (type_move == CAPTURES_PAWN_QUEEN_ML) return "PAWN";
+    if (type_move == CAPTURES_PAWN_ROOK_ML) return "PAWN";
+    if (type_move == CAPTURES_PAWN_BISHOP_ML) return "PAWN";
+    if (type_move == CAPTURES_PAWN_KNIGHT_ML) return "PAWN";
+    if (type_move == CAPTURES_KNIGHT_QUEEN_ML) return "KNIGHT";
+    if (type_move == CAPTURES_KNIGHT_ROOK_ML) return "KNIGHT";
+    if (type_move == CAPTURES_BISHOP_QUEEN_ML) return "BISHOP";
+    if (type_move == CAPTURES_BISHOP_ROOK_ML) return "BISHOP";
+    if (type_move == CAPTURES_ROOK_QUEEN_ML) return "ROOK";
+    if (type_move == CAPTURES_KNIGHT_BISHOP_ML) return "KNIGHT";
+    if (type_move == CAPTURES_KNIGHT_KNIGHT_ML) return "KNIGHT";
+    if (type_move == CAPTURES_BISHOP_BISHOP_ML) return "BISHOP";
+    if (type_move == CAPTURES_BISHOP_KNIGHT_ML) return "BISHOP";
+    if (type_move == CAPTURES_ROOK_ROOK_ML) return "ROOK";
+    if (type_move == CAPTURES_QUEEN_QUEEN_ML) return "QUEEN";
+    if (type_move == CAPTURES_ROOK_BISHOP_ML) return "ROOK";
+    if (type_move == CAPTURES_ROOK_KNIGHT_ML) return "ROOK";
+    if (type_move == CAPTURES_QUEEN_ROOK_ML) return "QUEEN";
+    if (type_move == CAPTURES_QUEEN_BISHOP_ML) return "QUEEN";
+    if (type_move == CAPTURES_QUEEN_KNIGHT_ML) return "QUEEN";
+    if (type_move == CAPTURES_KING_QUEEN_ML) return "KING";
+    if (type_move == CAPTURES_KING_ROOK_ML) return "KING";
+    if (type_move == CAPTURES_KING_BISHOP_ML) return "KING";
+    if (type_move == CAPTURES_KING_KNIGHT_ML) return "KING";
+    if (type_move == CAPTURES_PAWN_PAWN_ML) return "PAWN";
+    if (type_move == EP_CAPTURES_ML) return "PAWN";
+    if (type_move == CAPTURES_KNIGHT_PAWN_ML) return "KNIGHT";
+    if (type_move == CAPTURES_BISHOP_PAWN_ML) return "BISHOP";
+    if (type_move == CAPTURES_ROOK_PAWN_ML) return "ROOK";
+    if (type_move == CAPTURES_QUEEN_PAWN_ML) return "QUEEN";
+    if (type_move == CAPTURES_KING_PAWN_ML) return "KING";
+    if (type_move == MOVE_QUEEN_ML) return "QUEEN";
+    if (type_move == MOVE_ROOK_ML) return "ROOK";
+    if (type_move == MOVE_BISHOP_ML) return "BISHOP";
+    if (type_move == MOVE_KNIGHT_ML) return "KNIGHT";
+    if (type_move == MOVE_KING_ML) return "KING";
+    if (type_move == MOVE_PAWN_ML) return "PAWN";
+    if (type_move == MOVE_DOUBLE_PAWN_ML) return "PAWN";
+    if (type_move == MOVE_KING_CASTLE_ML) return "KING";
+    if (type_move == MOVE_KING_QUEEN_CASTLE_ML) return "KING";
+    return "";
+}
+
+// используем для строкового представления фигуры в ходах
+/**
+* -
+* 
+* @param {number} type_move
+* @returns {string}
+*/
+//+
+const type_move_to_name_piece_ml = function (type_move) {
+    if (type_move == MOVE_NO_ML) return "NO";
+    if (type_move == CAPTURES_PAWN_QUEEN_PROMO_QUEEN_ML) return "P";
+    if (type_move == CAPTURES_PAWN_ROOK_PROMO_QUEEN_ML) return "P";
+    if (type_move == CAPTURES_PAWN_BISHOP_PROMO_QUEEN_ML) return "P";
+    if (type_move == CAPTURES_PAWN_KNIGHT_PROMO_QUEEN_ML) return "P";
+    if (type_move == CAPTURES_PAWN_QUEEN_PROMO_ROOK_ML) return "P";
+    if (type_move == CAPTURES_PAWN_ROOK_PROMO_ROOK_ML) return "P";
+    if (type_move == CAPTURES_PAWN_BISHOP_PROMO_ROOK_ML) return "P";
+    if (type_move == CAPTURES_PAWN_KNIGHT_PROMO_ROOK_ML) return "P";
+    if (type_move == CAPTURES_PAWN_QUEEN_PROMO_BISHOP_ML) return "P";
+    if (type_move == CAPTURES_PAWN_ROOK_PROMO_BISHOP_ML) return "P";
+    if (type_move == CAPTURES_PAWN_BISHOP_PROMO_BISHOP_ML) return "P";
+    if (type_move == CAPTURES_PAWN_KNIGHT_PROMO_BISHOP_ML) return "P";
+    if (type_move == CAPTURES_PAWN_QUEEN_PROMO_KNIGHT_ML) return "P";
+    if (type_move == CAPTURES_PAWN_ROOK_PROMO_KNIGHT_ML) return "P";
+    if (type_move == CAPTURES_PAWN_BISHOP_PROMO_KNIGHT_ML) return "P";
+    if (type_move == CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT_ML) return "P";
+    if (type_move == MOVE_PAWN_PROMO_QUEEN_ML) return "P";
+    if (type_move == MOVE_PAWN_PROMO_ROOK_ML) return "P";
+    if (type_move == MOVE_PAWN_PROMO_BISHOP_ML) return "P";
+    if (type_move == MOVE_PAWN_PROMO_KNIGHT_ML) return "P";
+    if (type_move == CAPTURES_PAWN_QUEEN_ML) return "P";
+    if (type_move == CAPTURES_PAWN_ROOK_ML) return "P";
+    if (type_move == CAPTURES_PAWN_BISHOP_ML) return "P";
+    if (type_move == CAPTURES_PAWN_KNIGHT_ML) return "P";
+    if (type_move == CAPTURES_KNIGHT_QUEEN_ML) return "N";
+    if (type_move == CAPTURES_KNIGHT_ROOK_ML) return "N";
+    if (type_move == CAPTURES_BISHOP_QUEEN_ML) return "B";
+    if (type_move == CAPTURES_BISHOP_ROOK_ML) return "B";
+    if (type_move == CAPTURES_ROOK_QUEEN_ML) return "R";
+    if (type_move == CAPTURES_KNIGHT_BISHOP_ML) return "N";
+    if (type_move == CAPTURES_KNIGHT_KNIGHT_ML) return "N";
+    if (type_move == CAPTURES_BISHOP_BISHOP_ML) return "B";
+    if (type_move == CAPTURES_BISHOP_KNIGHT_ML) return "B";
+    if (type_move == CAPTURES_ROOK_ROOK_ML) return "R";
+    if (type_move == CAPTURES_QUEEN_QUEEN_ML) return "Q";
+    if (type_move == CAPTURES_ROOK_BISHOP_ML) return "R";
+    if (type_move == CAPTURES_ROOK_KNIGHT_ML) return "R";
+    if (type_move == CAPTURES_QUEEN_ROOK_ML) return "Q";
+    if (type_move == CAPTURES_QUEEN_BISHOP_ML) return "Q";
+    if (type_move == CAPTURES_QUEEN_KNIGHT_ML) return "Q";
+    if (type_move == CAPTURES_KING_QUEEN_ML) return "K";
+    if (type_move == CAPTURES_KING_ROOK_ML) return "K";
+    if (type_move == CAPTURES_KING_BISHOP_ML) return "K";
+    if (type_move == CAPTURES_KING_KNIGHT_ML) return "K";
+    if (type_move == CAPTURES_PAWN_PAWN_ML) return "P";
+    if (type_move == EP_CAPTURES_ML) return "P";
+    if (type_move == CAPTURES_KNIGHT_PAWN_ML) return "N";
+    if (type_move == CAPTURES_BISHOP_PAWN_ML) return "B";
+    if (type_move == CAPTURES_ROOK_PAWN_ML) return "R";
+    if (type_move == CAPTURES_QUEEN_PAWN_ML) return "Q";
+    if (type_move == CAPTURES_KING_PAWN_ML) return "K";
+    if (type_move == MOVE_QUEEN_ML) return "Q";
+    if (type_move == MOVE_ROOK_ML) return "R";
+    if (type_move == MOVE_BISHOP_ML) return "B";
+    if (type_move == MOVE_KNIGHT_ML) return "N";
+    if (type_move == MOVE_KING_ML) return "K";
+    if (type_move == MOVE_PAWN_ML) return "P";
+    if (type_move == MOVE_DOUBLE_PAWN_ML) return "P";
+    if (type_move == MOVE_KING_CASTLE_ML) return "K";
+    if (type_move == MOVE_KING_QUEEN_CASTLE_ML) return "K";
+    return "";
+}
 
 
 //return_piece_name_captures_from_type_move, 
