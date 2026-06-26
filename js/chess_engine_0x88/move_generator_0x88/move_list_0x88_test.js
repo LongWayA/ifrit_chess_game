@@ -32,7 +32,7 @@ import {
 } from "../move_generator_0x88/move_list_0x88.js";
 
 import {
-    packing_moves, packing_moves_sorting_true, packing_moves_capture_in_0_true,
+    packing_moves, packing_moves_true, packing_moves_sorting_true, packing_moves_capture_in_0_true,
     packing_moves_move_in_0_true, packing_moves_k1_k2_true, packing_moves_history_true
 } from "../move_generator_0x88/move_list_pm_0x88_test.js";
 
@@ -132,8 +132,8 @@ class Move_list_0x88_TEST_С {
         //        │ capture  │  │   to    │  │  from  │  │  type  │
         //        │  (8 бит) │  │ (8 бит) │  │ (8 бит)│  │ (8 бит)│
         //        └──────────┘  └─────────┘  └────────┘  └────────┘
-        let packing_moves = new Int32Array(LENGTH_LIST_ML).fill(MOVE_NO_ML);
-        let packing_moves_true = new Int32Array(LENGTH_LIST_ML).fill(MOVE_NO_ML);
+        let packing_moves_l = new Int32Array(LENGTH_LIST_ML).fill(MOVE_NO_ML);
+        let packing_moves_true_l = new Int32Array(LENGTH_LIST_ML).fill(MOVE_NO_ML);
 
         let type_move = 0;// тип хода 0..60
         let from = 0;// откуда ход 0..119
@@ -158,33 +158,33 @@ class Move_list_0x88_TEST_С {
         piece_color = 1;
         number_captures_move = 0;
 
-        packing_moves_true[j] = 5530681;// запакованый ход (int 32)
-        packing_moves_true[IND_PIECE_COLOR_ML] = piece_color;
-        packing_moves_true[IND_NUMBER_CAPTURES_MOVE_ML] = number_captures_move;
-        packing_moves_true[IND_NUMBER_MOVE_ML] = j + 1;// количество ходов      
+        packing_moves_true_l[j] = 5530681;// запакованый ход (int 32)
+        packing_moves_true_l[IND_PIECE_COLOR_ML] = piece_color;
+        packing_moves_true_l[IND_NUMBER_CAPTURES_MOVE_ML] = number_captures_move;
+        packing_moves_true_l[IND_NUMBER_MOVE_ML] = j + 1;// количество ходов      
 
         // добавляем ход в список
-        j = add_packing_move_ml(packing_moves, type_move, from, to, name_capture_piece);
+        j = add_packing_move_ml(packing_moves_l, type_move, from, to, name_capture_piece);
 
         j = j - 1;// из количества ходов делаем индекс последнего хода 
 
-        set_color_ml(packing_moves, piece_color);
+        set_color_ml(packing_moves_l, piece_color);
 
-        set_number_captures_move_ml(packing_moves, number_captures_move);
+        set_number_captures_move_ml(packing_moves_l, number_captures_move);
 
-        if (packing_moves_true[j] != packing_moves[j]) {
+        if (packing_moves_true_l[j] != packing_moves_l[j]) {
             w = w + 1;
-            console.log("Move_list_0x88_TEST_С -> add_packing_move_ml_test-> packing_moves_true[" + j + "] = " + packing_moves_true[j]);
-            console.log("Move_list_0x88_TEST_С -> add_packing_move_ml_test-> packing_moves[" + j + "] = " + packing_moves[j]);
+            console.log("Move_list_0x88_TEST_С -> add_packing_move_ml_test-> packing_moves_true_l[" + j + "] = " + packing_moves_true_l[j]);
+            console.log("Move_list_0x88_TEST_С -> add_packing_move_ml_test-> packing_moves_l[" + j + "] = " + packing_moves_l[j]);
         }
 
         // сравнение двух списков ходов
         // если есть отличия то печатем в консоль предупреждение
-        test_compare_list_from_ml(packing_moves_true, packing_moves);
+        test_compare_list_from_ml(packing_moves_true_l, packing_moves_l);
 
         // сравниваем параметры type_move, from, to, name_capture_piece до и после запаковки. 
         // если есть отличия то печатаем их 
-        w = w + this.test_compare_parametr_from_unpack(packing_moves, j, type_move, from, to, name_capture_piece);
+        w = w + this.test_compare_parametr_from_unpack(packing_moves_l, j, type_move, from, to, name_capture_piece);
         //------------------------------------------------------------------------------------
 
         //------------------------------------------------------------------------------------
@@ -198,39 +198,39 @@ class Move_list_0x88_TEST_С {
         piece_color = 0;
         number_captures_move = 0;
 
-        packing_moves_true[j] = 3413050;
-        packing_moves_true[IND_PIECE_COLOR_ML] = piece_color;
-        packing_moves_true[IND_NUMBER_CAPTURES_MOVE_ML] = number_captures_move;
-        packing_moves_true[IND_NUMBER_MOVE_ML] = j + 1;
+        packing_moves_true_l[j] = 3413050;
+        packing_moves_true_l[IND_PIECE_COLOR_ML] = piece_color;
+        packing_moves_true_l[IND_NUMBER_CAPTURES_MOVE_ML] = number_captures_move;
+        packing_moves_true_l[IND_NUMBER_MOVE_ML] = j + 1;
 
         // добавляем ход в список
-        j = add_packing_move_ml(packing_moves, type_move, from, to, name_capture_piece);
+        j = add_packing_move_ml(packing_moves_l, type_move, from, to, name_capture_piece);
 
         j = j - 1;// из количества ходов делаем индекс последнего хода 
 
-        set_color_ml(packing_moves, piece_color);
+        set_color_ml(packing_moves_l, piece_color);
 
-        set_number_captures_move_ml(packing_moves, number_captures_move);
+        set_number_captures_move_ml(packing_moves_l, number_captures_move);
 
-        if (packing_moves_true[j] != packing_moves[j]) {
+        if (packing_moves_true_l[j] != packing_moves_l[j]) {
             w = w + 1;
-            console.log("Move_list_0x88_TEST_С -> add_packing_move_ml_test-> packing_moves_true[" + j + "] = " + packing_moves_true[j]);
-            console.log("Move_list_0x88_TEST_С -> add_packing_move_ml_test-> packing_moves[" + j + "] = " + packing_moves[j]);
+            console.log("Move_list_0x88_TEST_С -> add_packing_move_ml_test-> packing_moves_true_l[" + j + "] = " + packing_moves_true_l[j]);
+            console.log("Move_list_0x88_TEST_С -> add_packing_move_ml_test-> packing_moves_l[" + j + "] = " + packing_moves_l[j]);
         }
 
         // сравнение двух списков ходов
         // если есть отличия то печатем в консоль предупреждение
-        test_compare_list_from_ml(packing_moves_true, packing_moves);
+        test_compare_list_from_ml(packing_moves_true_l, packing_moves_l);
 
         // сравниваем параметры type_move, from, to, name_capture_piece до и после запаковки. 
         // если есть отличия то печатаем их 
-        w = w + this.test_compare_parametr_from_unpack(packing_moves, j, type_move, from, to, name_capture_piece);
+        w = w + this.test_compare_parametr_from_unpack(packing_moves_l, j, type_move, from, to, name_capture_piece);
         //------------------------------------------------------------------------------------
 
         if (w != 0) {
             console.log("Move_list_0x88_TEST_С -> add_packing_move_ml_test-> PRINT LIST");
             // печатаем в консоль весь список ходов
-            test_print_list_ml(packing_moves);
+            test_print_list_ml(packing_moves_l);
         }
 
     }
@@ -246,25 +246,25 @@ class Move_list_0x88_TEST_С {
 
         let is_print = 0;
 
-        let packing_moves_save = new Int32Array(LENGTH_LIST_ML).fill(MOVE_NO_ML);
+        let packing_moves_l = new Int32Array(LENGTH_LIST_ML).fill(MOVE_NO_ML);
 
-        //записываем список до сортировки что бы потом можно было распечатать исходный если есть ошибки
-        save_list_from_ml(packing_moves_save, packing_moves);
+        //
+        save_list_from_ml(packing_moves_l, packing_moves);
 
         // проверяем работу функции save_list_from_ml
-        test_compare_list_from_ml(packing_moves_save, packing_moves);
+        test_compare_list_from_ml(packing_moves_l, packing_moves);
 
         //----------------------------------------------------------
-        sorting_list_ml(packing_moves);
+        sorting_list_ml(packing_moves_l);
         //----------------------------------------------------------
 
         for (let i = 0; i < packing_moves[IND_NUMBER_MOVE_ML]; i++) {
 
-            if (packing_moves_sorting_true[i] != packing_moves[i]) {
+            if (packing_moves_sorting_true[i] != packing_moves_l[i]) {
 
                 is_print = 1;
                 console.log("Move_list_0x88_TEST_С -> sorting_list_ml_test-> packing_moves_sorting_true[" + i + "] = " + packing_moves_sorting_true[i]);
-                console.log("Move_list_0x88_TEST_С -> sorting_list_ml_test-> packing_moves[" + i + "] = " + packing_moves[i]);
+                console.log("Move_list_0x88_TEST_С -> sorting_list_ml_test-> packing_moves_l[" + i + "] = " + packing_moves_l[i]);
             }
 
         }
@@ -274,11 +274,11 @@ class Move_list_0x88_TEST_С {
             console.log("Move_list_0x88_TEST_С -> sorting_list_ml_test-> packing_moves");
             test_print_list_ml(packing_moves);
             console.log("-----------");
-            console.log("Move_list_0x88_TEST_С -> sorting_list_ml_test-> PRINT packing_moves_save");
-            test_print_list_ml(packing_moves_save);
+            console.log("Move_list_0x88_TEST_С -> sorting_list_ml_test-> PRINT packing_moves_l");
+            test_print_list_ml(packing_moves_l);
             console.log("-----------");
             console.log("test_compare_list-----------");
-            test_compare_list_from_ml(packing_moves_sorting_true, packing_moves);
+            test_compare_list_from_ml(packing_moves_sorting_true, packing_moves_l);
         }
 
 
@@ -300,7 +300,7 @@ class Move_list_0x88_TEST_С {
 
         // записываем в начало взятие
 
-        //записываем список до сортировки что бы потом можно было распечатать исходный если есть ошибки
+        // заполняем массив packing_moves_save
         save_list_from_ml(packing_moves_save, packing_moves_sorting_true);
 
         // type_move[5] = 47 nm = CAPTURES_KNIGHT_PAWN_ML
@@ -332,7 +332,7 @@ class Move_list_0x88_TEST_С {
 
         // записываем в начало простой ход
 
-        //записываем список до сортировки что бы потом можно было распечатать исходный если есть ошибки
+        // заполняем массив packing_moves_save
         save_list_from_ml(packing_moves_save, packing_moves_sorting_true);
 
         // type_move[11] = 52 nm = MOVE_QUEEN_ML
@@ -376,6 +376,8 @@ class Move_list_0x88_TEST_С {
     */
     set_move_after_the_captures_ml_test() {
 
+        let packing_moves_l = new Int32Array(LENGTH_LIST_ML).fill(MOVE_NO_ML);
+
         let packing_moves_k = new Int32Array(1).fill(MOVE_NO_ML);// список ходов. ход упакован в одно число Uint32        
 
         let move_k1 = 5530422; // 54 nm = MOVE_BISHOP_ML
@@ -385,22 +387,25 @@ class Move_list_0x88_TEST_С {
 
         let is_print = 0;
 
+        // заполняем массив packing_moves_l
+        save_list_from_ml(packing_moves_l, packing_moves_sorting_true);
+
         packing_moves_k[depth] = move_k1;// ход киллер
-        set_move_after_the_captures_ml(packing_moves_sorting_true, packing_moves_k, depth);
+        set_move_after_the_captures_ml(packing_moves_l, packing_moves_k, depth);
 
         packing_moves_k[depth] = move_k2;// ход киллер
-        set_move_after_the_captures_ml(packing_moves_sorting_true, packing_moves_k, depth);
+        set_move_after_the_captures_ml(packing_moves_l, packing_moves_k, depth);
 
         //
-        for (let i = 0; i < packing_moves_sorting_true[IND_NUMBER_MOVE_ML]; i++) {
+        for (let i = 0; i < packing_moves_l[IND_NUMBER_MOVE_ML]; i++) {
 
-            if (packing_moves_k1_k2_true[i] != packing_moves_sorting_true[i]) {
+            if (packing_moves_k1_k2_true[i] != packing_moves_l[i]) {
 
                 is_print = 1;
                 console.log("Move_list_0x88_TEST_С -> set_move_after_the_captures_ml_test-> packing_moves_k1_k2_true[" + i + "] = "
                     + packing_moves_k1_k2_true[i]);
-                console.log("Move_list_0x88_TEST_С -> set_move_after_the_captures_ml_test-> packing_moves_sorting_true[" + i + "] = "
-                    + packing_moves_sorting_true[i]);
+                console.log("Move_list_0x88_TEST_С -> set_move_after_the_captures_ml_test-> packing_moves_l[" + i + "] = "
+                    + packing_moves_l[i]);
             }
 
         }
@@ -408,7 +413,7 @@ class Move_list_0x88_TEST_С {
         if (is_print == 1) {
             console.log("-----------");
             console.log("move killer-----------");
-            test_print_list_ml(packing_moves_sorting_true);
+            test_print_list_ml(packing_moves_l);
         }
 
 
@@ -422,6 +427,8 @@ class Move_list_0x88_TEST_С {
     */
     sorting_list_history_heuristic_ml_test() {
 
+        let packing_moves_l = new Int32Array(LENGTH_LIST_ML).fill(MOVE_NO_ML);
+
         const MAX_COLOR_HH = 2;          // 0 - черные, 1 - белые
         const MAX_COORDINATE_HH = 64;    // размер 64-клеточной доски
 
@@ -433,6 +440,9 @@ class Move_list_0x88_TEST_С {
         let h = 0;
 
         let is_print = 0;
+
+        // заполняем массив packing_moves_l
+        save_list_from_ml(packing_moves_l, packing_moves_sorting_true);
 
         for (let color = 0; color < MAX_COLOR_HH; color++) {
             const color_shift = color << 12;  // color * 4096
@@ -447,18 +457,18 @@ class Move_list_0x88_TEST_С {
         }
 
 
-        sorting_list_history_heuristic_ml(packing_moves_sorting_true, history);
+        sorting_list_history_heuristic_ml(packing_moves_l, history);
 
         //
-        for (let i = 0; i < packing_moves_sorting_true[IND_NUMBER_MOVE_ML]; i++) {
+        for (let i = 0; i < packing_moves_l[IND_NUMBER_MOVE_ML]; i++) {
 
-            if (packing_moves_history_true[i] != packing_moves_sorting_true[i]) {
+            if (packing_moves_history_true[i] != packing_moves_l[i]) {
 
                 is_print = 1;
                 console.log("Move_list_0x88_TEST_С -> sorting_list_history_heuristic_ml_test-> packing_moves_history_true[" + i + "] = "
                     + packing_moves_history_true[i]);
-                console.log("Move_list_0x88_TEST_С -> sorting_list_history_heuristic_ml_test-> packing_moves_sorting_true[" + i + "] = "
-                    + packing_moves_sorting_true[i]);
+                console.log("Move_list_0x88_TEST_С -> sorting_list_history_heuristic_ml_test-> packing_moves_l[" + i + "] = "
+                    + packing_moves_l[i]);
             }
 
         }
@@ -467,7 +477,7 @@ class Move_list_0x88_TEST_С {
             console.log("-----------");
             console.log("history-----------");
             //test_print_list_ml(packing_moves_sorting_true);
-            test_print_list_history_ml(packing_moves_sorting_true, history);
+            test_print_list_history_ml(packing_moves_l, history);
         }
 
     }
@@ -1313,47 +1323,47 @@ class Move_list_0x88_TEST_С {
      * например KING, QUEEN -> CAPTURES_KING_QUEEN
      * 
     */
-    return_promo_piece_from_type_move_ml_test() {    
+    return_promo_piece_from_type_move_ml_test() {
 
         let promo_piece = "-";
-        let type_move = 0; 
-        let promo_piece_true = "-";               
+        let type_move = 0;
+        let promo_piece_true = "-";
 
         //-------------        
         type_move = MOVE_PAWN_PROMO_QUEEN_ML;
         promo_piece_true = "q";
         promo_piece = return_promo_piece_from_type_move_ml(type_move);
-        if (promo_piece != promo_piece_true){ 
+        if (promo_piece != promo_piece_true) {
             console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
-            console.log("promo_piece = " + promo_piece ); 
-            console.log("promo_piece_true = " + promo_piece_true);                   
+            console.log("promo_piece = " + promo_piece);
+            console.log("promo_piece_true = " + promo_piece_true);
         }
 
         type_move = MOVE_PAWN_PROMO_ROOK_ML;
         promo_piece_true = "r";
         promo_piece = return_promo_piece_from_type_move_ml(type_move);
-        if (promo_piece != promo_piece_true){ 
+        if (promo_piece != promo_piece_true) {
             console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
-            console.log("promo_piece = " + promo_piece ); 
-            console.log("promo_piece_true = " + promo_piece_true);                   
+            console.log("promo_piece = " + promo_piece);
+            console.log("promo_piece_true = " + promo_piece_true);
         }
 
         type_move = MOVE_PAWN_PROMO_BISHOP_ML;
         promo_piece_true = "b";
         promo_piece = return_promo_piece_from_type_move_ml(type_move);
-        if (promo_piece != promo_piece_true){ 
+        if (promo_piece != promo_piece_true) {
             console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
-            console.log("promo_piece = " + promo_piece ); 
-            console.log("promo_piece_true = " + promo_piece_true);                   
+            console.log("promo_piece = " + promo_piece);
+            console.log("promo_piece_true = " + promo_piece_true);
         }
 
         type_move = MOVE_PAWN_PROMO_KNIGHT_ML;
         promo_piece_true = "n";
         promo_piece = return_promo_piece_from_type_move_ml(type_move);
-        if (promo_piece != promo_piece_true){ 
+        if (promo_piece != promo_piece_true) {
             console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
-            console.log("promo_piece = " + promo_piece ); 
-            console.log("promo_piece_true = " + promo_piece_true);                   
+            console.log("promo_piece = " + promo_piece);
+            console.log("promo_piece_true = " + promo_piece_true);
         }
         //------------- 
 
@@ -1361,37 +1371,37 @@ class Move_list_0x88_TEST_С {
         type_move = CAPTURES_PAWN_QUEEN_PROMO_QUEEN_ML;
         promo_piece_true = "q";
         promo_piece = return_promo_piece_from_type_move_ml(type_move);
-        if (promo_piece != promo_piece_true){ 
+        if (promo_piece != promo_piece_true) {
             console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
-            console.log("promo_piece = " + promo_piece ); 
-            console.log("promo_piece_true = " + promo_piece_true);                   
+            console.log("promo_piece = " + promo_piece);
+            console.log("promo_piece_true = " + promo_piece_true);
         }
 
         type_move = CAPTURES_PAWN_QUEEN_PROMO_ROOK_ML;
         promo_piece_true = "r";
         promo_piece = return_promo_piece_from_type_move_ml(type_move);
-        if (promo_piece != promo_piece_true){ 
+        if (promo_piece != promo_piece_true) {
             console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
-            console.log("promo_piece = " + promo_piece ); 
-            console.log("promo_piece_true = " + promo_piece_true);                   
+            console.log("promo_piece = " + promo_piece);
+            console.log("promo_piece_true = " + promo_piece_true);
         }
 
         type_move = CAPTURES_PAWN_QUEEN_PROMO_BISHOP_ML;
         promo_piece_true = "b";
         promo_piece = return_promo_piece_from_type_move_ml(type_move);
-        if (promo_piece != promo_piece_true){ 
+        if (promo_piece != promo_piece_true) {
             console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
-            console.log("promo_piece = " + promo_piece ); 
-            console.log("promo_piece_true = " + promo_piece_true);                   
+            console.log("promo_piece = " + promo_piece);
+            console.log("promo_piece_true = " + promo_piece_true);
         }
 
         type_move = CAPTURES_PAWN_QUEEN_PROMO_KNIGHT_ML;
         promo_piece_true = "n";
         promo_piece = return_promo_piece_from_type_move_ml(type_move);
-        if (promo_piece != promo_piece_true){ 
+        if (promo_piece != promo_piece_true) {
             console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
-            console.log("promo_piece = " + promo_piece ); 
-            console.log("promo_piece_true = " + promo_piece_true);                   
+            console.log("promo_piece = " + promo_piece);
+            console.log("promo_piece_true = " + promo_piece_true);
         }
         //------------- 
 
@@ -1399,37 +1409,37 @@ class Move_list_0x88_TEST_С {
         type_move = CAPTURES_PAWN_ROOK_PROMO_QUEEN_ML;
         promo_piece_true = "q";
         promo_piece = return_promo_piece_from_type_move_ml(type_move);
-        if (promo_piece != promo_piece_true){ 
+        if (promo_piece != promo_piece_true) {
             console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
-            console.log("promo_piece = " + promo_piece ); 
-            console.log("promo_piece_true = " + promo_piece_true);                   
+            console.log("promo_piece = " + promo_piece);
+            console.log("promo_piece_true = " + promo_piece_true);
         }
 
         type_move = CAPTURES_PAWN_ROOK_PROMO_ROOK_ML;
         promo_piece_true = "r";
         promo_piece = return_promo_piece_from_type_move_ml(type_move);
-        if (promo_piece != promo_piece_true){ 
+        if (promo_piece != promo_piece_true) {
             console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
-            console.log("promo_piece = " + promo_piece ); 
-            console.log("promo_piece_true = " + promo_piece_true);                   
+            console.log("promo_piece = " + promo_piece);
+            console.log("promo_piece_true = " + promo_piece_true);
         }
 
         type_move = CAPTURES_PAWN_ROOK_PROMO_BISHOP_ML;
         promo_piece_true = "b";
         promo_piece = return_promo_piece_from_type_move_ml(type_move);
-        if (promo_piece != promo_piece_true){ 
+        if (promo_piece != promo_piece_true) {
             console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
-            console.log("promo_piece = " + promo_piece ); 
-            console.log("promo_piece_true = " + promo_piece_true);                   
+            console.log("promo_piece = " + promo_piece);
+            console.log("promo_piece_true = " + promo_piece_true);
         }
 
         type_move = CAPTURES_PAWN_ROOK_PROMO_KNIGHT_ML;
         promo_piece_true = "n";
         promo_piece = return_promo_piece_from_type_move_ml(type_move);
-        if (promo_piece != promo_piece_true){ 
+        if (promo_piece != promo_piece_true) {
             console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
-            console.log("promo_piece = " + promo_piece ); 
-            console.log("promo_piece_true = " + promo_piece_true);                   
+            console.log("promo_piece = " + promo_piece);
+            console.log("promo_piece_true = " + promo_piece_true);
         }
         //------------- 
 
@@ -1437,37 +1447,37 @@ class Move_list_0x88_TEST_С {
         type_move = CAPTURES_PAWN_BISHOP_PROMO_QUEEN_ML;
         promo_piece_true = "q";
         promo_piece = return_promo_piece_from_type_move_ml(type_move);
-        if (promo_piece != promo_piece_true){ 
+        if (promo_piece != promo_piece_true) {
             console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
-            console.log("promo_piece = " + promo_piece ); 
-            console.log("promo_piece_true = " + promo_piece_true);                   
+            console.log("promo_piece = " + promo_piece);
+            console.log("promo_piece_true = " + promo_piece_true);
         }
 
         type_move = CAPTURES_PAWN_BISHOP_PROMO_ROOK_ML;
         promo_piece_true = "r";
         promo_piece = return_promo_piece_from_type_move_ml(type_move);
-        if (promo_piece != promo_piece_true){ 
+        if (promo_piece != promo_piece_true) {
             console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
-            console.log("promo_piece = " + promo_piece ); 
-            console.log("promo_piece_true = " + promo_piece_true);                   
+            console.log("promo_piece = " + promo_piece);
+            console.log("promo_piece_true = " + promo_piece_true);
         }
 
         type_move = CAPTURES_PAWN_BISHOP_PROMO_BISHOP_ML;
         promo_piece_true = "b";
         promo_piece = return_promo_piece_from_type_move_ml(type_move);
-        if (promo_piece != promo_piece_true){ 
+        if (promo_piece != promo_piece_true) {
             console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
-            console.log("promo_piece = " + promo_piece ); 
-            console.log("promo_piece_true = " + promo_piece_true);                   
+            console.log("promo_piece = " + promo_piece);
+            console.log("promo_piece_true = " + promo_piece_true);
         }
 
         type_move = CAPTURES_PAWN_BISHOP_PROMO_KNIGHT_ML;
         promo_piece_true = "n";
         promo_piece = return_promo_piece_from_type_move_ml(type_move);
-        if (promo_piece != promo_piece_true){ 
+        if (promo_piece != promo_piece_true) {
             console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
-            console.log("promo_piece = " + promo_piece ); 
-            console.log("promo_piece_true = " + promo_piece_true);                   
+            console.log("promo_piece = " + promo_piece);
+            console.log("promo_piece_true = " + promo_piece_true);
         }
         //------------- 
 
@@ -1475,41 +1485,135 @@ class Move_list_0x88_TEST_С {
         type_move = CAPTURES_PAWN_KNIGHT_PROMO_QUEEN_ML;
         promo_piece_true = "q";
         promo_piece = return_promo_piece_from_type_move_ml(type_move);
-        if (promo_piece != promo_piece_true){ 
+        if (promo_piece != promo_piece_true) {
             console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
-            console.log("promo_piece = " + promo_piece ); 
-            console.log("promo_piece_true = " + promo_piece_true);                   
+            console.log("promo_piece = " + promo_piece);
+            console.log("promo_piece_true = " + promo_piece_true);
         }
 
         type_move = CAPTURES_PAWN_KNIGHT_PROMO_ROOK_ML;
         promo_piece_true = "r";
         promo_piece = return_promo_piece_from_type_move_ml(type_move);
-        if (promo_piece != promo_piece_true){ 
+        if (promo_piece != promo_piece_true) {
             console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
-            console.log("promo_piece = " + promo_piece ); 
-            console.log("promo_piece_true = " + promo_piece_true);                   
+            console.log("promo_piece = " + promo_piece);
+            console.log("promo_piece_true = " + promo_piece_true);
         }
 
         type_move = CAPTURES_PAWN_KNIGHT_PROMO_BISHOP_ML;
         promo_piece_true = "b";
         promo_piece = return_promo_piece_from_type_move_ml(type_move);
-        if (promo_piece != promo_piece_true){ 
+        if (promo_piece != promo_piece_true) {
             console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
-            console.log("promo_piece = " + promo_piece ); 
-            console.log("promo_piece_true = " + promo_piece_true);                   
+            console.log("promo_piece = " + promo_piece);
+            console.log("promo_piece_true = " + promo_piece_true);
         }
 
         type_move = CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT_ML;
         promo_piece_true = "n";
         promo_piece = return_promo_piece_from_type_move_ml(type_move);
-        if (promo_piece != promo_piece_true){ 
+        if (promo_piece != promo_piece_true) {
             console.log("type_move = " + type_move + " nm = " + TYPE_MOVE_NAME_ML[type_move]);
-            console.log("promo_piece = " + promo_piece ); 
-            console.log("promo_piece_true = " + promo_piece_true);                   
+            console.log("promo_piece = " + promo_piece);
+            console.log("promo_piece_true = " + promo_piece_true);
         }
         //------------- 
     }
     //======================================================================================= 
+
+    //=======================================================================================
+    /*
+     * если ход from, to 
+     * нашли в списке ходов
+     * в случае превращений это первое попавшееся
+     * 
+    */
+    move_is_found_ml_test() {
+
+        let from = 51;
+        let to = 36;
+        let found = false;
+
+        found = move_is_found_ml(packing_moves, from, to);
+        if(!found) console.log("found = " + found);
+
+    }
+    //======================================================================================= 
+
+
+    //=======================================================================================
+    /*
+     * если ход from, to 
+     * нашли в списке ходов
+     * в случае превращений это первое попавшееся
+     * 
+    */
+    return_i_move_ml_test() {
+
+        let from = 51;
+        let to = 36;
+        let promo = "";        
+        let i_move = -1;
+        let i_move_true = -1;        
+
+        //---------------------
+        from = 51;
+        to = 36;
+        promo = ""; 
+        i_move_true = 0; 
+
+        i_move = return_i_move_ml(packing_moves, from, to, promo);
+
+        if(i_move != i_move_true){ 
+            console.log("i_move = " + i_move);
+            console.log("i_move_true = " + i_move_true);
+            test_print_list_ml(packing_moves);       
+        }
+        //---------------------
+
+        //---------------------
+        from = 85;
+        to = 55;
+        promo = ""; 
+        i_move_true = 20; 
+
+        i_move = return_i_move_ml(packing_moves, from, to, promo);
+
+        if(i_move != i_move_true){ 
+            console.log("i_move = " + i_move);
+            console.log("i_move_true = " + i_move_true);
+            test_print_list_ml(packing_moves);       
+        }
+        //---------------------
+    }
+    //======================================================================================= 
+
+    //=======================================================================================
+    /*
+     * возвращем ход из списка на заданной позиции
+     * в виде строки вида e2e4, e7e8q
+     * 
+    */
+    move_to_string_uci_ml_test() {
+
+            let i = 0;
+            let move_str = ""
+            let move_str_true = ""
+
+            i = 0;
+            move_str_true = "d5e6"
+            move_str = move_to_string_uci_ml(i, packing_moves);
+            if(move_str != move_str_true) console.log("move_str = " + move_str);
+
+            i = 11;
+            move_str_true = "e5c4"
+            move_str = move_to_string_uci_ml(i, packing_moves);
+            if(move_str != move_str_true) console.log("move_str = " + move_str);
+
+
+    }
+    //======================================================================================= 
+
 
     //=======================================================================================
     go() {
@@ -1522,7 +1626,10 @@ class Move_list_0x88_TEST_С {
         this.return_type_captures_pawn_promo_ml_test();
         this.return_type_simple_move_ml_test();
         this.return_promo_piece_from_type_move_ml_test();
-        
+        this.move_is_found_ml_test();
+        this.return_i_move_ml_test();
+        this.move_to_string_uci_ml_test();
+
     }
     //=======================================================================================
 

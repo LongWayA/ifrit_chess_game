@@ -779,7 +779,7 @@ const sorting_list_history_heuristic_ml = function (packing_moves, history) {
 /**
  * gui
  * 
- * 
+ * t
  * 
  * если ход from, to 
  * нашли в списке ходов
@@ -815,7 +815,7 @@ const move_is_found_ml = function (packing_moves, from, to) {
 /**
 * gui, i_serch
 * 
-*
+* t (превращения не тестировал, лень делать список с превращениями)
 *
 * находим и возвращаем порядковый номер хода
 * по ходу from, to, promo
@@ -863,7 +863,7 @@ const return_i_move_ml = function (packing_moves, from, to, promo = "") {
 /**
 *  gui, i_serch
 * 
-*
+* t
 *
 * возвращем ход из списка на заданной позиции
 * в виде строки вида e2e4, e7e8q
