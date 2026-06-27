@@ -37,7 +37,8 @@ let packing_moves_k1_k2_true = new Int32Array(LENGTH_LIST_ML).fill(MOVE_NO_ML);
 // после взятий добавляем два киллера. для проверки set_move_after_the_captures_ml
 let packing_moves_history_true = new Int32Array(LENGTH_LIST_ML).fill(MOVE_NO_ML);
 
-
+// генерация ходов из позиции 1n1n3k/2P5/8/8/8/8/3p4/2B1B2K w - - 0 1
+let packing_promo_true = new Int32Array(LENGTH_LIST_ML).fill(MOVE_NO_ML);
 
 // Position 2
 // r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -
@@ -2556,5 +2557,170 @@ packing_moves_history_true[IND_NUMBER_CAPTURES_MOVE_ML] = 8;
 packing_moves_history_true[IND_NUMBER_MOVE_ML] = 48;// количество ходов 
 
 
+//-----------------------------------------------------------------------------------------
+
+// type_move[0] = 4 nm = CAPTURES_PAWN_KNIGHT_PROMO_QUEEN_ML
+// from[0] = 18
+// to[0] = 1
+// 1name_capture_piece_i[0] = 10
+// c7-b8
+packing_promo_true[0] = 167842308
+
+// type_move[1] = 8 nm = CAPTURES_PAWN_KNIGHT_PROMO_ROOK_ML
+// from[1] = 18
+// to[1] = 1
+// name_capture_piece_i[1] = 10
+// c7-b8
+packing_promo_true[1] = 167842312
+
+// type_move[2] = 12 nm = CAPTURES_PAWN_KNIGHT_PROMO_BISHOP_ML
+// from[2] = 18
+// to[2] = 1
+// name_capture_piece_i[2] = 10
+// c7-b8
+packing_promo_true[2] = 167842316
+
+// type_move[3] = 16 nm = CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT_ML
+// from[3] = 18
+// to[3] = 1
+// name_capture_piece_i[3] = 10
+// c7-b8
+packing_promo_true[3] = 167842320
+
+// type_move[4] = 4 nm = CAPTURES_PAWN_KNIGHT_PROMO_QUEEN_ML
+// from[4] = 18
+// to[4] = 3
+// name_capture_piece_i[4] = 10
+// c7-d8
+packing_promo_true[4] = 167973380
+
+// type_move[5] = 8 nm = CAPTURES_PAWN_KNIGHT_PROMO_ROOK_ML
+// from[5] = 18
+// to[5] = 3
+// name_capture_piece_i[5] = 10
+// c7-d8
+packing_promo_true[5] = 167973384
+
+// type_move[6] = 12 nm = CAPTURES_PAWN_KNIGHT_PROMO_BISHOP_ML
+// from[6] = 18
+// to[6] = 3
+// name_capture_piece_i[6] = 10
+// c7-d8
+packing_promo_true[6] = 167973388
+
+// type_move[7] = 16 nm = CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT_ML
+// from[7] = 18
+// to[7] = 3
+// name_capture_piece_i[7] = 10
+// c7-d8
+packing_promo_true[7] = 167973392
+
+// type_move[8] = 48 nm = CAPTURES_BISHOP_PAWN_ML
+// from[8] = 114
+// to[8] = 99
+// name_capture_piece_i[8] = 9
+// c1-d2
+packing_promo_true[8] = 157512240
+
+// type_move[9] = 48 nm = CAPTURES_BISHOP_PAWN_ML
+// from[9] = 116
+// to[9] = 99
+// name_capture_piece_i[9] = 9
+// e1-d2
+packing_promo_true[9] = 157512752
+
+// type_move[10] = 17 nm = MOVE_PAWN_PROMO_QUEEN_ML
+// from[10] = 18
+// to[10] = 2
+// name_capture_piece_i[10] = 0
+// c7-c8
+packing_promo_true[10] = 135697
+
+// type_move[11] = 18 nm = MOVE_PAWN_PROMO_ROOK_ML
+// from[11] = 18
+// to[11] = 2
+// name_capture_piece_i[11] = 0
+// c7-c8
+packing_promo_true[11] = 135698 
+
+// type_move[12] = 19 nm = MOVE_PAWN_PROMO_BISHOP_ML
+// from[12] = 18
+// to[12] = 2
+// name_capture_piece_i[12] = 0
+// c7-c8
+packing_promo_true[12] = 135699
+
+// type_move[13] = 20 nm = MOVE_PAWN_PROMO_KNIGHT_ML
+// from[13] = 18
+// to[13] = 2
+// name_capture_piece_i[13] = 0
+// c7-c8
+packing_promo_true[13] = 135700 
+
+// type_move[14] = 54 nm = MOVE_BISHOP_ML
+// from[14] = 114
+// to[14] = 97
+// name_capture_piece_i[14] = 0
+// c1-b2
+packing_promo_true[14] = 6386230
+
+// type_move[15] = 54 nm = MOVE_BISHOP_ML
+// from[15] = 114
+// to[15] = 80
+// name_capture_piece_i[15] = 0
+// c1-a3
+packing_promo_true[15] = 5272118
+
+// type_move[16] = 54 nm = MOVE_BISHOP_ML
+// from[16] = 116
+// to[16] = 101
+// name_capture_piece_i[16] = 0
+// e1-f2
+packing_promo_true[16] = 6648886 
+
+// type_move[17] = 54 nm = MOVE_BISHOP_ML
+// from[17] = 116
+// to[17] = 86
+// name_capture_piece_i[17] = 0
+// e1-g3
+packing_promo_true[17] = 5665846 
+
+// type_move[18] = 54 nm = MOVE_BISHOP_ML
+// from[18] = 116
+// to[18] = 71
+// name_capture_piece_i[18] = 0
+// e1-h4
+packing_promo_true[18] = 4682806 
+
+// type_move[19] = 56 nm = MOVE_KING_ML
+// from[19] = 119
+// to[19] = 103
+// name_capture_piece_i[19] = 0
+// h1-h2
+packing_promo_true[19] = 6780728 
+
+// type_move[20] = 56 nm = MOVE_KING_ML
+// from[20] = 119
+// to[20] = 118
+// name_capture_piece_i[20] = 0
+// h1-g1
+packing_promo_true[20] = 7763768 
+
+// type_move[21] = 56 nm = MOVE_KING_ML
+// from[21] = 119
+// to[21] = 102
+// name_capture_piece_i[21] = 0
+// h1-g2
+packing_promo_true[21] = 6715192
+
+packing_promo_true[IND_PIECE_COLOR_ML] = 1;
+packing_promo_true[IND_NUMBER_CAPTURES_MOVE_ML] = 10;
+packing_promo_true[IND_NUMBER_MOVE_ML] = 22;// количество ходов 
+
+//-----------------------------------------------------------------------------------------
+
+
+
+
 export { packing_moves, packing_moves_true, packing_moves_sorting_true, packing_moves_capture_in_0_true,
-     packing_moves_move_in_0_true, packing_moves_k1_k2_true, packing_moves_history_true };
+     packing_moves_move_in_0_true, packing_moves_k1_k2_true, packing_moves_history_true, packing_promo_true };

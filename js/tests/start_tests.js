@@ -14,6 +14,10 @@ import {
       Move_list_0x88_TEST_С
 } from "../chess_engine_0x88/move_generator_0x88/move_list_0x88_test.js";
 
+import {
+      Move_generator_captures_0x88_TEST_С
+} from "../chess_engine_0x88/move_generator_0x88/move_generator_captures_0x88_test.js";
+
 /**
  * НАЗНАЧЕНИЕ
  *  
@@ -25,6 +29,7 @@ const NOT_TEST = 0;
 
 const is_chess_board_0x88 = 1; // TEST
 const is_move_list_0x88 = 1; // TEST
+const is_move_generator_captures_0x88 = 1; // TEST
 
 let Tests_R = {
 
@@ -32,7 +37,9 @@ let Tests_R = {
 
       chess_board_0x88_TEST_O: new Сhess_board_0x88_TEST_С(),
 
-      move_list_0x88_TEST_O: new Move_list_0x88_TEST_С(),      
+      move_list_0x88_TEST_O: new Move_list_0x88_TEST_С(),  
+      
+      move_generator_captures_0x88_TEST_O: new Move_generator_captures_0x88_TEST_С(),      
 
 
       iniM() {
@@ -40,6 +47,8 @@ let Tests_R = {
             Tests_R.chess_board_0x88_TEST_O.iniM();// Тестируем модуль шахматной доски chess_board_0x88.js
 
             Tests_R.move_list_0x88_TEST_O.iniM();// Тестируем модуль список ходов move_list_0x88.js
+
+            Tests_R.move_generator_captures_0x88_TEST_O.iniM();// Тестируем модуль генерация взятий move_generator_captures_0x88_test.js
       },
 
       go() {
@@ -56,6 +65,13 @@ let Tests_R = {
                   console.log("Tests_R -> Start Test: move_list_0x88.js");
                   Tests_R.move_list_0x88_TEST_O.go();
             }
+
+            // Тестируем модуль генерация взятий move_generator_captures_0x88_test.js
+            if (is_move_generator_captures_0x88 == TEST) {
+                  console.log("Tests_R -> Start Test: move_generator_captures_0x88_test.js");
+                  Tests_R.move_generator_captures_0x88_TEST_O.go();
+            }
+
       },
 
 };

@@ -815,7 +815,7 @@ const move_is_found_ml = function (packing_moves, from, to) {
 /**
 * gui, i_serch
 * 
-* t (превращения не тестировал, лень делать список с превращениями)
+* t
 *
 * находим и возвращаем порядковый номер хода
 * по ходу from, to, promo
@@ -1132,6 +1132,12 @@ const test_print_list_ml = function (packing_moves) {
 
         console.log("---- ");
     }
+
+    console.log("piece_color = " + piece_color);
+    console.log("number_captures_move = " + number_captures_move);
+    console.log("number_move = " + number_move);
+    console.log("*********** test_print_list");
+
 }
 
 /**

@@ -33,7 +33,7 @@ import {
 
 import {
     packing_moves, packing_moves_true, packing_moves_sorting_true, packing_moves_capture_in_0_true,
-    packing_moves_move_in_0_true, packing_moves_k1_k2_true, packing_moves_history_true
+    packing_moves_move_in_0_true, packing_moves_k1_k2_true, packing_moves_history_true, packing_promo_true
 } from "../move_generator_0x88/move_list_pm_0x88_test.js";
 
 import {
@@ -1537,6 +1537,11 @@ class Move_list_0x88_TEST_С {
         found = move_is_found_ml(packing_moves, from, to);
         if(!found) console.log("found = " + found);
 
+        from = 18;
+        to = 3;
+        found = move_is_found_ml(packing_promo_true, from, to);
+        if(!found) console.log("found = " + found);
+
     }
     //======================================================================================= 
 
@@ -1585,6 +1590,22 @@ class Move_list_0x88_TEST_С {
             test_print_list_ml(packing_moves);       
         }
         //---------------------
+
+        //---------------------
+        from = 18;
+        to = 3;
+        promo = ""; 
+        i_move_true = 4; 
+
+        i_move = return_i_move_ml(packing_promo_true, from, to, promo);
+
+        if(i_move != i_move_true){ 
+            console.log("i_move = " + i_move);
+            console.log("i_move_true = " + i_move_true);
+            test_print_list_ml(packing_promo_true);       
+        }
+        //---------------------
+
     }
     //======================================================================================= 
 
@@ -1608,6 +1629,11 @@ class Move_list_0x88_TEST_С {
             i = 11;
             move_str_true = "e5c4"
             move_str = move_to_string_uci_ml(i, packing_moves);
+            if(move_str != move_str_true) console.log("move_str = " + move_str);
+
+            i = 5;
+            move_str_true = "c7d8r"
+            move_str = move_to_string_uci_ml(i, packing_promo_true);
             if(move_str != move_str_true) console.log("move_str = " + move_str);
 
 

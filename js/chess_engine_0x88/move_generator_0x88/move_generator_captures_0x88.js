@@ -67,6 +67,9 @@ const moves_bishop_mgc = new Int32Array([-15, 17, 15, -17]);
 const moves_knight_mgc = new Int32Array([-33, -31, -14, 18, 33, 31, 14, -18]);
 
 /** генерируем всевозможные ходы, но не учитываем шахи и вскрытые шахи.
+ * 
+ * 
+ * 
 * @param {Int32Array} chess_board_0x88
 * @param {Int32Array} packing_moves
 * @returns {void}
@@ -86,11 +89,15 @@ const generated_pseudo_legal_captures_mgc = function (chess_board_0x88, packing_
             generated_pseudo_legal_captures_one_piece_mgc(from, side_to_move, chess_board_0x88, packing_moves);
         }
     }
+
     // все ходы которые мы нашли это взятия. так что количество взятий равно количеству ходов
     packing_moves[IND_NUMBER_CAPTURES_MOVE_ML] = packing_moves[IND_NUMBER_MOVE_ML];
 }
 
 /** считаем ходы одной фигуры из конкретной позиции. сделал для работы гуи
+ * 
+ * t
+ * 
 * @param {number} from
 * @param {Int32Array} chess_board_0x88
 * @param {Int32Array} packing_moves
@@ -107,6 +114,10 @@ const generated_pseudo_legal_captures_one_piece_for_gui_mgc = function (from, ch
     if ((from & OUT_OF_BOUNDS_MASK_CB) == 0) {// 136 0x88
         generated_pseudo_legal_captures_one_piece_mgc(from, side_to_move, chess_board_0x88, packing_moves);
     }
+    
+    // все ходы которые мы нашли это взятия. так что количество взятий равно количеству ходов
+    packing_moves[IND_NUMBER_CAPTURES_MOVE_ML] = packing_moves[IND_NUMBER_MOVE_ML];
+
 }
 
 
