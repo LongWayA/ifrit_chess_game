@@ -90,6 +90,9 @@ const moves_knight_mgq = new Int32Array([-33, -31, -14, 18, 33, 31, 14, -18]);
 
 
 /** генерируем всевозможные ходы, но не учитываем шахи и вскрытые шахи.
+* 
+* t
+* 
 * @param {Int32Array} chess_board_0x88
 * @param {Int32Array} packing_moves
 * @returns {void}
@@ -107,6 +110,9 @@ const generated_pseudo_legal_quiet_moves_mgq = function (chess_board_0x88, packi
 
 
 /**  считаем ходы одной фигуры из конкретной позиции
+* 
+* t
+* 
 * @param {number} from
 * @param {Int32Array} chess_board_0x88
 * @param {Int32Array} packing_moves

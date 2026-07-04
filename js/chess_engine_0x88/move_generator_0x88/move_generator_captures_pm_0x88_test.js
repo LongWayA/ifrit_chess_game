@@ -3,7 +3,7 @@
  * @copyright Copyright (c) 2026, AnBr75 and/or its affiliates. All rights reserved.
  * @author AnBr75
  * @name move_generator_captures_pm_0x88_test.js
- * @version created 27.06m.2026 
+ * @version created 03.07m.2026 
  * 
 */
 

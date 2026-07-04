@@ -2,7 +2,7 @@
 /** 
  * @copyright Copyright (c) 2026, AnBr75 and/or its affiliates. All rights reserved.
  * @author AnBr75
- * @name pathes_browser.js
+ * @name start_tests.js
  * @version created 09.06m.2026
 */
 
@@ -18,6 +18,15 @@ import {
       Move_generator_captures_0x88_TEST_С
 } from "../chess_engine_0x88/move_generator_0x88/move_generator_captures_0x88_test.js";
 
+import {
+      Move_generator_quiet_0x88_TEST_С
+} from "../chess_engine_0x88/move_generator_0x88/move_generator_quiet_0x88_test.js";
+
+import {
+      Make_move_0x88_TEST_С
+} from "../chess_engine_0x88/move_generator_0x88/make_move_0x88_test.js";
+
+
 /**
  * НАЗНАЧЕНИЕ
  *  
@@ -30,6 +39,8 @@ const NOT_TEST = 0;
 const is_chess_board_0x88 = 1; // TEST
 const is_move_list_0x88 = 1; // TEST
 const is_move_generator_captures_0x88 = 1; // TEST
+const is_move_generator_quiet_0x88 = 1; // TEST
+const is_make_move_0x88 = 1; // TEST
 
 let Tests_R = {
 
@@ -39,7 +50,12 @@ let Tests_R = {
 
       move_list_0x88_TEST_O: new Move_list_0x88_TEST_С(),  
       
-      move_generator_captures_0x88_TEST_O: new Move_generator_captures_0x88_TEST_С(),      
+      move_generator_captures_0x88_TEST_O: new Move_generator_captures_0x88_TEST_С(),  
+      
+      move_generator_quiet_0x88_TEST_O: new Move_generator_quiet_0x88_TEST_С(),
+
+      make_move_0x88_TEST_O: new Make_move_0x88_TEST_С(),      
+
 
 
       iniM() {
@@ -49,6 +65,11 @@ let Tests_R = {
             Tests_R.move_list_0x88_TEST_O.iniM();// Тестируем модуль список ходов move_list_0x88.js
 
             Tests_R.move_generator_captures_0x88_TEST_O.iniM();// Тестируем модуль генерация взятий move_generator_captures_0x88_test.js
+
+            Tests_R.move_generator_quiet_0x88_TEST_O.iniM();// Тестируем модуль генераций тихих ходов move_generator_quiet_0x88.js
+
+            Tests_R.make_move_0x88_TEST_O.iniM();// Тестируем модуль генераций тихих ходов move_generator_quiet_0x88.js
+
       },
 
       go() {
@@ -66,10 +87,22 @@ let Tests_R = {
                   Tests_R.move_list_0x88_TEST_O.go();
             }
 
-            // Тестируем модуль генерация взятий move_generator_captures_0x88_test.js
+            // Тестируем модуль генерации взятий move_generator_captures_0x88_test.js
             if (is_move_generator_captures_0x88 == TEST) {
                   console.log("Tests_R -> Start Test: move_generator_captures_0x88_test.js");
                   Tests_R.move_generator_captures_0x88_TEST_O.go();
+            }
+
+            // Тестируем модуль генерации тихих ходов move_generator_quiet_0x88.js
+            if (is_move_generator_quiet_0x88 == TEST) {
+                  console.log("Tests_R -> Start Test: move_generator_quiet_0x88.js");
+                  Tests_R.move_generator_quiet_0x88_TEST_O.go();
+            }
+
+            // Тестируем модуль генерации позиций make_move_0x88.js
+            if (is_make_move_0x88 == TEST) {
+                  console.log("Tests_R -> Start Test: make_move_0x88.js");
+                  Tests_R.make_move_0x88_TEST_O.go();
             }
 
       },

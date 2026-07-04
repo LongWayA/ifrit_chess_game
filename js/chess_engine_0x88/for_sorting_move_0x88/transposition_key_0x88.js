@@ -130,6 +130,10 @@ const set_key_from_board_0x88_tk = function (chess_board_0x88, chess_board_key_6
             piece = chess_board_0x88[sq];
 
             if (piece != 0) {
+
+                //console.log("set_key_from_board_0x88_tk piece = " + piece);
+                //console.log("set_key_from_board_0x88_tk sq = " + sq);                
+
                 key_64 = key_64 ^ key_array_64_tk[piece][sq];
             }
         }

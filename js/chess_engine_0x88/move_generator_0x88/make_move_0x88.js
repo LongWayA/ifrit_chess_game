@@ -71,6 +71,9 @@ const MOOVE_IS_NOT_LEGAL_CASTLING_MM = 2;
 
 
 /** делаем ход на доске chess_board_0x88
+* 
+* t
+* 
 * @param {Int32Array} chess_board_0x88
 * @param {BigUint64Array} chess_board_key_64
 * @param {number} type_move

@@ -68,7 +68,7 @@ const moves_knight_mgc = new Int32Array([-33, -31, -14, 18, 33, 31, 14, -18]);
 
 /** генерируем всевозможные ходы, но не учитываем шахи и вскрытые шахи.
  * 
- * 
+ * t
  * 
 * @param {Int32Array} chess_board_0x88
 * @param {Int32Array} packing_moves
@@ -529,6 +529,9 @@ const generated_captures_moves_pawn_promo_mgc = function (piece_name, from, to_l
 /** ищем шахи (прямая проверка лучей без генерации списков)
  * оптимизация предложенная Qwen3.7-Max, с прямой генерацией лучей.
  * оставлю в конце файла исходную чтобы было видно из чего это в итоге получилось.
+ * 
+ * t
+ * 
  * @param {number} from - квадрат, который проверяем на шах (обычно позиция короля)
  * @param {number} piece_color - цвет фигуры на квадрате from (WHITE_CB или BLACK_CB)
  * @param {Int32Array} chess_board_0x88 - доска
