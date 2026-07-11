@@ -9,14 +9,14 @@
 
 import {
     BOARD_SIZE_CB
-} from "../move_generator_0x88/chess_board_0x88.js";
+} from "../move_generator_0x88_t/chess_board_0x88.js";
 
 import {
     get_type_move_ml, get_from_ml, get_to_ml, get_name_capture_piece_ml,
     sorting_list_ml,
     LENGTH_LIST_ML, IND_PIECE_COLOR_ML, IND_NUMBER_MOVE_ML,
     MOVE_NO_ML
-} from "../move_generator_0x88/move_list_0x88.js";
+} from "../move_generator_0x88_t/move_list_0x88.js";
 
 import {
 
@@ -24,9 +24,9 @@ import {
 
 import {
   generated_pseudo_legal_captures_mgc
-} from "../move_generator_0x88/move_generator_captures_0x88.js";
+} from "../move_generator_0x88_t/move_generator_captures_0x88.js";
 
-import { do_moves_mm } from "../move_generator_0x88/make_move_0x88.js";
+import { do_moves_mm } from "../move_generator_0x88_t/make_move_0x88.js";
 
 import { score_position_e, PIECE_SCORE_E } from "./evaluate_0x88.js";
 

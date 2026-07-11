@@ -12,11 +12,11 @@ import {
      B_ROOK_CB, B_KING_CB, IND_CASTLING_Q_CB, IND_CASTLING_q_CB, IND_CASTLING_K_CB,
     IND_CASTLING_k_CB, IND_EN_PASSANT_YES_CB,
     IND_EN_PASSANT_TARGET_SQUARE_CB
-} from "../move_generator_0x88/chess_board_0x88.js";
+} from "../move_generator_0x88_t/chess_board_0x88.js";
 
 import {
     test_print_i_move_list_ml
-} from "../move_generator_0x88/move_list_0x88.js";
+} from "../move_generator_0x88_t/move_list_0x88.js";
 
 
 // nnnnnnnnnnnnnnnnnnnnnn

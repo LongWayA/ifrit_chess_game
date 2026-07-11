@@ -2,29 +2,29 @@
 /** 
  * @copyright Copyright (c) 2026, AnBr75 and/or its affiliates. All rights reserved.
  * @author AnBr75
- * @name start_tests.js
+ * @name move_generator_0x88_tests.js
  * @version created 09.06m.2026
 */
 
 import {
       Сhess_board_0x88_TEST_С
-} from "../chess_engine_0x88/move_generator_0x88/chess_board_0x88_test.js";
+} from "../chess_engine_0x88/move_generator_0x88_t/chess_board_0x88_test.js";
 
 import {
       Move_list_0x88_TEST_С
-} from "../chess_engine_0x88/move_generator_0x88/move_list_0x88_test.js";
+} from "../chess_engine_0x88/move_generator_0x88_t/move_list_0x88_test.js";
 
 import {
       Move_generator_captures_0x88_TEST_С
-} from "../chess_engine_0x88/move_generator_0x88/move_generator_captures_0x88_test.js";
+} from "../chess_engine_0x88/move_generator_0x88_t/move_generator_captures_0x88_test.js";
 
 import {
       Move_generator_quiet_0x88_TEST_С
-} from "../chess_engine_0x88/move_generator_0x88/move_generator_quiet_0x88_test.js";
+} from "../chess_engine_0x88/move_generator_0x88_t/move_generator_quiet_0x88_test.js";
 
 import {
       Make_move_0x88_TEST_С
-} from "../chess_engine_0x88/move_generator_0x88/make_move_0x88_test.js";
+} from "../chess_engine_0x88/move_generator_0x88_t/make_move_0x88_test.js";
 
 
 /**

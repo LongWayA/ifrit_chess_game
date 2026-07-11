@@ -9,13 +9,13 @@
 import {
     s_0x88_to_x07_cb, s_0x88_to_y07_cb,
     LET_COOR_CB
-} from "../move_generator_0x88/chess_board_0x88.js";
+} from "../move_generator_0x88_t/chess_board_0x88.js";
 
 import {
     get_type_move_ml, get_from_ml, get_to_ml, get_name_capture_piece_ml,
     return_promo_piece_from_type_move_ml,
     TYPE_MOVE_NAME_ML
-} from "../move_generator_0x88/move_list_0x88.js";
+} from "../move_generator_0x88_t/move_list_0x88.js";
 
 /**
 * НАЗНАЧЕНИЕ

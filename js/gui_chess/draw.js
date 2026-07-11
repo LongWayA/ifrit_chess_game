@@ -17,11 +17,11 @@ import { Html5Sprites_C } from "./html5_sprites/html5_sprites.js";
 import {
     get_to_ml,
     IND_NUMBER_MOVE_ML
-} from "../chess_engine_0x88/move_generator_0x88/move_list_0x88.js";
+} from "../chess_engine_0x88/move_generator_0x88_t/move_list_0x88.js";
 
 import {
     s_0x88_to_x07_cb, s_0x88_to_y07_cb
-} from "../chess_engine_0x88/move_generator_0x88/chess_board_0x88.js";
+} from "../chess_engine_0x88/move_generator_0x88_t/chess_board_0x88.js";
 
 
 /**

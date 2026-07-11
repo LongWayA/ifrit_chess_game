@@ -16,16 +16,16 @@ import {
   BOARD_SIZE_CB, SIDE_TO_MOVE_CB,
   BLACK_CB, WHITE_CB,
   IND_KING_FROM_WHITE_CB, IND_KING_FROM_BLACK_CB
-} from "../move_generator_0x88/chess_board_0x88.js";
+} from "../move_generator_0x88_t/chess_board_0x88.js";
 
-import { do_moves_mm } from "../move_generator_0x88/make_move_0x88.js";
+import { do_moves_mm } from "../move_generator_0x88_t/make_move_0x88.js";
 
 import {
   get_type_move_ml, get_from_ml, get_to_ml, get_name_capture_piece_ml,
   sorting_list_ml, test_print_list_ml,
   LENGTH_LIST_ML, IND_PIECE_COLOR_ML, IND_NUMBER_CAPTURES_MOVE_ML, IND_NUMBER_MOVE_ML,
   MOVE_NO_ML
-} from "../move_generator_0x88/move_list_0x88.js";
+} from "../move_generator_0x88_t/move_list_0x88.js";
 
 import {
   add_move_to_pv_line_pv, save_pv_line_pv,
@@ -34,10 +34,10 @@ import {
 
 import {
   generated_pseudo_legal_captures_mgc, check_detected_mgc
-} from "../move_generator_0x88/move_generator_captures_0x88.js";
+} from "../move_generator_0x88_t/move_generator_captures_0x88.js";
 import {
   generated_pseudo_legal_quiet_moves_mgq
-} from "../move_generator_0x88/move_generator_quiet_0x88.js";
+} from "../move_generator_0x88_t/move_generator_quiet_0x88.js";
 
 import { } from "./evaluate_0x88.js";
 
@@ -76,6 +76,9 @@ let node_mm = 0;
 let chess_board_0x88_end_original = new Int32Array(BOARD_SIZE_CB).fill(0);// доска 0x88 с фигурами;
 
 /**
+ * 
+ * tp
+ * 
  * @param {Int32Array} packing_pv_line
  * @param {Int32Array} chess_board_0x88 
  * @param {BigUint64Array} chess_board_key_64

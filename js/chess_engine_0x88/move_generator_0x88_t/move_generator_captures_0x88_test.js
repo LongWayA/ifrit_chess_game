@@ -18,7 +18,7 @@ import {
     test_print_list_ml,
     LENGTH_LIST_ML, IND_NUMBER_MOVE_ML,
     MOVE_NO_ML
-} from "../move_generator_0x88/move_list_0x88.js";
+} from "../move_generator_0x88_t/move_list_0x88.js";
 
 import {
     generated_pseudo_legal_captures_mgc, generated_pseudo_legal_captures_one_piece_for_gui_mgc, check_detected_mgc

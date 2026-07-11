@@ -13,7 +13,7 @@ import {
   return_i_move_ml, move_to_string_uci_ml,
   LENGTH_LIST_ML, IND_PIECE_COLOR_ML, IND_NUMBER_MOVE_ML,
   MOVE_NO_ML
-} from "../move_generator_0x88/move_list_0x88.js";
+} from "../move_generator_0x88_t/move_list_0x88.js";
 
 import {
   x07_y07_to_0x88_cb,
@@ -21,7 +21,7 @@ import {
   test_compare_chess_board_0x88_cb, set_board_from_fen_0x88_cb, set_fen_from_0x88_cb,
   letter_to_x_coordinate_cb,
   BOARD_SIZE_CB
-} from "../move_generator_0x88/chess_board_0x88.js";
+} from "../move_generator_0x88_t/chess_board_0x88.js";
 
 import {
   clear_pv_line_pv, add_move_to_pv_line_pv, save_pv_line_pv, pv_line_to_uci_string_pv,
@@ -30,12 +30,13 @@ import {
 
 import {
   generated_pseudo_legal_captures_mgc
-} from "../move_generator_0x88/move_generator_captures_0x88.js";
+} from "../move_generator_0x88_t/move_generator_captures_0x88.js";
+
 import {
   generated_pseudo_legal_quiet_moves_mgq
-} from "../move_generator_0x88/move_generator_quiet_0x88.js";
+} from "../move_generator_0x88_t/move_generator_quiet_0x88.js";
 
-import { do_moves_mm } from "../move_generator_0x88/make_move_0x88.js";
+import { do_moves_mm } from "../move_generator_0x88_t/make_move_0x88.js";
 
 import {
   searching_negamax, ini_stack, chess_board_0x88_end_original, node_mm

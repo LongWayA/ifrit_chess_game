@@ -9,12 +9,12 @@ Code review: Qwen3.7-Max AI
 
 import {
     SQUARE_128_to_64_CB
-} from "../move_generator_0x88/chess_board_0x88.js";
+} from "../move_generator_0x88_t/chess_board_0x88.js";
 
 import {
     get_from_ml, get_to_ml,
     IND_PIECE_COLOR_ML
-} from "../move_generator_0x88/move_list_0x88.js";
+} from "../move_generator_0x88_t/move_list_0x88.js";
 
 /**
 НАЗНАЧЕНИЕ

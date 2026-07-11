@@ -9,7 +9,7 @@
 
 import {
   generated_pseudo_legal_quiet_moves_mgq, generated_pseudo_legal_quiet_moves_one_piece_for_gui_mgq
-} from "../move_generator_0x88/move_generator_quiet_0x88.js";
+} from "../move_generator_0x88_t/move_generator_quiet_0x88.js";
 
 import {
     set_board_from_fen_0x88_cb,
@@ -22,7 +22,7 @@ import {
     test_print_list_ml,
     LENGTH_LIST_ML, IND_NUMBER_MOVE_ML,
     MOVE_NO_ML
-} from "../move_generator_0x88/move_list_0x88.js";
+} from "../move_generator_0x88_t/move_list_0x88.js";
 
 import {
     packing_moves, packing_moves_f
