@@ -107,6 +107,7 @@ rl.on('line', (line) => {
   // }
 
   else if (command.startsWith('go depth')) {
+    // @ts-ignore
     depth_max = command.slice(9);
     //console.log('depth_max ' + depth_max);
     //console.log('2 fen_start ' + fen_start);

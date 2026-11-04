@@ -9,7 +9,7 @@
 import {
   start_search_negamax_r, searching_iterative_deepening_r, set_stop_search_in_1_r, set_stop_search_in_0_r, test_tt,
   move_str_to_board_r
-} from "./search_0x88/i_search_root_0x88.js";
+} from "./search_nm_ab_0x88/i_search_root_0x88.js";
 
 /**
 * НАЗНАЧЕНИЕ
@@ -69,7 +69,7 @@ class ChessEngine_0x88_С {
   }
 
   /**
-   * @param {import('./search_0x88/i_search_root_0x88.js').uci_return_search} uci_return_search
+   * @param {import('./search_nm_ab_0x88/i_search_root_0x88.js').uci_return_search} uci_return_search
    * @returns {void}
    */
   info_from_depth_uci(uci_return_search) {
@@ -89,7 +89,7 @@ class ChessEngine_0x88_С {
 
   // сообщение поиска движку
   /**
-   * @param {import('./search_0x88/i_search_root_0x88.js').uci_return_search} uci_return_search
+   * @param {import('./search_nm_ab_0x88/i_search_root_0x88.js').uci_return_search} uci_return_search
    * @returns {void}
    */
   message_search_root_to_engine(uci_return_search) {
@@ -129,3 +129,12 @@ class ChessEngine_0x88_С {
 }
 
 export { ChessEngine_0x88_С };
+
+/*
+Описание класса.
+
+Работа должна вестись через воркер worker_chessEngine_0x88_O
+В итоге вообще непонятно как он работает потому что вызываются другие функции
+из модуля i_search_root_0x88.js
+
+*/

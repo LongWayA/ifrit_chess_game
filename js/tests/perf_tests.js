@@ -8,7 +8,7 @@
 
 import {
       searching_negamax, ini_stack, chess_board_0x88_end_original, node_mm
-} from "../chess_engine_0x88/search_0x88/search_negamax_0x88.js";
+} from "../chess_engine_0x88/search_negamax_0x88/search_negamax_0x88.js";
 
 import {
       x07_y07_to_0x88_cb,
@@ -16,17 +16,17 @@ import {
       test_compare_chess_board_0x88_cb, set_board_from_fen_0x88_cb, set_fen_from_0x88_cb,
       letter_to_x_coordinate_cb,
       BOARD_SIZE_CB
-} from "../chess_engine_0x88/move_generator_0x88_t/chess_board_0x88.js";
+} from "../chess_engine_0x88/core_0x88_t/chess_board_0x88_t/chess_board_0x88.js";
 
 import {
       ini_random_key_array_64_tk, set_key_from_board_0x88_tk, test_chess_board_key_64_tk,
       test_generation_key_64_tk
-} from "../chess_engine_0x88/for_sorting_move_0x88/transposition_key_0x88.js";
+} from "../chess_engine_0x88/heuristic_0x88/transposition_table_0x88/transposition_key_0x88.js";
 
 import {
       clear_pv_line_pv, add_move_to_pv_line_pv, save_pv_line_pv, pv_line_to_uci_string_pv,
       MAX_DEPTH_PV, IND_TYPE_VARIANT_PV
-} from "../chess_engine_0x88/search_0x88/pv_line_0x88.js";
+} from "../chess_engine_0x88/search_negamax_0x88/pv_line_0x88.js";
 
 import { Timer_C } from "../browser/timer.js";
 

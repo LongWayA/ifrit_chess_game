@@ -17,27 +17,27 @@ import {
     move_is_found_ml, return_i_move_ml, move_to_string_uci_ml,
     LENGTH_LIST_ML, IND_PIECE_COLOR_ML,
     MOVE_NO_ML
-} from "../chess_engine_0x88/move_generator_0x88_t/move_list_0x88.js";
+} from "../chess_engine_0x88/core_0x88_t/move_list_0x88_t/move_list_0x88.js";
 
 import {
     x07_y07_to_0x88_cb,
      set_board_from_fen_0x88_cb, set_fen_from_0x88_cb,
     BOARD_SIZE_CB
-} from "../chess_engine_0x88/move_generator_0x88_t/chess_board_0x88.js";
+} from "../chess_engine_0x88/core_0x88_t/chess_board_0x88_t/chess_board_0x88.js";
 
 import { 
       generated_pseudo_legal_captures_mgc, generated_pseudo_legal_captures_one_piece_for_gui_mgc
-} from "../chess_engine_0x88/move_generator_0x88_t/move_generator_captures_0x88.js";
+} from "../chess_engine_0x88/core_0x88_t/generator_move_0x88_t/generator_move_captures_0x88.js";
 import {     
   generated_pseudo_legal_quiet_moves_mgq, generated_pseudo_legal_quiet_moves_one_piece_for_gui_mgq,
-} from "../chess_engine_0x88/move_generator_0x88_t/move_generator_quiet_0x88.js";
+} from "../chess_engine_0x88/core_0x88_t/generator_move_0x88_t/generator_move_quiet_0x88.js";
 
-import { do_moves_mm } from "../chess_engine_0x88/move_generator_0x88_t/make_move_0x88.js";
+import { do_moves_mm } from "../chess_engine_0x88/core_0x88_t/make_move_0x88_t/make_move_0x88.js";
 
 
 import {
   ini_random_key_array_64_tk
-} from "../chess_engine_0x88/for_sorting_move_0x88/transposition_key_0x88.js";
+} from "../chess_engine_0x88/heuristic_0x88/transposition_table_0x88/transposition_key_0x88.js";
 
 /**
 * НАЗНАЧЕНИЕ

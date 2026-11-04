@@ -1,0 +1,3 @@
+const get_from = MoveList.get_from_ml;
+
+import * as MoveList from "./move_list_0x88.js";
