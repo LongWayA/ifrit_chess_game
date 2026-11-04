@@ -135,6 +135,7 @@ const CAPTURES_ROOK_KNIGHT_ML = 37;//
 const CAPTURES_QUEEN_ROOK_ML = 38;//
 const CAPTURES_QUEEN_BISHOP_ML = 39;//
 const CAPTURES_QUEEN_KNIGHT_ML = 40;//
+
 /* 
 Qwen3.7-Max AI:
 "В реальности QxP (выигрыш материала + безопасность) — это отличный ход, 
@@ -527,7 +528,7 @@ const add_packing_move_ml = (packing_moves, type_move, from, to, name_capture_pi
 *
 * это нужно для работы генератора взятий. это очень важная функция и конечно полностью проверена
 * возвращаем название хода превращения пешки со взятием по взятой фигуре
-* т.е. пешка берет коня KNIGHT тогда будет множестов превращений со взятием коня,
+* т.е. пешка берет коня KNIGHT тогда будет множестово превращений со взятием коня,
 * это
 * PROMO_QUEEN = CAPTURES_PAWN_KNIGHT_PROMO_QUEEN;
 * PROMO_ROOK = CAPTURES_PAWN_KNIGHT_PROMO_ROOK;
@@ -551,8 +552,12 @@ const return_type_captures_pawn_promo_ml = (piece_name_captures) =>
 * t 
 *
 * очень важная функция. используется в генераторе взятий и тихих ходов.
+* Возвращаем тип хода по ходящей фигуре и по взятой фигуры, либо отсутствию фигуры
+* тут simple move это и просто ходы и взятия. 
+* Эти ходы взяты в отличие от рокировки, взятия на проходе, ходов с превращением
 * возвращем тип хода взятия по ходящей фигуре и по взятой фигуре
-* например KING, QUEEN -> CAPTURES_KING_QUEEN
+* например KING, QUEEN -> CAPTURES_KING_QUEEN,
+* если же ходим на пустую клетку(PIECE_NO_CB) то тип простого хода
 * @param {number} piece_name
 * @param {number} piece_name_captures
 * @returns {number}
@@ -622,6 +627,10 @@ console.log(arr[0]);  // 100 — оригинал тоже изменился!
  * 
  * сортировка по типу хода
  * чем меньше число, тем выше приоритет хода
+ * потому что в type_move уже зашита эвристика MVV/LVA:
+ * 1-20 — взятия с превращением (самый высокий приоритет)
+ * 21-51 — обычные взятия
+ * 52-60 — тихие ходы
  * исправленная Qwen3.7-Max AI версия
  * @param {Int32Array} packing_moves
  * @returns {void}
@@ -638,11 +647,14 @@ const sorting_list_ml = function (packing_moves) {
  * 
  * t
  * 
- * это вставки хода из кеш таблицы на первое место
+ * это вставка хода из кеш таблицы на первое место
+ * точнее мы просто нужный ход из списка поднимаем на первое место.
+ * находим ход и поднимаем на первое место
  * @param {Int32Array} packing_moves
  * @param {Int32Array} packing_moves_1_tt
  * @returns {number}
  */
+// нужно передать всего один ход, но я передаю массив из одного хода.
 // не понятно почему я первый ход передаю в виде массива. может что бы не потерять оптимизацию?
 const set_move_in_0_ml = function (packing_moves, packing_moves_1_tt) {
 
@@ -684,6 +696,7 @@ const set_move_in_0_ml = function (packing_moves, packing_moves_1_tt) {
  * это для киллеров
  * находм ход по from, to
  * и ставим сразу после взятий.
+ * нужно передать всего один ход, но я передаю массив киллеров по глубине.
  * 
  * @param {Int32Array} packing_moves
  * @param {Int32Array} packing_moves_k
@@ -890,12 +903,11 @@ const move_to_string_uci_ml = function (i, packing_moves) {
 }
 
 // Qwen3.7-Max AI
-// возвращаем фигуру в которую превращается пешка по типу хода
 /**
- * pv_line
  * 
  * t
  * 
+ * Возвращаем фигуру в которую превращается пешка по типу хода
 * @param {number} type_move
 * @returns {string}
 */

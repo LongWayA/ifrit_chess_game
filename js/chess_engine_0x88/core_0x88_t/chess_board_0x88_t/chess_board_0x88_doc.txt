@@ -1,0 +1,414 @@
+==========================================================================
+ТЕОРИЯ
+
+Используем доску 0x88. Размер 128. Это для фигур
+ 0,   1,   2,   3,   4,   5,   6,   7,     8,   9,   10,  11,  12,  13,  14,  15, - 8
+ 16,  17,  18,  19,  20,  21,  22,  23,    24,  25,  26,  27,  28,  29,  30,  31, - 7
+ 32,  33,  34,  35,  36,  37,  38,  39,    40,  41,  42,  43,  44,  45,  46,  47, - 6
+ 48,  49,  50,  51,  52,  53,  54,  55,    56,  57,  58,  59,  60,  61,  62,  63, - 5
+ 64,  65,  66,  67,  68,  69,  70,  71,    72,  73,  74,  75,  76,  77,  78,  79, - 4
+ 80,  81,  82,  83,  84,  85,  86,  87,    88,  89,  90,  91,  92,  93,  94,  95, - 3
+ 96,  97,  98,  99,  100, 101, 102, 103,   104, 105, 106, 107, 108, 109, 110, 111,- 2
+ 112, 113, 114, 115, 116, 117, 118, 119,   120, 121, 122, 123, 124, 125, 126, 127 - 1
+ a    b    c    d    e    f    g    h 
+ т.е диапазон от 0 до 127 используем для доски записи фигур. это 128 позиций
+
+так как мы проверяем (index & 0x88) === 0, а значит никогда не используем часть клеток доски
+ то я решил хранить в них дополнительные данные позиции
+ 
+  8 это side_to_move, цвет хода 0-1 (0 - черные 1 - белые)
+ 
+  9 это castling_Q, рокировка белых в длинную сторону 0-1 (0-не возможна 1-возможна)
+  10 это castling_K, рокировка белых в короткую сторону 0-1
+  11 это castling_q, рокировка черных в длинную сторону 0-1
+  12 это castling_k, рокировка черных в короткую сторону 0-1 
+ 
+  13 это en_passant_yes, разрешение взятия на проходе 0-1 
+  14 en_passant_target_square, координата битого поля от 0 до 119 
+ 
+  15 king_from_white, положение белого короля от 0 до 119
+  24 king_from_black, положение черного короля от 0 до 119
+ 
+  25 halfmove_clock, The number of halfmoves since the last capture or pawn advance,
+      used for the fifty-move rule.(from wikipedia)
+  +1 каждый полуход
+  Поскольку правило говорит о 50 полных ходах (ход белых + ход черных), ничью можно требовать, 
+  когда этот счетчик в FEN достигает значения 100 (50 ходов × 2 игрока = 100 полуходов).
+  Сбрасывается при взятии или ходе пешки.
+ 
+  26 fullmove_number, The number of the full moves. It starts at 1 and is incremented after Black's move.(from wikipedia) 
+  Старт с единицы: В самом начале партии (в стартовой позиции) это поле всегда равно 1.
+  Шаг белых: Счетчик увеличивается на 1 только после того, как свой ход сделают черные. 
+  То есть полный ход считается завершенным, когда сходили оба игрока.
+ 
+  27 score, оценка позиции
+  
+ Перевод координат доски х и у в линейную: 
+ s_0x88 = 16 * y_07 + x_07;
+ И обратно:
+ x_07 = s_0x88 & 7;
+ y_07 = s_0x88 >> 4; // s_0x88 / 16
+
+==========================================================================
+КОНСТАНТЫ, использование
+
+const BLACK_CB = 0;
+const WHITE_CB = 1;
+
+const PIECE_NO_CB = 0; // нет фигуры
+
+WHITE PIECE
+const W_PAWN_CB = 1;     // пешка 
+const W_KNIGHT_CB = 2;   // конь
+const W_BISHOP_CB = 3;   // слон
+const W_ROOK_CB = 4;     // ладья
+const W_QUEEN_CB = 5;    // ферзь
+const W_KING_CB = 6;     // король
+
+BLACK PIECE
+const B_PAWN_CB = 9;     // пешка 
+const B_KNIGHT_CB = 10;   // конь
+const B_BISHOP_CB = 11;   // слон
+const B_ROOK_CB = 12;     // ладья
+const B_QUEEN_CB = 13;    // ферзь
+const B_KING_CB = 14;     // король
+
+const PIECE_NAME_CB = [
+    "PIECE_NO_CB",
+    "W_PAWN_CB", "W_KNIGHT_CB", "W_BISHOP_CB", "W_ROOK_CB", "W_QUEEN_CB", "W_KING_CB",
+    "PIECE_NO_CB", "PIECE_NO_CB",
+    "B_PAWN_CB", "B_KNIGHT_CB", "B_BISHOP_CB", "B_ROOK_CB", "B_QUEEN_CB", "B_KING_CB"
+];
+
+так как мы проверяем (index & 0x88) === 0 и значит никогда не используем часть клеток доски
+то я решил использовать их для хранения данных позиции
+
+const SIDE_TO_MOVE_CB = 8; // положение в массиве цвета хода 0-1
+
+const IND_CASTLING_Q_CB = 9; // положение в массиве рокировки белых в длинную сторону 0-1
+const IND_CASTLING_K_CB = 10; // положение в массиве рокировки белых в короткую сторону 0-1
+const IND_CASTLING_q_CB = 11; // положение в массиве рокировки черных в длинную сторону 0-1
+const IND_CASTLING_k_CB = 12; // положение в массиве рокировки черных в короткую сторону 0-1
+
+const IND_EN_PASSANT_YES_CB = 13; // положение в массиве разрешение взятия на проходе 0-1
+const IND_EN_PASSANT_TARGET_SQUARE_CB = 14; // положение в массиве координата битого поля от 0 до 119
+
+const IND_KING_FROM_WHITE_CB = 15; // индекс в массиве для позиции белого короля от 0 до 119
+const IND_KING_FROM_BLACK_CB = 24; // индекс в массиве положения черного короля от 0 до 119
+
+const IND_HALFMOVE_CLOCK_CB = 25; // The number of halfmoves since the last capture or pawn advance,
+used for the fifty-move rule.(from wikipedia)
+
+const IND_FULLMOVE_NUMBER_CB = 26; // The number of the full moves. It starts at 1 and is incremented after Black's move.(from wikipedia)
+
+const IND_SCORE_CB = 27; // положение в массиве оценки позиции
+
+//////////////////////////////////
+
+const BOARD_SIZE_CB = 128;// размер доски: от 0 до 127
+const OUT_OF_BOUNDS_MASK_CB = 0x88; // 136 в десятичной, но лучше использовать hex для читаемости битовой логики
+
+нужно для взятия на проходе при переводе позиции в фен
+const LET_COOR_CB = [
+    "a", "b", "c", "d", "e", "f", "g", "h"
+];
+
+перевод 64 позиций в 128
+const SQUARE_64_to_128_CB = [
+    0, 1, 2, 3, 4, 5, 6, 7,
+    16, 17, 18, 19, 20, 21, 22, 23,
+    32, 33, 34, 35, 36, 37, 38, 39,
+    48, 49, 50, 51, 52, 53, 54, 55,
+    64, 65, 66, 67, 68, 69, 70, 71,
+    80, 81, 82, 83, 84, 85, 86, 87,
+    96, 97, 98, 99, 100, 101, 102, 103,
+    112, 113, 114, 115, 116, 117, 118, 119
+];
+
+перевод 128 позиции в 64
+const SQUARE_128_to_64_CB = [
+    0, 1, 2, 3, 4, 5, 6, 7, 0, 0, 0, 0, 0, 0, 0, 0,
+    8, 9, 10, 11, 12, 13, 14, 15, 0, 0, 0, 0, 0, 0, 0, 0,
+    16, 17, 18, 19, 20, 21, 22, 23, 0, 0, 0, 0, 0, 0, 0, 0,
+    24, 25, 26, 27, 28, 29, 30, 31, 0, 0, 0, 0, 0, 0, 0, 0,
+    32, 33, 34, 35, 36, 37, 38, 39, 0, 0, 0, 0, 0, 0, 0, 0,
+    40, 41, 42, 43, 44, 45, 46, 47, 0, 0, 0, 0, 0, 0, 0, 0,
+    48, 49, 50, 51, 52, 53, 54, 55, 0, 0, 0, 0, 0, 0, 0, 0,
+    56, 57, 58, 59, 60, 61, 62, 63, 0, 0, 0, 0, 0, 0, 0, 0
+];
+
+Создаем быстрый типизированный массив для всех ASCII символов (выносим в глобальную область)
+const FEN_PIECES_ARRAY_CB = new Int32Array(128);
+По умолчанию заполняем нулями (или -1), чтобы отличать цифры от фигур
+Заполняем его один раз при старте движка:
+FEN_PIECES_ARRAY_CB[107] = B_KING_CB;   // 'k'.charCodeAt(0) === 107
+FEN_PIECES_ARRAY_CB[113] = B_QUEEN_CB;  // 'q'.charCodeAt(0) === 113
+FEN_PIECES_ARRAY_CB[114] = B_ROOK_CB;   // 'r'.charCodeAt(0) === 114
+FEN_PIECES_ARRAY_CB[98] = B_BISHOP_CB; // 'b'.charCodeAt(0) === 98
+FEN_PIECES_ARRAY_CB[110] = B_KNIGHT_CB; // 'n'.charCodeAt(0) === 110
+FEN_PIECES_ARRAY_CB[112] = B_PAWN_CB;   // 'p'.charCodeAt(0) === 112
+
+FEN_PIECES_ARRAY_CB[75] = W_KING_CB;   // 'K'.charCodeAt(0) === 75
+FEN_PIECES_ARRAY_CB[81] = W_QUEEN_CB;  // 'Q'.charCodeAt(0) === 81
+FEN_PIECES_ARRAY_CB[82] = W_ROOK_CB;   // 'R'.charCodeAt(0) === 82
+FEN_PIECES_ARRAY_CB[66] = W_BISHOP_CB; // 'B'.charCodeAt(0) === 66
+FEN_PIECES_ARRAY_CB[78] = W_KNIGHT_CB; // 'N'.charCodeAt(0) === 78
+FEN_PIECES_ARRAY_CB[80] = W_PAWN_CB;   // 'P'.charCodeAt(0) === 80
+
+==========================================================================
+ФУНКЦИИ, использование
+
+-------------
+есть тест
+Переводим координаты х и у в линейную координату доски 128(0x88)
+
+x07 - координата фигуры на доске по х от 0 до 7
+y07 - координата фигуры на доске по у от 0 до 7
+z128 - координата фигуры в массиве от 0 до 119
+
+z128 = x07_y07_to_0x88_cb(x07, y07)
+
+-------------
+есть тест
+Переводим линейную координату доски 128(0x88) в х
+
+z128 - координата фигуры в массиве от 0 до 119
+x07 - координата фигуры на доске по х от 0 до 7
+
+x07 = s_0x88_to_x07_cb(z128)
+
+-------------
+есть тест
+Переводим линейную координату доски 128(0x88) в у
+
+z128 - координата фигуры в массиве от 0 до 119
+y07 - координата фигуры на доске по у от 0 до 7
+
+y07 = s_0x88_to_y07_cb(z128)
+
+-------------
+нет теста
+Смотрим валидность клетки доски 128(0x88) если 0 то мы на доске
+
+index - линейная координата массива от 0 до 127
+z - если 0 то мы на доске, иначе мимо
+
+z = s_0x88_out_of_bounds_cb(index)
+
+-------------
+нет теста
+Получаем цвет фигуры
+
+изначально фигуры выбраны с учетом бита цвета:
+0 - пусто,
+1 - пешка, 2-конь, 3-слон, 4-ладья,  5-ферзь,  6-король <- белые фигуры 
+9 - пешка, 10-конь, 11-слон, 12-ладья, 13-ферзь, 14-король <- черные фигуры 
+
+piece - кодировка фигуры
+color - цвет фигуры: 0-черная, 1-белая
+
+color = get_piece_color_cb(piece)
+
+-------------
+нет теста
+Получаем тип фигуры
+
+piece - кодировка фигуры
+type - тип фигуры: 1 - пешка, 2-конь, 3-слон, 4-ладья,  5-ферзь,  6-король
+
+type = get_piece_type_cb(piece)
+
+-------------
+нет теста и не использую
+Создаем код фигуры по её типу и цвету
+
+type - тип фигуры: 1 - пешка, 2-конь, 3-слон, 4-ладья,  5-ферзь,  6-король
+color - цвет фигуры: 0-черная, 1-белая
+
+piece - кодировка фигуры
+
+piece = create_piece_cb(type, color)
+
+-------------
+есть тест
+Инициализируем позицию из FEN-строки
+
+fen - позиция вида: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" 
+
+chess_board_0x88 - представление доски вида chess_board_0x88 = new Int32Array(128).fill(0);// доска 0x88 с фигурами
+
+set_board_from_fen_0x88_cb(fen, chess_board_0x88)
+
+-------------
+нет теста
+Переводим букву горизонтали (a-h) в координату x (0-7)
+
+letter - a b c d e f g h 
+
+x -      0 1 2 3 4 5 6 7
+
+x = letter_to_x_coordinate_cb(letter)
+
+-------------
+
+// Индексы:               0   1    2    3    4    5    6   7   8    9    10   11   12   13   14
+const PIECES_CHARS_CB = ["", "P", "N", "B", "R", "Q", "K", "", "", "p", "n", "b", "r", "q", "k"];
+
+-------------
+есть тест
+Генерируем FEN-строку по текущей позиции на доске 0x88
+
+chess_board_0x88 - представление доски вида chess_board_0x88 = new Int32Array(128).fill(0);// доска 0x88 с фигурами
+
+fen - позиция вида: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" 
+
+fen = set_fen_from_0x88_cb(chess_board_0x88)
+
+-------------
+нет теста
+Генерируем стартовую позицию
+
+chess_board_0x88 =
+ B_ROOK_CB, B_KNIGHT_CB, B_BISHOP_CB, B_QUEEN_CB, B_KING_CB, B_BISHOP_CB, B_KNIGHT_CB, B_ROOK_CB, 0, 0, 0, 0, 0, 0, 0, 0,
+ B_PAWN_CB, B_PAWN_CB, B_PAWN_CB, B_PAWN_CB, B_PAWN_CB, B_PAWN_CB, B_PAWN_CB, B_PAWN_CB, 0, 0, 0, 0, 0, 0, 0, 0,
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+ W_PAWN_CB, W_PAWN_CB, W_PAWN_CB, W_PAWN_CB, W_PAWN_CB, W_PAWN_CB, W_PAWN_CB, W_PAWN_CB, 0, 0, 0, 0, 0, 0, 0, 0,
+ W_ROOK_CB, W_KNIGHT_CB, W_BISHOP_CB, W_QUEEN_CB, W_KING_CB, W_BISHOP_CB, W_KNIGHT_CB, W_ROOK_CB, 0, 0, 0, 0, 0, 0, 0, 0
+
+   // цвет хода 0 - черные 1 - белые
+    chess_board_0x88[SIDE_TO_MOVE_CB] = 1;
+    // разрешение взятия на проходе 1/0
+    chess_board_0x88[IND_EN_PASSANT_YES_CB] = 0;
+    // координата битого поля
+    chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE_CB] = 0;
+    // рокировка белых в длинную сторону   1/0
+    chess_board_0x88[IND_CASTLING_Q_CB] = 1;
+    // рокировка белых в короткую сторону  1/0
+    chess_board_0x88[IND_CASTLING_K_CB] = 1;
+    // рокировка черных в длинную сторону  1/0
+    chess_board_0x88[IND_CASTLING_q_CB] = 1;
+    // рокировка черных в короткую сторону 1/0
+    chess_board_0x88[IND_CASTLING_k_CB] = 1;
+
+    chess_board_0x88[IND_KING_FROM_WHITE_CB] = 116;
+    chess_board_0x88[IND_KING_FROM_BLACK_CB] = 4;
+
+    chess_board_0x88[IND_SCORE_CB] = -1;
+
+    chess_board_0x88[IND_HALFMOVE_CLOCK_CB] = 0;
+    chess_board_0x88[IND_FULLMOVE_NUMBER_CB] = 1;
+
+iniStartPositionForWhite_cb(chess_board_0x88)
+
+-------------
+нет теста
+Генерируем нулевую позицию
+
+chess_board_0x88 =
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+
+    chess_board_0x88[IND_KING_FROM_WHITE_CB] = 0;
+    chess_board_0x88[IND_KING_FROM_BLACK_CB] = 0;
+
+    // цвет хода 0 - черные 1 - белые
+    chess_board_0x88[SIDE_TO_MOVE_CB] = 0;
+    // разрешение взятия на проходе 1/0
+    chess_board_0x88[IND_EN_PASSANT_YES_CB] = 0;
+    // координата битого поля
+    chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE_CB] = 0;
+    // рокировка белых в длинную сторону   1/0
+    chess_board_0x88[IND_CASTLING_Q_CB] = 0;
+    // рокировка белых в короткую сторону  1/0
+    chess_board_0x88[IND_CASTLING_K_CB] = 0;
+    // рокировка черных в длинную сторону  1/0
+    chess_board_0x88[IND_CASTLING_q_CB] = 0;
+    // рокировка черных в короткую сторону 1/0
+    chess_board_0x88[IND_CASTLING_k_CB] = 0;
+
+    chess_board_0x88[IND_SCORE_CB] = -1;
+
+    chess_board_0x88[IND_HALFMOVE_CLOCK_CB] = 0;
+    chess_board_0x88[IND_FULLMOVE_NUMBER_CB] = 0;
+
+iniPositionFor_0_cb(chess_board_0x88)
+
+-------------
+
+==========================================================================
+ФУНКЦИИ ДЛЯ ТЕСТОВ, использование
+
+-------------
+Выводим дополнительную информацию по позиции на консоль браузера (для тестирования)
+
+chess_board_0x88 - представление доски вида chess_board_0x88 = new Int32Array(128).fill(0);// доска 0x88 с фигурами
+
+test_print_any_0x88_cb(chess_board_0x88)
+
+-------------
+Печатаем имена фигур на позиции в консоле браузера (для тестирования)
+
+chess_board_0x88 - представление доски вида chess_board_0x88 = new Int32Array(128).fill(0);// доска 0x88 с фигурами
+
+test_print_piece_0x88_cb(chess_board_0x88)
+
+-------------
+Проверяем совпадение двух позиций.  (для тестирования)
+
+chess_board_0x88_original - представление доски вида chess_board_0x88 = new Int32Array(128).fill(0);// доска 0x88 с фигурами
+chess_board_0x88 - представление доски вида chess_board_0x88 = new Int32Array(128).fill(0);// доска 0x88 с фигурами
+
+is_test_ok - пройден 1, есть отклонения 0
+
+is_test_ok = test_compare_chess_board_0x88_cb(chess_board_0x88_original, chess_board_0x88)
+
+-------------
+Печатаем цвета фигур на позиции в консоле браузера (для тестирования)
+
+chess_board_0x88 - представление доски вида chess_board_0x88 = new Int32Array(128).fill(0);// доска 0x88 с фигурами
+
+test_print_piece_color_0x88_cb(chess_board_0x88)
+
+-------------
+Выводим позицию в одну линию на консоль браузера (для тестирования)
+
+chess_board_0x88 - представление доски вида chess_board_0x88 = new Int32Array(128).fill(0);// доска 0x88 с фигурами
+
+test_print_piece_in_line_0x88_cb(chess_board_0x88)
+
+-------------
+Ищем короля заданного цвета. нужно для обнаружения шаха
+ эта функция нужна для тестирования верности записи положения королей
+
+chess_board_0x88 - представление доски вида chess_board_0x88 = new Int32Array(128).fill(0);// доска 0x88 с фигурами
+piece_color - цвет фигуры: 1 - белый, 0 - черный
+
+king - позиция короля: от 0 до 119
+
+king = searching_king_cb(chess_board_0x88, piece_color)
+
+-------------
+
+export {
+    x07_y07_to_0x88_cb, s_0x88_to_x07_cb, s_0x88_to_y07_cb,
+    test_print_any_0x88_cb, test_print_piece_0x88_cb, test_print_piece_color_0x88_cb, test_print_piece_in_line_0x88_cb,
+    test_compare_chess_board_0x88_cb, set_board_from_fen_0x88_cb, set_fen_from_0x88_cb,
+    searching_king_cb, iniStartPositionForWhite_cb, letter_to_x_coordinate_cb,
+    s_0x88_out_of_bounds_cb, get_piece_color_cb, get_piece_type_cb,
+    //create_piece_cb,
+    BOARD_SIZE_CB, OUT_OF_BOUNDS_MASK_CB, SIDE_TO_MOVE_CB, LET_COOR_CB,
+    BLACK_CB, WHITE_CB, PIECE_NO_CB, W_PAWN_CB, W_KNIGHT_CB, W_BISHOP_CB, W_ROOK_CB, W_QUEEN_CB, W_KING_CB, B_PAWN_CB,
+    B_KNIGHT_CB, B_BISHOP_CB, B_ROOK_CB, B_QUEEN_CB, B_KING_CB, IND_CASTLING_Q_CB, IND_CASTLING_q_CB, IND_CASTLING_K_CB,
+    IND_CASTLING_k_CB, IND_HALFMOVE_CLOCK_CB, IND_FULLMOVE_NUMBER_CB, PIECE_NAME_CB, IND_EN_PASSANT_YES_CB,
+    IND_EN_PASSANT_TARGET_SQUARE_CB, IND_KING_FROM_WHITE_CB, IND_KING_FROM_BLACK_CB, IND_SCORE_CB,
+    SQUARE_64_to_128_CB, SQUARE_128_to_64_CB
+};
