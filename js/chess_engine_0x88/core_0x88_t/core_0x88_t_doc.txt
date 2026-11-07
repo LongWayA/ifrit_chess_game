@@ -1,0 +1,279 @@
+ОСНОВНЫЕ ИДЕИ ЯДРА
+
+1) chess_board_0x88_t
+Доска представлена массивом chess_board_0x88 = new Int32Array(128).fill(0)
+Используем доску 0x88. Размер 128. Это для фигур
+ 0,   1,   2,   3,   4,   5,   6,   7,     8,   9,   10,  11,  12,  13,  14,  15, - 8
+ 16,  17,  18,  19,  20,  21,  22,  23,    24,  25,  26,  27,  28,  29,  30,  31, - 7
+ 32,  33,  34,  35,  36,  37,  38,  39,    40,  41,  42,  43,  44,  45,  46,  47, - 6
+ 48,  49,  50,  51,  52,  53,  54,  55,    56,  57,  58,  59,  60,  61,  62,  63, - 5
+ 64,  65,  66,  67,  68,  69,  70,  71,    72,  73,  74,  75,  76,  77,  78,  79, - 4
+ 80,  81,  82,  83,  84,  85,  86,  87,    88,  89,  90,  91,  92,  93,  94,  95, - 3
+ 96,  97,  98,  99,  100, 101, 102, 103,   104, 105, 106, 107, 108, 109, 110, 111,- 2
+ 112, 113, 114, 115, 116, 117, 118, 119,   120, 121, 122, 123, 124, 125, 126, 127 - 1
+ a    b    c    d    e    f    g    h
+
+изначально фигуры выбраны с учетом бита цвета:
+0 - пусто,
+1 - пешка, 2-конь, 3-слон, 4-ладья,  5-ферзь,  6-король <- белые фигуры 
+9 - пешка, 10-конь, 11-слон, 12-ладья, 13-ферзь, 14-король <- черные фигуры 
+
+Избыточные ячейки заполняем нужной информацией так что вся наша позиция это этот массив и ничего более.
+Так как мы проверяем (index & 0x88) === 0, а значит никогда не используем часть клеток доски
+ то я решил хранить в них дополнительные данные позиции
+ 
+  8 это side_to_move, цвет хода 0-1 (0 - черные 1 - белые)
+ 
+  9 это castling_Q, рокировка белых в длинную сторону 0-1 (0-не возможна 1-возможна)
+  10 это castling_K, рокировка белых в короткую сторону 0-1
+  11 это castling_q, рокировка черных в длинную сторону 0-1
+  12 это castling_k, рокировка черных в короткую сторону 0-1 
+ 
+  13 это en_passant_yes, разрешение взятия на проходе 0-1 
+  14 en_passant_target_square, координата битого поля от 0 до 119 
+ 
+  15 king_from_white, положение белого короля от 0 до 119
+  24 king_from_black, положение черного короля от 0 до 119
+ 
+  25 halfmove_clock, The number of halfmoves since the last capture or pawn advance,
+      used for the fifty-move rule.(from wikipedia)
+ 
+  26 fullmove_number, The number of the full moves. It starts at 1 and is incremented after Black's move.(from wikipedia) 
+
+  27 score, оценка позиции
+
+
+2) move_list_0x88_t
+Список содержит псевдолегальные ходы, т.е. есть ходы под шах,
+ открывающие шах и рокировки через битые поля.
+
+Список ходов представлен массивом packing_moves = new Int32Array(LENGTH_LIST = 260).fill(MOVE_NO)
+
+Каждый ход упакован в одно 32-битное число по такой схеме: 
+ Биты:  31........24  23.......16  15.......8   7.......0
+        ┌──────────┐  ┌─────────┐  ┌────────┐  ┌────────┐
+        │ capture  │  │   to    │  │  from  │  │  type  │
+        │  (8 бит) │  │ (8 бит) │  │ (8 бит)│  │ (8 бит)│
+        └──────────┘  └─────────┘  └────────┘  └────────┘
+
+  Индексы массива от 0 до 256 зарезервированы для упакованого хода:
+  packing_moves[i]
+  8 бит для type_move - тип хода. всего 60 разных типов ходов
+  8 бит для from - откуда ходит фигура на 128 клеточном поле
+  8 бит для to - куда ходит фигура на 128 клеточном поле
+  8 бит для name_capture_piece - имя взятой фигуры
+
+  индексы массива зарезервированы для: 
+  257 - piece_color - цвет ходяшей фигуры: 0 - черная, 1 - белая.
+  258 - number_captures_move - количество взятий
+  259 - number_move - количество всех записаных ходов
+
+ Расписал все возможные типы ходов. всего получилось 61 типа ходов
+ Теперь каждый тип хода имеет свой обработчик
+
+ const MOVE_NO_ML = 0;// нет хода
+
+ абсолютный приоритет. пешка берет да еще превращается в фигуру
+ превращение в ферзь
+ взятие пешкой фигуры и превращение в фигуру
+ const CAPTURES_PAWN_QUEEN_PROMO_QUEEN_ML = 1;//
+ const CAPTURES_PAWN_ROOK_PROMO_QUEEN_ML = 2;// пешка берет ладью и превращается в ферзь
+ const CAPTURES_PAWN_BISHOP_PROMO_QUEEN_ML = 3;//
+ const CAPTURES_PAWN_KNIGHT_PROMO_QUEEN_ML = 4;//
+
+ превращение в ладью
+ const CAPTURES_PAWN_QUEEN_PROMO_ROOK_ML = 5;//
+ const CAPTURES_PAWN_ROOK_PROMO_ROOK_ML = 6;//
+ const CAPTURES_PAWN_BISHOP_PROMO_ROOK_ML = 7;//
+ const CAPTURES_PAWN_KNIGHT_PROMO_ROOK_ML = 8;//
+
+ превращение в слона
+ const CAPTURES_PAWN_QUEEN_PROMO_BISHOP_ML = 9;//
+ const CAPTURES_PAWN_ROOK_PROMO_BISHOP_ML = 10;//
+ const CAPTURES_PAWN_BISHOP_PROMO_BISHOP_ML = 11;//
+ const CAPTURES_PAWN_KNIGHT_PROMO_BISHOP_ML = 12;//
+
+ превращение в коня
+ const CAPTURES_PAWN_QUEEN_PROMO_KNIGHT_ML = 13;//
+ const CAPTURES_PAWN_ROOK_PROMO_KNIGHT_ML = 14;//
+ const CAPTURES_PAWN_BISHOP_PROMO_KNIGHT_ML = 15;//
+ const CAPTURES_PAWN_KNIGHT_PROMO_KNIGHT_ML = 16;//
+
+ ходы пешки с превращением
+ const MOVE_PAWN_PROMO_QUEEN_ML = 17;//
+ const MOVE_PAWN_PROMO_ROOK_ML = 18;// 
+ const MOVE_PAWN_PROMO_BISHOP_ML = 19;//
+ const MOVE_PAWN_PROMO_KNIGHT_ML = 20;//
+
+ взятая фигура дороже чем та, что берет
+ const CAPTURES_PAWN_QUEEN_ML = 21;// пешка берет ферзь
+ const CAPTURES_PAWN_ROOK_ML = 22;//
+ const CAPTURES_PAWN_BISHOP_ML = 23;//
+ const CAPTURES_PAWN_KNIGHT_ML = 24;//
+
+ const CAPTURES_KNIGHT_QUEEN_ML = 25;//
+ const CAPTURES_KNIGHT_ROOK_ML = 26;//
+
+ const CAPTURES_BISHOP_QUEEN_ML = 27;//
+ const CAPTURES_BISHOP_ROOK_ML = 28;//
+
+ const CAPTURES_ROOK_QUEEN_ML = 29;//
+
+ фигуры равнозначны
+ const CAPTURES_KNIGHT_BISHOP_ML = 30;//  
+ const CAPTURES_KNIGHT_KNIGHT_ML = 31;// 
+
+ const CAPTURES_BISHOP_BISHOP_ML = 32;//
+ const CAPTURES_BISHOP_KNIGHT_ML = 33;//
+
+ const CAPTURES_ROOK_ROOK_ML = 34;//
+ const CAPTURES_QUEEN_QUEEN_ML = 35;//
+
+ взятая фигура дешевле той что берет
+ const CAPTURES_ROOK_BISHOP_ML = 36;//
+ const CAPTURES_ROOK_KNIGHT_ML = 37;//
+
+ const CAPTURES_QUEEN_ROOK_ML = 38;//
+ const CAPTURES_QUEEN_BISHOP_ML = 39;//
+ const CAPTURES_QUEEN_KNIGHT_ML = 40;//
+
+ взятия королем
+ const CAPTURES_KING_QUEEN_ML = 41;//
+ const CAPTURES_KING_ROOK_ML = 42;//
+ const CAPTURES_KING_BISHOP_ML = 43;//
+ const CAPTURES_KING_KNIGHT_ML = 44;//
+
+ взятия пешек
+ const CAPTURES_PAWN_PAWN_ML = 45;//
+ const EP_CAPTURES_ML = 46;// взятие на проходе
+ const CAPTURES_KNIGHT_PAWN_ML = 47;//
+ const CAPTURES_BISHOP_PAWN_ML = 48;//
+ const CAPTURES_ROOK_PAWN_ML = 49;//
+ const CAPTURES_QUEEN_PAWN_ML = 50;//
+ const CAPTURES_KING_PAWN_ML = 51;//
+
+/////////
+
+ const MOVE_QUEEN_ML = 52;// ход ферзем
+ const MOVE_ROOK_ML = 53;// ход ладьей
+ const MOVE_BISHOP_ML = 54;// ход слоном
+ const MOVE_KNIGHT_ML = 55;// ход конем
+ const MOVE_KING_ML = 56;// простой ход королем
+
+ const MOVE_PAWN_ML = 57;// ход пешкой
+ const MOVE_DOUBLE_PAWN_ML = 58;// ход пешкой на две клетки
+
+ const MOVE_KING_CASTLE_ML = 59;// короткая рокировка
+ const MOVE_KING_QUEEN_CASTLE_ML = 60;// длинная рокировка
+
+Такая кодировка типов ходов используется для сортировки ходов по 
+эвристике MVV/LVA:
+1-20 — взятия с превращением (самый высокий приоритет)
+21-51 — обычные взятия
+52-60 — тихие ходы
+
+Реализатор ходов уже знает что за ход поступил и делает только необходимые действия.
+
+3) generator_move_0x88_t
+
+3.1 Проходим по доске chess_board_0x88 и пишем в список packing_moves только взятия.
+    Списка фигур нет. Максимально простой, на мой взгляд, генератор.
+    Ходы псевдолегальные, т.е. тут есть взятия под шах или открывающие шах.
+
+3.2 Проходим по доске chess_board_0x88 и пишем в список packing_moves только ходы не взятия.
+    Ходы псевдолегальные, т.е. тут есть ходы под шах или открывающие шах, а также рокировки 
+    через битые поля.
+
+4) make_move_0x88_t
+
+Делаем ход основываясь на типе хода, обновляем кеш-ключ позиции.
+
+Есть три случая: 
+  1 - ход легальный. мы сделали ход и король не под шахом 
+  2 - ход не легальный мы не сделали рокировку из за битых полей. мы просто не делаем ход 
+  0 - ход не легальный. мы сделали ход а король оказался или остался под шахом. тут сигнал что нужно будет откатить ход
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 

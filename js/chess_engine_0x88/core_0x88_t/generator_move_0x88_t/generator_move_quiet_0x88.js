@@ -89,8 +89,8 @@ const moves_bishop_mgq = new Int32Array([-15, 17, 15, -17]);
 const moves_knight_mgq = new Int32Array([-33, -31, -14, 18, 33, 31, 14, -18]);
 
 
-/** генерируем всевозможные ходы, но не учитываем шахи и вскрытые шахи.
-* 
+/** 
+* генерируем тихие ходы т.е. не взятия, но не учитываем шахи и вскрытые шахи.
 * t
 * 
 * @param {Int32Array} chess_board_0x88
@@ -109,8 +109,8 @@ const generated_pseudo_legal_quiet_moves_mgq = function (chess_board_0x88, packi
 }
 
 
-/**  считаем ходы одной фигуры из конкретной позиции
-* 
+/**  
+* считаем тихие ходы т.е. не взятия одной фигуры из конкретной позиции. сделал для работы гуи
 * t
 * 
 * @param {number} from
@@ -129,7 +129,8 @@ const generated_pseudo_legal_quiet_moves_one_piece_for_gui_mgq = function (from,
 
 
 
-/** считаем ходы одной фигуры из конкретной позиции
+/** 
+* считаем тихие ходы т.е. не взятия одной фигуры из конкретной позиции
 * @param {number} from
 * @param {number} side_to_move
 * @param {Int32Array} chess_board_0x88
@@ -195,7 +196,8 @@ const generated_pseudo_legal_quiet_moves_one_piece_mgq = function (from, side_to
 }
 
 
-/** смотрим и если находим простые ходы то добавляем в список ходов
+/** 
+* смотрим и если находим простые ходы то добавляем в список ходов
 * @param {number} piece_name
 * @param {number} from
 * @param {number} to
@@ -217,7 +219,8 @@ const add_quiet_move_mgq = function (piece_name, from, to, chess_board_0x88, pac
 }
 
 
-/** простые ходы короля (т.е. не взятия и не рокировки)
+/** 
+* простые ходы короля (т.е. не взятия и не рокировки)
 * @param {number} piece_name 
 * @param {number} from
 * @param {Int32Array} chess_board_0x88
@@ -237,7 +240,8 @@ const generated_quiet_moves_king_mgq = function (piece_name, from, chess_board_0
 }
 
 
-/** простые ходы ферзя (т.е. не взятия)
+/** 
+* простые ходы ферзя (т.е. не взятия)
 * @param {number} piece_name 
 * @param {number} from
 * @param {Int32Array} chess_board_0x88
@@ -264,7 +268,8 @@ const generated_quiet_moves_queen_mgq = function (piece_name, from, chess_board_
 }
 
 
-/** простые ходы ладьи
+/** 
+* простые ходы ладьи
 * @param {number} piece_name 
 * @param {number} from
 * @param {Int32Array} chess_board_0x88
@@ -290,7 +295,8 @@ const generated_quiet_moves_rook_mgq = function (piece_name, from, chess_board_0
 }
 
 
-/** простые ходы слона
+/** 
+* простые ходы слона
 * @param {number} piece_name 
 * @param {number} from
 * @param {Int32Array} chess_board_0x88
@@ -316,7 +322,8 @@ const generated_quiet_moves_bishop_mgq = function (piece_name, from, chess_board
 }
 
 
-/** простые ходы коня
+/** 
+* простые ходы коня
 * @param {number} piece_name 
 * @param {number} from
 * @param {Int32Array} chess_board_0x88
@@ -337,7 +344,8 @@ const generated_quiet_moves_knight_mgq = function (piece_name, from, chess_board
 }
 
 
-/** рокировки короля. черного, белого, длинные, короткие
+/** 
+* рокировки короля. черного, белого, длинные, короткие
 * @param {number} piece_color
 * @param {number} from
 * @param {Int32Array} chess_board_0x88
@@ -402,7 +410,8 @@ const generated_moves_castle_king_mgq = function (piece_color, from, chess_board
 }
 
 
-/** простые ходы пешек белых и черных
+/** 
+* простые ходы пешек белых и черных
 * @param {number} piece_color
 * @param {number} from
 * @param {Int32Array} chess_board_0x88
@@ -420,7 +429,8 @@ const generated_quiet_moves_pawn_mgq = function (piece_color, from, chess_board_
 
 
 
-/** простые ходы белых пешек
+/** 
+* простые ходы белых пешек
 * @param {number} from
 * @param {Int32Array} chess_board_0x88
 * @param {Int32Array} packing_moves
@@ -443,7 +453,8 @@ const generated_quiet_moves_pawn_white_mgq = function (from, chess_board_0x88, p
 }
 
 
-/** простые ходы черных пешек
+/** 
+* простые ходы черных пешек
 * @param {number} from
 * @param {Int32Array} chess_board_0x88
 * @param {Int32Array} packing_moves
@@ -467,7 +478,8 @@ const generated_quiet_moves_pawn_black_mgq = function (from, chess_board_0x88, p
 }
 
 
-/** ход пешки на одну клетку
+/** 
+* ход пешки на одну клетку
 * @param {number} from
 * @param {number} to
 * @param {Int32Array} chess_board_0x88
@@ -486,7 +498,8 @@ const generated_moves_pawn_one_mgq = function (from, to, chess_board_0x88, packi
 }
 
 
-/** ход пешки на две клетки
+/** 
+* ход пешки на две клетки
 * @param {number} from
 * @param {number} to_void
 * @param {number} to
@@ -508,7 +521,8 @@ const generated_moves_pawn_double_mgq = function (from, to_void, to, chess_board
 }
 
 
-/** ходы пешки с превращением
+/** 
+* ходы пешки с превращением
 * @param {number} from
 * @param {number} to_center
 * @param {Int32Array} chess_board_0x88

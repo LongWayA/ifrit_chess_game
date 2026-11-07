@@ -1,0 +1,52 @@
+для работы нужны: chess_board_0x88.js, move_list_0x88.js
+
+==========================================================================
+ТЕОРИЯ
+
+ Проходим по доске chess_board_0x88 и пишем в список packing_moves только взятия.
+ Списка фигур нет. Максимально простой, на мой взгляд, генератор.
+ Ходы псевдолегальные, т.е. тут есть ходы под шах или открывающие шах.
+
+==========================================================================
+КОНСТАНТЫ, использование
+
+
+==========================================================================
+ФУНКЦИИ, использование
+
+-------------
+генерируем всевозможные взятия, но не учитываем шахи и вскрытые шахи.
+
+chess_board_0x88 - по этой доске генерируется список ходов chess_board_0x88 = new Int32Array(128).fill(0);// доска 0x88 с фигурами
+packing_moves - список ходов packing_moves = new Int32Array(LENGTH_LIST = 260).fill(MOVE_NO);
+
+generated_pseudo_legal_captures_mgc(chess_board_0x88, packing_moves)
+
+-------------
+считаем взятия одной фигуры из конкретной позиции. сделал для работы гуи
+
+from - где стоит фигура для которой генерируется список ходов
+chess_board_0x88 - по этой доске генерируется список ходов chess_board_0x88 = new Int32Array(128).fill(0);// доска 0x88 с фигурами
+packing_moves - список ходов packing_moves = new Int32Array(LENGTH_LIST = 260).fill(MOVE_NO);
+
+generated_pseudo_legal_captures_one_piece_for_gui_mgc(from, chess_board_0x88, packing_moves)
+
+-------------
+ищем шахи (прямая проверка лучей без генерации списков)
+оптимизация предложенная Qwen3.7-Max, с прямой генерацией лучей.
+
+from - где стоит фигура для которой генерируется список ходов
+
+from - квадрат, который проверяем на шах (обычно позиция короля)
+piece_color - цвет фигуры на квадрате from (WHITE_CB или BLACK_CB)
+chess_board_0x88 -  chess_board_0x88 = new Int32Array(128).fill(0);// доска 0x88 с фигурами
+
+check - тип атакующей фигуры (например, B_KNIGHT_CB) или 0, если шаха нет
+
+check = check_detected_mgc(from, piece_color, chess_board_0x88) 
+
+-------------
+
+export {
+    generated_pseudo_legal_captures_mgc, generated_pseudo_legal_captures_one_piece_for_gui_mgc, check_detected_mgc
+};

@@ -66,10 +66,11 @@ const moves_bishop_mgc = new Int32Array([-15, 17, 15, -17]);
 // ходы коня
 const moves_knight_mgc = new Int32Array([-33, -31, -14, 18, 33, 31, 14, -18]);
 
-/** генерируем всевозможные ходы, но не учитываем шахи и вскрытые шахи.
- * 
- * t
- * 
+/** 
+* генерируем всевозможные взятия, но не учитываем шахи и вскрытые шахи.
+* 
+* t
+* 
 * @param {Int32Array} chess_board_0x88
 * @param {Int32Array} packing_moves
 * @returns {void}
@@ -94,10 +95,11 @@ const generated_pseudo_legal_captures_mgc = function (chess_board_0x88, packing_
     packing_moves[IND_NUMBER_CAPTURES_MOVE_ML] = packing_moves[IND_NUMBER_MOVE_ML];
 }
 
-/** считаем ходы одной фигуры из конкретной позиции. сделал для работы гуи
- * 
- * t
- * 
+/** 
+* считаем взятия одной фигуры из конкретной позиции. сделал для работы гуи
+* 
+* t
+* 
 * @param {number} from
 * @param {Int32Array} chess_board_0x88
 * @param {Int32Array} packing_moves
@@ -122,7 +124,8 @@ const generated_pseudo_legal_captures_one_piece_for_gui_mgc = function (from, ch
 
 
 
-/**  считаем ходы одной фигуры из конкретной позиции
+/**  
+* считаем взятия одной фигуры из конкретной позиции
 * @param {number} from
 * @param {number} side_to_move
 * @param {Int32Array} chess_board_0x88
@@ -187,7 +190,8 @@ const generated_pseudo_legal_captures_one_piece_mgc = function (from, side_to_mo
 }
 
 
-/** смотрим ход from, to и если это взятие добавляем в список.
+/** 
+* смотрим ход from, to и если это взятие добавляем в список.
 * @param {number} piece_name
 * @param {number} piece_color
 * @param {number} from
@@ -221,7 +225,8 @@ const add_captures_move_mgc = function (piece_name, piece_color, from, to, chess
 }
 
 
-/** взятия королем
+/** 
+* взятия королем
 * @param {number} piece_name
 * @param {number} piece_color
 * @param {number} from
@@ -242,7 +247,8 @@ const generated_captures_moves_king_mgc = function (piece_name, piece_color, fro
     }
 }
 
-/** взятия ферзем
+/** 
+* взятия ферзем
 * @param {number} piece_name 
 * @param {number} piece_color
 * @param {number} from
@@ -272,7 +278,8 @@ const generated_captures_moves_queen_mgc = function (piece_name, piece_color, fr
 }
 
 
-/** взятия ладьей
+/** 
+* взятия ладьей
 * @param {number} piece_name 
 * @param {number} piece_color
 * @param {number} from
@@ -299,7 +306,8 @@ const generated_captures_moves_rook_mgc = function (piece_name, piece_color, fro
 }
 
 
-/** взятия слоном
+/** 
+* взятия слоном
 * @param {number} piece_name 
 * @param {number} piece_color
 * @param {number} from
@@ -327,7 +335,8 @@ const generated_captures_moves_bishop_mgc = function (piece_name, piece_color, f
 }
 
 
-/** взятие конем
+/** 
+* взятие конем
 * @param {number} piece_name
 * @param {number} piece_color
 * @param {number} from
@@ -349,7 +358,8 @@ const generated_captures_moves_knight_mgc = function (piece_name, piece_color, f
 }
 
 
-/** взятия пешкой
+/** 
+* взятия пешкой
 * @param {number} piece_name 
 * @param {number} piece_color
 * @param {number} from
@@ -368,7 +378,8 @@ const generated_captures_moves_pawn_mgc = function (piece_name, piece_color, fro
     }
 }
 
-/** взятия белой пешкой
+/** 
+* взятия белой пешкой
 * @param {number} piece_name
 * @param {number} piece_color
 * @param {number} from
@@ -390,7 +401,8 @@ const generated_captures_moves_pawn_white_mgc = function (piece_name, piece_colo
 }
 
 
-/** взятия черной пешкой
+/** 
+* взятия черной пешкой
 * @param {number} piece_name
 * @param {number} piece_color
 * @param {number} from
@@ -411,7 +423,8 @@ const generated_captures_moves_pawn_black_mgc = function (piece_name, piece_colo
 }
 
 
-/** простые взятия пешкой как белой так и черной
+/** 
+* простые взятия пешкой как белой так и черной
 * @param {number} piece_name
 * @param {number} from
 * @param {number} to_left
@@ -464,7 +477,8 @@ const generated_moves_pawn_captures_mgc = function (piece_name, from, to_left, t
 }
 
 
-/** взятие пешкой с превращением
+/** 
+* взятие пешкой с превращением
 * @param {number} piece_name 
 * @param {number} from
 * @param {number} to_left
@@ -526,17 +540,18 @@ const generated_captures_moves_pawn_promo_mgc = function (piece_name, from, to_l
 
 
 
-/** ищем шахи (прямая проверка лучей без генерации списков)
- * оптимизация предложенная Qwen3.7-Max, с прямой генерацией лучей.
- * оставлю в конце файла исходную чтобы было видно из чего это в итоге получилось.
- * 
- * t
- * 
- * @param {number} from - квадрат, который проверяем на шах (обычно позиция короля)
- * @param {number} piece_color - цвет фигуры на квадрате from (WHITE_CB или BLACK_CB)
- * @param {Int32Array} chess_board_0x88 - доска
- * @returns {number} - тип атакующей фигуры (например, B_KNIGHT_CB) или 0, если шаха нет
- */
+/** 
+* ищем шахи (прямая проверка лучей без генерации списков)
+* оптимизация предложенная Qwen3.7-Max, с прямой генерацией лучей.
+* оставлю в конце файла исходную чтобы было видно из чего это в итоге получилось.
+* 
+* t
+* 
+* @param {number} from - квадрат, который проверяем на шах (обычно позиция короля)
+* @param {number} piece_color - цвет фигуры на квадрате from (WHITE_CB или BLACK_CB)
+* @param {Int32Array} chess_board_0x88 - доска
+* @returns {number} - тип атакующей фигуры (например, B_KNIGHT_CB) или 0, если шаха нет
+*/
 const check_detected_mgc = function (from, piece_color, chess_board_0x88) {
     // Определяем фигуры противника, которые могут атаковать
     const isWhite = (piece_color == WHITE_CB);

@@ -1,0 +1,41 @@
+для работы нужны: chess_board_0x88.js, move_list_0x88.js
+
+==========================================================================
+ТЕОРИЯ
+
+  Проходим по доске chess_board_0x88 и пишем в список packing_moves только ходы не взятия.
+  Списка фигур нет. Максимально простой, на мой взгляд, генератор.
+  Ходы псевдолегальные, т.е. тут есть ходы под шах или открывающие шах, а также рокировки 
+  через битые поля.
+
+==========================================================================
+КОНСТАНТЫ, использование
+
+==========================================================================
+ФУНКЦИИ, использование
+
+-------------
+генерируем тихие ходы т.е. не взятия, но не учитываем шахи и вскрытые шахи.
+
+chess_board_0x88 - по этой доске генерируется список ходов chess_board_0x88 = new Int32Array(128).fill(0);// доска 0x88 с фигурами
+packing_moves - список ходов packing_moves = new Int32Array(LENGTH_LIST = 260).fill(MOVE_NO);
+
+generated_pseudo_legal_quiet_moves_mgq(chess_board_0x88, packing_moves)
+
+-------------
+считаем тихие ходы т.е. не взятия одной фигуры из конкретной позиции. сделал для работы гуи
+
+from - где стоит фигура для которой генерируется список ходов
+chess_board_0x88 - по этой доске генерируется список ходов chess_board_0x88 = new Int32Array(128).fill(0);// доска 0x88 с фигурами
+packing_moves - список ходов packing_moves = new Int32Array(LENGTH_LIST = 260).fill(MOVE_NO);
+
+generated_pseudo_legal_quiet_moves_one_piece_for_gui_mgq(from, chess_board_0x88, packing_moves)
+
+-------------
+
+-------------
+export { 
+    generated_pseudo_legal_quiet_moves_mgq, generated_pseudo_legal_quiet_moves_one_piece_for_gui_mgq,
+    A1_MGQ, B1_MGQ, C1_MGQ , D1_MGQ, E1_MGQ, F1_MGQ, G1_MGQ, H1_MGQ, 
+    A8_MGQ, B8_MGQ, C8_MGQ, D8_MGQ, E8_MGQ, F8_MGQ, G8_MGQ, H8_MGQ
+};
