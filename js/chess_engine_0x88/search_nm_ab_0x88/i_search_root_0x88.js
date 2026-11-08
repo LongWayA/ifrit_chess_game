@@ -18,7 +18,7 @@ import {
 import {
   x07_y07_to_0x88_cb,
   test_print_piece_0x88_cb,
-  test_compare_chess_board_0x88_cb, set_board_from_fen_0x88_cb, set_fen_from_0x88_cb,
+  test_compare_chess_board_0x88_cb, set_board_from_fen_0x88_cb, set_fen_from_0x88_cb, test_print_piece_0x88_f_cb,
   letter_to_x_coordinate_cb,
   BOARD_SIZE_CB
 } from "../core_0x88_t/chess_board_0x88_t/chess_board_0x88.js";
@@ -39,7 +39,7 @@ import {
 import { do_moves_mm } from "../core_0x88_t/make_move_0x88_t/make_move_0x88.js";
 
 import {
-  searching_negamax, ini_stack, chess_board_0x88_end_original, node_mm
+  searching_negamax, ini_stack, chess_board_0x88_found_best_score, node_mm
 } from "../search_negamax_0x88/search_negamax_0x88.js";
 
 import {
@@ -73,6 +73,8 @@ import { Timer_C } from "../../browser/timer.js";
 import { ChessEngine_0x88_С } from "../i_chess_engine_0x88.js";
 
 import { ini_stack_qs } from "../quiescence_search_0x88/quiescence_search_0x88.js";
+
+import { score_position_e, PAWN_SCORE_E } from "../evaluate_0x88/evaluate_0x88.js";
 
 /**
 * НАЗНАЧЕНИЕ
@@ -151,13 +153,16 @@ const test_tt = function () {
 const start_search_negamax_r = function (fen_start, depth_max) {
   let depth = 0;
 
-  let chess_board_0x88 = new Int32Array(BOARD_SIZE_CB).fill(0);// текущая доска с фигурами 0x88 
+  let chess_board_0x88 = new Int32Array(BOARD_SIZE_CB).fill(0);// текущая доска с фигурами 0x88
+
+  // TEST
+  let chess_board_0x88_score = new Int32Array(BOARD_SIZE_CB).fill(0);// позиция соответствующая оценке с фигурами 0x88 
+
   let chess_board_0x88_start = new Int32Array(BOARD_SIZE_CB).fill(0);// записываем стартовую доску
-  let chess_board_0x88_get_move = new Int32Array(BOARD_SIZE_CB).fill(0);// записываем доску с ходом
 
   let chess_board_0x88_save_test = new Int32Array(BOARD_SIZE_CB).fill(0);// доска 0x88 с фигурами
 
-  const chess_board_key_64 = new BigUint64Array(1);
+  const chess_board_key_64 = new BigUint64Array(1);// зобрист ключ позиции
 
   let packing_pv_line = new Int32Array(MAX_DEPTH_PV).fill(MOVE_NO_ML);
 
@@ -165,19 +170,18 @@ const start_search_negamax_r = function (fen_start, depth_max) {
   let time_end = 0;// останавливаем таймер
   let time_delta = 0;// промежуток времени между запуском и остановкой таймера
 
-  ini_stack();
+  ini_stack();// инициируем стек
 
-  ini_random_key_array_64_tk();// инициируем внтуренний массив случайных чисел.
+  ini_random_key_array_64_tk();// инициируем внутренний массив случайных чисел.
 
   time_start = timer_O.getCurrentTimeMs();
 
-  console.log("start_search_negamax_r -> start_search_minmax->fen_start " + fen_start);
+  console.log("start_search_negamax_r -> start_search_negamax_r->fen_start " + fen_start);
 
   set_board_from_fen_0x88_cb(fen_start, chess_board_0x88_start);
 
   chess_board_0x88.set(chess_board_0x88_start);
   chess_board_0x88_save_test.set(chess_board_0x88);
-  chess_board_0x88_get_move.set(chess_board_0x88);
 
   chess_board_key_64[0] = 0n;
   // по позиции генерируем ключ
@@ -188,16 +192,21 @@ const start_search_negamax_r = function (fen_start, depth_max) {
   //
   let node = 0;
 
-  let best_score = searching_negamax(packing_pv_line, chess_board_0x88, chess_board_key_64, depth, depth_max);
+  let best_score = searching_negamax(chess_board_0x88, chess_board_0x88_score,  chess_board_key_64, packing_pv_line,  depth, depth_max);
 
   node = node + node_mm;
 
   test_compare_chess_board_0x88_cb(chess_board_0x88_save_test, chess_board_0x88);
 
-  chess_board_0x88_get_move.set(chess_board_0x88_end_original);
   //test
-  console.log("start_search_negamax_r -> test_print_piece_0x88_cb");
-  test_print_piece_0x88_cb(chess_board_0x88_get_move);
+  console.log("start_search_negamax_r -> chess_board_0x88_found_best_score");
+  test_print_piece_0x88_f_cb(chess_board_0x88_found_best_score);
+
+  // TEST
+  console.log("start_search_negamax_r -> chess_board_0x88_score");
+  test_print_piece_0x88_f_cb(chess_board_0x88_score);
+  console.log("start_search_negamax_r -> chess_board_0x88_score => score = " + score_position_e(chess_board_0x88_score));
+
 
   time_end = timer_O.getCurrentTimeMs();
   time_delta = (time_end - time_start) / 1000;
@@ -205,7 +214,7 @@ const start_search_negamax_r = function (fen_start, depth_max) {
   //let w = (chess_board_0x88_start[SIDE_TO_MOVE_CB] == WHITE_CB) ? 1 : -1;
 
   uci_return_search.fen_start = fen_start;
-  uci_return_search.fen_end = set_fen_from_0x88_cb(chess_board_0x88_get_move);
+  uci_return_search.fen_end = set_fen_from_0x88_cb(chess_board_0x88_found_best_score);
   //uci_return_search.fen_end = fen_start;
 
   let depth_uci = String(depth_max);

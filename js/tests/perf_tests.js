@@ -7,8 +7,8 @@
 */
 
 import {
-      searching_negamax, ini_stack, chess_board_0x88_end_original, node_mm
-} from "../chess_engine_0x88/search_negamax_0x88/search_negamax_0x88.js";
+      searching_negamax_pt, ini_stack_pt, chess_board_0x88_found_best_score, node_mm
+} from "../chess_engine_0x88/search_negamax_0x88/search_negamax_0x88_perf_tests.js";
 
 import {
       x07_y07_to_0x88_cb,
@@ -81,7 +81,7 @@ let Tests_perf_R = {
             let time_delta = 0;// промежуток времени между запуском и остановкой таймера
             let nps = 0;
 
-            ini_stack();
+            ini_stack_pt();
 
             ini_random_key_array_64_tk();// инициируем внтуренний массив случайных чисел.
 
@@ -92,7 +92,7 @@ let Tests_perf_R = {
 
             set_board_from_fen_0x88_cb(fen, chess_board_0x88);
 
-            best_score = searching_negamax(packing_pv_line, chess_board_0x88, chess_board_key_64, depth, depth_max);
+            best_score = searching_negamax_pt(packing_pv_line, chess_board_0x88, chess_board_key_64, depth, depth_max);
 
             node_true = 4865609;
 
@@ -126,7 +126,7 @@ let Tests_perf_R = {
 
             set_board_from_fen_0x88_cb(fen, chess_board_0x88);
 
-            best_score = searching_negamax(packing_pv_line, chess_board_0x88, chess_board_key_64, depth, depth_max);
+            best_score = searching_negamax_pt(packing_pv_line, chess_board_0x88, chess_board_key_64, depth, depth_max);
 
             node_true = 4085603;
 
@@ -160,7 +160,7 @@ let Tests_perf_R = {
 
             set_board_from_fen_0x88_cb(fen, chess_board_0x88);
 
-            best_score = searching_negamax(packing_pv_line, chess_board_0x88, chess_board_key_64, depth, depth_max);
+            best_score = searching_negamax_pt(packing_pv_line, chess_board_0x88, chess_board_key_64, depth, depth_max);
 
             node_true = 11030083;
 
@@ -194,7 +194,7 @@ let Tests_perf_R = {
 
             set_board_from_fen_0x88_cb(fen, chess_board_0x88);
 
-            best_score = searching_negamax(packing_pv_line, chess_board_0x88, chess_board_key_64, depth, depth_max);
+            best_score = searching_negamax_pt(packing_pv_line, chess_board_0x88, chess_board_key_64, depth, depth_max);
 
             node_true = 15833292;
 
@@ -228,7 +228,7 @@ let Tests_perf_R = {
 
             set_board_from_fen_0x88_cb(fen, chess_board_0x88);
 
-            best_score = searching_negamax(packing_pv_line, chess_board_0x88, chess_board_key_64, depth, depth_max);
+            best_score = searching_negamax_pt(packing_pv_line, chess_board_0x88, chess_board_key_64, depth, depth_max);
 
             node_true = 2103487;
 
@@ -262,7 +262,7 @@ let Tests_perf_R = {
 
             set_board_from_fen_0x88_cb(fen, chess_board_0x88);
 
-            best_score = searching_negamax(packing_pv_line, chess_board_0x88, chess_board_key_64, depth, depth_max);
+            best_score = searching_negamax_pt(packing_pv_line, chess_board_0x88, chess_board_key_64, depth, depth_max);
 
             node_true = 3894594;
 

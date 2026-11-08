@@ -96,11 +96,11 @@ let IfritChessGame_R = {
 
         IfritChessGame_R.position_fen = IfritChessGame_R.INITIAL_POSITION_FEN;
 
-        //IfritChessGame_R.gui_chess_O.mode_game = Gui_chess_C.MINMAX;// полный перебор        
-        IfritChessGame_R.gui_chess_O.mode_game = Gui_chess_C.ID;// циклическое погружение со всеми эвристиками      
+        IfritChessGame_R.gui_chess_O.mode_game = Gui_chess_C.NEGAMAX;// полный перебор        
+        //IfritChessGame_R.gui_chess_O.mode_game = Gui_chess_C.ID;// циклическое погружение со всеми эвристиками      
 
         // задаем глубину перебора во время игры
-        IfritChessGame_R.gui_chess_O.depth_max = 6;//6
+        IfritChessGame_R.gui_chess_O.depth_max = 4;//6
         
         // @ts-ignore
         IfritChessGame_R.checkbox_O.set_input_max_depth_value(IfritChessGame_R.gui_chess_O.depth_max);
@@ -292,14 +292,14 @@ let IfritChessGame_R = {
         let side_to_move = IfritChessGame_R.gui_chess_O.chessBoard_8x8_O.side_to_move;
 
         // тут ход уже сделан на доске движка chess_board_0x88_O и мы считаем ответ
-        if (IfritChessGame_R.gui_chess_O.mode_game == Gui_chess_C.MINMAX) {// test minmax запуск полного перебора 
-            console.log("IfritChessGame_R -> MINMAX");
+        if (IfritChessGame_R.gui_chess_O.mode_game == Gui_chess_C.NEGAMAX) {// test negamax запуск полного перебора 
+            console.log("IfritChessGame_R -> NEGAMAX");
 
             IfritChessGame_R.gui_chess_O.click_is_stop = Gui_chess_C.CLICK_YES_STOP;
             IfritChessGame_R.checkbox_O.set_disabled(true);
 
             IfritChessGame_R.gui_chess_O.GuiStartWorker_O.message_gui_to_egnine(fen, IfritChessGame_R.gui_chess_O.depth_max, side_to_move,
-                1, Gui_chess_C.MINMAX);
+                1, Gui_chess_C.NEGAMAX);
 
 
         } else if (IfritChessGame_R.gui_chess_O.mode_game == Gui_chess_C.ID) {  // iterative deepening
@@ -343,10 +343,10 @@ let IfritChessGame_R = {
             let side_to_move = IfritChessGame_R.gui_chess_O.chessBoard_8x8_O.side_to_move;
 
             // тут ход уже сделан на доске движка chess_board_0x88_O и мы считаем ответ
-            if (IfritChessGame_R.gui_chess_O.mode_game == Gui_chess_C.MINMAX) {// test minmax запуск полного перебора 
+            if (IfritChessGame_R.gui_chess_O.mode_game == Gui_chess_C.NEGAMAX) {// test negamax запуск полного перебора 
                 console.log("IfritChessGame_R -> MINMAX");
                 IfritChessGame_R.gui_chess_O.GuiStartWorker_O.message_gui_to_egnine(IfritChessGame_R.position_fen,
-                    IfritChessGame_R.gui_chess_O.depth_max, side_to_move, 0, Gui_chess_C.MINMAX);
+                    IfritChessGame_R.gui_chess_O.depth_max, side_to_move, 0, Gui_chess_C.NEGAMAX);
 
             } else if (IfritChessGame_R.gui_chess_O.mode_game == Gui_chess_C.ID) {  // iterative deepening
                 console.log("IfritChessGame_R -> ID");
@@ -377,14 +377,14 @@ let IfritChessGame_R = {
         let side_to_move = IfritChessGame_R.gui_chess_O.chessBoard_8x8_O.side_to_move;
 
         // тут ход уже сделан на доске движка chess_board_0x88_O и мы считаем ответ
-        if (IfritChessGame_R.gui_chess_O.mode_game == Gui_chess_C.MINMAX) {// test minmax запуск полного перебора 
-            console.log("IfritChessGame_R -> MINMAX");
+        if (IfritChessGame_R.gui_chess_O.mode_game == Gui_chess_C.NEGAMAX) {// test negamax запуск полного перебора 
+            console.log("IfritChessGame_R -> NEGAMAX");
 
             IfritChessGame_R.gui_chess_O.click_is_stop = Gui_chess_C.CLICK_YES_STOP;
             IfritChessGame_R.checkbox_O.set_disabled(true);
 
             IfritChessGame_R.gui_chess_O.GuiStartWorker_O.message_gui_to_egnine(fen, IfritChessGame_R.gui_chess_O.depth_max, side_to_move,
-                0, Gui_chess_C.MINMAX);
+                0, Gui_chess_C.NEGAMAX);
 
 
         } else if (IfritChessGame_R.gui_chess_O.mode_game == Gui_chess_C.ID) {  // iterative deepening

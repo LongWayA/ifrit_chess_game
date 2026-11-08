@@ -800,6 +800,61 @@ const searching_king_cb = function (chess_board_0x88, piece_color) {
     return -1;
 }
 
+// 1- пешка, 2-конь, 3-слон, 4-ладья,  5-ферзь,  6-король <- белые фигуры 
+// 9- пешка, 10-конь, 11-слон, 12-ладья, 13-ферзь, 14-король <- черные фигуры
+// Справочник шахматных фигур
+/** @type {Record<number, string>} */
+const chessPieces = {
+
+    0: '\u3000', // Специальный широкий пробел (вместо обычного ' ')
+
+    // Белые фигуры
+    1: '♙', // Пешка
+    2: '♘', // Конь
+    3: '♗', // Слон
+    4: '♖', // Ладья
+    5: '♕', // Ферзь
+    6: '♔', // Король
+
+    // Черные фигуры
+    9: '♟',  // Пешка
+    10: '♞', // Конь
+    11: '♝', // Слон
+    12: '♜', // Ладья
+    13: '♛', // Ферзь
+    14: '♚' // Король
+};
+
+/**
+* использую для тестов и через это тестирую
+* печатаем имена фигур на позиции в консоле браузера (для тестирования)
+* @param {Int32Array} chess_board_0x88
+* @returns {void}
+*/
+const test_print_piece_0x88_f_cb = function (chess_board_0x88) {
+    console.log("test_print_piece_0x88 F ****************");
+    /** @type {number} */
+    let l = 0;// 
+    let line = "";//
+    // бежим по доске и добавляем в линию фигуры с доски. как достигли 
+    // конца доски с фигурами печатаем линию и все по новой
+    for (let i = 0; i < BOARD_SIZE_CB; i++) {
+        if ((i & OUT_OF_BOUNDS_MASK_CB) === 0) {// 136 0x88
+            l = 1;
+            //line = line + "|" + String(chess_board_0x88[i]); 
+            line = line + "|" + chessPieces[chess_board_0x88[i]];
+        } else if (l === 1) {
+            l = 0;
+            console.log(line + "|");
+            //console.log( "\n");
+            line = "";
+        }
+    }
+    console.log("side_to_move = " + chess_board_0x88[SIDE_TO_MOVE_CB]);
+    console.log("**************** test_print_0x88 F");
+}
+
+
 // ----------------------------------------------------------------------FOR TEST
 
 export {
@@ -807,7 +862,7 @@ export {
     test_print_any_0x88_cb, test_print_piece_0x88_cb, test_print_piece_color_0x88_cb, test_print_piece_in_line_0x88_cb,
     test_compare_chess_board_0x88_cb, set_board_from_fen_0x88_cb, set_fen_from_0x88_cb,
     searching_king_cb, iniStartPositionForWhite_cb, letter_to_x_coordinate_cb,
-    s_0x88_out_of_bounds_cb, get_piece_color_cb, get_piece_type_cb,
+    s_0x88_out_of_bounds_cb, get_piece_color_cb, get_piece_type_cb, test_print_piece_0x88_f_cb,
     //create_piece_cb,
     BOARD_SIZE_CB, OUT_OF_BOUNDS_MASK_CB, SIDE_TO_MOVE_CB, LET_COOR_CB,
     BLACK_CB, WHITE_CB, PIECE_NO_CB, W_PAWN_CB, W_KNIGHT_CB, W_BISHOP_CB, W_ROOK_CB, W_QUEEN_CB, W_KING_CB, B_PAWN_CB,
@@ -816,3 +871,17 @@ export {
     IND_EN_PASSANT_TARGET_SQUARE_CB, IND_KING_FROM_WHITE_CB, IND_KING_FROM_BLACK_CB, IND_SCORE_CB,
     SQUARE_64_to_128_CB, SQUARE_128_to_64_CB
 };
+
+/*
+
+Фигура	Белая (Символ / Код)	Черная (Символ / Код)
+Король	♔ (&#9812;)	♚ (&#9818;)
+Ферзь	♕ (&#9813;)	♛ (&#9819;)
+Ладья	♖ (&#9814;)	♜ (&#9820;)
+Слон	♗ (&#9815;)	♝ (&#9821;)
+Конь	♘ (&#9816;)	♞ (&#9822;)
+Пешка	♙ (&#9817;)	♟ (&#9823;)
+
+
+
+*/

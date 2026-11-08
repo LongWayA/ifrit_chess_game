@@ -38,7 +38,7 @@ class Gui_chess_C {
 
       // test = 1 запуск полного перебора minmax         
       // test = 2 message_to_engine(message) работа с воркером
-      static MINMAX = 1;
+      static NEGAMAX = 1;
       static ID = 2;
 
       static CLICK_NO = 0;
