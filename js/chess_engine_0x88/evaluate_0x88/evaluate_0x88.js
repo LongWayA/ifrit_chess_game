@@ -1,12 +1,11 @@
 // @ts-check
-/**
-@copyright Copyright (c) 2026, AnBr75 and/or its affiliates. All rights reserved.
-@author AnBr75
-@name evaluate_0x88.js
-@version created 29.11m.2026, 07.06m.2026
-Code review: Qwen3.7-Max AI
-Qwen3.7-Max AI: FIXED: PST now contain relative bonuses only
+/** 
+ * @copyright Copyright (c) 2026, AnBr75 and/or its affiliates. All rights reserved.
+ * @author AnBr75
+ * @name evaluate_0x88.js
+ * @version created 29.11m.2026 
 */
+
 import {
     x07_y07_to_0x88_cb, s_0x88_to_x07_cb, s_0x88_to_y07_cb,
     test_print_any_0x88_cb, test_print_piece_0x88_cb, test_print_piece_color_0x88_cb, test_print_piece_in_line_0x88_cb,
@@ -21,284 +20,252 @@ import {
     SQUARE_64_to_128_CB, SQUARE_128_to_64_CB
 } from "../core_0x88_t/chess_board_0x88_t/chess_board_0x88.js";
 
-/**
-НАЗНАЧЕНИЕ
-Оценочная функция с Tapered Eval (интерполяция MG/EG).
+import {
+  ini_random_key_array_64_tk, ini_key_array_64_tk, set_key_from_board_0x88_tk, test_chess_board_key_64_tk,
+  key_update_do_move_0x88_tk, key_update_ep_move_0x88_tk, key_update_promo_move_0x88_tk,
+  key_update_castle_move_0x88_tk, key_update_ep_0x88_tk, key_update_ep_sq_0x88_tk, key_update_QqKk_0x88_tk,
+  test_generation_key_64_tk
+} from "../heuristic_0x88/transposition_table_0x88/transposition_key_0x88.js";
 
-ИСПРАВЛЕНИЯ (v3):
-  - КРИТИЧЕСКИЙ баг: PST теперь содержат ТОЛЬКО позиционные бонусы (-50...+50),
-    а не абсолютные значения (300-5000).
-  - Базовый материал (PIECE_SCORE_MG/EG) добавляется ОТДЕЛЬНО.
-  - До исправления движок показывал оценку 21000+ вместо ~0 в стартовой позиции.
+/**
+* НАЗНАЧЕНИЕ
+
 */
 
-// =============================================================================
-// БАЗОВЫЕ ВЕСА ФИГУР (добавляются ОТДЕЛЬНО от PST)
-// =============================================================================
-const PAWN_SCORE_E = 100;
-const KNIGHT_SCORE_E = 320;
-const BISHOP_SCORE_E = 330;
-const ROOK_SCORE_E = 500;
-const QUEEN_SCORE_E = 900;
-const KING_SCORE_E = 20000;
+// оценки фигур
+const PAWN_SCORE_E = 100;  // пешка 
+const KNIGHT_SCORE_E = 400;  // конь
+const BISHOP_SCORE_E = 400;  // слон
+const ROOK_SCORE_E = 600;  // ладья
+const QUEEN_SCORE_E = 1200; // ферзь
+const KING_SCORE_E = 5000;// король
 
-// ИСПРАВЛЕННЫЙ КОД:
-const PIECE_SCORE_MG = new Int32Array([
-    0,  100, 320, 330, 500, 900, 20000,  0,  // ← 8 элементов (индексы 0-7)
-    0, -100,-320,-330,-500,-900,-20000       // ← 7 элементов (индексы 8-14)
-]);
+// Имена фигур закодированы цифрами: 
+// 0- нет фигуры, 
+// 1- пешка, 2-конь, 3-слон, 4-ладья,  5-ферзь,  6-король <- белые фигуры 
+// 9- пешка, 10-конь, 11-слон, 12-ладья, 13-ферзь, 14-король <- черные фигуры 
+//                     0  1             2               3               4             5              6             7  8
+const PIECE_SCORE_E = [0, PAWN_SCORE_E, KNIGHT_SCORE_E, BISHOP_SCORE_E, ROOK_SCORE_E, QUEEN_SCORE_E, KING_SCORE_E, 0, 0,
+  //9             10              11              12            13             14   
+  PAWN_SCORE_E, KNIGHT_SCORE_E, BISHOP_SCORE_E, ROOK_SCORE_E, QUEEN_SCORE_E, KING_SCORE_E];
 
-const PIECE_SCORE_EG = new Int32Array([
-    0,  100, 310, 320, 500, 900, 20000,  0,  // ← 8 элементов
-    0, -100,-310,-320,-500,-900,-20000       // ← 7 элементов
-]);
-
-// Legacy export
-const PIECE_SCORE_E = [
-    0, PAWN_SCORE_E, KNIGHT_SCORE_E, BISHOP_SCORE_E, ROOK_SCORE_E, QUEEN_SCORE_E, KING_SCORE_E, 0, 0,
-    -PAWN_SCORE_E, -KNIGHT_SCORE_E, -BISHOP_SCORE_E, -ROOK_SCORE_E, -QUEEN_SCORE_E, -KING_SCORE_E
+const CENTER_0x88_E = [
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  5, 5, 5, 5, 5, 5, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0,
+  10, 20, 20, 20, 20, 20, 20, 10, 0, 0, 0, 0, 0, 0, 0, 0,
+  15, 20, 25, 30, 30, 25, 20, 15, 0, 0, 0, 0, 0, 0, 0, 0,
+  15, 20, 25, 30, 30, 25, 20, 15, 0, 0, 0, 0, 0, 0, 0, 0,
+  10, 15, 20, 25, 25, 20, 15, 10, 0, 0, 0, 0, 0, 0, 0, 0,
+  5, 5, 5, 5, 5, 5, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 ];
 
-// =============================================================================
-// ФАЗА ИГРЫ (Tapered Eval)
-// =============================================================================
-const PHASE_WEIGHTS = new Int32Array([
-    0, 0, 1, 1, 2, 4, 0,   // 0-6 (Белые)
-    0, 0,                   // 7-8 (Заполнители)
-    0, 1, 1, 2, 4, 0        // 9-14 (Черные)
-]);
-const MAX_PHASE_MATERIAL = 24;
+const CENTER_KNIGHT_0x88_E = [
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  5, 5, 5, 5, 5, 5, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0,
+  10, 20, 20, 20, 20, 20, 20, 10, 0, 0, 0, 0, 0, 0, 0, 0,
+  15, 20, 25, 30, 30, 25, 20, 15, 0, 0, 0, 0, 0, 0, 0, 0,
+  15, 20, 25, 30, 30, 25, 20, 15, 0, 0, 0, 0, 0, 0, 0, 0,
+  10, 15, 20, 25, 25, 20, 15, 10, 0, 0, 0, 0, 0, 0, 0, 0,
+  5, 5, 5, 5, 5, 5, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+];
 
-// =============================================================================
-// PIECE-SQUARE TABLES (ОТНОСИТЕЛЬНЫЕ бонусы для MG, БЕЗ базового материала!)
-// Принципы: развитие > вывод ферзя > рокировка > контроль центра
-// =============================================================================
-const PST_EMPTY = new Int32Array(128);
+const CENTER_BISHOP_0x88_E = [
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  5, 5, 5, 5, 5, 5, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0,
+  10, 20, 20, 20, 20, 20, 20, 10, 0, 0, 0, 0, 0, 0, 0, 0,
+  15, 20, 25, 30, 30, 25, 20, 15, 0, 0, 0, 0, 0, 0, 0, 0,
+  15, 20, 25, 30, 30, 25, 20, 15, 0, 0, 0, 0, 0, 0, 0, 0,
+  10, 15, 20, 25, 25, 20, 15, 10, 0, 0, 0, 0, 0, 0, 0, 0,
+  5, 5, 5, 5, 5, 5, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+];
 
-// --- ПЕШКИ MG: контроль центра, штрафы за крайние пешки ---
-const MG_W_PAWN = new Int32Array([
-      0,   0,   0,   0,   0,   0,   0,   0,  0,0,0,0,0,0,0,0,  // rank 0 (8-я, превращение)
-     50,  50,  50,  50,  50,  50,  50,  50,  0,0,0,0,0,0,0,0,  // rank 1 (7-я, перед превращением)
-     10,  10,  20,  30,  30,  20,  10,  10,  0,0,0,0,0,0,0,0,  // rank 2 (6-я)
-      5,   5,  10,  20,  20,  10,   5,   5,  0,0,0,0,0,0,0,0,  // rank 3 (5-я)
-      0,   0,   5,  15,  15,   5,   0,   0,  0,0,0,0,0,0,0,0,  // rank 4 (4-я: e4,d4 = +15!)
-      0,  -5,  -5,   0,   0,  -5,  -5,   0,  0,0,0,0,0,0,0,0,  // rank 5 (3-я)
-      5,  10,  10, -15, -15,  10,  10,   5,  0,0,0,0,0,0,0,0,  // rank 6 (2-я: e2,d2 = -15, не двигай без нужды)
-      0,   0,   0,   0,   0,   0,   0,   0,  0,0,0,0,0,0,0,0   // rank 7 (1-я)
-]);
+const CENTER_ROOK_0x88_E = [
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  5, 5, 5, 5, 5, 5, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0,
+  10, 20, 20, 20, 20, 20, 20, 10, 0, 0, 0, 0, 0, 0, 0, 0,
+  15, 20, 25, 30, 30, 25, 20, 15, 0, 0, 0, 0, 0, 0, 0, 0,
+  15, 20, 25, 30, 30, 25, 20, 15, 0, 0, 0, 0, 0, 0, 0, 0,
+  10, 15, 20, 25, 25, 20, 15, 10, 0, 0, 0, 0, 0, 0, 0, 0,
+  5, 5, 5, 5, 5, 5, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+];
 
-// --- КОНИ MG: ОГРОМНЫЙ бонус за f3/c3, штраф за края и стартовую позицию ---
-const MG_W_KNIGHT = new Int32Array([
-    -50, -40, -30, -20, -20, -30, -40, -50,  0,0,0,0,0,0,0,0,  // rank 0 (8-я)
-    -40, -20,   0,   5,   5,   0, -20, -40,  0,0,0,0,0,0,0,0,  // rank 1 (7-я)
-    -30,   0,  10,  15,  15,  10,   0, -30,  0,0,0,0,0,0,0,0,  // rank 2 (6-я)
-    -20,   5,  15,  25,  25,  15,   5, -20,  0,0,0,0,0,0,0,0,  // rank 3 (5-я: центр!)
-    -20,   5,  15,  25,  25,  15,   5, -20,  0,0,0,0,0,0,0,0,  // rank 4 (4-я: центр!)
-    -30,   0,  15,  20,  20,  15,   0, -30,  0,0,0,0,0,0,0,0,  // rank 5 (3-я: c3,f3 = +15-20!)
-    -40, -20,   0,   5,   5,   0, -20, -40,  0,0,0,0,0,0,0,0,  // rank 6 (2-я)
-    -50, -40, -30, -20, -20, -30, -40, -50,  0,0,0,0,0,0,0,0   // rank 7 (1-я: b1,g1 = -40, штраф!)
-]);
+const CENTER_QUEEN_0x88_E = [
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 1, 2, 2, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 1, 2, 3, 3, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 1, 2, 3, 3, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 1, 2, 2, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+];
 
-// --- СЛОНЫ MG: фианкетто, активные диагонали, штраф за пассивность ---
-const MG_W_BISHOP = new Int32Array([
-    -20, -10, -10, -10, -10, -10, -10, -20,  0,0,0,0,0,0,0,0,
-    -10,   0,   0,   0,   0,   0,   0, -10,  0,0,0,0,0,0,0,0,
-    -10,   0,  10,  10,  10,  10,   0, -10,  0,0,0,0,0,0,0,0,
-    -10,   5,   5,  15,  15,   5,   5, -10,  0,0,0,0,0,0,0,0,
-    -10,   5,  10,  15,  15,  10,   5, -10,  0,0,0,0,0,0,0,0,
-    -10,  10,  10,  10,  10,  10,  10, -10,  0,0,0,0,0,0,0,0,  // rank 5: c4,f4,b5,g5 = +10
-    -10,  10,   5,   5,   5,   5,  10, -10,  0,0,0,0,0,0,0,0,  // rank 6: b2,g2 = +10 (фианкетто!)
-    -20, -10, -10, -10, -10, -10, -10, -20,  0,0,0,0,0,0,0,0   // rank 7: c1,f1 = -10 (заперт!)
-]);
 
-// --- ЛАДЬИ MG: 7-я горизонталь, связь после рокировки ---
-const MG_W_ROOK = new Int32Array([
-      0,   0,   0,   0,   0,   0,   0,   0,  0,0,0,0,0,0,0,0,
-     20,  20,  20,  20,  20,  20,  20,  20,  0,0,0,0,0,0,0,0,  // rank 1: 7-я горизонталь!
-     -5,   0,   0,   0,   0,   0,   0,  -5,  0,0,0,0,0,0,0,0,
-     -5,   0,   0,   0,   0,   0,   0,  -5,  0,0,0,0,0,0,0,0,
-     -5,   0,   0,   0,   0,   0,   0,  -5,  0,0,0,0,0,0,0,0,
-     -5,   0,   0,   0,   0,   0,   0,  -5,  0,0,0,0,0,0,0,0,
-     -5,   0,   0,   0,   0,   0,   0,  -5,  0,0,0,0,0,0,0,0,
-      0,   0,   0,  10,  10,   0,   0,   0,  0,0,0,0,0,0,0,0   // rank 7: d1,e1 = +10 (связь после рокировки)
-]);
+const CENTER_W_KING_0x88_E = [
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 5, 10, 0, 0, 0, 20, 5, 0, 0, 0, 0, 0, 0, 0, 0,
+];
 
-// --- ФЕРЗИ MG: ШТРАФ за ранний вывод! Все центральные поля отрицательные ---
-const MG_W_QUEEN = new Int32Array([
-    -30, -25, -25, -20, -20, -25, -25, -30,  0,0,0,0,0,0,0,0,  // rank 0: глубокий тыл
-    -25, -15, -10,  -5,  -5, -10, -15, -25,  0,0,0,0,0,0,0,0,  // rank 1: 7-я (атака в эндшпиле)
-    -20, -10,  -5,   0,   0,  -5, -10, -20,  0,0,0,0,0,0,0,0,  // rank 2
-    -15,  -5,   0,   5,   5,   0,  -5, -15,  0,0,0,0,0,0,0,0,  // rank 3
-    -15,  -5,   0,   5,   5,   0,  -5, -15,  0,0,0,0,0,0,0,0,  // rank 4: центр = +5, но мало!
-    -20, -10,  -5,   0,   0,  -5, -10, -20,  0,0,0,0,0,0,0,0,  // rank 5
-    -25, -15, -10, -10, -10, -10, -15, -25,  0,0,0,0,0,0,0,0,  // rank 6: 2-я горизонталь
-    -30, -25, -20, -15, -15, -20, -25, -30,  0,0,0,0,0,0,0,0   // rank 7: d1 = -15 (держи дома!)
-]);
+const CENTER_B_KING_0x88_E = [
+  0, 5, 10, 0, 0, 0, 20, 5, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+];
 
-// --- КОРОЛИ MG: РОКИРОВКА ИЛИ СМЕРТЬ! Огромный бонус за g1/c1 ---
-const MG_W_KING = new Int32Array([
-    -50, -40, -30, -20, -20, -30, -40, -50,  0,0,0,0,0,0,0,0,
-    -40, -30, -20, -10, -10, -20, -30, -40,  0,0,0,0,0,0,0,0,
-    -30, -20, -10,   0,   0, -10, -20, -30,  0,0,0,0,0,0,0,0,
-    -30, -20, -10,   0,   0, -10, -20, -30,  0,0,0,0,0,0,0,0,
-    -30, -20, -10,   0,   0, -10, -20, -30,  0,0,0,0,0,0,0,0,
-    -30, -20, -10,   0,   0, -10, -20, -30,  0,0,0,0,0,0,0,0,
-    -30, -20, -10,   0,   0, -10, -20, -30,  0,0,0,0,0,0,0,0,
-    -30, -20, -10, -20, -20, -10,  20, -30,  0,0,0,0,0,0,0,0   // g1 = +20, c1 = +10 (рокировка!), e1 = -20 (плохо!)
-]);
+const CENTER_W_PAWN_0x88_E = [
+  100, 100, 100, 100, 100, 100, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0,
+  30, 30, 30, 30, 30, 30, 30, 30, 0, 0, 0, 0, 0, 0, 0, 0,
+  25, 25, 25, 25, 20, 20, 20, 20, 0, 0, 0, 0, 0, 0, 0, 0,
+  20, 20, 20, 20, 15, 15, 15, 15, 0, 0, 0, 0, 0, 0, 0, 0,
+  15, 15, 15, 15, 10, 10, 10, 10, 0, 0, 0, 0, 0, 0, 0, 0,
+  10, 10, 10, 10, 5, 5, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0,
+  5, 5, 5, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+];
 
-// --- ПЕШКИ EG: проходные экстремально ценны ---
-const EG_W_PAWN = new Int32Array([
-      0,   0,   0,   0,   0,   0,   0,   0,  0,0,0,0,0,0,0,0,
-     80,  80,  80,  80,  80,  80,  80,  80,  0,0,0,0,0,0,0,0,  // Почти ферзь!
-     10,  10,  15,  20,  20,  15,  10,  10,  0,0,0,0,0,0,0,0,
-    -30, -30, -20, -10, -10, -20, -30, -30,  0,0,0,0,0,0,0,0,
-    -40, -40, -30, -20, -20, -30, -40, -40,  0,0,0,0,0,0,0,0,
-    -40, -40, -30, -20, -20, -30, -40, -40,  0,0,0,0,0,0,0,0,
-    -40, -40, -40, -40, -40, -40, -40, -40,  0,0,0,0,0,0,0,0,
-      0,   0,   0,   0,   0,   0,   0,   0,  0,0,0,0,0,0,0,0
-]);
+const CENTER_B_PAWN_0x88_E = [
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  5, 5, 5, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  10, 10, 10, 10, 5, 5, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0,
+  15, 15, 15, 15, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  20, 20, 20, 20, 15, 15, 15, 15, 0, 0, 0, 0, 0, 0, 0, 0,
+  25, 25, 25, 25, 20, 20, 20, 20, 0, 0, 0, 0, 0, 0, 0, 0,
+  30, 30, 30, 30, 30, 30, 30, 30, 0, 0, 0, 0, 0, 0, 0, 0,
+  100, 100, 100, 100, 100, 100, 100, 100, 0, 0, 0, 0, 0, 0, 0, 0,
+];
 
-// --- КОРОЛИ EG: активный король идёт в центр ---
-const EG_W_KING = new Int32Array([
-    -40, -30, -20, -10, -10, -20, -30, -40,  0,0,0,0,0,0,0,0,
-    -30, -10,   0,  10,  10,   0, -10, -30,  0,0,0,0,0,0,0,0,
-    -20,   0,  20,  30,  30,  20,   0, -20,  0,0,0,0,0,0,0,0,
-    -10,  10,  30,  50,  50,  30,  10, -10,  0,0,0,0,0,0,0,0,
-    -10,  10,  30,  50,  50,  30,  10, -10,  0,0,0,0,0,0,0,0,
-    -20,   0,  20,  30,  30,  20,   0, -20,  0,0,0,0,0,0,0,0,
-    -30, -10,   0,  10,  10,   0, -10, -30,  0,0,0,0,0,0,0,0,
-    -40, -30, -20, -10, -10, -20, -30, -40,  0,0,0,0,0,0,0,0
-]);
-
-// Для остальных фигур в EG используем те же PST что и в MG
-const EG_W_KNIGHT = new Int32Array(MG_W_KNIGHT);
-const EG_W_BISHOP = new Int32Array(MG_W_BISHOP);
-const EG_W_ROOK   = new Int32Array(MG_W_ROOK);
-const EG_W_QUEEN  = new Int32Array(MG_W_QUEEN);
-
-// =============================================================================
-// ОТЗЕРКАЛИВАНИЕ ДЛЯ ЧЁРНЫХ (ИСПРАВЛЕНО!)
-// =============================================================================
 /**
- * Отзеркаливает белую PST для чёрных: rank 0..7 -> 7..0, меняет знак.
- * ИСПРАВЛЕНО: теперь правильно зеркалирует координаты!
- * @param {Int32Array} whitePST
- * @returns {Int32Array}
- */
-function makeBlackPST(whitePST) {
-    const black = new Int32Array(128);
-    for (let r = 0; r < 8; r++) {
-        const whiteRank = (7 - r) * 16;  // ИСПРАВЛЕНО: зеркалим правильно!
-        const blackRank = r * 16;
-        for (let f = 0; f < 8; f++) {
-            black[blackRank + f] = -whitePST[whiteRank + f];
-        }
-    }
-    return black;
-}
-
-const MG_B_PAWN   = makeBlackPST(MG_W_PAWN);
-const MG_B_KNIGHT = makeBlackPST(MG_W_KNIGHT);
-const MG_B_BISHOP = makeBlackPST(MG_W_BISHOP);
-const MG_B_ROOK   = makeBlackPST(MG_W_ROOK);
-const MG_B_QUEEN  = makeBlackPST(MG_W_QUEEN);
-const MG_B_KING   = makeBlackPST(MG_W_KING);
-
-const EG_B_PAWN   = makeBlackPST(EG_W_PAWN);
-const EG_B_KNIGHT = makeBlackPST(EG_W_KNIGHT);
-const EG_B_BISHOP = makeBlackPST(EG_W_BISHOP);
-const EG_B_ROOK   = makeBlackPST(EG_W_ROOK);
-const EG_B_QUEEN  = makeBlackPST(EG_W_QUEEN);
-const EG_B_KING   = makeBlackPST(EG_W_KING);
-
-// Сборные массивы для O(1)-доступа по piece ID
-const ALL_MG_PST = [
-    PST_EMPTY, MG_W_PAWN, MG_W_KNIGHT, MG_W_BISHOP, MG_W_ROOK, MG_W_QUEEN, MG_W_KING,
-    PST_EMPTY, PST_EMPTY,
-    MG_B_PAWN, MG_B_KNIGHT, MG_B_BISHOP, MG_B_ROOK, MG_B_QUEEN, MG_B_KING
-];
-const ALL_EG_PST = [
-    PST_EMPTY, EG_W_PAWN, EG_W_KNIGHT, EG_W_BISHOP, EG_W_ROOK, EG_W_QUEEN, EG_W_KING,
-    PST_EMPTY, PST_EMPTY,
-    EG_B_PAWN, EG_B_KNIGHT, EG_B_BISHOP, EG_B_ROOK, EG_B_QUEEN, EG_B_KING
-];
-
-// =============================================================================
-// ГЛАВНАЯ ФУНКЦИЯ ОЦЕНКИ (ИСПРАВЛЕНО!)
-// =============================================================================
-/**
- * Основная оценка позиции с Tapered Eval.
- * ИСПРАВЛЕНО: теперь базовый материал добавляется ОТДЕЛЬНО от PST.
- *
- * @param {Int32Array} chess_board_0x88
- * @returns {number} оценка в сантипешках (с точки зрения ходящей стороны)
- */
+* @param {Int32Array} chess_board_0x88 
+* @returns {number}
+*/
 const score_position_e = function (chess_board_0x88) {
-    let mg_score = 0;
-    let eg_score = 0;
-    let game_phase = 0;
 
-    // === ПРОХОД ПО ДОСКЕ ===
-    for (let rank = 0; rank < 128; rank += 16) {
-        for (let sq = rank; sq < rank + 8; sq++) {
-            const piece = chess_board_0x88[sq];
-            if (piece === PIECE_NO_CB) continue;
+  let color_piece = 0;
+  let score_piece = 0;
+  let index_piece = 0;
+  let score = 0;
 
-            // ★★★ ИСПРАВЛЕНИЕ: Базовый материал добавляется ОТДЕЛЬНО ★★★
-            mg_score += PIECE_SCORE_MG[piece];
-            eg_score += PIECE_SCORE_EG[piece];
+  for (let sq = 0; sq < 128; sq++) {
+    if ((sq & 136) == 0) {// 136 0x88
 
-            // Позиционные бонусы из PST (теперь относительные!)
-            mg_score += ALL_MG_PST[piece][sq];
-            eg_score += ALL_EG_PST[piece][sq];
+      index_piece = chess_board_0x88[sq];
+      score_piece = PIECE_SCORE_E[index_piece];
+      //color_piece = (index_piece > W_KING) ? BLACK : WHITE;
+      color_piece = 1 - (index_piece >> 3);
 
-            game_phase += PHASE_WEIGHTS[piece];
-        }
-    }
+      // есть фигура на доске
+      if (index_piece != 0) {
+        if (color_piece == 1) {// белая фигура
+          score = score + score_piece;
+          if (index_piece == W_KING_CB) {
+            score = score + CENTER_W_KING_0x88_E[sq];
+          } else if (index_piece == W_QUEEN_CB) {
+            score = score + CENTER_QUEEN_0x88_E[sq];
+          } else if (index_piece == W_ROOK_CB) {
+            score = score + CENTER_ROOK_0x88_E[sq];
+          } else if (index_piece == W_BISHOP_CB) {
+            score = score + CENTER_BISHOP_0x88_E[sq];
+          } else if (index_piece == W_KNIGHT_CB) {
+            score = score + CENTER_KNIGHT_0x88_E[sq];
+          } else if (index_piece == W_PAWN_CB) {
+            score = score + CENTER_W_PAWN_0x88_E[sq];
+          }
+        } else {// черная фигура
+          score = score - score_piece;
+          if (index_piece == B_KING_CB) {
+            score = score - CENTER_B_KING_0x88_E[sq];
+          } else if (index_piece == B_QUEEN_CB) {
+            score = score - CENTER_QUEEN_0x88_E[sq];
+          } else if (index_piece == B_ROOK_CB) {
+            score = score - CENTER_ROOK_0x88_E[sq];
+          } else if (index_piece == B_BISHOP_CB) {
+            score = score - CENTER_BISHOP_0x88_E[sq];
+          } else if (index_piece == B_KNIGHT_CB) {
+            score = score - CENTER_KNIGHT_0x88_E[sq];
+          } else if (index_piece == B_PAWN_CB) {
+            score = score - CENTER_B_PAWN_0x88_E[sq];
+          }
+        }//if (color_piece == 1) {// белая фигура
+      }//if (index_piece != 0) {
 
-    // Защита от переполнения фазы
-    if (game_phase > MAX_PHASE_MATERIAL) game_phase = MAX_PHASE_MATERIAL;
+    }// if ((sq & 136) == 0) {// 136 0x88
+  }//for (let sq = 0; sq < 128; sq++) {
 
-    // === TAPERED EVAL ===
-    const mg_weight = game_phase;
-    const eg_weight = MAX_PHASE_MATERIAL - mg_weight;
-    const final_score = ((mg_score * mg_weight + eg_score * eg_weight) / MAX_PHASE_MATERIAL) | 0;
+  // тестируем запись в фен
+  //test_fen(chess_board_0x88);
+  //test_print_piese_0x88(chess_board_0x88);
+  //console.log("score_position -> score " + score);
 
-    // Side-to-move
-    return (chess_board_0x88[SIDE_TO_MOVE_CB] === BLACK_CB) ? -final_score : final_score;
-};
+  if (chess_board_0x88[SIDE_TO_MOVE_CB] == BLACK_CB) score = -score;
 
-// =============================================================================
-// ТЕСТЫ
-// =============================================================================
+  return score;
+}//score_position(chess_board_0x88_O) {
+
+
 // тестируем фен. то что правильно в него записывается позиция и наоборот - считывается
 /**
 * @param {Int32Array} chess_board_0x88
 * @returns {void}
 */
 const test_fen_e = function (chess_board_0x88) {
-    let chess_board_0x88_O_save = new Int32Array(BOARD_SIZE_CB).fill(0);
-    chess_board_0x88_O_save.set(chess_board_0x88);
 
-    let fen_save_1 = set_fen_from_0x88_cb(chess_board_0x88);
-    set_board_from_fen_0x88_cb(fen_save_1, chess_board_0x88);
+  let chess_board_0x88_O_save = new Int32Array(BOARD_SIZE_CB).fill(0);// доска 0x88 с фигурами
 
-    let fen_save_2 = set_fen_from_0x88_cb(chess_board_0x88);
-    set_board_from_fen_0x88_cb(fen_save_2, chess_board_0x88);
+  // записали доску чтобы потом сравнить
+  chess_board_0x88_O_save.set(chess_board_0x88);
 
-    let fen_save_3 = set_fen_from_0x88_cb(chess_board_0x88);
-    set_board_from_fen_0x88_cb(fen_save_3, chess_board_0x88);
+  // // загнали позицию в фен
+  let fen_save_1 = set_fen_from_0x88_cb(chess_board_0x88);
 
-    let fen_save_4 = set_fen_from_0x88_cb(chess_board_0x88);
-    set_board_from_fen_0x88_cb(fen_save_4, chess_board_0x88);
+  // // возвращаем позицию из фена
+  set_board_from_fen_0x88_cb(fen_save_1, chess_board_0x88);
 
-    if ((fen_save_1 != fen_save_2) && (fen_save_2 != fen_save_3) && (fen_save_3 != fen_save_4)) {
-        console.log("test_fen " + fen_save_1 + " != " + fen_save_2 + " != " + fen_save_3 + " != " + fen_save_4);
-    }
+  // загнали позицию в фен повторно
+  let fen_save_2 = set_fen_from_0x88_cb(chess_board_0x88);
 
-    let fen_save_5 = set_fen_from_0x88_cb(chess_board_0x88_O_save);
-    test_compare_chess_board_0x88_cb(chess_board_0x88_O_save, chess_board_0x88);
+  // возвращаем позицию из фена
+  set_board_from_fen_0x88_cb(fen_save_2, chess_board_0x88);
+
+  // загнали позицию в фен повторно
+  let fen_save_3 = set_fen_from_0x88_cb(chess_board_0x88);
+
+  // возвращаем позицию из фена
+  set_board_from_fen_0x88_cb(fen_save_3, chess_board_0x88);
+
+  // загнали позицию в фен повторно
+  let fen_save_4 = set_fen_from_0x88_cb(chess_board_0x88);
+
+  // возвращаем позицию из фена
+  set_board_from_fen_0x88_cb(fen_save_4, chess_board_0x88);
+
+
+  if ((fen_save_1 != fen_save_2) && (fen_save_2 != fen_save_3) && (fen_save_3 != fen_save_4)) {
+    console.log("test_fen " + fen_save_1 + " != " + fen_save_2 + " != " + fen_save_3 + " != " + fen_save_4);
+  }
+
+  // загнали позицию в фен повторно
+  let fen_save_5 = set_fen_from_0x88_cb(chess_board_0x88_O_save);
+
+
+  // сравниваем записанную доску и ту что получилась из фена. если что то не так будет вывод на консоль
+
+  test_compare_chess_board_0x88_cb(chess_board_0x88_O_save, chess_board_0x88);
+
 }
 
 export { score_position_e, test_fen_e, PAWN_SCORE_E, PIECE_SCORE_E };

@@ -20,19 +20,20 @@ import {
 /**
 * НАЗНАЧЕНИЕ
 
-let packing_pv_line = new Int32Array(MAX_DEPTH = 103).fill(MOVE_NO);
+let packing_pv_line = new Int32Array(MAX_DEPTH_PV = 104).fill(MOVE_NO);
 
-101 - type_variant - тип варианта
-102 - score_variant - оценка варианта
-103 - depth_max - длина варианта
+101 - type_variant - тип варианта. это я уже не помню что такое и вроде не использую
+102 - детектор мата по типу depth - 1 + 500
+103 - depth_max - максимальная глубина записи хода
 */
 
 
-const MAX_DEPTH_PV = 104;
+const MAX_DEPTH_PV = 104;// размер массива. до 103 глубины. причем 101,102,103 используем
 
-const IND_TYPE_VARIANT_PV = 101;
-const IND_DEPTH_MAT_PV = 102;
-const IND_DEPTH_PV = 103;
+const IND_TYPE_VARIANT_PV = 101;// кое где пишу но зачем уже не помню. похоже не использую
+const IND_DEPTH_MAT_PV = 102;// записываем детектор мата по типу depth - 1 + 500, если не 0 то случай мата или пата 
+const IND_DEPTH_PV = 103; // сюда пишем глубину записи если она больше уже записанной. 
+                          // т.е. это последняя глубина записанного хода, а не колличество записанных ходов
 
 /**
 * очищаем список ходов
@@ -67,7 +68,7 @@ const save_pv_line_pv = function (packing_pv_line_to, packing_pv_line_from) {
 
   let depth_max = packing_pv_line_from[IND_DEPTH_PV];
 
-  for (let i = 0; i <= depth_max; i++) {
+  for (let i = 0; i <= depth_max; i++) { // <= а не < существенно
     packing_pv_line_to[i] = packing_pv_line_from[i];
   }
 
@@ -87,7 +88,7 @@ const test_print_pv_line_pv = function (packing_pv_line) {
   let name_capture_piece_i;
 
   let type_variant = packing_pv_line[IND_TYPE_VARIANT_PV];
-  let score_variant = packing_pv_line[IND_DEPTH_MAT_PV];
+  let depth_mat = packing_pv_line[IND_DEPTH_MAT_PV];
   let depth_max = packing_pv_line[IND_DEPTH_PV];
 
 
@@ -111,9 +112,9 @@ const test_print_pv_line_pv = function (packing_pv_line) {
 
     console.log("---- ");
   }
-
+// score_variant
   console.log("type_variant = " + type_variant);
-  console.log("score_variant = " + score_variant);
+  console.log("depth_mat = " + depth_mat);
   console.log("depth_max = " + depth_max);
   console.log("*********** test_print_list");
 }

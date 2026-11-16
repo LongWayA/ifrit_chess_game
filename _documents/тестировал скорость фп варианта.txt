@@ -1,0 +1,11 @@
+исходный модуль
+max depth:5, nodes:4865609, n/s:1526705, score:85
+ info depth 5 score cp 85 nodes 4865609 nps 1526705 pv e2e4 b8c6 f1b5 c6e5 b5d7 
+
+модуль переписанный под функциональную парадигму
+max depth:5, nodes:4865609, n/s:534447, score:85
+ info depth 5 score cp 85 nodes 4865609 nps 534447 pv e2e4 b8c6 f1b5 c6e5 b5d7 
+
+максимально быстрый модуль
+max depth:5, nodes:4865609, n/s:3256766, score:85
+ info depth 5 score cp 85 nodes 4865609 nps 3256766 pv e2e4 b8c6 f1b5 c6e5 b5d7 

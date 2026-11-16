@@ -131,9 +131,9 @@ const quiescence_search = function (alpha, beta, chess_board_0x88, chess_board_k
 
     // Delta Pruning
     // Если текущая оценка + стоимость съедаемой фигуры + запас все равно меньше alpha
-    if (static_eval + PIECE_SCORE_E[name_capture_piece] + SAFETY_MARGIN < alpha) {
-      continue; // Этот ход можно даже не делать и не проверять легальность!
-    }
+    // if (static_eval + PIECE_SCORE_E[name_capture_piece] + SAFETY_MARGIN < alpha) {
+    //   continue; // Этот ход можно даже не делать и не проверять легальность!
+    // }
 
     chess_board_save.set(chess_board_0x88);
     chess_board_key_64_undo[0] = chess_board_key_64[0];
@@ -147,7 +147,7 @@ const quiescence_search = function (alpha, beta, chess_board_0x88, chess_board_k
 
       continue;
 
-    } else if (is_moove_legal == 2) {// нелегальные рокировки не генерируются. просто пропускаем ход
+    } else if (is_moove_legal == 2) {// нелегальные рокировки не генерируются. просто пропускаем ход тут еще и просто когда хода нет
       continue;
     }
 
