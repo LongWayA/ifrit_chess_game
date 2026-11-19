@@ -72,7 +72,7 @@ let best_packing_pv_line_stack = new Array(MAX_DEPTH_SEARCH);// тут лини�
  *  ни одной аллокации — всё создано один раз в ini_stack().
  * ========================================================================= */
 // ini
-const ini_stack = () => {
+const nm_ini_stack = () => {
 
   for (let depth = 0; depth < MAX_DEPTH_SEARCH; depth++) {
 
@@ -116,7 +116,7 @@ const TEST = true;//
  * @param {Int32Array} [chess_board_0x88_found_best_score] - позиция
  * @returns {number} - оценка позиции
  */
-const searching_negamax = (chess_board_0x88, chess_board_0x88_score, chess_board_key_64, packing_pv_line, depth, depth_max, node_mm, 
+const nm_searching_negamax = (chess_board_0x88, chess_board_0x88_score, chess_board_key_64, packing_pv_line, depth, depth_max, node_mm, 
                            chess_board_0x88_found_best_score) =>{
 
   const chess_board_undo = chess_board_undo_stack[depth];
@@ -232,7 +232,8 @@ const searching_negamax = (chess_board_0x88, chess_board_0x88_score, chess_board
     // зачем это делаю не помню. код посмотрел и все равно не понимаю :)
     if (depth == 0) packing_pv_line[IND_TYPE_VARIANT_PV] = 1;
 
-    score = -searching_negamax(chess_board_0x88, chess_board_0x88_score, chess_board_key_64, packing_pv_line,  (depth + 1), depth_max, node_mm);
+    score = -nm_searching_negamax(chess_board_0x88, chess_board_0x88_score, chess_board_key_64, 
+                                  packing_pv_line,  (depth + 1), depth_max, node_mm);
 
 
     if (score > found_score) {
@@ -328,4 +329,4 @@ const searching_negamax = (chess_board_0x88, chess_board_0x88_score, chess_board
 
 }//searching_minmax(pv_line_0x88_O, chess_board_0x88,
 
-export {searching_negamax, ini_stack};
+export {nm_searching_negamax, nm_ini_stack};

@@ -153,7 +153,7 @@ const CENTER_B_PAWN_0x88_E = [
 * @param {Int32Array} chess_board_0x88 
 * @returns {number}
 */
-const score_position_e = function (chess_board_0x88) {
+const score_position_e = (chess_board_0x88) => {
 
   let color_piece = 0;
   let score_piece = 0;
@@ -222,7 +222,7 @@ const score_position_e = function (chess_board_0x88) {
 * @param {Int32Array} chess_board_0x88
 * @returns {void}
 */
-const test_fen_e = function (chess_board_0x88) {
+const test_fen_e = (chess_board_0x88) => {
 
   let chess_board_0x88_O_save = new Int32Array(BOARD_SIZE_CB).fill(0);// доска 0x88 с фигурами
 

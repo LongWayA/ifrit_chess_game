@@ -4,6 +4,7 @@
  * @author AnBr75
  * @name transposition_table_0x88.js
  * @version created 07.02m.2026 
+ * Code review: Gemini 4 Hydrogen
 */
 
 /**
@@ -34,13 +35,20 @@
 */
 //-
 
+// TESTS ////////////////////////////////////////////
+const TT_IS_TEST_FEN = true;//
+//const TT_IS_TEST_FEN = false; //
+////////////////////////////////////////////// TESTS
+
+
 //8 388 480
 //const MAX_TABLE_LENTH = 1_048_576;
 //const MAX_TABLE_LENTH = 2_097_152;//2_097_152; 4_194_304; 8_388_608; 16_777_216
 //const MAX_TABLE_LENTH = 16_777_216;//
 
 //const MAX_TABLE_LENTH = 16_384;//1_024 2_048 4_096 8_192 16_384 32_768 65_536
-const MAX_TABLE_LENTH_TT = 65_536;
+//const MAX_TABLE_LENTH_TT = 65_536;
+const MAX_TABLE_LENTH_TT = 1_048_576;
 
 const MAX_SCORE_UPDATE_TT = 1;// не использую. флаг записи точной оценки позиции
 
@@ -54,7 +62,7 @@ const IND_SC_TT = 1;// индекс для записи оценки хода
 const IND_DD_TT = 2;// индекс для записи на сколько ходов смотрели позицию delta_depth = max_depth - depth
 
 // массив нужен для возвращения значений из функции get_position_from_tt(записанный ход передается через параметр)
-// в нем записаны: типа узла, оценка хода, delta_depth
+// в нем записаны: тип узла, оценка хода, delta_depth
 const out_tt = [-1, -1, -1];//
 
 // 64 битный ключ позиции   
@@ -97,21 +105,22 @@ let no_collision_fen = 0;// зашли по индексу и фен совпа�
 
 const print_test_set_get_position_tt = function () {
 
-    if (yes_collision_fen != 0) {
+  //  if (yes_collision_fen != 0) {
+      if (true) {
 
         console.log("set---------------------");
-        console.log("input_to__set_position_in_tt " + input_to__set_position_in_tt);// зашли чтобы попытаться добавить позицию
-        console.log("key_64_found__set_position_in_tt " + key_64_found__set_position_in_tt);// ключ при добавлении позиции уже есть
-        console.log("key_64_new_save__set_position_in_tt " + key_64_new_save__set_position_in_tt);// добавили позицию по новой
-        console.log("key_64_rewrite__set_position_in_tt " + key_64_rewrite__set_position_in_tt);// добавили позицию перезаписав старую 
+        console.log("зашли чтобы попытаться добавить позицию " + input_to__set_position_in_tt);// зашли чтобы попытаться добавить позицию
+        console.log("ключ при добавлении позиции уже есть " + key_64_found__set_position_in_tt);// ключ при добавлении позиции уже есть
+        console.log("добавили позицию по новой " + key_64_new_save__set_position_in_tt);// добавили позицию по новой
+        console.log("добавили позицию перезаписав старую " + key_64_rewrite__set_position_in_tt);// добавили позицию перезаписав старую 
 
         console.log("get---------------------");
-        console.log("input_to__get_position_from_tt " + input_to__get_position_from_tt);
-        console.log("key_64_found__get_position_from_tt " + key_64_found__get_position_from_tt)// зашли по индексу но ключ не совпал
-        console.log("key_64_not_found__get_position_from_tt " + key_64_not_found__get_position_from_tt)// зашли по индексу и ключ совпал
-        console.log("delta_depth_use__get_position_from_tt " + delta_depth_use__get_position_from_tt)// глубина поиска из таблицы больше чем в узле
-        console.log("yes collision_fen " + yes_collision_fen)// зашли по индексу но фен не совпал
-        console.log("no_collision_fen " + no_collision_fen)// зашли по индексу и фен совпал
+        console.log("зашли чтобы попытаться использовать позицию " + input_to__get_position_from_tt);// зашли чтобы попытаться использовать позицию
+        console.log("зашли по индексу но ключ не совпал " + key_64_found__get_position_from_tt)// зашли по индексу но ключ не совпал
+        console.log("зашли по индексу и ключ совпал " + key_64_not_found__get_position_from_tt)// зашли по индексу и ключ совпал
+        console.log("глубина поиска из таблицы больше чем в узле " + delta_depth_use__get_position_from_tt)// глубина поиска из таблицы больше чем в узле
+        console.log("зашли по индексу но фен не совпал " + yes_collision_fen)// зашли по индексу но фен не совпал
+        console.log("зашли по индексу и фен совпал " + no_collision_fen)// зашли по индексу и фен совпал
     }
 }
 
@@ -131,7 +140,7 @@ const clear_hash_tt = function () {
         type_save_node_tt[i] = 0; //
         delta_depth_tt[i] = 0; //
 
-        // test_fen_board ----------------------------------------------------------------------------------
+        // test_fen_board ----------------
         test_fen_tt[i] = ""; //  
     }
 }
@@ -177,6 +186,10 @@ const test_uses_hash_tt = function () {
 
     console.log("test_uses_hash_tt -> save_position " + save_position +
         " not_save_position " + not_save_position);
+    if (TT_IS_TEST_FEN) {
+        console.log("yes collision_fen " + yes_collision_fen)// зашли по индексу но фен не совпал
+        console.log("no_collision_fen " + no_collision_fen)// зашли по индексу и фен совпал       
+    }
 }
 
 /**
@@ -219,7 +232,9 @@ const set_position_in_tt = function (chess_board_key_64, packing_moves, type_nod
             score_tt[Number(index_key_64)] = score;
             type_save_node_tt[Number(index_key_64)] = type_nodes;
             delta_depth_tt[Number(index_key_64)] = delta_depth;
-            test_fen_tt[Number(index_key_64)] = fen;
+            if (TT_IS_TEST_FEN) {
+                test_fen_tt[Number(index_key_64)] = fen;
+            }
         }
     } else {
 
@@ -230,7 +245,9 @@ const set_position_in_tt = function (chess_board_key_64, packing_moves, type_nod
         score_tt[Number(index_key_64)] = score;
         type_save_node_tt[Number(index_key_64)] = type_nodes;
         delta_depth_tt[Number(index_key_64)] = delta_depth;
-        test_fen_tt[Number(index_key_64)] = fen;
+        if (TT_IS_TEST_FEN) {
+            test_fen_tt[Number(index_key_64)] = fen;
+        }
     }
 }
 
@@ -258,11 +275,13 @@ const get_position_from_tt = function (chess_board_key_64, packing_moves_1, dept
         // зашли по индексу и ключ совпал
         key_64_found__get_position_from_tt = key_64_found__get_position_from_tt + 1;
 
-        if (fen === test_fen_tt[Number(index_key_64)]) {
-            no_collision_fen = no_collision_fen + 1;// зашли по индексу и фен совпал
-        } else {//if (fen === fen_test) {
-            yes_collision_fen = yes_collision_fen + 1;// зашли по индексу но фен не совпал
-        }//if (fen === fen_test) {
+        if (TT_IS_TEST_FEN) {
+            if (fen === test_fen_tt[Number(index_key_64)]) {
+                no_collision_fen = no_collision_fen + 1;// зашли по индексу и фен совпал
+            } else {//if (fen === fen_test) {
+                yes_collision_fen = yes_collision_fen + 1;// зашли по индексу но фен не совпал
+            }//if (fen === fen_test) {
+        }
 
         let delta_depth = max_depth - depth;
 
@@ -306,5 +325,5 @@ const get_position_from_tt = function (chess_board_key_64, packing_moves_1, dept
 
 export {
     clear_out_tt, ini_tt, clear_hash_tt, test_uses_hash_tt, set_position_in_tt, get_position_from_tt, print_test_set_get_position_tt,
-    MAX_TABLE_LENTH_TT, MAX_SCORE_UPDATE_TT, ALPHA_UPDATE_TT, BETA_CUT_TT, IND_TN_TT, IND_SC_TT, IND_DD_TT
+    MAX_TABLE_LENTH_TT, MAX_SCORE_UPDATE_TT, ALPHA_UPDATE_TT, BETA_CUT_TT, IND_TN_TT, IND_SC_TT, IND_DD_TT, TT_IS_TEST_FEN
 };

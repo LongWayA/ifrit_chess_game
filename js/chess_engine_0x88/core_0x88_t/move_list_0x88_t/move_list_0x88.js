@@ -4,7 +4,7 @@
  * @author AnBr75
  * @name move_list_0x88.js
  * @version created 24.01m.2026 
- * Code review: Qwen3.7-Max AI
+ * Code review: Qwen3.7-Max AI, Gemini 4 Hydrogen
 */
 
 //+
@@ -244,6 +244,15 @@ const TYPE_MOVE_NAME_ML = [
     "MOVE_KING_QUEEN_CASTLE_ML",
 ];
 
+// --- служебные буферы: создаются ОДИН раз при загрузке модуля --- Q
+// const SORT_COUNTS = new Int32Array(256); // корзины по type_move (младший байт)
+// const SORT_TMP    = new Int32Array(256); // буфер стабильной раскладки (макс. ходов в позиции ~218)
+
+// /** @type {Int32Array[]} */
+// const SORT_VIEWS  = [];  
+// // заранее созданные view, чтобы не аллоцировать в горячем пути
+// for (let k = 0; k <= 256; k++) SORT_VIEWS.push(SORT_TMP.subarray(0, k));
+
 
 //--------------------------------------------------------------
 // код от Qwen3.7-Max AI
@@ -265,76 +274,76 @@ const L = (p1, p2, val) => { SIMPLE_MOVE_LUT[p1 * PIECE_LUT_SIZE + p2] = val; };
 // Короли
 L(W_KING_CB, PIECE_NO_CB, MOVE_KING_ML);
 L(W_KING_CB, B_QUEEN_CB, CAPTURES_KING_QUEEN_ML);
-L(W_KING_CB, B_ROOK_CB, CAPTURES_KING_ROOK_ML); 
+L(W_KING_CB, B_ROOK_CB, CAPTURES_KING_ROOK_ML);
 L(W_KING_CB, B_BISHOP_CB, CAPTURES_KING_BISHOP_ML);
-L(W_KING_CB, B_KNIGHT_CB, CAPTURES_KING_KNIGHT_ML); 
+L(W_KING_CB, B_KNIGHT_CB, CAPTURES_KING_KNIGHT_ML);
 L(W_KING_CB, B_PAWN_CB, CAPTURES_KING_PAWN_ML);
 
 L(B_KING_CB, PIECE_NO_CB, MOVE_KING_ML);
 L(B_KING_CB, W_QUEEN_CB, CAPTURES_KING_QUEEN_ML);
-L(B_KING_CB, W_ROOK_CB, CAPTURES_KING_ROOK_ML); 
+L(B_KING_CB, W_ROOK_CB, CAPTURES_KING_ROOK_ML);
 L(B_KING_CB, W_BISHOP_CB, CAPTURES_KING_BISHOP_ML);
-L(B_KING_CB, W_KNIGHT_CB, CAPTURES_KING_KNIGHT_ML); 
+L(B_KING_CB, W_KNIGHT_CB, CAPTURES_KING_KNIGHT_ML);
 L(B_KING_CB, W_PAWN_CB, CAPTURES_KING_PAWN_ML);
 
 // Ферзи
 L(W_QUEEN_CB, PIECE_NO_CB, MOVE_QUEEN_ML);
 L(W_QUEEN_CB, B_QUEEN_CB, CAPTURES_QUEEN_QUEEN_ML);
-L(W_QUEEN_CB, B_ROOK_CB, CAPTURES_QUEEN_ROOK_ML); 
+L(W_QUEEN_CB, B_ROOK_CB, CAPTURES_QUEEN_ROOK_ML);
 L(W_QUEEN_CB, B_BISHOP_CB, CAPTURES_QUEEN_BISHOP_ML);
-L(W_QUEEN_CB, B_KNIGHT_CB, CAPTURES_QUEEN_KNIGHT_ML); 
+L(W_QUEEN_CB, B_KNIGHT_CB, CAPTURES_QUEEN_KNIGHT_ML);
 L(W_QUEEN_CB, B_PAWN_CB, CAPTURES_QUEEN_PAWN_ML);
 
 L(B_QUEEN_CB, PIECE_NO_CB, MOVE_QUEEN_ML);
 L(B_QUEEN_CB, W_QUEEN_CB, CAPTURES_QUEEN_QUEEN_ML);
-L(B_QUEEN_CB, W_ROOK_CB, CAPTURES_QUEEN_ROOK_ML); 
+L(B_QUEEN_CB, W_ROOK_CB, CAPTURES_QUEEN_ROOK_ML);
 L(B_QUEEN_CB, W_BISHOP_CB, CAPTURES_QUEEN_BISHOP_ML);
-L(B_QUEEN_CB, W_KNIGHT_CB, CAPTURES_QUEEN_KNIGHT_ML); 
+L(B_QUEEN_CB, W_KNIGHT_CB, CAPTURES_QUEEN_KNIGHT_ML);
 L(B_QUEEN_CB, W_PAWN_CB, CAPTURES_QUEEN_PAWN_ML);
 
 // Ладьи
 L(W_ROOK_CB, PIECE_NO_CB, MOVE_ROOK_ML);
 L(W_ROOK_CB, B_QUEEN_CB, CAPTURES_ROOK_QUEEN_ML);
-L(W_ROOK_CB, B_ROOK_CB, CAPTURES_ROOK_ROOK_ML); 
+L(W_ROOK_CB, B_ROOK_CB, CAPTURES_ROOK_ROOK_ML);
 L(W_ROOK_CB, B_BISHOP_CB, CAPTURES_ROOK_BISHOP_ML);
-L(W_ROOK_CB, B_KNIGHT_CB, CAPTURES_ROOK_KNIGHT_ML); 
+L(W_ROOK_CB, B_KNIGHT_CB, CAPTURES_ROOK_KNIGHT_ML);
 L(W_ROOK_CB, B_PAWN_CB, CAPTURES_ROOK_PAWN_ML);
 
 L(B_ROOK_CB, PIECE_NO_CB, MOVE_ROOK_ML);
 L(B_ROOK_CB, W_QUEEN_CB, CAPTURES_ROOK_QUEEN_ML);
-L(B_ROOK_CB, W_ROOK_CB, CAPTURES_ROOK_ROOK_ML); 
+L(B_ROOK_CB, W_ROOK_CB, CAPTURES_ROOK_ROOK_ML);
 L(B_ROOK_CB, W_BISHOP_CB, CAPTURES_ROOK_BISHOP_ML);
-L(B_ROOK_CB, W_KNIGHT_CB, CAPTURES_ROOK_KNIGHT_ML); 
+L(B_ROOK_CB, W_KNIGHT_CB, CAPTURES_ROOK_KNIGHT_ML);
 L(B_ROOK_CB, W_PAWN_CB, CAPTURES_ROOK_PAWN_ML);
 
 // Слоны
 L(W_BISHOP_CB, PIECE_NO_CB, MOVE_BISHOP_ML);
 L(W_BISHOP_CB, B_QUEEN_CB, CAPTURES_BISHOP_QUEEN_ML);
-L(W_BISHOP_CB, B_ROOK_CB, CAPTURES_BISHOP_ROOK_ML); 
+L(W_BISHOP_CB, B_ROOK_CB, CAPTURES_BISHOP_ROOK_ML);
 L(W_BISHOP_CB, B_BISHOP_CB, CAPTURES_BISHOP_BISHOP_ML);
-L(W_BISHOP_CB, B_KNIGHT_CB, CAPTURES_BISHOP_KNIGHT_ML); 
+L(W_BISHOP_CB, B_KNIGHT_CB, CAPTURES_BISHOP_KNIGHT_ML);
 L(W_BISHOP_CB, B_PAWN_CB, CAPTURES_BISHOP_PAWN_ML);
 
 L(B_BISHOP_CB, PIECE_NO_CB, MOVE_BISHOP_ML);
 L(B_BISHOP_CB, W_QUEEN_CB, CAPTURES_BISHOP_QUEEN_ML);
-L(B_BISHOP_CB, W_ROOK_CB, CAPTURES_BISHOP_ROOK_ML); 
+L(B_BISHOP_CB, W_ROOK_CB, CAPTURES_BISHOP_ROOK_ML);
 L(B_BISHOP_CB, W_BISHOP_CB, CAPTURES_BISHOP_BISHOP_ML);
-L(B_BISHOP_CB, W_KNIGHT_CB, CAPTURES_BISHOP_KNIGHT_ML); 
+L(B_BISHOP_CB, W_KNIGHT_CB, CAPTURES_BISHOP_KNIGHT_ML);
 L(B_BISHOP_CB, W_PAWN_CB, CAPTURES_BISHOP_PAWN_ML);
 
 // Кони
 L(W_KNIGHT_CB, PIECE_NO_CB, MOVE_KNIGHT_ML);
 L(W_KNIGHT_CB, B_QUEEN_CB, CAPTURES_KNIGHT_QUEEN_ML);
-L(W_KNIGHT_CB, B_ROOK_CB, CAPTURES_KNIGHT_ROOK_ML); 
+L(W_KNIGHT_CB, B_ROOK_CB, CAPTURES_KNIGHT_ROOK_ML);
 L(W_KNIGHT_CB, B_BISHOP_CB, CAPTURES_KNIGHT_BISHOP_ML);
-L(W_KNIGHT_CB, B_KNIGHT_CB, CAPTURES_KNIGHT_KNIGHT_ML); 
+L(W_KNIGHT_CB, B_KNIGHT_CB, CAPTURES_KNIGHT_KNIGHT_ML);
 L(W_KNIGHT_CB, B_PAWN_CB, CAPTURES_KNIGHT_PAWN_ML);
 
 L(B_KNIGHT_CB, PIECE_NO_CB, MOVE_KNIGHT_ML);
 L(B_KNIGHT_CB, W_QUEEN_CB, CAPTURES_KNIGHT_QUEEN_ML);
-L(B_KNIGHT_CB, W_ROOK_CB, CAPTURES_KNIGHT_ROOK_ML); 
+L(B_KNIGHT_CB, W_ROOK_CB, CAPTURES_KNIGHT_ROOK_ML);
 L(B_KNIGHT_CB, W_BISHOP_CB, CAPTURES_KNIGHT_BISHOP_ML);
-L(B_KNIGHT_CB, W_KNIGHT_CB, CAPTURES_KNIGHT_KNIGHT_ML); 
+L(B_KNIGHT_CB, W_KNIGHT_CB, CAPTURES_KNIGHT_KNIGHT_ML);
 L(B_KNIGHT_CB, W_PAWN_CB, CAPTURES_KNIGHT_PAWN_ML);
 
 // Пешки
@@ -345,16 +354,16 @@ L(B_KNIGHT_CB, W_PAWN_CB, CAPTURES_KNIGHT_PAWN_ML);
 
 L(W_PAWN_CB, PIECE_NO_CB, MOVE_PAWN_ML);
 L(W_PAWN_CB, B_QUEEN_CB, CAPTURES_PAWN_QUEEN_ML);
-L(W_PAWN_CB, B_ROOK_CB, CAPTURES_PAWN_ROOK_ML); 
+L(W_PAWN_CB, B_ROOK_CB, CAPTURES_PAWN_ROOK_ML);
 L(W_PAWN_CB, B_BISHOP_CB, CAPTURES_PAWN_BISHOP_ML);
-L(W_PAWN_CB, B_KNIGHT_CB, CAPTURES_PAWN_KNIGHT_ML); 
+L(W_PAWN_CB, B_KNIGHT_CB, CAPTURES_PAWN_KNIGHT_ML);
 L(W_PAWN_CB, B_PAWN_CB, CAPTURES_PAWN_PAWN_ML);
 
 L(B_PAWN_CB, PIECE_NO_CB, MOVE_PAWN_ML);
 L(B_PAWN_CB, W_QUEEN_CB, CAPTURES_PAWN_QUEEN_ML);
-L(B_PAWN_CB, W_ROOK_CB, CAPTURES_PAWN_ROOK_ML); 
+L(B_PAWN_CB, W_ROOK_CB, CAPTURES_PAWN_ROOK_ML);
 L(B_PAWN_CB, W_BISHOP_CB, CAPTURES_PAWN_BISHOP_ML);
-L(B_PAWN_CB, W_KNIGHT_CB, CAPTURES_PAWN_KNIGHT_ML); 
+L(B_PAWN_CB, W_KNIGHT_CB, CAPTURES_PAWN_KNIGHT_ML);
 L(B_PAWN_CB, W_PAWN_CB, CAPTURES_PAWN_PAWN_ML);
 
 //--------------------------------------------------------------
@@ -508,8 +517,8 @@ const add_packing_move_ml = (packing_moves, type_move, from, to, name_capture_pi
     const move = (name_capture_piece << 24) | (to << 16) | (from << 8) | type_move;
 
     let i = packing_moves[IND_NUMBER_MOVE_ML]; // количество уже записанных ходов. используем как индекс для нового хода
-                                               // потому что пишем с 0 то получается что количество ходов и индекс нового хода совпадают. 
-                                               // можно сказать что это индекс в массиве куда пишем ход
+    // потому что пишем с 0 то получается что количество ходов и индекс нового хода совпадают. 
+    // можно сказать что это индекс в массиве куда пишем ход
 
     packing_moves[i] = move; // сохраняем ход
 
@@ -575,89 +584,164 @@ const return_type_simple_move_ml = (piece_name, piece_name_captures) =>
 // SORTING
 /////////////////////////////////////////////////////////////////////////
 
-// сортировка по типу хода. 
-// взятия с превращением самые первые 
-// дальше просто превращения
-// дальше хорошие взятия (т.е.взятая фигура дороже чем та, что берет)
-// дальше нейтральные взятия (т.е.взятая фигура равнозначна той, что берет)
-// дальше плохие взятия (т.е.взятая фигура дешевле чем та, что берет)
-// дальше взятия королем
-// дальше взятия пешек   
-// дальше простые ходы фигур 
-// дальше простые ходы пешек
-// и самые последние рокировки 
-// взятия раньше других ходов для удобства поиска и сортировки тихих ходов
-
-//В шахматных движках для сортировки ходов используют 
-//Insertion Sort (Сортировка вставками) или просто встроенный 
-//Array.prototype.sort(), который в V8 оптимизирован (Timsort).
-/* 
-Каждый ход упакован в одно 32-битное число по такой схеме: 
-Биты:  31........24  23.......16  15.......8   7.......0
-       ┌──────────┐  ┌─────────┐  ┌────────┐  ┌────────┐
-       │ capture  │  │   to    │  │  from  │  │  type  │
-       │  (8 бит) │  │ (8 бит) │  │ (8 бит)│  │ (8 бит)│
-       └──────────┘  └─────────┘  └────────┘  └────────┘
-type_move занимает младшие 8 бит (биты 0-7). Именно по нему мы хотим сортировать, 
-потому что в type_move уже зашита эвристика MVV/LVA:
-1-20 — взятия с превращением (самый высокий приоритет)
-21-51 — обычные взятия
-52-60 — тихие ходы
-
-arr.subarray это НЕ копирование данных! Это создание представления (view) на часть исходного Int32Array
-const arr = new Int32Array([10, 20, 30, 40, 50, 99, 99]);
-const view = arr.subarray(0, 3);  // [10, 20, 30]
-
-view[0] = 100;  // Меняем через view
-console.log(arr[0]);  // 100 — оригинал тоже изменился!
-
-0xFF в двоичном виде — это 00000000 00000000 00000000 11111111 (255 в десятичной).
-Операция битовое И (&) с маской 0xFF обнуляет все биты, кроме младших 8. 
-То есть из 32-битного упакованного хода мы "вытаскиваем" только type_move.
-
-Мы получили type_move = 21 за одну CPU-инструкцию вместо вызова функции get_type_move_ml()
-
-Компаратор (a & 0xFF) - (b & 0xFF)
-Это стандартный трюк для сортировки по возрастанию:
-Если результат < 0 → a ставится перед b
-Если результат = 0 → порядок не меняется
-Если результат > 0 → b ставится перед a
-*/
 /**
- * 
- * t
- * 
  * сортировка по типу хода
  * чем меньше число, тем выше приоритет хода
  * потому что в type_move уже зашита эвристика MVV/LVA:
  * 1-20 — взятия с превращением (самый высокий приоритет)
  * 21-51 — обычные взятия
  * 52-60 — тихие ходы
- * исправленная Qwen3.7-Max AI версия
- * @param {Int32Array} packing_moves
+ */
+
+// /**
+// * Exchange Sort (наивный пузырек/выбор)
+// * @param {Int32Array} packing_moves — типизированный массив упакованных ходов и метаданных
+// * @returns {void}
+// */
+
+// const sorting_list_ml = (packing_moves) => {
+
+//     let save_packing_moves_i;
+//     const number_move = packing_moves[IND_NUMBER_MOVE_ML];
+
+//     //console.log("Move_list_0x88_С-> SORTING -----------------------------------");
+//     // выводим в начало списка отсортированные взятия. так что самая слабая берущая фигура в самом начале
+//     for (let i = 0; i < number_move; i++) {
+//         for (let j = i + 1; j < number_move; j++) {// перебираем оставшийся список
+//             // если на позиции есть взятая фигура
+//             if ((packing_moves[i] & 0xFF) >= (packing_moves[j] & 0xFF)) {
+//                 // сохраняем позицию на которую будем писать
+//                 save_packing_moves_i = packing_moves[i];
+
+//                 // пишем на позицию
+//                 packing_moves[i] = packing_moves[j];
+
+//                 // сюда пишем начальную позицию. т.о. две позиции меняются местами
+//                 packing_moves[j] = save_packing_moves_i;
+//             }
+//         }
+//     }
+// }
+
+
+
+/**
+ * Insertion Sort (сортировка вставками)
+ * 
+ * написал Gemini 4 Hydrogen
+ * 
+ * Сортировка списка ходов по приоритету (младший байт: 1..60).
+ * Использует классическую сортировку вставками (Insertion Sort) прямо на месте (in-place).
+ * 
+ * Почему это быстро:
+ * 1. Нет создания объектов в памяти (отказ от .subarray()), что убирает нагрузку на сборщик мусора.
+ * 2. Нет вызова коллбэк-функций на каждое сравнение (отказ от .sort((a, b) => ...)).
+ * 3. В шахматах обычно 30-40 ходов в позиции — на малых массивах Insertion Sort быстрее QuickSort/TimSort.
+ * 4. Алгоритм стабильный: ходы с одинаковым приоритетом сохраняют свой исходный порядок.
+ * 
+ * @param {Int32Array} packing_moves — типизированный массив упакованных ходов и метаданных
  * @returns {void}
  */
+
 const sorting_list_ml = (packing_moves) => {
+    // Получаем фактическое количество сгенерированных ходов в текущей позиции.
+    // Сортировать будем только диапазон от 0 до number_move - 1.
     const number_move = packing_moves[IND_NUMBER_MOVE_ML];
-    // Встроенная сортировка V8 работает на Int32Array очень быстро
-    // Мы сортируем только занятую часть массива
-    const subArray = packing_moves.subarray(0, number_move);
-    subArray.sort((a, b) => (a & 0xFF) - (b & 0xFF));
-}
- 
+
+    // Начинаем со второго элемента (индекс 1), так как массив из одного элемента (индекс 0)
+    // по определению уже считается отсортированным.
+    for (let i = 1; i < number_move; i++) {
+        // Сохраняем текущий упакованный ход (32-битное целое), который будем вставлять на нужное место.
+        const currentMove = packing_moves[i];
+
+        // Извлекаем приоритет хода из младших 8 бит (маска 0xFF = 0b11111111 = 255).
+        // Чем меньше это число (от 1 до 60), тем выше приоритет хода (взятия с превращением -> взятия -> тихие).
+        const currentScore = currentMove & 0xFF;
+
+        // Указатель на последний элемент уже отсортированной левой части массива.
+        let j = i - 1;
+
+        // Двигаемся справа налево по отсортированной части массива, пока не дойдём до начала (j >= 0)
+        // и пока приоритет элемента слева хуже (число больше), чем у нашего текущего хода.
+        // Важно: строгое неравенство (>) гарантирует стабильность сортировки (одинаковые элементы не меняются местами).
+        while (j >= 0 && (packing_moves[j] & 0xFF) > currentScore) {
+            // Сдвигаем более слабый ход на одну позицию вправо, освобождая место под currentMove.
+            packing_moves[j + 1] = packing_moves[j];
+            j--;
+        }
+
+        // Цикл остановился: либо мы дошли до начала массива (j = -1), либо нашли элемент с приоритетом <= currentScore.
+        // Вставляем сохранённый ход в освободившуюся ячейку сразу справа от остановившегося указателя.
+        packing_moves[j + 1] = currentMove;
+    }
+};
+
+// /**
+//  * Написал Qwen 4 Max
+//  * Сортировка по типу хода (младший байт, 1..60).
+//  * Гибрид: вставки для коротких списков + counting sort для длинных.
+//  * Стабильная: порядок ходов одного типа сохраняется (как у V8 TimSort).
+//  * @param {Int32Array} packing_moves
+//  * @returns {void}
+//  */
+// const sorting_list_ml = (packing_moves) => {
+//     const n = packing_moves[IND_NUMBER_MOVE_ML];
+//     if (n < 2) return;
+
+//     // короткие списки (типично для quiescence) — вставки прямо в массиве,
+//     // без подготовки корзин; на почти отсортированных данных это O(n)
+//     if (n <= 16) {
+//         for (let i = 1; i < n; i++) {
+//             const move = packing_moves[i];
+//             const key = move & 0xFF;
+//             let j = i - 1;
+//             while (j >= 0 && (packing_moves[j] & 0xFF) > key) {
+//                 packing_moves[j + 1] = packing_moves[j];
+//                 j--;
+//             }
+//             packing_moves[j + 1] = move;
+//         }
+//         return;
+//     }
+
+//     // 1) считаем количество ходов каждого типа
+//     SORT_COUNTS.fill(0);
+//     for (let i = 0; i < n; i++) SORT_COUNTS[packing_moves[i] & 0xFF]++;
+
+//     // 2) превращаем счётчики в стартовые позиции корзин
+//     let sum = 0;
+//     for (let k = 0; k < 256; k++) {
+//         const c = SORT_COUNTS[k];
+//         SORT_COUNTS[k] = sum;
+//         sum += c;
+//         if (sum === n) break; // все ходы розданы — дальше корзины пустые
+//     }
+
+//     // 3) стабильная раскладка во временный буфер
+//     for (let i = 0; i < n; i++) {
+//         const move = packing_moves[i];
+//         SORT_TMP[SORT_COUNTS[move & 0xFF]++] = move;
+//     }
+
+//     // 4) копируем обратно одним memcpy (view создан заранее — без аллокации)
+//     packing_moves.set(SORT_VIEWS[n]);
+// };
+
+
 /**
  * 
  * t
  * 
- * это вставка хода из кеш таблицы на первое место
+ * это вставка хода из кеш таблицы на первое место т.е индекс 0
  * точнее мы просто нужный ход из списка поднимаем на первое место.
  * находим ход и поднимаем на первое место
  * @param {Int32Array} packing_moves
  * @param {Int32Array} packing_moves_1_tt
  * @returns {number}
  */
+// для packing_moves_1_tt
 // нужно передать всего один ход, но я передаю массив из одного хода.
-// не понятно почему я первый ход передаю в виде массива. может что бы не потерять оптимизацию?
+// что бы в других местах возвращать параметр.
 const set_move_in_0_ml = (packing_moves, packing_moves_1_tt) => {
 
     let save_move = -1;
@@ -667,8 +751,8 @@ const set_move_in_0_ml = (packing_moves, packing_moves_1_tt) => {
     let start = 0;
     let move_tt = packing_moves_1_tt[0];
 
-    if (packing_moves[start] == move_tt) return -1;// ход и так на первом месте
-    
+    if (packing_moves[start] == move_tt) return 1;// ход и так на первом месте
+
     // 1 ищем ход в списке
     for (s_m = start; s_m < number_move; s_m++) {// 
         if (packing_moves[s_m] == move_tt) {
@@ -688,6 +772,7 @@ const set_move_in_0_ml = (packing_moves, packing_moves_1_tt) => {
     // сюда пишем начальную позицию. т.о. две позиции меняются местами
     packing_moves[start] = save_move;
 
+    // отработали нормально 
     return 0;
 }//
 
@@ -1042,19 +1127,19 @@ const test_compare_list_from_ml = (packing_moves_original, packing_moves) => {
     // цвет хода
     if (piece_color_original != piece_color) {
         console.log("test_compare_list_from->piece_color original = " + piece_color_original);
-        console.log("test_compare_list_from->piece_color          = " + piece_color);            
+        console.log("test_compare_list_from->piece_color          = " + piece_color);
     }
 
     // количество взятий
     if (number_captures_move_original != number_captures_move) {
         console.log("test_compare_list_from->number_captures_move original = " + number_captures_move_original);
-        console.log("test_compare_list_from->number_captures_move          = " + number_captures_move);            
+        console.log("test_compare_list_from->number_captures_move          = " + number_captures_move);
     }
 
     // количество ходов
     if (number_move_original != number_move) {
         console.log("test_compare_list_from->number_move original = " + number_move_original);
-        console.log("test_compare_list_from->number_move          = " + number_move);          
+        console.log("test_compare_list_from->number_move          = " + number_move);
     }
 
     // нашли несовпадающие ходы
@@ -1133,7 +1218,7 @@ const test_print_list_ml = (packing_moves) => {
         to_i = get_to_ml(i, packing_moves);
         name_capture_piece_i = get_name_capture_piece_ml(i, packing_moves);
 
-        console.log("move[" + i + "] = " + packing_moves[i] );
+        console.log("move[" + i + "] = " + packing_moves[i]);
         console.log("type_move[" + i + "] = " + type_move_i + " nm = " + TYPE_MOVE_NAME_ML[type_move_i]);
         console.log("from[" + i + "] = " + from_i);
         console.log("to[" + i + "] = " + to_i);
@@ -1184,7 +1269,7 @@ const test_print_list_history_ml = (packing_moves, history) => {
         to_i = get_to_ml(i, packing_moves);
         name_capture_piece_i = get_name_capture_piece_ml(i, packing_moves);
 
-        console.log("move[" + i + "] = " + packing_moves[i] );
+        console.log("move[" + i + "] = " + packing_moves[i]);
         console.log("type_move[" + i + "] = " + type_move_i + " nm = " + TYPE_MOVE_NAME_ML[type_move_i]);
         console.log("from[" + i + "] = " + from_i);
         console.log("to[" + i + "] = " + to_i);
@@ -1196,8 +1281,8 @@ const test_print_list_history_ml = (packing_moves, history) => {
             (8 - s_0x88_to_y07_cb(to_i)));
 
         // color * 4096, from * 64
-        console.log("h[" + i + "](" + SQUARE_128_to_64_CB[from_i] + "," + SQUARE_128_to_64_CB[to_i] + ") = " + 
-            history[( piece_color << 12) | (SQUARE_128_to_64_CB[from_i] << 6) | SQUARE_128_to_64_CB[to_i]]);    
+        console.log("h[" + i + "](" + SQUARE_128_to_64_CB[from_i] + "," + SQUARE_128_to_64_CB[to_i] + ") = " +
+            history[(piece_color << 12) | (SQUARE_128_to_64_CB[from_i] << 6) | SQUARE_128_to_64_CB[to_i]]);
         console.log("---- ");
     }
 

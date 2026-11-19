@@ -4,18 +4,18 @@
  * @author AnBr75
  * @name quiescence_search_0x88.js
  * @version created 31.01m.2026 
- * Code review: DeepSeek AI
+ * Code review: DeepSeek AI, Gemini 4 Hydrogen
 */
 
 import {
-    BOARD_SIZE_CB
+  BOARD_SIZE_CB
 } from "../core_0x88_t/chess_board_0x88_t/chess_board_0x88.js";
 
 import {
-    get_type_move_ml, get_from_ml, get_to_ml, get_name_capture_piece_ml,
-    sorting_list_ml,
-    LENGTH_LIST_ML, IND_PIECE_COLOR_ML, IND_NUMBER_MOVE_ML,
-    MOVE_NO_ML
+  get_type_move_ml, get_from_ml, get_to_ml, get_name_capture_piece_ml,
+  sorting_list_ml, clear_list_ml,
+  LENGTH_LIST_ML, IND_PIECE_COLOR_ML, IND_NUMBER_MOVE_ML,
+  MOVE_NO_ML
 } from "../core_0x88_t/move_list_0x88_t/move_list_0x88.js";
 
 import {
@@ -38,22 +38,22 @@ import { score_position_e, PIECE_SCORE_E } from "../evaluate_0x88/evaluate_0x88.
 let node_qs = 0;
 
 // Стоимость фигур (примерная)
-const PIECE_VALUES = [0, 100, 300, 325, 500, 975, 10000]; 
+const PIECE_VALUES = [0, 100, 300, 325, 500, 975, 10000];
 
 const SAFETY_MARGIN = 200; // запас на случай позиционных изменений (например, проход пешки)
 
 const MAX_DEPTH_SEARCH = 128;
 
 let packing_moves_stack = new Array(MAX_DEPTH_SEARCH);
-let chess_board_save_stack = new Array(MAX_DEPTH_SEARCH);
+let chess_board_undo_stack = new Array(MAX_DEPTH_SEARCH);
 let chess_board_key_64_undo_stack = new Array(MAX_DEPTH_SEARCH);
 
-const ini_stack_qs = function () {
+const qs_ini_stack = () => {
 
   for (let depth = 0; depth < MAX_DEPTH_SEARCH; depth++) {
 
     packing_moves_stack[depth] = new Int32Array(LENGTH_LIST_ML).fill(MOVE_NO_ML);
-    chess_board_save_stack[depth] = new Int32Array(BOARD_SIZE_CB).fill(MOVE_NO_ML);
+    chess_board_undo_stack[depth] = new Int32Array(BOARD_SIZE_CB).fill(MOVE_NO_ML);
     chess_board_key_64_undo_stack[depth] = new BigUint64Array(1);
   }
 }
@@ -71,11 +71,11 @@ const ini_stack_qs = function () {
  
   */
 
-const quiescence_search = function (alpha, beta, chess_board_0x88, chess_board_key_64, depth) {
+const qs_quiescence_search = (alpha, beta, chess_board_0x88, chess_board_key_64, depth) => {
 
   let packing_moves = packing_moves_stack[depth];
 
-  let chess_board_save = chess_board_save_stack[depth];
+  let chess_board_undo = chess_board_undo_stack[depth];
 
   const chess_board_key_64_undo = chess_board_key_64_undo_stack[depth];
 
@@ -87,7 +87,7 @@ const quiescence_search = function (alpha, beta, chess_board_0x88, chess_board_k
   let type_move;// тип хода
   let from;// откуда ход
   let to;// куда ход
-  let name_capture_piece;// имя взятой фигуры
+  //let name_capture_piece;// имя взятой фигуры
   let piece_color;// цвет хода
 
   // Защита от переполнения стека
@@ -109,6 +109,7 @@ const quiescence_search = function (alpha, beta, chess_board_0x88, chess_board_k
     alpha = best_value;
   // ===================================== Stand Pat
 
+
   generated_pseudo_legal_captures_mgc(chess_board_0x88, packing_moves);
 
   // если ходов нет
@@ -126,7 +127,8 @@ const quiescence_search = function (alpha, beta, chess_board_0x88, chess_board_k
     type_move = get_type_move_ml(move_i, packing_moves);// тип хода
     from = get_from_ml(move_i, packing_moves);
     to = get_to_ml(move_i, packing_moves);
-    name_capture_piece = get_name_capture_piece_ml(move_i, packing_moves);
+
+    //name_capture_piece = get_name_capture_piece_ml(move_i, packing_moves);
     piece_color = packing_moves[IND_PIECE_COLOR_ML];
 
     // Delta Pruning
@@ -135,14 +137,14 @@ const quiescence_search = function (alpha, beta, chess_board_0x88, chess_board_k
     //   continue; // Этот ход можно даже не делать и не проверять легальность!
     // }
 
-    chess_board_save.set(chess_board_0x88);
+    chess_board_undo.set(chess_board_0x88);
     chess_board_key_64_undo[0] = chess_board_key_64[0];
 
     is_moove_legal = do_moves_mm(chess_board_0x88, chess_board_key_64, type_move, from, to, piece_color);
 
     if (is_moove_legal == 0) { // король под шахом. отменяем ход и пропускаем этот цикл
 
-      chess_board_0x88.set(chess_board_save);
+      chess_board_0x88.set(chess_board_undo);
       chess_board_key_64[0] = chess_board_key_64_undo[0];
 
       continue;
@@ -151,25 +153,21 @@ const quiescence_search = function (alpha, beta, chess_board_0x88, chess_board_k
       continue;
     }
 
-    score = -quiescence_search(-beta, -alpha, chess_board_0x88, chess_board_key_64, (depth + 1));
+    score = -qs_quiescence_search(-beta, -alpha, chess_board_0x88, chess_board_key_64, (depth + 1));
 
-    chess_board_0x88.set(chess_board_save);
+    chess_board_0x88.set(chess_board_undo);
     chess_board_key_64[0] = chess_board_key_64_undo[0];
 
-    if (score >= beta) {
-      return score;
-    }
-    if (score > best_value)
-      best_value = score;
+    if (score >= beta) return score;
+    if (score > best_value) best_value = score;
+    if (score > alpha) alpha = score;
 
-    if (score > alpha)
-      alpha = score;
   }
 
   return best_value;
 }
 
-export { quiescence_search, ini_stack_qs };
+export { qs_quiescence_search, qs_ini_stack };
 
 /*
 https://www.chessprogramming.org/Quiescence_Search

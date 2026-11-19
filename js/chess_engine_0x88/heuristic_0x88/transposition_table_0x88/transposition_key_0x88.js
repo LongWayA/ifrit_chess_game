@@ -4,12 +4,13 @@
  * @author AnBr75
  * @name transposition_table_0x88.js
  * @version created 07.02m.2026 
+ * * Code review: Gemini 4 Hydrogen
 */
 
 import {
     SIDE_TO_MOVE_CB,
-     W_PAWN_CB,  W_ROOK_CB, W_KING_CB, B_PAWN_CB,
-     B_ROOK_CB, B_KING_CB, IND_CASTLING_Q_CB, IND_CASTLING_q_CB, IND_CASTLING_K_CB,
+    W_PAWN_CB, W_ROOK_CB, W_KING_CB, B_PAWN_CB,
+    B_ROOK_CB, B_KING_CB, IND_CASTLING_Q_CB, IND_CASTLING_q_CB, IND_CASTLING_K_CB,
     IND_CASTLING_k_CB, IND_EN_PASSANT_YES_CB,
     IND_EN_PASSANT_TARGET_SQUARE_CB
 } from "../../core_0x88_t/chess_board_0x88_t/chess_board_0x88.js";
@@ -320,7 +321,7 @@ const key_update_ep_sq_0x88_tk = function (chess_board_key_64, chess_board_0x88)
 */
 const key_update_QqKk_0x88_tk = function (Q, q, K, k, chess_board_key_64) {
 
-   // sm16 ep32 epsq70 Q48 K64 q80 k96 
+    // sm16 ep32 epsq70 Q48 K64 q80 k96 
     if (Q == 1) {
         chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[4][48];
     }
@@ -368,3 +369,20 @@ export {
     key_update_castle_move_0x88_tk, key_update_ep_0x88_tk, key_update_ep_sq_0x88_tk, key_update_QqKk_0x88_tk,
     test_generation_key_64_tk
 };
+
+/**
+Gemini 4 Hydrogen:
+Посмотрите на функцию set_key_from_board_0x88_tk (строка 146) и key_update_ep_sq_0x88_tk (строка 278)
+key_64 = key_64 ^ BigInt(chess_board_0x88[IND_EN_PASSANT_TARGET_SQUARE_CB]) ^ key_array_64_tk[5][70];
+• Почему это ломает хеш: Вы делаете XOR с «сырым» числом координаты клетки (BigInt(...)), а затем с 
+одной и той же константой key_array_64_tk[5][70].
+• В чём ошибка: Во-первых, если в key_update_ep_sq_0x88_tk вы забыли сначала сделать XOR со старым 
+полем взятия на проходе перед тем, как доска обновилась, key_array_64_tk[5][70] не самоуничтожится 
+(два XOR с одним числом дают ноль, а три — снова это число). Во-вторых, XOR с маленьким числом BigInt(sq) 
+(от 0 до 127) меняет только младшие 7 бит ключа, что резко снижает качество хеша и вызывает частые коллизии 
+по индексу таблицы!
+• Как надо: Для каждой из 128 клеток поля взятия на проходе нужно брать отдельное 64-битное случайное число 
+из массива (например, key_array_64_tk[0][ep_sq], так как индекс 0 — это пустая клетка, и его ячейки в 
+key_array_64_tk сейчас вообще не используются!). При смене поля нужно сначала сделать 
+XOR со старым ep_sq, а затем — с новым.
+*/
