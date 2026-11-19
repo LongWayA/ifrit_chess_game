@@ -82,7 +82,7 @@ const MOOVE_IS_NOT_LEGAL_CASTLING_MM = 2;
 * @param {number} piece_color
 * @returns {number}
 */
-const do_moves_mm = function (chess_board_0x88, chess_board_key_64, type_move, from, to, piece_color) {
+const do_moves_mm = (chess_board_0x88, chess_board_key_64, type_move, from, to, piece_color) => {
   //console.log("Make_move_0x88_C->do_moves  move_i " + move_i);
 
   let is_move_legal = MOOVE_IS_LEGAL_MM;// по умолчанию ход считаем легальным.
@@ -596,7 +596,7 @@ const do_moves_mm = function (chess_board_0x88, chess_board_key_64, type_move, f
  * @param {Int32Array} chess_board_0x88
  * @param {BigUint64Array} chess_board_key_64
  */
-const key_update_ep_0x88_mm = function (chess_board_0x88, chess_board_key_64) {
+const key_update_ep_0x88_mm = (chess_board_0x88, chess_board_key_64) => {
 
   if (chess_board_0x88[IND_EN_PASSANT_YES_CB] == 1) {
     chess_board_0x88[IND_EN_PASSANT_YES_CB] = 0;
@@ -612,7 +612,7 @@ const key_update_ep_0x88_mm = function (chess_board_0x88, chess_board_key_64) {
  * @param {number} to 
  * @returns {void}
  */
-const make_simple_move_0x88_mm = function (chess_board_0x88, chess_board_key_64, from, to) {
+const make_simple_move_0x88_mm = (chess_board_0x88, chess_board_key_64, from, to) => {
 
   let piece_from = chess_board_0x88[from];
   let piece_to = chess_board_0x88[to];
@@ -637,7 +637,7 @@ const make_simple_move_0x88_mm = function (chess_board_0x88, chess_board_key_64,
  * @param {number} to 
  * @returns {void}
  */
-const stop_king_castle_captures_rook_0x88_mm = function (chess_board_0x88, chess_board_key_64, to) {
+const stop_king_castle_captures_rook_0x88_mm = (chess_board_0x88, chess_board_key_64, to) => {
 
   if (chess_board_0x88[IND_CASTLING_K_CB] == 1) {
     // если ходит фигура с н1 то это белая ладья. отменяем рокировку в короткую сторону для белых
@@ -688,7 +688,7 @@ const stop_king_castle_captures_rook_0x88_mm = function (chess_board_0x88, chess
  * @param {number} from
  * @returns {void}
  */
-const stop_king_castle_move_rook_0x88_mm = function (chess_board_0x88, chess_board_key_64, from) {
+const stop_king_castle_move_rook_0x88_mm = (chess_board_0x88, chess_board_key_64, from) => {
 
   if (chess_board_0x88[IND_CASTLING_K_CB] == 1) {
     // если ходит фигура с н1 то это белая ладья. отменяем рокировку в короткую сторону для белых
@@ -738,7 +738,7 @@ const stop_king_castle_move_rook_0x88_mm = function (chess_board_0x88, chess_boa
  * @param {number} from
  * @returns {void}
  */
-const stop_king_castle_move_king_0x88_mm = function (chess_board_0x88, chess_board_key_64, from) {
+const stop_king_castle_move_king_0x88_mm = (chess_board_0x88, chess_board_key_64, from) => {
 
   if (chess_board_0x88[IND_CASTLING_K_CB] == 1) {
     // если ходит фигура с e1 то это белый король. отменяем все рокировки для белых
@@ -787,7 +787,7 @@ const stop_king_castle_move_king_0x88_mm = function (chess_board_0x88, chess_boa
  * @returns {number}
  */
 // Qwen3.7-Max AI: В make_king_castle_move_0x88_mm вы дважды вычисляете цвет
-const make_king_castle_move_0x88_mm = function (chess_board_0x88, chess_board_key_64, from, to, piece_color) {
+const make_king_castle_move_0x88_mm = (chess_board_0x88, chess_board_key_64, from, to, piece_color) => {
 
   let is_move_legal = MOOVE_IS_LEGAL_MM;
 
@@ -880,7 +880,7 @@ const make_king_castle_move_0x88_mm = function (chess_board_0x88, chess_board_ke
  * @param {number} piece_color  
  * @returns {number}
  */
-const make_king_queen_castle_move_0x88_mm = function (chess_board_0x88, chess_board_key_64, from, to, piece_color) {
+const make_king_queen_castle_move_0x88_mm = (chess_board_0x88, chess_board_key_64, from, to, piece_color) => {
 
   let is_move_legal = MOOVE_IS_LEGAL_MM;
 
@@ -976,7 +976,7 @@ const make_king_queen_castle_move_0x88_mm = function (chess_board_0x88, chess_bo
  * @param {number} piece_color  
  * @returns {void}
  */
-const make_en_passant_move_0x88_mm = function (chess_board_0x88, chess_board_key_64, from, to, piece_color) {
+const make_en_passant_move_0x88_mm = (chess_board_0x88, chess_board_key_64, from, to, piece_color) => {
 
   let piece_from = chess_board_0x88[from];
   let piece_to16;
@@ -1014,7 +1014,7 @@ const make_en_passant_move_0x88_mm = function (chess_board_0x88, chess_board_key
  * @param {number} promo_piece  
  * @returns {void}
  */
-const make_promo_move_0x88_mm = function (chess_board_0x88, chess_board_key_64, from, to, promo_piece) {
+const make_promo_move_0x88_mm = (chess_board_0x88, chess_board_key_64, from, to, promo_piece) => {
 
   let piece_to = chess_board_0x88[to];
   //let piece_color = (piece_from > W_KING) ? BLACK : WHITE;// цвет взятой фигуры;

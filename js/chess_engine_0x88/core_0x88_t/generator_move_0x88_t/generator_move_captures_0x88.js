@@ -75,7 +75,7 @@ const moves_knight_mgc = new Int32Array([-33, -31, -14, 18, 33, 31, 14, -18]);
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_pseudo_legal_captures_mgc = function (chess_board_0x88, packing_moves) {
+const generated_pseudo_legal_captures_mgc = (chess_board_0x88, packing_moves) => {
     //console.log('->generated_pseudo_legal_moves');
     // вывели из цикла чтобы определить один раз
     let side_to_move = chess_board_0x88[SIDE_TO_MOVE_CB];
@@ -105,7 +105,7 @@ const generated_pseudo_legal_captures_mgc = function (chess_board_0x88, packing_
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_pseudo_legal_captures_one_piece_for_gui_mgc = function (from, chess_board_0x88, packing_moves) {
+const generated_pseudo_legal_captures_one_piece_for_gui_mgc = (from, chess_board_0x88, packing_moves) => {
     //console.log('->generated_pseudo_legal_moves');
     // тут определяем чтобы не менять вызов generated_pseudo_legal_moves_one_piece(from, side_to_move, ...
     let side_to_move = chess_board_0x88[SIDE_TO_MOVE_CB];
@@ -132,7 +132,7 @@ const generated_pseudo_legal_captures_one_piece_for_gui_mgc = function (from, ch
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_pseudo_legal_captures_one_piece_mgc = function (from, side_to_move, chess_board_0x88, packing_moves) {
+const generated_pseudo_legal_captures_one_piece_mgc = (from, side_to_move, chess_board_0x88, packing_moves) => {
 
     let piece_name = -1;// имя фигуры типа 1,2,...,6, 9,...,14
     let piece_color = -1;// цвет фигуры 0 или 1
@@ -200,7 +200,7 @@ const generated_pseudo_legal_captures_one_piece_mgc = function (from, side_to_mo
 * @param {Int32Array} packing_moves
 * @returns {number} 0-можно продолжить луч, 1-прерываем луч (stop_beam)
 */
-const add_captures_move_mgc = function (piece_name, piece_color, from, to, chess_board_0x88, packing_moves) {
+const add_captures_move_mgc = (piece_name, piece_color, from, to, chess_board_0x88, packing_moves) => {
 
     let piece_captures = chess_board_0x88[to];// имя взятой фигуры
     let piece_color_captures;// цвет взятой фигуры
@@ -234,7 +234,7 @@ const add_captures_move_mgc = function (piece_name, piece_color, from, to, chess
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_captures_moves_king_mgc = function (piece_name, piece_color, from, chess_board_0x88, packing_moves) {
+const generated_captures_moves_king_mgc = (piece_name, piece_color, from, chess_board_0x88, packing_moves) => {
     //moves_king  = [-16, -15, 1, 17, 16, 15, -1, -17];
     let to;
     let stop_beam;
@@ -256,7 +256,7 @@ const generated_captures_moves_king_mgc = function (piece_name, piece_color, fro
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_captures_moves_queen_mgc = function (piece_name, piece_color, from, chess_board_0x88, packing_moves) {
+const generated_captures_moves_queen_mgc = (piece_name, piece_color, from, chess_board_0x88, packing_moves) => {
     //    moves_king = [-16, -15, 1, 17, 16, 15, -1, -17];
     //    moves_queen = this.moves_king;
     let to;
@@ -287,7 +287,7 @@ const generated_captures_moves_queen_mgc = function (piece_name, piece_color, fr
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_captures_moves_rook_mgc = function (piece_name, piece_color, from, chess_board_0x88, packing_moves) {
+const generated_captures_moves_rook_mgc = (piece_name, piece_color, from, chess_board_0x88, packing_moves) => {
     //moves_rook = [-16, 1, 16, -1];
     let to;
     let stop_beam;
@@ -315,7 +315,7 @@ const generated_captures_moves_rook_mgc = function (piece_name, piece_color, fro
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_captures_moves_bishop_mgc = function (piece_name, piece_color, from, chess_board_0x88, packing_moves) {
+const generated_captures_moves_bishop_mgc = (piece_name, piece_color, from, chess_board_0x88, packing_moves) => {
     //moves_bishop = [-15, 17, 15, -17];
     let to;
     let stop_beam;
@@ -344,7 +344,7 @@ const generated_captures_moves_bishop_mgc = function (piece_name, piece_color, f
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_captures_moves_knight_mgc = function (piece_name, piece_color, from, chess_board_0x88, packing_moves) {
+const generated_captures_moves_knight_mgc = (piece_name, piece_color, from, chess_board_0x88, packing_moves) => {
     //moves_knight = [-33, -31, -14, 18, 33, 31, 14, -18];
     let to;
     let stop_beam;
@@ -367,7 +367,7 @@ const generated_captures_moves_knight_mgc = function (piece_name, piece_color, f
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_captures_moves_pawn_mgc = function (piece_name, piece_color, from, chess_board_0x88, packing_moves) {
+const generated_captures_moves_pawn_mgc = (piece_name, piece_color, from, chess_board_0x88, packing_moves) => {
 
     if (piece_color == 1) {// белая пешка
         // взятие белой пешкой
@@ -387,7 +387,7 @@ const generated_captures_moves_pawn_mgc = function (piece_name, piece_color, fro
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_captures_moves_pawn_white_mgc = function (piece_name, piece_color, from, chess_board_0x88, packing_moves) {
+const generated_captures_moves_pawn_white_mgc = (piece_name, piece_color, from, chess_board_0x88, packing_moves) => {
     // Math.floor(from / 16) == 1
     if ((from >> 4) == 1) {// белая пешка на на предпоследней позиции(7-ая линия из 8). можно смотреть взятие с превращением
         // смотрим и если есть добавляем взятия пешкой с превращением
@@ -410,7 +410,7 @@ const generated_captures_moves_pawn_white_mgc = function (piece_name, piece_colo
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_captures_moves_pawn_black_mgc = function (piece_name, piece_color, from, chess_board_0x88, packing_moves) {
+const generated_captures_moves_pawn_black_mgc = (piece_name, piece_color, from, chess_board_0x88, packing_moves) => {
     // Math.floor(from / 16) == 6
     if ((from >> 4) == 6) {// черная пешка на на предпоследней позиции(2-ая линия из 8). можно смотреть взятие с превращением
         generated_captures_moves_pawn_promo_mgc(piece_name, from, (from + 15), (from + 17),
@@ -434,7 +434,7 @@ const generated_captures_moves_pawn_black_mgc = function (piece_name, piece_colo
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_moves_pawn_captures_mgc = function (piece_name, from, to_left, to_right, piece_color, chess_board_0x88, packing_moves) {
+const generated_moves_pawn_captures_mgc = (piece_name, from, to_left, to_right, piece_color, chess_board_0x88, packing_moves) => {
     let piece_color_captures;
     let piece_captures;
     let type_move;
@@ -488,7 +488,7 @@ const generated_moves_pawn_captures_mgc = function (piece_name, from, to_left, t
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_captures_moves_pawn_promo_mgc = function (piece_name, from, to_left, to_right, piece_color, chess_board_0x88, packing_moves) {
+const generated_captures_moves_pawn_promo_mgc = (piece_name, from, to_left, to_right, piece_color, chess_board_0x88, packing_moves) => {
     let piece_color_captures;
     let piece_captures;
     let type_move;
@@ -552,7 +552,7 @@ const generated_captures_moves_pawn_promo_mgc = function (piece_name, from, to_l
 * @param {Int32Array} chess_board_0x88 - доска
 * @returns {number} - тип атакующей фигуры (например, B_KNIGHT_CB) или 0, если шаха нет
 */
-const check_detected_mgc = function (from, piece_color, chess_board_0x88) {
+const check_detected_mgc = (from, piece_color, chess_board_0x88) => {
     // Определяем фигуры противника, которые могут атаковать
     const isWhite = (piece_color == WHITE_CB);
     const opp_king   = isWhite ? B_KING_CB   : W_KING_CB;

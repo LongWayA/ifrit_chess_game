@@ -97,7 +97,7 @@ const moves_knight_mgq = new Int32Array([-33, -31, -14, 18, 33, 31, 14, -18]);
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_pseudo_legal_quiet_moves_mgq = function (chess_board_0x88, packing_moves) {
+const generated_pseudo_legal_quiet_moves_mgq = (chess_board_0x88, packing_moves) => {
     //console.log('generator_move_quiet_0x88_С->generated_pseudo_legal_moves');
     let side_to_move = chess_board_0x88[SIDE_TO_MOVE_CB];
     for (let from = 0; from < BOARD_SIZE_CB; from++) {
@@ -118,7 +118,7 @@ const generated_pseudo_legal_quiet_moves_mgq = function (chess_board_0x88, packi
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_pseudo_legal_quiet_moves_one_piece_for_gui_mgq = function (from, chess_board_0x88, packing_moves) {
+const generated_pseudo_legal_quiet_moves_one_piece_for_gui_mgq = (from, chess_board_0x88, packing_moves) => {
     //console.log('generator_move_quiet_0x88_С->generated_pseudo_legal_moves');
     let side_to_move = chess_board_0x88[SIDE_TO_MOVE_CB];
     // если мы не вышли за пределы доски
@@ -137,7 +137,7 @@ const generated_pseudo_legal_quiet_moves_one_piece_for_gui_mgq = function (from,
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_pseudo_legal_quiet_moves_one_piece_mgq = function (from, side_to_move, chess_board_0x88, packing_moves) {
+const generated_pseudo_legal_quiet_moves_one_piece_mgq = (from, side_to_move, chess_board_0x88, packing_moves) => {
 
     let piece_name;
     let piece_color;
@@ -205,7 +205,7 @@ const generated_pseudo_legal_quiet_moves_one_piece_mgq = function (from, side_to
 * @param {Int32Array} packing_moves
 * @returns {number}
 */
-const add_quiet_move_mgq = function (piece_name, from, to, chess_board_0x88, packing_moves) {
+const add_quiet_move_mgq = (piece_name, from, to, chess_board_0x88, packing_moves) => {
 
     let piece_to = chess_board_0x88[to];
     let type_move;
@@ -227,7 +227,7 @@ const add_quiet_move_mgq = function (piece_name, from, to, chess_board_0x88, pac
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_quiet_moves_king_mgq = function (piece_name, from, chess_board_0x88, packing_moves) {
+const generated_quiet_moves_king_mgq = (piece_name, from, chess_board_0x88, packing_moves) => {
     //moves_king  = [-16, -15, 1, 17, 16, 15, -1, -17];
     let to;
     let stop_beam;
@@ -248,7 +248,7 @@ const generated_quiet_moves_king_mgq = function (piece_name, from, chess_board_0
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_quiet_moves_queen_mgq = function (piece_name, from, chess_board_0x88, packing_moves) {
+const generated_quiet_moves_queen_mgq = (piece_name, from, chess_board_0x88, packing_moves) => {
     //    moves_king = [-16, -15, 1, 17, 16, 15, -1, -17];
     //    moves_queen = this.moves_king;
     let to;
@@ -276,7 +276,7 @@ const generated_quiet_moves_queen_mgq = function (piece_name, from, chess_board_
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_quiet_moves_rook_mgq = function (piece_name, from, chess_board_0x88, packing_moves) {
+const generated_quiet_moves_rook_mgq = (piece_name, from, chess_board_0x88, packing_moves) => {
     //moves_rook = [-16, 1, 16, -1];
     let to;
     let stop_beam;
@@ -303,7 +303,7 @@ const generated_quiet_moves_rook_mgq = function (piece_name, from, chess_board_0
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_quiet_moves_bishop_mgq = function (piece_name, from, chess_board_0x88, packing_moves) {
+const generated_quiet_moves_bishop_mgq = (piece_name, from, chess_board_0x88, packing_moves) => {
     //moves_bishop = [-15, 17, 15, -17];
     let to;
     let stop_beam;
@@ -330,7 +330,7 @@ const generated_quiet_moves_bishop_mgq = function (piece_name, from, chess_board
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_quiet_moves_knight_mgq = function (piece_name, from, chess_board_0x88, packing_moves) {
+const generated_quiet_moves_knight_mgq = (piece_name, from, chess_board_0x88, packing_moves) => {
     //moves_knight = [-33, -31, -14, 18, 33, 31, 14, -18];
     let to;
     let stop_beam;
@@ -352,7 +352,7 @@ const generated_quiet_moves_knight_mgq = function (piece_name, from, chess_board
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_moves_castle_king_mgq = function (piece_color, from, chess_board_0x88, packing_moves) {
+const generated_moves_castle_king_mgq = (piece_color, from, chess_board_0x88, packing_moves) => {
     let to;//        C1_MGQ G1_MGQ
     let piece_to_1;//B1_MGQ F1_MGQ
     let piece_to_2;//C1_MGQ G1_MGQ
@@ -418,7 +418,7 @@ const generated_moves_castle_king_mgq = function (piece_color, from, chess_board
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_quiet_moves_pawn_mgq = function (piece_color, from, chess_board_0x88, packing_moves) {
+const generated_quiet_moves_pawn_mgq = (piece_color, from, chess_board_0x88, packing_moves) => {
 
     if (piece_color == 1) {// белая пешка
         generated_quiet_moves_pawn_white_mgq(from, chess_board_0x88, packing_moves);
@@ -436,7 +436,7 @@ const generated_quiet_moves_pawn_mgq = function (piece_color, from, chess_board_
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_quiet_moves_pawn_white_mgq = function (from, chess_board_0x88, packing_moves) {
+const generated_quiet_moves_pawn_white_mgq = (from, chess_board_0x88, packing_moves) => {
     // Math.floor(from / 16) == 6
     if ((from >> 4) == 6) {// белая пешка на стартовой позиции(2-ая линия снизу). можно ходить на две клетки
         generated_moves_pawn_double_mgq(from, (from - 16), (from - 32),
@@ -460,7 +460,7 @@ const generated_quiet_moves_pawn_white_mgq = function (from, chess_board_0x88, p
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_quiet_moves_pawn_black_mgq = function (from, chess_board_0x88, packing_moves) {
+const generated_quiet_moves_pawn_black_mgq = (from, chess_board_0x88, packing_moves) => {
 
     // Math.floor(from / 16) == 1
     if ((from >> 4) == 1) {// черная пешка на стартовой позиции(7-ая линия снизу). можно ходить на две клетки
@@ -486,7 +486,7 @@ const generated_quiet_moves_pawn_black_mgq = function (from, chess_board_0x88, p
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_moves_pawn_one_mgq = function (from, to, chess_board_0x88, packing_moves) {
+const generated_moves_pawn_one_mgq = (from, to, chess_board_0x88, packing_moves) => {
     let piece_to;
     let type_move;
 
@@ -507,7 +507,7 @@ const generated_moves_pawn_one_mgq = function (from, to, chess_board_0x88, packi
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_moves_pawn_double_mgq = function (from, to_void, to, chess_board_0x88, packing_moves) {
+const generated_moves_pawn_double_mgq = (from, to_void, to, chess_board_0x88, packing_moves) => {
     let piece_to;
     let piece_to_void;
     let type_move;
@@ -529,7 +529,7 @@ const generated_moves_pawn_double_mgq = function (from, to_void, to, chess_board
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const generated_quiet_moves_pawn_promo_mgq = function (from, to_center, chess_board_0x88, packing_moves) {
+const generated_quiet_moves_pawn_promo_mgq = (from, to_center, chess_board_0x88, packing_moves) => {
     let piece_to;
     let type_move;
 

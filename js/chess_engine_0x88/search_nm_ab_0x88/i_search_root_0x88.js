@@ -1,74 +1,35 @@
 // @ts-check
-/**
-@copyright Copyright (c) 2026, AnBr75 and/or its affiliates. All rights reserved.
-@author AnBr75
-@name i_search_root_0x88.js
-@version corrected / refactored
-
-НАЗНАЧЕНИЕ
-  Корневой интерфейс поиска.
-
-  Есть два режима:
-    1. start_search_negamax_r(fen_start, depth_max)
-       Тестовый запуск полного перебора.
-
-    2. searching_iterative_deepening_r(chessEngine_0x88_O, fen_start, depth_max)
-       Основной поиск: итеративное углубление + alpha-beta/PVS.
-
-  На каждой завершённой глубине формируется UCI-подобный объект:
-    {
-      fen_start,
-      fen_end,
-      info,
-      best_move
-    }
-
-  Важно:
-    - незавершённая из-за stop итерация не публикуется;
-    - bestmove берётся из корневого списка ходов, а не из PV-массива;
-    - info depth показывает текущую завершённую глубину;
-    - тяжёлые проверки ключей и печати вынесены под флаги.
+/** 
+ * @copyright Copyright (c) 2026, AnBr75 and/or its affiliates. All rights reserved.
+ * @author AnBr75
+ * @name i_search_root_0x88.js
+ * @version created 24.01m.2026 
 */
 
+
 import {
-  clear_list_ml,
-  get_type_move_ml,
-  get_from_ml,
-  get_to_ml,
-  return_i_move_ml,
-  move_to_string_uci_ml,
+  get_type_move_ml, get_from_ml, get_to_ml, get_name_capture_piece_ml,
   sorting_list_ml,
-  LENGTH_LIST_ML,
-  IND_PIECE_COLOR_ML,
-  IND_NUMBER_MOVE_ML,
+  return_i_move_ml, move_to_string_uci_ml,
+  LENGTH_LIST_ML, IND_PIECE_COLOR_ML, IND_NUMBER_MOVE_ML,
   MOVE_NO_ML
 } from "../core_0x88_t/move_list_0x88_t/move_list_0x88.js";
 
 import {
-  BOARD_SIZE_CB,
-  SIDE_TO_MOVE_CB,
-  WHITE_CB,
-  IND_KING_FROM_WHITE_CB,
-  IND_KING_FROM_BLACK_CB,
   x07_y07_to_0x88_cb,
+  test_print_piece_0x88_cb,
+  test_compare_chess_board_0x88_cb, set_board_from_fen_0x88_cb, set_fen_from_0x88_cb, test_print_piece_0x88_f_cb,
   letter_to_x_coordinate_cb,
-  set_board_from_fen_0x88_cb,
-  set_fen_from_0x88_cb,
-  test_print_piece_0x88_f_cb
+  BOARD_SIZE_CB
 } from "../core_0x88_t/chess_board_0x88_t/chess_board_0x88.js";
 
 import {
-  clear_pv_line_pv,
-  add_move_to_pv_line_pv,
-  save_pv_line_pv,
-  pv_line_to_uci_string_pv,
-  MAX_DEPTH_PV,
-  IND_TYPE_VARIANT_PV
-} from "../search_negamax_0x88/pv_line_0x88.js";
+  clear_pv_line_pv, add_move_to_pv_line_pv, save_pv_line_pv, test_print_pv_line_pv, pv_line_to_uci_string_pv,
+  MAX_DEPTH_PV, IND_TYPE_VARIANT_PV
+} from "../core_0x88_t/pv_line_0x88.js";
 
 import {
-  generated_pseudo_legal_captures_mgc,
-  check_detected_mgc
+  generated_pseudo_legal_captures_mgc
 } from "../core_0x88_t/generator_move_0x88_t/generator_move_captures_0x88.js";
 
 import {
@@ -77,140 +38,99 @@ import {
 
 import { do_moves_mm } from "../core_0x88_t/make_move_0x88_t/make_move_0x88.js";
 
-import {
-  searching_negamax,
-  ini_stack,
-  chess_board_0x88_found_best_score,
-  node_mm
-} from "../search_negamax_0x88/search_negamax_0x88.js";
+import { searching_negamax, ini_stack } from "../search_negamax_0x88/search_negamax_0x88.js";
 
 import {
-  searching_negamax_alpha_beta_id_ab,
-  set_stop_search_in_1_ab,
-  set_stop_search_in_0_ab,
-  set_node_in_0_ab,
-  node_ab,
-  is_history_heuristic_use_ab,
-  ini_stack_ab,
+  searching_negamax_alpha_beta_id_ab, set_stop_search_in_1_ab, set_stop_search_in_0_ab, set_node_in_0_ab,
+  node_ab, is_history_heuristic_use_ab, ini_stack_ab,
   INIT_EVAL_AB,
-  save_alpha_up_test_tt,
-  save_beta_cut_test_tt,
-  use_alpha_up_test_tt,
-  use_beta_cut_test_tt,
+  save_alpha_up_test_tt, save_beta_cut_test_tt,
+  use_alpha_up_test_tt, use_beta_cut_test_tt,
   clear_test_tt
 } from "./search_nm_ab_0x88.js";
+
+import {
+  sorting_list_top_max_score_lr, add_score_lr
+} from "./move_list_root_0x88.js";
 
 import {
   ini_Array_hh
 } from "../heuristic_0x88/history_heuristic_0x88/history_heuristic_0x88.js";
 
 import {
-  ini_random_key_array_64_tk,
-  set_key_from_board_0x88_tk,
-  test_chess_board_key_64_tk,
+  ini_random_key_array_64_tk, set_key_from_board_0x88_tk, test_chess_board_key_64_tk,
   test_generation_key_64_tk
 } from "../heuristic_0x88/transposition_table_0x88/transposition_key_0x88.js";
 
 import {
-  ini_tt,
-  test_uses_hash_tt,
-  print_test_set_get_position_tt
+  ini_tt, test_uses_hash_tt, print_test_set_get_position_tt,
 } from "../heuristic_0x88/transposition_table_0x88/transposition_table_0x88.js";
 
 import { Timer_C } from "../../browser/timer.js";
+
 import { ChessEngine_0x88_С } from "../i_chess_engine_0x88.js";
+
 import { ini_stack_qs } from "../quiescence_search_0x88/quiescence_search_0x88.js";
-import { score_position_e } from "../evaluate_0x88/evaluate_0x88.js";
+
+import { score_position_e, PAWN_SCORE_E } from "../evaluate_0x88/evaluate_0x88.js";
 
 /**
-@typedef {Object} uci_return_search
-@property {string} fen_start
-@property {string} fen_end
-@property {string} info
-@property {string} best_move
+* НАЗНАЧЕНИЕ
+* Есть два режима поиска: 
+* searching_iterative_deepening(fen_start, depth_max) - основной поиск
+* start_search_minmax(fen_start, depth_max) - тестирование перебора
+*
+* Поиск начинается с присланой в виде fen позиции fen_start
+* и максимальной глубины перебора depth_max
+* Из fen мы заполняем chess_board_0x88_O_start.
+*
+* Во время поиска идет циклическое погружение и на каждой просчитанной глубине
+* возвращается заполненный объект uci_return_search
+* Конечно есть финальная позиция fen_end
+* Так что поиск начинается со стартового fen и заканчивается
+* финальным.
+* Конечно же выводим строку с информацией info : "info depth 1 score cp 17 nodes 20 nps 20000 pv e2e4 "
+* тут и глубина перебора  и оценка и колличество узлов и скорость перебора и лучший вариант 
+*
+* Выводим так же лучший ход best_move
+*
+* Думаю этот интерфейс останется надолго. Добавление эвристик и даже замена генератора
+* на него влиять не должны.
 */
 
-/* =========================================================================
- * 1. КОНСТАНТЫ И ФЛАГИ
- * ========================================================================= */
+/**
+* 
+* @typedef {Object} uci_return_search
+* @property {string} fen_start - начальная позиция в виде fen передаваемая на вход движка
+* @property {string} fen_end - конечная позиция в виде fen возникшая после хода движка
+* @property {string} info - info depth 1 score cp 17 nodes 20 nps 20000 pv e2e4 
+* @property {string} best_move - bestmove e2e4 ponder e7e6
+*/
 
 const ALPHA_SCORE_R = -50000;
 const BETA_SCORE_R = 50000;
-const MATE_R = -30000;
 
-/** Ограничение глубины сверху. */
-const MAX_DEPTH_ROOT = Math.min(128, MAX_DEPTH_PV - 1);
-
-/** TEST: печать позиций после полного перебора. */
-const DEBUG_NEGAMAX_PRINT = false;
-
-/** TEST: проверка ключей после каждого корневого хода. */
-const VERIFY_ROOT_KEY = false;
-
-/** TEST: печать TT-статистики в конце поиска. */
-const DEBUG_TT_PRINT = false;
 
 const timer_O = new Timer_C();
 
-/* =========================================================================
- * 2. ОДНОКРАТНАЯ ИНИЦИАЛИЗАЦИЯ
- *    В старом коде случайные ключи и стеки пересоздавались на каждый поиск.
- *    Это дорого и сбрасывает полезную информацию.
- * ========================================================================= */
-
-let keys_initialized_r = false;
-let search_initialized_r = false;
-
-function ensure_keys_r() {
-  if (!keys_initialized_r) {
-    ini_random_key_array_64_tk();
-    keys_initialized_r = true;
-  }
-}
-
-function ensure_search_r() {
-  ensure_keys_r();
-
-  if (!search_initialized_r) {
-    ini_tt();
-    ini_stack_qs();
-    ini_stack_ab();
-    ini_stack();
-
-    if (is_history_heuristic_use_ab == 1) {
-      ini_Array_hh();
-    }
-
-    search_initialized_r = true;
-  }
-}
-
-/** Принудительная переинициализация. Можно вызвать при новой партии. */
-const ini_search_root_r = function () {
-  keys_initialized_r = false;
-  search_initialized_r = false;
-  ensure_search_r();
+const uci_return_search = {
+  fen_start: "-",// начальная позиция в виде fen передаваемая на вход движка
+  fen_end: "-",// конечная позиция в виде fen возникшая после хода движка
+  info: "-",// info depth 1 seldepth 2 multipv 1 score cp 17 nodes 20 nps 20000 hashfull 0 tbhits 0 time 1 pv e2e4        
+  best_move: "-",// bestmove e2e4 ponder e7e6
 };
 
-/* =========================================================================
- * 3. STOP-ФЛАГИ
- * ========================================================================= */
-
-let stop_search_root = 0;
+let stop_search_root = 0;// флаг эсктренного выхода в корне
 
 const set_stop_search_in_1_r = function () {
   set_stop_search_in_1_ab();
   stop_search_root = 1;
-};
+}
 
 const set_stop_search_in_0_r = function () {
   set_stop_search_in_0_ab();
   stop_search_root = 0;
-};
-
-/* =========================================================================
- * 4. TEST TT
- * ========================================================================= */
+}
 
 const test_tt = function () {
   console.log("-------------------------------------- ");
@@ -220,144 +140,110 @@ const test_tt = function () {
   console.log("save_beta_cut_test_tt " + save_beta_cut_test_tt);
   console.log("use_beta_cut_test_tt " + use_beta_cut_test_tt);
   console.log("-------------------------------------- ");
-};
 
-/* =========================================================================
- * 5. ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ КОРНЯ
- * ========================================================================= */
-
-/**
- * Оценка позиции, в которой нет легальных ходов.
- *
- * @param {Int32Array} board
- * @returns {number}
- */
-function no_moves_score_r(board) {
-  const side = board[SIDE_TO_MOVE_CB];
-  const king_square = (side == WHITE_CB)
-    ? board[IND_KING_FROM_WHITE_CB]
-    : board[IND_KING_FROM_BLACK_CB];
-
-  if (check_detected_mgc(king_square, side, board) != 0) {
-    return MATE_R;
-  }
-
-  return 0;
 }
 
-/**
- * Стабильная сортировка корневого порядка ходов по оценкам прошлой итерации.
- * Сортируем не сам список ходов, а массив индексов root_order.
- *
- * @param {Int32Array} root_order
- * @param {Int32Array} root_scores
- * @param {number} count
- */
-function sort_root_order_by_score(root_order, root_scores, count) {
-  for (let i = 1; i < count; i++) {
-    const move_i = root_order[i];
-    const score = root_scores[move_i];
-
-    let j = i - 1;
-
-    // Стабильно: при равных оценках старый порядок сохраняется.
-    while (j >= 0 && root_scores[root_order[j]] < score) {
-      root_order[j + 1] = root_order[j];
-      j--;
-    }
-
-    root_order[j + 1] = move_i;
-  }
-}
-
-/**
- * Первый UCI-ход из PV-строки.
- *
- * @param {string} pv
- * @returns {string}
- */
-function first_move_from_pv_string(pv) {
-  const trimmed = pv.trim();
-  if (trimmed.length == 0) return "no";
-
-  const space_i = trimmed.indexOf(" ");
-  if (space_i == -1) return trimmed;
-
-  return trimmed.slice(0, space_i);
-}
-
-/* =========================================================================
- * 6. ТЕСТОВЫЙ ЗАПУСК ПОЛНОГО ПЕРЕБОРА
- * ========================================================================= */
-
-/**
+/** negamax
  * @param {string} fen_start
  * @param {number} depth_max
  * @returns {uci_return_search}
  */
 const start_search_negamax_r = function (fen_start, depth_max) {
-  ensure_search_r();
+  let depth = 0;
 
-  const chess_board_0x88 = new Int32Array(BOARD_SIZE_CB).fill(0);
-  const chess_board_0x88_score = new Int32Array(BOARD_SIZE_CB).fill(0);
-  const chess_board_0x88_start = new Int32Array(BOARD_SIZE_CB).fill(0);
-  const chess_board_key_64 = new BigUint64Array(1);
-  const packing_pv_line = new Int32Array(MAX_DEPTH_PV).fill(MOVE_NO_ML);
+  let chess_board_0x88 = new Int32Array(BOARD_SIZE_CB).fill(0);// текущая доска с фигурами 0x88
+
+  // TEST
+  let chess_board_0x88_score = new Int32Array(BOARD_SIZE_CB).fill(0);// позиция соответствующая оценке с фигурами 0x88 
+
+  let chess_board_0x88_start = new Int32Array(BOARD_SIZE_CB).fill(0);// записываем стартовую доску
+
+  const chess_board_key_64 = new BigUint64Array(1);// зобрист ключ позиции
+
+  let packing_pv_line = new Int32Array(MAX_DEPTH_PV).fill(MOVE_NO_ML);
+
+  // это позиция соответствующая найденному лучшему ходу.
+  let chess_board_0x88_found_best_score = new Int32Array(BOARD_SIZE_CB).fill(0);// доска 0x88 с фигурами;
+
+  let time_start = 0;// запускаем таймер
+  let time_end = 0;// останавливаем таймер
+  let time_delta = 0;// промежуток времени между запуском и остановкой таймера
+
+  ini_stack();// инициируем стек
+
+  ini_random_key_array_64_tk();// инициируем внутренний массив случайных чисел.
+
+  time_start = timer_O.getCurrentTimeMs();
+
+  console.log("start_search_negamax_r -> start_search_negamax_r->fen_start " + fen_start);
 
   set_board_from_fen_0x88_cb(fen_start, chess_board_0x88_start);
+
   chess_board_0x88.set(chess_board_0x88_start);
+
+  chess_board_key_64[0] = 0n;
+  // по позиции генерируем ключ
   set_key_from_board_0x88_tk(chess_board_0x88, chess_board_key_64);
 
-  const time_start = timer_O.getCurrentTimeMs();
+  console.log("start_search_negamax_r -> start_search_negamax ");
+  console.log("start_search_negamax_r -> =========================================================================");
 
-  const best_score = searching_negamax(
-    chess_board_0x88,
-    chess_board_0x88_score,
-    chess_board_key_64,
-    packing_pv_line,
-    0,
-    depth_max
-  );
 
-  const nodes = node_mm;
-  const time_end = timer_O.getCurrentTimeMs();
-  const time_delta_ms = Math.max(time_end - time_start, 1);
-  const time_delta_sec = time_delta_ms / 1000;
-  const nps = Math.round(nodes / time_delta_sec);
+  let node_mm = new Int32Array(1).fill(0);
 
-  const pv = pv_line_to_uci_string_pv(packing_pv_line, best_score);
-  const best_move_uci = first_move_from_pv_string(pv);
+  let best_score = searching_negamax(chess_board_0x88, chess_board_0x88_score,  chess_board_key_64, packing_pv_line,  
+                                     depth, depth_max, node_mm, chess_board_0x88_found_best_score);
 
-  if (DEBUG_NEGAMAX_PRINT) {
-    console.log("start_search_negamax_r -> fen_start " + fen_start);
-    console.log("start_search_negamax_r -> found_best_score:");
-    test_print_piece_0x88_f_cb(chess_board_0x88_found_best_score);
-    console.log("start_search_negamax_r -> score_board:");
-    test_print_piece_0x88_f_cb(chess_board_0x88_score);
-    console.log("start_search_negamax_r -> score_board eval = " +
-      score_position_e(chess_board_0x88_score));
-  }
 
-  /** @type {uci_return_search} */
-  const result = {
-    fen_start: fen_start,
-    fen_end: set_fen_from_0x88_cb(chess_board_0x88_found_best_score),
-    info:
-      "info depth " + depth_max +
-      " score cp " + best_score +
-      " nodes " + nodes +
-      " nps " + nps +
-      " time " + time_delta_ms +
-      " pv " + pv,
-    best_move: "bestmove " + best_move_uci
-  };
 
-  return result;
-};
+  //test
+  console.log("start_search_negamax_r -> chess_board_0x88_found_best_score");
+  test_print_piece_0x88_f_cb(chess_board_0x88_found_best_score);
 
-/* =========================================================================
- * 7. ОСНОВНОЙ ПОИСК: ИТЕРАТИВНОЕ УГЛУБЛЕНИЕ + ALPHA-BETA
- * ========================================================================= */
+  // TEST
+  console.log("start_search_negamax_r -> chess_board_0x88_score");
+  test_print_piece_0x88_f_cb(chess_board_0x88_score);
+  console.log("start_search_negamax_r -> chess_board_0x88_score => score = " + score_position_e(chess_board_0x88_score));
+
+  //console.log("start_search_negamax_r -> packing_pv_line");
+  //test_print_pv_line_pv(packing_pv_line);
+
+
+  time_end = timer_O.getCurrentTimeMs();
+  time_delta = (time_end - time_start) / 1000;
+
+  //let w = (chess_board_0x88_start[SIDE_TO_MOVE_CB] == WHITE_CB) ? 1 : -1;
+
+  uci_return_search.fen_start = fen_start;
+  uci_return_search.fen_end = set_fen_from_0x88_cb(chess_board_0x88_found_best_score);
+  //uci_return_search.fen_end = fen_start;
+
+  let depth_uci = String(depth_max);
+  let score_cp = String(best_score);
+  let nodes = String(node_mm[0]);
+  let nps = String(Math.round(node_mm[0] / time_delta));
+  let pv = pv_line_to_uci_string_pv(packing_pv_line, best_score);
+
+  //info depth 3 seldepth 4 multipv 1 score cp 42 nodes 72 nps 36000 hashfull 0 tbhits 0 time 2 pv e2e4
+  //info depth 3 score cp 42 nodes 72 nps 36000 pv e2e4        
+  uci_return_search.info = "info depth " + depth_uci + " score cp " + score_cp +
+    " nodes " + nodes + " nps " + nps + " pv " + pv;
+
+  uci_return_search.best_move = "bestmove no";
+
+
+  //console.log("Search_0x88_C->start_print_pv_line ***************************************");
+  //this.info_return_search.pv_line.test_print_pv_line(chess_board_0x88_O);
+  //pv_line_0x88_O.test_print_pv_line(chess_board_0x88_O);
+
+  console.log("start_search_negamax_r -> start_search_negamax node " + node_mm[0]);
+
+  return uci_return_search;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * @param {ChessEngine_0x88_С} chessEngine_0x88_O
@@ -366,382 +252,376 @@ const start_search_negamax_r = function (fen_start, depth_max) {
  * @returns {uci_return_search}
  */
 const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start, depth_max) {
-  ensure_search_r();
-  clear_test_tt();
 
-  set_stop_search_in_0_ab();
-  stop_search_root = 0;
+  let chess_board_0x88 = new Int32Array(BOARD_SIZE_CB).fill(0);// текущая доска с фигурами 0x88 
+  let chess_board_0x88_save = new Int32Array(BOARD_SIZE_CB).fill(MOVE_NO_ML);
+  let chess_board_0x88_start = new Int32Array(BOARD_SIZE_CB).fill(0);// записываем стартовую доску
+  let chess_board_0x88_get_move = new Int32Array(BOARD_SIZE_CB).fill(0);// записываем доску с ходом
 
-  if (depth_max > MAX_DEPTH_ROOT) depth_max = MAX_DEPTH_ROOT;
-  if (depth_max < 1) depth_max = 1;
-
-  /* --- доски и ключи ---------------------------------------------------- */
-  const chess_board_0x88 = new Int32Array(BOARD_SIZE_CB).fill(0);
-  const chess_board_0x88_save = new Int32Array(BOARD_SIZE_CB).fill(0);
-  const chess_board_0x88_start = new Int32Array(BOARD_SIZE_CB).fill(0);
-  const chess_board_0x88_get_move = new Int32Array(BOARD_SIZE_CB).fill(0);
-
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
   const chess_board_key_64 = new BigUint64Array(1);
   const chess_board_key_64_undo = new BigUint64Array(1);
   const chess_board_key_64_save_test = new BigUint64Array(1);
   const chess_board_key_64_test = new BigUint64Array(1);
 
-  /* --- списки ходов и PV ------------------------------------------------ */
-  const packing_moves = new Int32Array(LENGTH_LIST_ML).fill(MOVE_NO_ML);
-  const root_scores = new Int32Array(LENGTH_LIST_ML).fill(INIT_EVAL_AB);
-  const packing_pv_line = new Int32Array(MAX_DEPTH_PV).fill(MOVE_NO_ML);
-  const best_packing_pv_line = new Int32Array(MAX_DEPTH_PV).fill(MOVE_NO_ML);
 
-  /* --- стартовая позиция ------------------------------------------------ */
-  set_board_from_fen_0x88_cb(fen_start, chess_board_0x88_start);
+  chess_board_key_64[0] = 0n;
+
+  ini_random_key_array_64_tk();// инициируем внтуренний массив случайных чисел.
+  ini_tt();
+  clear_test_tt();
+  ini_stack_qs();
+  ini_stack_ab();
+
+  let packing_moves = new Int32Array(LENGTH_LIST_ML).fill(MOVE_NO_ML);// список ходов. ход упакован в одно число Uint32
+
+  let list_score_move = new Int32Array(LENGTH_LIST_ML).fill(MOVE_NO_ML);// список оценок ходов. нужно для сортировки по оценке в корне
+
+  let packing_pv_line = new Int32Array(MAX_DEPTH_PV).fill(MOVE_NO_ML);// линия лучших ходов
+  let best_packing_pv_line = new Int32Array(MAX_DEPTH_PV).fill(MOVE_NO_ML);// линия лучших ходов для конкретного узла
+
+  let alpha;
+  let beta;
+  let score;// текущая оценка позиции
+  let depth = 0;
+  let best_score;// лучшая оценка позиции
+  let best_move_i = -1;// номер лучшего хода в списке ходов
+  let isPV_node = 1;// является ли узел основным вариантом
+
+  let is_moove_legal = -1;// является ли ход легальным
+
+  let time_start = 0;// запускаем таймер
+  let time_end = 0;// останавливаем таймер
+  let time_delta = 0;// промежуток времени между запуском и остановкой таймера
+
+  let type_move;// тип хода
+  let from;// откуда ход
+  let to;// куда ход
+  let name_capture_piece;// имя взятой фигуры
+  let piece_color;// цвет хода
+  let w;// цвет хода
+
+  if (is_history_heuristic_use_ab == 1) {
+    ini_Array_hh();
+  }
+
+  set_stop_search_in_0_ab();// сбрасываем флаг экстренного выхода в поиске
+  stop_search_root = 0;// флаг эсктренного выхода в корне
+
+  console.log("searching_iterative_deepening -> ========================================================== ");
+  //console.log("searching_iterative_deepening->fen_start " + fen_start);
+  set_board_from_fen_0x88_cb(fen_start, chess_board_0x88_start);// доска из фен
+
   chess_board_0x88.set(chess_board_0x88_start);
-
-  // Если ходов нет, fen_end не должен стать пустой доской.
+  // копируем доску чтобы когда у движка не будет ходов не получить пустую доску.
   chess_board_0x88_get_move.set(chess_board_0x88);
 
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // по позиции генерируем ключ
   set_key_from_board_0x88_tk(chess_board_0x88, chess_board_key_64);
 
-  /* --- корневой список ходов ------------------------------------------- */
-  clear_list_ml(packing_moves);
+  let node_root = 0;// количество финальных позиций
+
   generated_pseudo_legal_captures_mgc(chess_board_0x88, packing_moves);
   generated_pseudo_legal_quiet_moves_mgq(chess_board_0x88, packing_moves);
 
-  // Базовая сортировка корневого списка.
+  // печатаем в консоль весь список ходов
+  //test_print_list_ml(packing_moves);
+
+  // печатаем позицию
+  //test_print_piece_0x88_cb(chess_board_0x88);
+
+  // сортировка списка ходов по типу хода
   sorting_list_ml(packing_moves);
 
-  const number_root_moves = packing_moves[IND_NUMBER_MOVE_ML];
-  const piece_color_root = packing_moves[IND_PIECE_COLOR_ML];
+  //console.log("searching_iterative_deepening -> after sorting_list");
 
-  // Порядок перебора корневых ходов. Сам список ходов не переставляем.
-  const root_order = new Int32Array(number_root_moves);
-  for (let i = 0; i < number_root_moves; i++) {
-    root_order[i] = i;
-  }
+  // печатаем в консоль весь список ходов
+  //test_print_list_ml(packing_moves);
 
-  /** @type {uci_return_search} */
-  let last_result = {
-    fen_start: fen_start,
-    fen_end: fen_start,
-    info: "info depth 0 score cp 0 nodes 0 nps 0 time 0 pv no",
-    best_move: "bestmove no"
-  };
+  console.log("searching_iterative_deepening start searching начало поиска");
 
-  let nodes_total = 0;
-  let time_total_ms = 0;
-  let completed_depth = 0;
-
-  /* --- итеративное углубление ------------------------------------------ */
+  // увеличение по максимальной глубине
   for (let depth_max_current = 1; depth_max_current <= depth_max; depth_max_current++) {
 
-    if (stop_search_root == 1) break;
-
-    const time_start = timer_O.getCurrentTimeMs();
-
-    let best_score = INIT_EVAL_AB;
-    let alpha = ALPHA_SCORE_R;
-    let beta = BETA_SCORE_R;
-
-    let best_move_i = -1;
-    let best_move_uci = "no";
     let number_move_legal = 0;
-    let node_depth = 0;
+
+    time_start = timer_O.getCurrentTimeMs();
+
+    best_score = INIT_EVAL_AB;//  оценка позиции
+
+    alpha = ALPHA_SCORE_R;
+    beta = BETA_SCORE_R;
 
     clear_pv_line_pv(packing_pv_line);
-    root_scores.fill(INIT_EVAL_AB);
 
-    /* --- цикл по корневым ходам ---------------------------------------- */
-    for (let order_i = 0; order_i < number_root_moves; order_i++) {
+    number_move_legal = 0;
 
-      if (stop_search_root == 1) break;
+    // идем по списку ходов
 
-      const move_i = root_order[order_i];
+    //console.log("searching_iterative_deepening -> packing_moves[IND_NUMBER_MOVE] " + packing_moves[IND_NUMBER_MOVE]);
+    node_root = 0;
 
-      const type_move = get_type_move_ml(move_i, packing_moves);
-      const from = get_from_ml(move_i, packing_moves);
-      const to = get_to_ml(move_i, packing_moves);
+    for (let move_i = 0; move_i < packing_moves[IND_NUMBER_MOVE_ML]; move_i++) {
+
+      type_move = get_type_move_ml(move_i, packing_moves);
+      from = get_from_ml(move_i, packing_moves);
+      to = get_to_ml(move_i, packing_moves);
+      name_capture_piece = get_name_capture_piece_ml(move_i, packing_moves);
+      piece_color = packing_moves[IND_PIECE_COLOR_ML];
 
       chess_board_0x88_save.set(chess_board_0x88);
       chess_board_key_64_undo[0] = chess_board_key_64[0];
 
-      const is_moove_legal = do_moves_mm(
-        chess_board_0x88,
-        chess_board_key_64,
-        type_move,
-        from,
-        to,
-        piece_color_root
-      );
+      is_moove_legal = do_moves_mm(chess_board_0x88, chess_board_key_64, type_move, from, to, piece_color);
 
-      if (is_moove_legal == 0 || is_moove_legal == 2) {
+      if (is_moove_legal == 0) { // король под шахом. отменяем ход и пропускаем этот цикл
+
         chess_board_0x88.set(chess_board_0x88_save);
         chess_board_key_64[0] = chess_board_key_64_undo[0];
+
+        continue;
+      } else if (is_moove_legal == 2) {// нелегальные рокировки и взятия короля не генерируются. просто пропускаем ход
         continue;
       }
-
       number_move_legal = number_move_legal + 1;
 
-      add_move_to_pv_line_pv(move_i, packing_moves, packing_pv_line, 0);
+      //gggggggggggggggggggggggggggggggggg
+      //this.chessEngine_0x88_O?.info_currmove_uci(move_list_0x88_O.move_to_string_uci(move_i, chess_board_0x88_O), move_i, String(depth_max_current));
+
+      add_move_to_pv_line_pv(move_i, packing_moves, packing_pv_line, depth);
       packing_pv_line[IND_TYPE_VARIANT_PV] = 1;
 
+      // console.log("searching_iterative_deepening ->  move_i " + move_i + " depth_max_current " + depth_max_current + " ==========");
       set_node_in_0_ab();
 
-      if (VERIFY_ROOT_KEY) {
-        chess_board_key_64_save_test[0] = chess_board_key_64[0];
-      }
+      isPV_node = 1;
 
-      const score = -searching_negamax_alpha_beta_id_ab(
-        -beta,
-        -alpha,
-        chess_board_0x88,
-        chess_board_key_64,
-        packing_pv_line,
-        1,
-        depth_max_current,
-        1
-      );
+      // сохраняем ключ доски для последующего сравнения
+      chess_board_key_64_save_test[0] = chess_board_key_64[0];
 
-      node_depth = node_depth + node_ab;
+      score = -searching_negamax_alpha_beta_id_ab(-beta, -alpha, chess_board_0x88, chess_board_key_64, packing_pv_line,
+        (depth + 1), depth_max_current, isPV_node);
 
-      if (VERIFY_ROOT_KEY) {
-        test_chess_board_key_64_tk(chess_board_key_64_save_test, chess_board_key_64);
-        set_key_from_board_0x88_tk(chess_board_0x88, chess_board_key_64_test);
-        test_generation_key_64_tk(
-          chess_board_key_64_test,
-          chess_board_key_64,
-          packing_moves,
-          move_i,
-          "root"
-        );
-      }
+      //test
+      //console.log("searching_iterative_deepening -> score " + score);
+      //test_print_piese_0x88(chess_board_0x88);
 
-      root_scores[move_i] = score;
+      // сравниваем ключи сохраненный и измененный
+      test_chess_board_key_64_tk(chess_board_key_64_save_test, chess_board_key_64);
+
+      /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      // генерируем ключ по позиции и сравниваем его с вышедшим из поиска
+      set_key_from_board_0x88_tk(chess_board_0x88, chess_board_key_64_test);
+      test_generation_key_64_tk(chess_board_key_64_test, chess_board_key_64, packing_moves, move_i, "root");
+
+      node_root = node_root + node_ab;
+      //console.log("--searching_iterative_deepening ->  move_i " + move_i + " score " + score);
+
+      add_score_lr(move_i, list_score_move, score);
+
+      //console.log("Search_0x88_C-> должны смотреть за черных, а вот реально что " + move_list_0x88_O.piece_color);
 
       if (score > best_score) {
+
         best_score = score;
         best_move_i = move_i;
-
-        // UCI лучшего хода фиксируем сразу из корневого списка.
-        best_move_uci = move_to_string_uci_ml(move_i, packing_moves);
 
         save_pv_line_pv(best_packing_pv_line, packing_pv_line);
         chess_board_0x88_get_move.set(chess_board_0x88);
 
         if (score > alpha) {
-          alpha = score;
+          alpha = score; // alpha acts like max in MiniMax
         }
-      }
+      }//if (score > best_score) {
 
+      // восстановили доску
       chess_board_0x88.set(chess_board_0x88_save);
       chess_board_key_64[0] = chess_board_key_64_undo[0];
 
-      if (stop_search_root == 1) break;
-    }
+    }//for (let move_i = 0; move_i < move_list_0x88_O.number_move; move_i++) {
 
-    // Незавершённую итерацию не публикуем.
-    if (stop_search_root == 1) break;
+    if (best_move_i != -1) save_pv_line_pv(packing_pv_line, best_packing_pv_line);
 
-    if (best_move_i != -1) {
-      save_pv_line_pv(packing_pv_line, best_packing_pv_line);
-    }
+    time_end = timer_O.getCurrentTimeMs();
+    time_delta = (time_end - time_start) / 1000;
 
-    const time_end = timer_O.getCurrentTimeMs();
-    const time_delta_ms = Math.max(time_end - time_start, 1);
+    uci_return_search.fen_start = fen_start;
+    uci_return_search.fen_end = set_fen_from_0x88_cb(chess_board_0x88_get_move);
 
-    time_total_ms = time_total_ms + time_delta_ms;
-    nodes_total = nodes_total + node_depth;
-    completed_depth = depth_max_current;
-
-    // Готовим порядок ходов для следующей итерации.
-    sort_root_order_by_score(root_order, root_scores, number_root_moves);
-
-    const time_total_sec = time_total_ms / 1000;
-    const nps = Math.round(nodes_total / time_total_sec);
-
-    let info;
-    let best_move;
 
     if (number_move_legal != 0) {
-      const pv = pv_line_to_uci_string_pv(packing_pv_line, best_score);
 
-      info =
-        "info depth " + depth_max_current +
-        " score cp " + best_score +
-        " nodes " + nodes_total +
-        " nps " + nps +
-        " time " + time_total_ms +
-        " pv " + pv;
+      sorting_list_top_max_score_lr(list_score_move);
 
-      best_move = "bestmove " + best_move_uci;
-    } else {
-      const score_no_moves = no_moves_score_r(chess_board_0x88);
+      //w = (chess_board_0x88_start[SIDE_TO_MOVE_CB] == WHITE_CB) ? 1 : -1;
 
-      info =
-        "info depth " + depth_max_current +
-        " score cp " + score_no_moves +
-        " nodes " + nodes_total +
-        " nps " + nps +
-        " time " + time_total_ms +
-        " pv no";
+      let depth_uci = String(depth_max);
+      let score_cp = String(best_score);
+      let nodes = String(node_root);
+      let nps = String(Math.round(node_root / time_delta)); packing_pv_line
 
-      best_move = "bestmove no";
+      //console.log("packing_pv_line[IND_DEPTH_PV] = " + packing_pv_line[IND_DEPTH_PV]);
+
+      let pv = pv_line_to_uci_string_pv(packing_pv_line, best_score);
+
+      //info depth 3 seldepth 4 multipv 1 score cp 42 nodes 72 nps 36000 hashfull 0 tbhits 0 time 2 pv e2e4
+      //info depth 3 score cp 42 nodes 72 nps 36000 pv e2e4        
+      uci_return_search.info = "info depth " + depth_uci + " score cp " + score_cp +
+        " nodes " + nodes + " nps " + nps + " pv " + pv;
+
+      uci_return_search.best_move = "bestmove no";
+      uci_return_search.best_move = "bestmove " + move_to_string_uci_ml(best_move_i, best_packing_pv_line);
+
+      // nnnnnnnnnnnnnnnnnnnnnn
+      chessEngine_0x88_O?.message_search_root_to_engine(uci_return_search);
+
+    } else { // if (number_move_legal != 0) {
+      let depth_uci = String(depth_max);
+      let score_cp = String(0);
+      let nodes = String(0);
+      let nps = String(0);
+
+      //info depth 3 seldepth 4 multipv 1 score cp 42 nodes 72 nps 36000 hashfull 0 tbhits 0 time 2 pv e2e4
+      //info depth 3 score cp 42 nodes 72 nps 36000 pv e2e4        
+      uci_return_search.info = "info depth " + depth_uci + " score cp " + score_cp +
+        " nodes " + nodes + " nps " + nps + " pv no";
+
+      uci_return_search.best_move = "bestmove no";
+
+      chessEngine_0x88_O?.message_search_root_to_engine(uci_return_search);
+
+      chessEngine_0x88_O?.info_from_depth_uci(uci_return_search);
     }
 
-    /** @type {uci_return_search} */
-    const iteration_result = {
-      fen_start: fen_start,
-      fen_end: set_fen_from_0x88_cb(chess_board_0x88_get_move),
-      info: info,
-      best_move: best_move
-    };
+    // print_test_set_get_position_tt();
+    // test_uses_hash_tt();
 
-    last_result = iteration_result;
+    // экстренный выход 
+    if (stop_search_root == 1) return uci_return_search;
 
-    chessEngine_0x88_O?.message_search_root_to_engine(iteration_result);
+  }// for (let depth_max_current = 1; depth_max_current < depth_max_search; depth_max_current++) {
 
-    // Если легальных ходов нет, глубже искать не нужно.
-    if (number_move_legal == 0) {
-      chessEngine_0x88_O?.info_from_depth_uci(iteration_result);
-      break;
-    }
-  }
+  print_test_set_get_position_tt();// печатаем если есть коллизии фена
+  test_uses_hash_tt();// сколько позиций записано
 
-  /* --- если stop пришёл до первой завершённой итерации ------------------ *
-   * стараемся вернуть хотя бы первый легальный ход, чтобы GUI не получил
-   * пустой bestmove.
-   * --------------------------------------------------------------------- */
-  if (completed_depth == 0 && number_root_moves > 0) {
-    for (let order_i = 0; order_i < number_root_moves; order_i++) {
-      const move_i = root_order[order_i];
+  test_tt();// записано использовано по альфа бете
 
-      const type_move = get_type_move_ml(move_i, packing_moves);
-      const from = get_from_ml(move_i, packing_moves);
-      const to = get_to_ml(move_i, packing_moves);
+  return uci_return_search;
+}
 
-      chess_board_0x88_save.set(chess_board_0x88);
-      chess_board_key_64_undo[0] = chess_board_key_64[0];
+/////////////////////////////////////////////////////////
 
-      const is_moove_legal = do_moves_mm(
-        chess_board_0x88,
-        chess_board_key_64,
-        type_move,
-        from,
-        to,
-        piece_color_root
-      );
-
-      if (is_moove_legal == 0 || is_moove_legal == 2) {
-        chess_board_0x88.set(chess_board_0x88_save);
-        chess_board_key_64[0] = chess_board_key_64_undo[0];
-        continue;
-      }
-
-      const fallback_uci = move_to_string_uci_ml(move_i, packing_moves);
-      chess_board_0x88_get_move.set(chess_board_0x88);
-
-      chess_board_0x88.set(chess_board_0x88_save);
-      chess_board_key_64[0] = chess_board_key_64_undo[0];
-
-      last_result = {
-        fen_start: fen_start,
-        fen_end: set_fen_from_0x88_cb(chess_board_0x88_get_move),
-        info: "info depth 0 score cp 0 nodes 0 nps 0 time 0 pv no",
-        best_move: "bestmove " + fallback_uci
-      };
-
-      break;
-    }
-  }
-
-  if (DEBUG_TT_PRINT) {
-    print_test_set_get_position_tt();
-    test_uses_hash_tt();
-    test_tt();
-  }
-
-  return last_result;
-};
-
-/* =========================================================================
- * 8. UCI MOVES -> FEN
- * ========================================================================= */
-
-/**
- * Преобразует строку ходов в конечный FEN.
- * Поддерживаемый формат:
- *   "moves e2e4 e7e5 g1f3 ..."
- *
+/** moves e2e4 e7e5 g1f3 b8c6 f1b5
  * @param {string} fen_start
  * @param {string} move_str
- * @returns {string} FEN или "-1" при ошибке
+ * @returns {string}
  */
 const move_str_to_board_r = function (fen_start, move_str) {
-  ensure_keys_r();
 
-  const chess_board_0x88_uci = new Int32Array(BOARD_SIZE_CB).fill(0);
-  const packing_moves = new Int32Array(LENGTH_LIST_ML).fill(MOVE_NO_ML);
+  // эта доска используется что бы перевести уки команду в позицию 
+  // потом провести ходы, если есть, а потом опять перевести в фен. 
+  // т.е. к счету внутри движка эта доска отношения не имеет.
+  let chess_board_0x88_uci = new Int32Array(BOARD_SIZE_CB).fill(0);// текущая доска с фигурами 0x88 
+  let packing_moves = new Int32Array(LENGTH_LIST_ML).fill(MOVE_NO_ML);// список ходов. ход упакован в одно число Uint32
+
   const chess_board_key_64 = new BigUint64Array(1);
+  const chess_board_key_64_undo = new BigUint64Array(1);
 
-  set_board_from_fen_0x88_cb(fen_start, chess_board_0x88_uci);
-  set_key_from_board_0x88_tk(chess_board_0x88_uci, chess_board_key_64);
+  chess_board_key_64[0] = 0n;
 
-  const tokens = move_str.trim().split(/\s+/);
-  let token_start = 0;
+  let type_move;
+  let name_capture_piece;
+  let piece_color;
 
-  if (tokens.length > 0 && tokens[0] == "moves") {
-    token_start = 1;
-  }
+  let from;
+  let to;
+  let promo;
 
-  for (let token_i = token_start; token_i < tokens.length; token_i++) {
-    const move_uci = tokens[token_i];
+  let x07;
+  let y07;
 
-    if (move_uci.length < 4) continue;
+  let i_move;
+  let is_moove_legal;
 
-    // Важно: список ходов очищаем перед каждой генерацией.
-    clear_list_ml(packing_moves);
+  let pos_start = 6;
+
+  ini_random_key_array_64_tk();// инициируем внтуренний массив случайных чисел.
+
+  set_board_from_fen_0x88_cb(fen_start, chess_board_0x88_uci);// доска из фен;
+
+  //console.log("Search_0x88_C-> " + move_str);
+
+  for (let pos = pos_start; pos < move_str.length; pos++) {
+
+    //console.log("Search_0x88_C-> " + move_str[pos] + move_str[pos + 1] +
+    //  move_str[pos + 2] + move_str[pos + 3] + move_str[pos + 4]);
+
     generated_pseudo_legal_captures_mgc(chess_board_0x88_uci, packing_moves);
     generated_pseudo_legal_quiet_moves_mgq(chess_board_0x88_uci, packing_moves);
 
-    const from_x = letter_to_x_coordinate_cb(move_uci[0]);
-    const from_y = 8 - Number(move_uci[1]);
-    const from = x07_y07_to_0x88_cb(from_x, from_y);
 
-    const to_x = letter_to_x_coordinate_cb(move_uci[2]);
-    const to_y = 8 - Number(move_uci[3]);
-    const to = x07_y07_to_0x88_cb(to_x, to_y);
+    //console.log("1 Search_0x88_C-> move_str[" + pos + "] " + move_str[pos]);      
+    x07 = letter_to_x_coordinate_cb(move_str[pos]);
+    pos = pos + 1;
 
-    const promo = move_uci.length > 4 ? move_uci[4] : "";
+    //console.log("1 Search_0x88_C-> move_str[" + pos + "] " + move_str[pos]);       
+    y07 = 8 - Number(move_str[pos]);
+    pos = pos + 1;
+    from = x07_y07_to_0x88_cb(x07, y07);
+    //console.log("1 Search_0x88_C-> from " + from);
 
-    const i_move = return_i_move_ml(packing_moves, from, to, promo);
-    if (i_move < 0) return "-1";
+    //console.log("2 Search_0x88_C-> move_str[" + pos + "] " + move_str[pos]);      
+    x07 = letter_to_x_coordinate_cb(move_str[pos]);
+    pos = pos + 1;
+    //console.log("2 Search_0x88_C-> move_str[" + pos + "] " + move_str[pos]);      
+    y07 = 8 - Number(move_str[pos]);
 
-    const type_move = get_type_move_ml(i_move, packing_moves);
-    const move_from = get_from_ml(i_move, packing_moves);
-    const move_to = get_to_ml(i_move, packing_moves);
-    const piece_color = packing_moves[IND_PIECE_COLOR_ML];
+    to = x07_y07_to_0x88_cb(x07, y07);
 
-    const is_moove_legal = do_moves_mm(
-      chess_board_0x88_uci,
-      chess_board_key_64,
-      type_move,
-      move_from,
-      move_to,
-      piece_color
-    );
+    //console.log("2 Search_0x88_C-> to " + to);      
 
-    if (is_moove_legal == 0 || is_moove_legal == 2) {
+    pos = pos + 1;
+
+    promo = "";
+    //console.log("3 Search_0x88_C-> move_str[" + pos + "] " + move_str[pos]); 
+    if (move_str[pos] != " ") {
+      promo = move_str[pos];
+      pos = pos + 1;
+    }
+
+    i_move = return_i_move_ml(packing_moves, from, to, promo);
+
+    //console.log("Search_0x88_C-> from " + from + " to " + to + " promo " + promo + " i_move " + i_move);
+
+    type_move = get_type_move_ml(i_move, packing_moves);
+    from = get_from_ml(i_move, packing_moves);
+    to = get_to_ml(i_move, packing_moves);
+    name_capture_piece = get_name_capture_piece_ml(i_move, packing_moves);
+    piece_color = packing_moves[IND_PIECE_COLOR_ML];
+
+    is_moove_legal = do_moves_mm(chess_board_0x88_uci, chess_board_key_64, type_move, from, to, piece_color);
+
+    if (is_moove_legal == 0) { // король под шахом. отменяем ход и пропускаем этот цикл
+      //console.log("Search_0x88_C->ошибка хода");
+      return "-1";
+    } else if (is_moove_legal == 2) {// нелегальные рокировки не генерируются. просто пропускаем ход
+      //console.log("Search_0x88_C->ошибка рокировки");
       return "-1";
     }
-  }
+  }//for (let pos = pos_start; pos < move_str.length; pos++) {
 
-  return set_fen_from_0x88_cb(chess_board_0x88_uci);
-};
+  //chess_board_0x88_O_uci.test_print_0x88();
+  //chess_board_0x88_O_uci.test_print_0x88_color();    
+  //chess_board_0x88_O_uci.test_print_any_0x88();
+  let fen = set_fen_from_0x88_cb(chess_board_0x88_uci);
+  //console.log("Search_0x88_C-> fen " + fen);
+  return fen;
+
+}//move_str_to_board(chess_board_0x88_O_uci, move_str) {
+
 
 export {
-  start_search_negamax_r,
-  searching_iterative_deepening_r,
-  set_stop_search_in_1_r,
-  set_stop_search_in_0_r,
-  test_tt,
-  move_str_to_board_r,
-  ini_search_root_r
+  start_search_negamax_r, searching_iterative_deepening_r, set_stop_search_in_1_r, set_stop_search_in_0_r, test_tt,
+  move_str_to_board_r
 };

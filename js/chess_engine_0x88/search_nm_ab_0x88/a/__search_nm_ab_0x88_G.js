@@ -32,7 +32,7 @@ import {
 
 import {
     generated_pseudo_legal_quiet_moves_mgq
-} from "../core_0x88_t/generator_move_0x88_t/generator_move_quiet_moves_0x88.js";
+} from "../core_0x88_t/generator_move_0x88_t/generator_move_quiet_0x88.js";
 
 import { do_moves_mm } from "../core_0x88_t/make_move_0x88_t/make_move_0x88.js";
 import { score_position_e, PAWN_SCORE_E } from "../evaluate_0x88/evaluate_0x88.js";

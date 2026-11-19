@@ -24,7 +24,7 @@
      * @param {Int32Array} list_score_move
      * @returns {void}
      */
-    const sorting_list_top_max_score_lr = function (list_score_move) {
+    const sorting_list_top_max_score_lr = (list_score_move) => {
 
         let save_score_move;
 
@@ -51,7 +51,7 @@
      * @param {Int32Array} list_score_move
      * @returns {void}
      */
-    const sorting_list_top_min_score_lr = function (list_score_move) {
+    const sorting_list_top_min_score_lr = (list_score_move) => {
 
         let save_score_move;
 
@@ -80,7 +80,7 @@
    * @param {number} score_move
    * @returns {void}
    */
-    const add_score_lr = function (move_i, list_score_move, score_move) {
+    const add_score_lr = (move_i, list_score_move, score_move) => {
         //console.log('Move_list_0x88_С->add_move');
         list_score_move[move_i] = score_move;
 
@@ -91,7 +91,7 @@
      * @param {Int32Array} list_score_move
      * @returns {void}
      */   
-    const clear_list_lr = function (list_score_move) {
+    const clear_list_lr = (list_score_move) => {
         for (let i = 0; i < LENGTH_LIST_LR; i++) {
             list_score_move[i] = 0;
         }

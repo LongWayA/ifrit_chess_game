@@ -7,7 +7,7 @@
 */
 
 import {
-      searching_negamax_pt, ini_stack_pt, chess_board_0x88_found_best_score, node_mm
+      pt_searching_negamax, pt_ini_stack
 } from "../chess_engine_0x88/search_negamax_0x88/search_negamax_0x88_perf_tests.js";
 
 import {
@@ -26,7 +26,7 @@ import {
 import {
       clear_pv_line_pv, add_move_to_pv_line_pv, save_pv_line_pv, pv_line_to_uci_string_pv,
       MAX_DEPTH_PV, IND_TYPE_VARIANT_PV
-} from "../chess_engine_0x88/search_negamax_0x88/pv_line_0x88.js";
+} from "../chess_engine_0x88/core_0x88_t/pv_line_0x88.js";
 
 import { Timer_C } from "../browser/timer.js";
 
@@ -70,9 +70,17 @@ let Tests_perf_R = {
 
             let chess_board_0x88 = new Int32Array(BOARD_SIZE_CB).fill(0);// текущая доска с фигурами 0x88
 
+            // TEST
+            let chess_board_0x88_score = new Int32Array(BOARD_SIZE_CB).fill(0);// позиция соответствующая оценке с фигурами 0x88 
+
             const chess_board_key_64 = new BigUint64Array(1);
 
             let packing_pv_line = new Int32Array(MAX_DEPTH_PV).fill(0);
+
+            // это позиция соответствующая найденному лучшему ходу.
+            let chess_board_0x88_found_best_score = new Int32Array(BOARD_SIZE_CB).fill(0);// доска 0x88 с фигурами;
+
+            let node_mm = new Int32Array(1).fill(0);
 
             let fen = "no";
 
@@ -81,7 +89,7 @@ let Tests_perf_R = {
             let time_delta = 0;// промежуток времени между запуском и остановкой таймера
             let nps = 0;
 
-            ini_stack_pt();
+            pt_ini_stack();
 
             ini_random_key_array_64_tk();// инициируем внтуренний массив случайных чисел.
 
@@ -92,30 +100,33 @@ let Tests_perf_R = {
 
             set_board_from_fen_0x88_cb(fen, chess_board_0x88);
 
-            best_score = searching_negamax_pt(packing_pv_line, chess_board_0x88, chess_board_key_64, depth, depth_max);
+
+
+            best_score = pt_searching_negamax(chess_board_0x88, chess_board_0x88_score,  chess_board_key_64, packing_pv_line,  
+                                     depth, depth_max, node_mm, chess_board_0x88_found_best_score);
 
             node_true = 4865609;
 
             time_end = Tests_perf_R.timer_O.getCurrentTimeMs();
             time_delta = (time_end - time_start) / 1000;
-            nps = node_mm/time_delta;
+            nps = node_mm[0] / time_delta;
 
-            if (node_mm != node_true) {
+            if (node_mm[0] != node_true) {
                   //if (1) {
                   console.log("Tests_perf_R -> Initial Position");
                   test_print_piece_0x88_cb(chess_board_0x88);
                   console.log("Tests_perf_R -> depth_max = " + depth_max);
                   console.log("Tests_perf_R -> best_score = " + best_score);
                   console.log("Tests_perf_R -> node_mm = " + node_mm);
-                  console.log("Tests_perf_R -> node_true = " + node_true);                 
+                  console.log("Tests_perf_R -> node_true = " + node_true);
                   console.log("--------------------- ");
                   console.log(" ");
             } else {
                   console.log("Tests_perf_R -> Initial Position OK depth_max = " + depth_max);
-                  console.log("Tests_perf_R -> time_delta = " + time_delta); 
-                  console.log("Tests_perf_R -> node_mm = " + node_mm); 
-                  console.log("Tests_perf_R -> nps = " + nps);    
-                  console.log(" ");                                              
+                  console.log("Tests_perf_R -> time_delta = " + time_delta);
+                  console.log("Tests_perf_R -> node_mm = " + node_mm);
+                  console.log("Tests_perf_R -> nps = " + nps);
+                  console.log(" ");
             }
             //------------------------------------------------------------------
 
@@ -126,15 +137,16 @@ let Tests_perf_R = {
 
             set_board_from_fen_0x88_cb(fen, chess_board_0x88);
 
-            best_score = searching_negamax_pt(packing_pv_line, chess_board_0x88, chess_board_key_64, depth, depth_max);
+            best_score = pt_searching_negamax(chess_board_0x88, chess_board_0x88_score,  chess_board_key_64, packing_pv_line,  
+                                     depth, depth_max, node_mm, chess_board_0x88_found_best_score);
 
             node_true = 4085603;
 
             time_end = Tests_perf_R.timer_O.getCurrentTimeMs();
             time_delta = (time_end - time_start) / 1000;
-            nps = node_mm/time_delta;            
+            nps = node_mm[0] / time_delta;
 
-            if (node_mm != node_true) {
+            if (node_mm[0] != node_true) {
                   //if (1) {
                   console.log("Tests_perf_R -> Position 2");
                   test_print_piece_0x88_cb(chess_board_0x88);
@@ -147,9 +159,9 @@ let Tests_perf_R = {
             } else {
                   console.log("Tests_perf_R -> Position 2 OK depth_max = " + depth_max);
                   console.log("Tests_perf_R -> time_delta = " + time_delta);
-                  console.log("Tests_perf_R -> node_mm = " + node_mm);     
-                  console.log("Tests_perf_R -> nps = " + nps);  
-                  console.log(" ");                                                  
+                  console.log("Tests_perf_R -> node_mm = " + node_mm);
+                  console.log("Tests_perf_R -> nps = " + nps);
+                  console.log(" ");
             }
             //------------------------------------------------------------------
 
@@ -160,15 +172,16 @@ let Tests_perf_R = {
 
             set_board_from_fen_0x88_cb(fen, chess_board_0x88);
 
-            best_score = searching_negamax_pt(packing_pv_line, chess_board_0x88, chess_board_key_64, depth, depth_max);
+            best_score = pt_searching_negamax(chess_board_0x88, chess_board_0x88_score,  chess_board_key_64, packing_pv_line,  
+                                     depth, depth_max, node_mm, chess_board_0x88_found_best_score);
 
             node_true = 11030083;
 
             time_end = Tests_perf_R.timer_O.getCurrentTimeMs();
-            time_delta = (time_end - time_start) / 1000; 
-            nps = node_mm/time_delta;                       
+            time_delta = (time_end - time_start) / 1000;
+            nps = node_mm[0] / time_delta;
 
-            if (node_mm != node_true) {
+            if (node_mm[0] != node_true) {
                   //if (1) {
                   console.log("Tests_perf_R -> Position 3");
                   test_print_piece_0x88_cb(chess_board_0x88);
@@ -181,9 +194,9 @@ let Tests_perf_R = {
             } else {
                   console.log("Tests_perf_R -> Position 3 OK depth_max = " + depth_max);
                   console.log("Tests_perf_R -> time_delta = " + time_delta);
-                  console.log("Tests_perf_R -> node_mm = " + node_mm);      
-                  console.log("Tests_perf_R -> nps = " + nps);   
-                  console.log(" ");                                                
+                  console.log("Tests_perf_R -> node_mm = " + node_mm);
+                  console.log("Tests_perf_R -> nps = " + nps);
+                  console.log(" ");
             }
             //------------------------------------------------------------------
 
@@ -194,15 +207,16 @@ let Tests_perf_R = {
 
             set_board_from_fen_0x88_cb(fen, chess_board_0x88);
 
-            best_score = searching_negamax_pt(packing_pv_line, chess_board_0x88, chess_board_key_64, depth, depth_max);
+            best_score = pt_searching_negamax(chess_board_0x88, chess_board_0x88_score,  chess_board_key_64, packing_pv_line,  
+                                     depth, depth_max, node_mm, chess_board_0x88_found_best_score);
 
             node_true = 15833292;
 
             time_end = Tests_perf_R.timer_O.getCurrentTimeMs();
             time_delta = (time_end - time_start) / 1000;
-            nps = node_mm/time_delta;            
+            nps = node_mm[0] / time_delta;
 
-            if (node_mm != node_true) {
+            if (node_mm[0] != node_true) {
                   //if (1) {
                   console.log("Tests_perf_R -> Position 4");
                   test_print_piece_0x88_cb(chess_board_0x88);
@@ -215,9 +229,9 @@ let Tests_perf_R = {
             } else {
                   console.log("Tests_perf_R -> Position 4 OK depth_max = " + depth_max);
                   console.log("Tests_perf_R -> time_delta = " + time_delta);
-                  console.log("Tests_perf_R -> node_mm = " + node_mm);  
-                  console.log("Tests_perf_R -> nps = " + nps);  
-                  console.log(" ");                                                     
+                  console.log("Tests_perf_R -> node_mm = " + node_mm);
+                  console.log("Tests_perf_R -> nps = " + nps);
+                  console.log(" ");
             }
             //------------------------------------------------------------------
 
@@ -228,15 +242,16 @@ let Tests_perf_R = {
 
             set_board_from_fen_0x88_cb(fen, chess_board_0x88);
 
-            best_score = searching_negamax_pt(packing_pv_line, chess_board_0x88, chess_board_key_64, depth, depth_max);
+            best_score = pt_searching_negamax(chess_board_0x88, chess_board_0x88_score,  chess_board_key_64, packing_pv_line,  
+                                     depth, depth_max, node_mm, chess_board_0x88_found_best_score);
 
             node_true = 2103487;
 
             time_end = Tests_perf_R.timer_O.getCurrentTimeMs();
             time_delta = (time_end - time_start) / 1000;
-            nps = node_mm/time_delta;            
+            nps = node_mm[0] / time_delta;
 
-            if (node_mm != node_true) {
+            if (node_mm[0] != node_true) {
                   //if (1) {
                   console.log("Tests_perf_R -> Position 5");
                   test_print_piece_0x88_cb(chess_board_0x88);
@@ -249,9 +264,9 @@ let Tests_perf_R = {
             } else {
                   console.log("Tests_perf_R -> Position 5 OK depth_max = " + depth_max);
                   console.log("Tests_perf_R -> time_delta = " + time_delta);
-                  console.log("Tests_perf_R -> node_mm = " + node_mm);      
-                  console.log("Tests_perf_R -> nps = " + nps); 
-                  console.log(" ");                                                  
+                  console.log("Tests_perf_R -> node_mm = " + node_mm);
+                  console.log("Tests_perf_R -> nps = " + nps);
+                  console.log(" ");
             }
             //------------------------------------------------------------------
 
@@ -262,15 +277,16 @@ let Tests_perf_R = {
 
             set_board_from_fen_0x88_cb(fen, chess_board_0x88);
 
-            best_score = searching_negamax_pt(packing_pv_line, chess_board_0x88, chess_board_key_64, depth, depth_max);
+            best_score = pt_searching_negamax(chess_board_0x88, chess_board_0x88_score,  chess_board_key_64, packing_pv_line,  
+                                     depth, depth_max, node_mm, chess_board_0x88_found_best_score);
 
             node_true = 3894594;
 
             time_end = Tests_perf_R.timer_O.getCurrentTimeMs();
             time_delta = (time_end - time_start) / 1000;
-            nps = node_mm/time_delta;            
+            nps = node_mm[0] / time_delta;
 
-            if (node_mm != node_true) {
+            if (node_mm[0] != node_true) {
                   //if (1) {
                   console.log("Tests_perf_R -> Position 6");
                   test_print_piece_0x88_cb(chess_board_0x88);
@@ -283,9 +299,9 @@ let Tests_perf_R = {
             } else {
                   console.log("Tests_perf_R -> Position 6 OK depth_max = " + depth_max);
                   console.log("Tests_perf_R -> time_delta = " + time_delta);
-                  console.log("Tests_perf_R -> node_mm = " + node_mm);      
-                  console.log("Tests_perf_R -> nps = " + nps);  
-                  console.log(" ");                                                 
+                  console.log("Tests_perf_R -> node_mm = " + node_mm);
+                  console.log("Tests_perf_R -> nps = " + nps);
+                  console.log(" ");
             }
             //------------------------------------------------------------------
       },

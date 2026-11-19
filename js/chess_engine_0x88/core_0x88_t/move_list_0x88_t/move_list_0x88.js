@@ -508,6 +508,8 @@ const add_packing_move_ml = (packing_moves, type_move, from, to, name_capture_pi
     const move = (name_capture_piece << 24) | (to << 16) | (from << 8) | type_move;
 
     let i = packing_moves[IND_NUMBER_MOVE_ML]; // количество уже записанных ходов. используем как индекс для нового хода
+                                               // потому что пишем с 0 то получается что количество ходов и индекс нового хода совпадают. 
+                                               // можно сказать что это индекс в массиве куда пишем ход
 
     packing_moves[i] = move; // сохраняем ход
 
@@ -635,7 +637,7 @@ console.log(arr[0]);  // 100 — оригинал тоже изменился!
  * @param {Int32Array} packing_moves
  * @returns {void}
  */
-const sorting_list_ml = function (packing_moves) {
+const sorting_list_ml = (packing_moves) => {
     const number_move = packing_moves[IND_NUMBER_MOVE_ML];
     // Встроенная сортировка V8 работает на Int32Array очень быстро
     // Мы сортируем только занятую часть массива
@@ -656,7 +658,7 @@ const sorting_list_ml = function (packing_moves) {
  */
 // нужно передать всего один ход, но я передаю массив из одного хода.
 // не понятно почему я первый ход передаю в виде массива. может что бы не потерять оптимизацию?
-const set_move_in_0_ml = function (packing_moves, packing_moves_1_tt) {
+const set_move_in_0_ml = (packing_moves, packing_moves_1_tt) => {
 
     let save_move = -1;
     let s_m;
@@ -703,7 +705,7 @@ const set_move_in_0_ml = function (packing_moves, packing_moves_1_tt) {
  * @param {number} depth
  * @returns {number}
  */
-const set_move_after_the_captures_ml = function (packing_moves, packing_moves_k, depth) {
+const set_move_after_the_captures_ml = (packing_moves, packing_moves_k, depth) => {
 
     let save_move = -1;
     let s_m;// индекс найденного хода киллера
@@ -747,7 +749,7 @@ const set_move_after_the_captures_ml = function (packing_moves, packing_moves_k,
  * @param {Int32Array} history - плоский массив [2 * 64 * 64]
  * @returns {void}
  */
-const sorting_list_history_heuristic_ml = function (packing_moves, history) {
+const sorting_list_history_heuristic_ml = (packing_moves, history) => {
     const number_move = packing_moves[IND_NUMBER_MOVE_ML];
     const start = packing_moves[IND_NUMBER_CAPTURES_MOVE_ML];
     const count = number_move - start;
@@ -802,7 +804,7 @@ const sorting_list_history_heuristic_ml = function (packing_moves, history) {
 * @param {number} to
 * @returns {boolean}
 */
-const move_is_found_ml = function (packing_moves, from, to) {
+const move_is_found_ml = (packing_moves, from, to) => {
 
     let found = false;
 
@@ -838,7 +840,7 @@ const move_is_found_ml = function (packing_moves, from, to) {
 * @param {number} to
 * @returns {number}
 */
-const return_i_move_ml = function (packing_moves, from, to, promo = "") {
+const return_i_move_ml = (packing_moves, from, to, promo = "") => {
 
     let i_move = -1;
 
@@ -884,7 +886,7 @@ const return_i_move_ml = function (packing_moves, from, to, promo = "") {
 * @param {Int32Array} packing_moves
 * @returns {string}
 */
-const move_to_string_uci_ml = function (i, packing_moves) {
+const move_to_string_uci_ml = (i, packing_moves) => {
 
     let type_move_i = get_type_move_ml(i, packing_moves);
 
@@ -977,7 +979,7 @@ const get_name_capture_piece_ml = (i, packing_moves) => (packing_moves[i] >>> 24
 * @param {Int32Array} packing_moves
 * @returns {void}
 */
-const test_compare_list_from_ml = function (packing_moves_original, packing_moves) {
+const test_compare_list_from_ml = (packing_moves_original, packing_moves) => {
 
     let number_move_original = packing_moves_original[IND_NUMBER_MOVE_ML];
     let number_move = packing_moves[IND_NUMBER_MOVE_ML];
@@ -1071,7 +1073,7 @@ const test_compare_list_from_ml = function (packing_moves_original, packing_move
  * @param {Int32Array} packing_moves
  * @returns {void}
  */
-const test_print_i_move_list_ml = function (i, packing_moves) {
+const test_print_i_move_list_ml = (i, packing_moves) => {
 
     let type_move_i = get_type_move_ml(i, packing_moves);
     let from_i = get_from_ml(i, packing_moves);
@@ -1111,7 +1113,7 @@ const test_print_i_move_list_ml = function (i, packing_moves) {
  * @param {Int32Array} packing_moves
  * @returns {void}
  */
-const test_print_list_ml = function (packing_moves) {
+const test_print_list_ml = (packing_moves) => {
 
     let type_move_i;
     let from_i;
@@ -1163,7 +1165,7 @@ const test_print_list_ml = function (packing_moves) {
  * 
  * @returns {void}
  */
-const test_print_list_history_ml = function (packing_moves, history) {
+const test_print_list_history_ml = (packing_moves, history) => {
 
     let type_move_i;
     let from_i;
@@ -1264,7 +1266,7 @@ const save_list_from_ml = (packing_moves_to, packing_moves_from) => {
 * @returns {string}
 */
 //+
-const type_move_to_name_piece_f_ml = function (type_move) {
+const type_move_to_name_piece_f_ml = (type_move) => {
     if (type_move == MOVE_NO_ML) return "NO";
     if (type_move == CAPTURES_PAWN_QUEEN_PROMO_QUEEN_ML) return "PAWN";
     if (type_move == CAPTURES_PAWN_ROOK_PROMO_QUEEN_ML) return "PAWN";
@@ -1337,7 +1339,7 @@ const type_move_to_name_piece_f_ml = function (type_move) {
 * @returns {string}
 */
 //+
-const type_move_to_name_piece_ml = function (type_move) {
+const type_move_to_name_piece_ml = (type_move) => {
     if (type_move == MOVE_NO_ML) return "NO";
     if (type_move == CAPTURES_PAWN_QUEEN_PROMO_QUEEN_ML) return "P";
     if (type_move == CAPTURES_PAWN_ROOK_PROMO_QUEEN_ML) return "P";

@@ -20,7 +20,7 @@ import {
 
 import {
 
-} from "../search_negamax_0x88/pv_line_0x88.js";
+} from "../core_0x88_t/pv_line_0x88.js";
 
 import {
   generated_pseudo_legal_captures_mgc

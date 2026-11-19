@@ -473,7 +473,7 @@ const set_fen_from_0x88_cb = (chess_board_0x88) => {
  * @param {Int32Array} chess_board_0x88 
  * @returns {void}
 */
-const iniStartPositionForWhite_cb = function (chess_board_0x88) {
+const iniStartPositionForWhite_cb = (chess_board_0x88) => {
 
     // 0- нет фигуры, 
     // 1- пешка, 2-конь, 3-слон, 4-ладья,  5-ферзь,  6-король <- белые фигуры 
@@ -522,7 +522,7 @@ const iniStartPositionForWhite_cb = function (chess_board_0x88) {
  * @param {Int32Array} chess_board_0x88 
  * @returns {void}
 */
-const iniPositionFor_0_cb = function (chess_board_0x88) {
+const iniPositionFor_0_cb = (chess_board_0x88) => {
 
     // раставляем фигуры
     chess_board_0x88.set([
@@ -568,7 +568,7 @@ const iniPositionFor_0_cb = function (chess_board_0x88) {
 * @param {Int32Array} chess_board_0x88
 * @returns {void}
 */
-const test_print_any_0x88_cb = function (chess_board_0x88) {
+const test_print_any_0x88_cb = (chess_board_0x88) => {
     console.log("test_print_any_0x88 ****************");
     console.log("side_to_move " + chess_board_0x88[SIDE_TO_MOVE_CB]);
     console.log("en_passant_yes " + chess_board_0x88[IND_EN_PASSANT_YES_CB]);
@@ -589,7 +589,7 @@ const test_print_any_0x88_cb = function (chess_board_0x88) {
 * @param {Int32Array} chess_board_0x88
 * @returns {void}
 */
-const test_print_piece_0x88_cb = function (chess_board_0x88) {
+const test_print_piece_0x88_cb = (chess_board_0x88) => {
     console.log("test_print_piece_0x88 ****************");
     /** @type {number} */
     let l = 0;// 
@@ -618,7 +618,7 @@ const test_print_piece_0x88_cb = function (chess_board_0x88) {
 * @param {Int32Array} chess_board_0x88
 * @returns {number}
 */
-const test_compare_chess_board_0x88_cb = function (chess_board_0x88_original, chess_board_0x88) {
+const test_compare_chess_board_0x88_cb = (chess_board_0x88_original, chess_board_0x88) => {
 
     let is_test_ok = 1;
     //console.log("test_compare_chess_board_0x88****************");
@@ -725,7 +725,7 @@ const test_compare_chess_board_0x88_cb = function (chess_board_0x88_original, ch
 * @param {Int32Array} chess_board_0x88
 * @returns {void}
 */
-const test_print_piece_color_0x88_cb = function (chess_board_0x88) {
+const test_print_piece_color_0x88_cb = (chess_board_0x88) => {
     console.log("test_print_0x88_color ****************");
     let l = 0;// только один раз должен сработать перевод строки
     let line = "";//
@@ -759,7 +759,7 @@ const test_print_piece_color_0x88_cb = function (chess_board_0x88) {
 * @param {Int32Array} chess_board_0x88
 * @returns {void}
 */
-const test_print_piece_in_line_0x88_cb = function (chess_board_0x88) {
+const test_print_piece_in_line_0x88_cb = (chess_board_0x88) => {
     console.log("test_print_0x88_line ****************");
     let line = "";//
     for (let i = 0; i < BOARD_SIZE_CB; i++) {
@@ -780,7 +780,7 @@ const test_print_piece_in_line_0x88_cb = function (chess_board_0x88) {
  * @param {number} piece_color
  * @returns {number}
 */
-const searching_king_cb = function (chess_board_0x88, piece_color) {
+const searching_king_cb = (chess_board_0x88, piece_color) => {
 
     for (let i = 0; i < BOARD_SIZE_CB; i++) {
         if ((i & OUT_OF_BOUNDS_MASK_CB) === 0) {// 136 0x88
@@ -830,7 +830,7 @@ const chessPieces = {
 * @param {Int32Array} chess_board_0x88
 * @returns {void}
 */
-const test_print_piece_0x88_f_cb = function (chess_board_0x88) {
+const test_print_piece_0x88_f_cb = (chess_board_0x88) => {
     console.log("test_print_piece_0x88 F ***");
     /** @type {number} */
     let l = 0;// 

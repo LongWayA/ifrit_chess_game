@@ -40,7 +40,7 @@ const IND_DEPTH_PV = 103; // сюда пишем глубину записи е�
 * @param {Int32Array} packing_pv_line
 * @returns {void}
 */
-const clear_pv_line_pv = function (packing_pv_line) {
+const clear_pv_line_pv = (packing_pv_line) => {
   for (let i = 0; i < MAX_DEPTH_PV; i++) {
     packing_pv_line[i] = 0;
   }
@@ -53,7 +53,7 @@ const clear_pv_line_pv = function (packing_pv_line) {
 * @param {number} depth
 * @returns {void}
 */
-const add_move_to_pv_line_pv = function (i_move, packing_moves, packing_pv_line, depth) {
+const add_move_to_pv_line_pv = (i_move, packing_moves, packing_pv_line, depth) => {
   //console.log('Move_list_0x88_С->add_move');
   packing_pv_line[depth] = packing_moves[i_move];
   if (depth > packing_pv_line[IND_DEPTH_PV]) packing_pv_line[IND_DEPTH_PV] = depth;
@@ -64,7 +64,7 @@ const add_move_to_pv_line_pv = function (i_move, packing_moves, packing_pv_line,
 * @param {Int32Array} packing_pv_line_from
  * @returns {void}
  */
-const save_pv_line_pv = function (packing_pv_line_to, packing_pv_line_from) {
+const save_pv_line_pv = (packing_pv_line_to, packing_pv_line_from) => {
 
   let depth_max = packing_pv_line_from[IND_DEPTH_PV];
 
@@ -81,7 +81,7 @@ const save_pv_line_pv = function (packing_pv_line_to, packing_pv_line_from) {
  * @param {Int32Array} packing_pv_line
  * @returns {void}
  */
-const test_print_pv_line_pv = function (packing_pv_line) {
+const test_print_pv_line_pv = (packing_pv_line) => {
   let type_move_i;
   let from_i;
   let to_i;
@@ -124,7 +124,7 @@ const test_print_pv_line_pv = function (packing_pv_line) {
  * @param {number} mat
  * @returns {string}
  */
-const pv_line_to_uci_string_pv = function (packing_pv_line, mat) {
+const pv_line_to_uci_string_pv = (packing_pv_line, mat) => {
 
   let pv_line_str = "";
   let promo;
