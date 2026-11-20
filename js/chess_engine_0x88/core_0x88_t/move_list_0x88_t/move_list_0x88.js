@@ -244,6 +244,10 @@ const TYPE_MOVE_NAME_ML = [
     "MOVE_KING_QUEEN_CASTLE_ML",
 ];
 
+// Статический буфер для кэширования весов истории при сортировке (макс. длина списка 260)
+const HIST_SCORES_ML = new Int32Array(LENGTH_LIST_ML);
+
+
 // --- служебные буферы: создаются ОДИН раз при загрузке модуля --- Q
 // const SORT_COUNTS = new Int32Array(256); // корзины по type_move (младший байт)
 // const SORT_TMP    = new Int32Array(256); // буфер стабильной раскладки (макс. ходов в позиции ~218)
@@ -825,10 +829,10 @@ const set_move_after_the_captures_ml = (packing_moves, packing_moves_k, depth) =
 
 /**
  * 
- * t
+ * улучшил Gemini 4 Hydrogen
  * 
- * Сортировка тихих ходов по эвристике истории.
- * Оптимизированная версия: Insertion Sort + плоский массив + кэширование.
+ * Сортировка тихих ходов по эвристике истории (по убыванию веса).
+ * Максимально быстрая версия: предвычисление оценок + локальные ссылки + Insertion Sort.
  * 
  * @param {Int32Array} packing_moves
  * @param {Int32Array} history - плоский массив [2 * 64 * 64]
@@ -837,40 +841,91 @@ const set_move_after_the_captures_ml = (packing_moves, packing_moves_k, depth) =
 const sorting_list_history_heuristic_ml = (packing_moves, history) => {
     const number_move = packing_moves[IND_NUMBER_MOVE_ML];
     const start = packing_moves[IND_NUMBER_CAPTURES_MOVE_ML];
-    const count = number_move - start;
 
-    if (count < 2) return; // Нечего сортировать
+    if (number_move - start < 2) return;
 
-    // Кэшируем смещение цвета (color * 4096)
+    // Локальные ссылки на массивы и смещение цвета для быстрого доступа в V8
+    const sq128to64 = SQUARE_128_to_64_CB;
+    const scores = HIST_SCORES_ML;
     const color_shift = packing_moves[IND_PIECE_COLOR_ML] << 12;
 
-    // Insertion Sort — идеален для малых массивов
+    // 1. Один линейный проход: вычисляем веса истории для всех тихих ходов
+    for (let i = start; i < number_move; i++) {
+        const move = packing_moves[i];
+        scores[i] = history[
+            color_shift |
+            (sq128to64[(move >> 8) & 0xFF] << 6) |
+            sq128to64[(move >> 16) & 0xFF]
+        ];
+    }
+
+    // 2. Insertion Sort по предвычисленным оценкам (без распаковки ходов внутри while)
     for (let i = start + 1; i < number_move; i++) {
+        const score_i = scores[i];
         const move_i = packing_moves[i];
-
-        // Быстрый доступ к плоскому массиву: color*4096 + from*64 + to
-        const hist_i = history[color_shift |
-            (SQUARE_128_to_64_CB[(move_i >> 8) & 255] << 6) |
-            SQUARE_128_to_64_CB[(move_i >> 16) & 255]];
-
         let j = i - 1;
 
-        while (j >= start) {
-            const move_j = packing_moves[j];
-            const hist_j = history[color_shift |
-                (SQUARE_128_to_64_CB[(move_j >> 8) & 255] << 6) |
-                SQUARE_128_to_64_CB[(move_j >> 16) & 255]];
-
-            if (hist_j > hist_i) {
-                packing_moves[j + 1] = move_j;
-                j--;
-            } else {
-                break;
-            }
+        while (j >= start && scores[j] < score_i) {
+            scores[j + 1] = scores[j];
+            packing_moves[j + 1] = packing_moves[j];
+            j--;
         }
+
+        scores[j + 1] = score_i;
         packing_moves[j + 1] = move_i;
     }
-}
+};
+
+
+
+// /**
+//  * 
+//  * t
+//  * 
+//  * Сортировка тихих ходов по эвристике истории.
+//  * Оптимизированная версия: Insertion Sort + плоский массив + кэширование.
+//  * 
+//  * @param {Int32Array} packing_moves
+//  * @param {Int32Array} history - плоский массив [2 * 64 * 64]
+//  * @returns {void}
+//  */
+// const sorting_list_history_heuristic_ml = (packing_moves, history) => {
+//     const number_move = packing_moves[IND_NUMBER_MOVE_ML];
+//     const start = packing_moves[IND_NUMBER_CAPTURES_MOVE_ML];
+//     const count = number_move - start;
+
+//     if (count < 2) return; // Нечего сортировать
+
+//     // Кэшируем смещение цвета (color * 4096)
+//     const color_shift = packing_moves[IND_PIECE_COLOR_ML] << 12;
+
+//     // Insertion Sort — идеален для малых массивов
+//     for (let i = start + 1; i < number_move; i++) {
+//         const move_i = packing_moves[i];
+
+//         // Быстрый доступ к плоскому массиву: color*4096 + from*64 + to
+//         const hist_i = history[color_shift |
+//             (SQUARE_128_to_64_CB[(move_i >> 8) & 255] << 6) |
+//             SQUARE_128_to_64_CB[(move_i >> 16) & 255]];
+
+//         let j = i - 1;
+
+//         while (j >= start) {
+//             const move_j = packing_moves[j];
+//             const hist_j = history[color_shift |
+//                 (SQUARE_128_to_64_CB[(move_j >> 8) & 255] << 6) |
+//                 SQUARE_128_to_64_CB[(move_j >> 16) & 255]];
+
+//             if (hist_j < hist_i) {
+//                 packing_moves[j + 1] = move_j;
+//                 j--;
+//             } else {
+//                 break;
+//             }
+//         }
+//         packing_moves[j + 1] = move_i;
+//     }
+// }
 
 /////////////////////////////////////////////////////////////////////////
 // SORTING

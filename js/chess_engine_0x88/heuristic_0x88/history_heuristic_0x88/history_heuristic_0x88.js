@@ -4,7 +4,7 @@
 @author AnBr75
 @name history_heuristic_0x88.js
 @version created 01.02m.2026, refactored for flat Int32Array
-Code review: Qwen3.7-Max AI
+Code review: Qwen3.7-Max AI, Gemini 4 Hydrogen 
 */
 
 import {

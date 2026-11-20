@@ -1,0 +1,90 @@
+Проверил различные эвристи сортировок 2011м26
+
+AB-------------
+max depth:8, nodes:9 671 441, n/s:841 580, score:0
+ info depth 8 score cp 0 nodes 9671441 nps 841580 pv b1c3 b8c6 g1f3 g8f6 d2d4 d7d5 c1e3 c8f5
+
+max depth:8, nodes:31 512 880, n/s:897 675, score:-15
+ info depth 8 score cp -15 nodes 31512880 nps 897675 pv g8f6 g1f3 b8c6 e2e4 d7d5 e4d5 f6d5 f1d3 
+
+TT-------------
+max depth:8, nodes:4 857 938, n/s:859 964, score:0
+ info depth 8 score cp 0 nodes 4857938 nps 859964 pv b1c3 b8c6 d2d4 d7d5 c1e3 c8f5 g1f3 g8f6
+
+max depth:8, nodes:15 031 165, n/s:884 915, score:-15
+ info depth 8 score cp -15 nodes 15031165 nps 884915 pv g8f6 g1f3 b8c6 e2e4 d7d5 e4d5 f6d5 f1d3 
+
+KIL-----------
+max depth:8, nodes:1 469 544, n/s:623 745, score:0
+ info depth 8 score cp 0 nodes 1469544 nps 623745 pv b1c3 g8f6 g1f3 d7d5 d2d4 b8c6 c1e3 c8f5 
+
+max depth:8, nodes:2 619 792, n/s:675 552, score:-15
+ info depth 8 score cp -15 nodes 2619792 nps 675552 pv g8f6 g1f3 d7d5 e2e3 c8e6 f1d3 b8c6 e1g1 
+
+HIS-----------
+старая сортировка
+max depth:8, nodes:3 998 334, n/s:481 959, score:0
+ info depth 8 score cp 0 nodes 3998334 nps 481959 pv b1c3 b8c6 d2d4 d7d5 g1f3 g8f6 c1e3 c8f5 
+
+ max depth:8, nodes:3 066 529, n/s:660 463, score:-15
+ info depth 8 score cp -15 nodes 3066529 nps 660463 pv g8f6 g1f3 b8c6 e2e4 d7d5 e4d5 f6d5 f1d3 
+
+новая сортировка
+ max depth:8, nodes:3 998 334, n/s:496 873, score:0
+ info depth 8 score cp 0 nodes 3998334 nps 496873 pv b1c3 b8c6 d2d4 d7d5 g1f3 g8f6 c1e3 c8f5 
+
+max depth:8, nodes:3 066 529, n/s:679 337, score:-15
+ info depth 8 score cp -15 nodes 3066529 nps 679337 pv g8f6 g1f3 b8c6 e2e4 d7d5 e4d5 f6d5 f1d3 
+
+TT+KIL+HIS----------
+max depth:8, nodes:752 283, n/s:576 904, score:0
+ info depth 8 score cp 0 nodes 752283 nps 576904 pv b1c3 b8c6 d2d4 d7d5 c1e3 c8f5 g1f3 g8f6 
+
+max depth:8, nodes:1 261 673, n/s:601 943, score:-15
+ info depth 8 score cp -15 nodes 1261673 nps 601943 pv g8f6 g1f3 b8c6 e2e4 d7d5 e4d5 f6d5 f1d3 
+
+новая сортировка
+ max depth:8, nodes:750 404, n/s:579 015, score:0
+ info depth 8 score cp 0 nodes 750404 nps 579015 pv b1c3 b8c6 d2d4 d7d5 c1e3 g8f6 g1f3 c8f5 
+
+ max depth:8, nodes:1 259 715, n/s:619 938, score:-15
+ info depth 8 score cp -15 nodes 1259715 nps 619938 pv g8f6 g1f3 b8c6 e2e4 d7d5 e4d5 f6d5 f1d3 
+
+апгрейд тт
+max depth:8, nodes:728 969, n/s:582 244, score:0
+ info depth 8 score cp 0 nodes 728969 nps 582244 pv b1c3 b8c6 d2d4 d7d5 c1e3 c8f5 g1f3 g8f6 
+
+max depth:8, nodes:1 347 287, n/s:641 260, score:-15
+ info depth 8 score cp -15 nodes 1347287 nps 641260 pv g8f6 g1f3 b8c6 e2e4 d7d5 e4d5 f6d5 f1d3 
+
+a+b TT
+max depth:10, nodes:31 089 672, n/s:622 952, score:0
+ info depth 10 score cp 0 nodes 31089672 nps 622952 pv b1c3 g8f6 g1f3 d7d5 d2d4 b8c6 f3e5 a7a5 c1e3 c8f5 
+a TT
+ max depth:10, nodes:31 856 712, n/s:633 788, score:0
+ info depth 10 score cp 0 nodes 31856712 nps 633788 pv b1c3 g8f6 g1f3 d7d5 d2d4 b8c6 f3e5 a7a5 c1e3 c8f5 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

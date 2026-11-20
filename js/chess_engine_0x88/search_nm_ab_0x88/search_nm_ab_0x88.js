@@ -13,18 +13,18 @@
 */
 
 import {
-   x07_y07_to_0x88_cb, s_0x88_to_x07_cb, s_0x88_to_y07_cb,
-    test_print_any_0x88_cb, test_print_piece_0x88_cb, test_print_piece_color_0x88_cb, test_print_piece_in_line_0x88_cb,
-    test_compare_chess_board_0x88_cb, set_board_from_fen_0x88_cb, set_fen_from_0x88_cb,
-    searching_king_cb, iniStartPositionForWhite_cb, letter_to_x_coordinate_cb,
-    s_0x88_out_of_bounds_cb, get_piece_color_cb, get_piece_type_cb, test_print_piece_0x88_f_cb,
-    //create_piece_cb,
-    BOARD_SIZE_CB, OUT_OF_BOUNDS_MASK_CB, SIDE_TO_MOVE_CB, LET_COOR_CB,
-    BLACK_CB, WHITE_CB, PIECE_NO_CB, W_PAWN_CB, W_KNIGHT_CB, W_BISHOP_CB, W_ROOK_CB, W_QUEEN_CB, W_KING_CB, B_PAWN_CB,
-    B_KNIGHT_CB, B_BISHOP_CB, B_ROOK_CB, B_QUEEN_CB, B_KING_CB, IND_CASTLING_Q_CB, IND_CASTLING_q_CB, IND_CASTLING_K_CB,
-    IND_CASTLING_k_CB, IND_HALFMOVE_CLOCK_CB, IND_FULLMOVE_NUMBER_CB, PIECE_NAME_CB, IND_EN_PASSANT_YES_CB,
-    IND_EN_PASSANT_TARGET_SQUARE_CB, IND_KING_FROM_WHITE_CB, IND_KING_FROM_BLACK_CB, IND_SCORE_CB,
-    SQUARE_64_to_128_CB, SQUARE_128_to_64_CB
+  x07_y07_to_0x88_cb, s_0x88_to_x07_cb, s_0x88_to_y07_cb,
+  test_print_any_0x88_cb, test_print_piece_0x88_cb, test_print_piece_color_0x88_cb, test_print_piece_in_line_0x88_cb,
+  test_compare_chess_board_0x88_cb, set_board_from_fen_0x88_cb, set_fen_from_0x88_cb,
+  searching_king_cb, iniStartPositionForWhite_cb, letter_to_x_coordinate_cb,
+  s_0x88_out_of_bounds_cb, get_piece_color_cb, get_piece_type_cb, test_print_piece_0x88_f_cb,
+  //create_piece_cb,
+  BOARD_SIZE_CB, OUT_OF_BOUNDS_MASK_CB, SIDE_TO_MOVE_CB, LET_COOR_CB,
+  BLACK_CB, WHITE_CB, PIECE_NO_CB, W_PAWN_CB, W_KNIGHT_CB, W_BISHOP_CB, W_ROOK_CB, W_QUEEN_CB, W_KING_CB, B_PAWN_CB,
+  B_KNIGHT_CB, B_BISHOP_CB, B_ROOK_CB, B_QUEEN_CB, B_KING_CB, IND_CASTLING_Q_CB, IND_CASTLING_q_CB, IND_CASTLING_K_CB,
+  IND_CASTLING_k_CB, IND_HALFMOVE_CLOCK_CB, IND_FULLMOVE_NUMBER_CB, PIECE_NAME_CB, IND_EN_PASSANT_YES_CB,
+  IND_EN_PASSANT_TARGET_SQUARE_CB, IND_KING_FROM_WHITE_CB, IND_KING_FROM_BLACK_CB, IND_SCORE_CB,
+  SQUARE_64_to_128_CB, SQUARE_128_to_64_CB
 } from "../core_0x88_t/chess_board_0x88_t/chess_board_0x88.js";
 
 import {
@@ -83,6 +83,62 @@ import {
   MAX_TABLE_LENTH_TT, MAX_SCORE_UPDATE_TT, ALPHA_UPDATE_TT, BETA_CUT_TT, IND_TN_TT, IND_SC_TT, IND_DD_TT, TT_IS_TEST_FEN
 } from "../heuristic_0x88/transposition_table_0x88/transposition_table_0x88.js";
 
+
+// TESTS ////////////////////////////////////////////
+//const IS_TEST_KEY_64 = true;//
+const IS_TEST_KEY_64 = false; //
+
+//const AB_IS_TEST_BOARD_SCORE = true;//
+const AB_IS_TEST_BOARD_SCORE = false;//
+//////////////////////////////////////////// TESTS
+
+const IS_EVALUATE_USE = true;// 
+//const IS_EVALUATE_USE = false;// 
+
+const IS_QUIESCENCE_USE = true;// используем просмотр выгодных взятий до конца
+//const IS_QUIESCENCE_USE = false;// используем просмотр выгодных взятий до конца
+
+const IS_AB_USE = true;// используем альфа-бета оптимизацию
+//const IS_AB_USE = false;// используем альфа-бета оптимизацию
+
+const IS_KILLER_USE = true;// is_killer_heuristic_use_ab   использование двух киллеров, т.е. лучших ходов на этой глубине
+//const IS_KILLER_USE = false;// is_killer_heuristic_use_ab   использование двух киллеров, т.е. лучших ходов на этой глубине
+
+const IS_HISTORY_USE = true;// использование сортировки по частоте отсечений.
+//const IS_HISTORY_USE = false;// использование сортировки по частоте отсечений.
+
+let IS_TT_USE = true;// сортировка и отсечка по таблице перестановок(хеш-таблице)
+//let IS_TT_USE = false;// сортировка и отсечка по таблице перестановок(хеш-таблице)
+
+//////////////////////////////
+
+// это два киллера
+let packing_moves_k1 = new Int32Array(MAX_DEPTH_KH).fill(MOVE_NO_ML);// список ходов. ход упакован в одно число Uint32
+let packing_moves_k2 = new Int32Array(MAX_DEPTH_KH).fill(MOVE_NO_ML);// список ходов. ход упакован в одно число Uint32
+
+// test_tt
+let ab_save_alpha_up_test_tt = 0;
+let ab_save_beta_cut_test_tt = 0;
+//let save_score_up_test_tt = 0;
+
+let ab_use_alpha_up_test_tt = 0;
+let ab_use_beta_cut_test_tt = 0;
+//let use_score_test_tt = 0;
+
+let ab_use_alpha_up_not_move_test_tt = 0;
+
+const ab_clear_test_tt = function () {
+  ab_save_alpha_up_test_tt = 0;//
+  ab_save_beta_cut_test_tt = 0;//
+  //save_score_up_test_tt = 0;
+
+  ab_use_alpha_up_test_tt = 0;//
+  ab_use_beta_cut_test_tt = 0;
+  //use_score_test_tt = 0;
+
+  ab_use_alpha_up_not_move_test_tt = 0;
+}
+
 /////////////////////////////////////////////
 // FULL SEARCH
 
@@ -108,7 +164,7 @@ let best_packing_pv_line_stack = new Array(MAX_DEPTH_SEARCH);// тут лини�
 // FULL SEARCH
 /////////////////////////////////////////////
 
-let packing_moves_1_tt_stack = new Array(MAX_DEPTH_SEARCH);
+let packing_move_arr_stack = new Array(MAX_DEPTH_SEARCH);
 let out_tt_stack = new Array(MAX_DEPTH_SEARCH);
 
 
@@ -142,7 +198,7 @@ const ab_ini_stack = () => {
     // FULL SEARCH
     /////////////////////////////////////////////
 
-    packing_moves_1_tt_stack[depth] = new Int32Array(1).fill(MOVE_NO_ML);
+    packing_move_arr_stack[depth] = new Int32Array(1).fill(MOVE_NO_ML);
     out_tt_stack[depth] = [-1, -1, -1];
 
   }
@@ -160,51 +216,6 @@ const MATE = -30000;
 const AB_INIT_EVAL = -40000;// матовая оценка всегда должна обновлять INIT_EVAL 
 // и при - и при + на следющей глубине поиска (-30000 > -40000) и (30000 > -40000)
 ///////////////////////////////////////////// AB SEARCH SEARCH
-
-
-// TESTS ////////////////////////////////////////////
-const IS_TEST_KEY_64 = true;//
-//const IS_TEST_KEY_64 = false; //
-
-const AB_IS_TEST_BOARD_SCORE = true;//
-//const AB_IS_TEST_BOARD_SCORE = false;//
-//////////////////////////////////////////// TESTS
-
-const IS_AB_USE = true;// используем альфа-бета оптимизацию
-//const IS_AB_USE = false;// используем альфа-бета оптимизацию
-
-// это два киллера
-let packing_moves_k1 = new Int32Array(MAX_DEPTH_KH).fill(MOVE_NO_ML);// список ходов. ход упакован в одно число Uint32
-let packing_moves_k2 = new Int32Array(MAX_DEPTH_KH).fill(MOVE_NO_ML);// список ходов. ход упакован в одно число Uint32
-const IS_KILLER_USE = true;// is_killer_heuristic_use_ab   использование двух киллеров, т.е. лучших ходов на этой глубине
-//const IS_KILLER_USE = false;// is_killer_heuristic_use_ab   использование двух киллеров, т.е. лучших ходов на этой глубине
-
-//const IS_HISTORY_USE = true;// использование сортировки по частоте отсечений.
-const IS_HISTORY_USE = false;// использование сортировки по частоте отсечений.
-
-const IS_QUIESCENCE_USE = true;// используем просмотр выгодных взятий до конца
-//const IS_QUIESCENCE_USE = false;// используем просмотр выгодных взятий до конца
-
-// test_tt
-let ab_save_alpha_up_test_tt = 0;
-let ab_save_beta_cut_test_tt = 0;
-//let save_score_up_test_tt = 0;
-
-let ab_use_alpha_up_test_tt = 0;
-let ab_use_beta_cut_test_tt = 0;
-//let use_score_test_tt = 0;
-
-const ab_clear_test_tt = function () {
-  ab_save_alpha_up_test_tt = 0;//
-  ab_save_beta_cut_test_tt = 0;//
-  //save_score_up_test_tt = 0;
-
-  ab_use_alpha_up_test_tt = 0;//
-  ab_use_beta_cut_test_tt = 0;
-  //use_score_test_tt = 0;
-}
-let IS_TT_USE = true;// сортировка и отсечка по таблице перестановок(хеш-таблице)
-//let IS_TT_USE = false;// сортировка и отсечка по таблице перестановок(хеш-таблице)
 
 /**
  * searching_alpha_beta_fail_soft
@@ -250,7 +261,7 @@ const ab_searching_negamax_alpha_beta_id = (alpha, beta, chess_board_0x88, chess
 
   let out_tt = out_tt_stack[depth];
 
-  let packing_moves_1_tt = packing_moves_1_tt_stack[depth];// список ходов. ход упакован в одно число Uint32
+  let packing_move_arr_tt = packing_move_arr_stack[depth];// список ходов. ход упакован в одно число Uint32
 
   let fen = "";
 
@@ -263,9 +274,12 @@ const ab_searching_negamax_alpha_beta_id = (alpha, beta, chess_board_0x88, chess
     if (IS_QUIESCENCE_USE) {
       found_score = qs_quiescence_search(alpha, beta, chess_board_0x88, chess_board_key_64, depth);
     } else {
-      // по входящей позиции генерируем ее оценку
-      found_score = score_position_e(chess_board_0x88);
-      //found_score = 0;
+      if (IS_EVALUATE_USE) {
+        // по входящей позиции генерируем ее оценку
+        found_score = score_position_e(chess_board_0x88);
+      } else {
+        found_score = 0;
+      }
     }
     //console.log("searching_negamax->found_score " + found_score);
 
@@ -296,29 +310,22 @@ const ab_searching_negamax_alpha_beta_id = (alpha, beta, chess_board_0x88, chess
     // *************************************************************************************************************fen
     if (TT_IS_TEST_FEN) {
       fen = set_fen_from_0x88_cb(chess_board_0x88);
+      out_tt = get_position_from_tt(chess_board_key_64, packing_move_arr_tt, depth, depth_max, fen);
+    } else {
+      out_tt = get_position_from_tt(chess_board_key_64, packing_move_arr_tt, depth, depth_max);
     }
-    out_tt = get_position_from_tt(chess_board_key_64, packing_moves_1_tt, depth, depth_max, fen);
 
-    //test
-    //if (is_save_position.tn == 0) console.log("Search_0x88_C-> tn == 0 !!!! depth " + depth);
+    if (out_tt[IND_TN_TT] == BETA_CUT_TT) {// если узел был записан при отсечеке по бете
 
-    if (out_tt[IND_TN_TT] == BETA_CUT_TT) {
+      if (out_tt[IND_SC_TT] >= beta) {// проверяем что оценка действительно вызывает отсечку 
 
-      if (out_tt[IND_SC_TT] >= beta) {
-
-        // TEST  
-        ab_use_beta_cut_test_tt = ab_use_beta_cut_test_tt + 1;
+        if (TT_IS_TEST_FEN) {
+          ab_use_beta_cut_test_tt = ab_use_beta_cut_test_tt + 1;
+        }
 
         return out_tt[IND_SC_TT];
       }
     }
-
-    // if ((is_save_position.tn == Transposition_table_0x88_C.MAX_SCORE_UPDATE) && (isPV == 0)) {
-
-    //   //test        
-    //   //this.test_tt.use_score = this.test_tt.use_score + 1;
-    //   return is_save_position.sc;
-    // }
   }
   // ==================================================== используем хеш таблицу   
 
@@ -371,26 +378,29 @@ const ab_searching_negamax_alpha_beta_id = (alpha, beta, chess_board_0x88, chess
   // используем хеш таблицу ====================================================
   // 
   if (IS_TT_USE) {
-    if (out_tt[IND_TN_TT] == ALPHA_UPDATE_TT) {
-      let test_set_move = set_move_in_0_ml(packing_moves, packing_moves_1_tt);
+    // if (out_tt[IND_TN_TT] == ALPHA_UPDATE_TT){
+    if ((out_tt[IND_TN_TT] == ALPHA_UPDATE_TT) || (out_tt[IND_TN_TT] == BETA_CUT_TT)) {
+      set_move_in_0_ml(packing_moves, packing_move_arr_tt);
 
-      if (test_set_move == 0) {
-        if (packing_moves[0] != packing_moves_1_tt[0]) {
-          console.log("ХОД ИЗ КЕШ ТАБЛИЦЫ НЕ СТАЛ ПЕРВЫМ! ");
-          console.log("set_move_in_0_ml packing_moves[0] = " + packing_moves[0]); IND_PIECE_COLOR_ML
-          console.log("set_move_in_0_ml packing_moves[0] color = " + packing_moves[IND_PIECE_COLOR_ML]);
-          console.log("set_move_in_0_ml packing_moves_1_tt[0] = " + packing_moves_1_tt[0]);
-          console.log("set_move_in_0_ml test_set_move = " + test_set_move);
-          console.log("set_move_in_0_ml ab_use_alpha_up_test_tt + 1 = " + ab_use_alpha_up_test_tt + 1);
-          console.log("set_move_in_0_ml depth " + depth);
+      if (TT_IS_TEST_FEN) {
+        let test_set_move = set_move_in_0_ml(packing_moves, packing_move_arr_tt);
+        if (test_set_move == 0) {
+          if (packing_moves[0] != packing_move_arr_tt[0]) {
+            console.log("ХОД ИЗ КЕШ ТАБЛИЦЫ НЕ СТАЛ ПЕРВЫМ! ");
+            console.log("set_move_in_0_ml packing_moves[0] = " + packing_moves[0]); IND_PIECE_COLOR_ML
+            console.log("set_move_in_0_ml packing_moves[0] color = " + packing_moves[IND_PIECE_COLOR_ML]);
+            console.log("set_move_in_0_ml packing_move_arr_tt[0] = " + packing_move_arr_tt[0]);
+            console.log("set_move_in_0_ml test_set_move = " + test_set_move);
+            console.log("set_move_in_0_ml ab_use_alpha_up_test_tt + 1 = " + ab_use_alpha_up_test_tt + 1);
+            console.log("set_move_in_0_ml depth " + depth);
+          }
         }
-      }
 
-      // TEST
-      if (test_set_move == -1) {
-        ab_use_alpha_up_test_tt = ab_use_alpha_up_test_tt - 1;
+        if (test_set_move == -1) {
+          ab_use_alpha_up_not_move_test_tt = ab_use_alpha_up_not_move_test_tt + 1;
+        }
+        ab_use_alpha_up_test_tt = ab_use_alpha_up_test_tt + 1;
       }
-      //ab_use_alpha_up_test_tt = ab_use_alpha_up_test_tt + 1;
     }
   }
   //==================================================== используем хеш таблицу
@@ -488,12 +498,12 @@ const ab_searching_negamax_alpha_beta_id = (alpha, beta, chess_board_0x88, chess
             // записываем ход в хеш  
             // *************************************************************************************************************fen
             if (TT_IS_TEST_FEN) {
-              fen = set_fen_from_0x88_cb(chess_board_0x88_undo);
+              fen = set_fen_from_0x88_cb(chess_board_0x88_undo);//_undo
+              set_position_in_tt(chess_board_key_64_undo, packing_moves, BETA_CUT_TT, score, depth, depth_max, move_number, fen);
+              ab_save_beta_cut_test_tt = ab_save_beta_cut_test_tt + 1;
+            } else {
+              set_position_in_tt(chess_board_key_64_undo, packing_moves, BETA_CUT_TT, score, depth, depth_max, move_number);
             }
-            set_position_in_tt(chess_board_key_64_undo, packing_moves, BETA_CUT_TT, score, depth, depth_max, move_number, fen);
-
-            // TEST
-            ab_save_beta_cut_test_tt = ab_save_beta_cut_test_tt + 1;
           }
           //==================================================== используем хеш таблицу
 
@@ -509,11 +519,11 @@ const ab_searching_negamax_alpha_beta_id = (alpha, beta, chess_board_0x88, chess
             // *************************************************************************************************************fen
             if (TT_IS_TEST_FEN) {
               fen = set_fen_from_0x88_cb(chess_board_0x88_undo);
+              set_position_in_tt(chess_board_key_64_undo, packing_moves, ALPHA_UPDATE_TT, score, depth, depth_max, move_number, fen);
+              ab_save_alpha_up_test_tt = ab_save_alpha_up_test_tt + 1;
+            } else {
+              set_position_in_tt(chess_board_key_64_undo, packing_moves, ALPHA_UPDATE_TT, score, depth, depth_max, move_number);
             }
-            set_position_in_tt(chess_board_key_64_undo, packing_moves, ALPHA_UPDATE_TT, score, depth, depth_max, move_number, fen);
-
-            // TEST
-            ab_save_alpha_up_test_tt = ab_save_alpha_up_test_tt + 1;
           }
           //==================================================== используем хеш таблицу
 
@@ -598,4 +608,5 @@ export {
   AB_INIT_EVAL, AB_IS_TEST_BOARD_SCORE,
   ab_save_alpha_up_test_tt, ab_save_beta_cut_test_tt, //save_score_up_test_tt,
   ab_use_alpha_up_test_tt, ab_use_beta_cut_test_tt, //use_score_test_tt,
+  ab_use_alpha_up_not_move_test_tt
 };

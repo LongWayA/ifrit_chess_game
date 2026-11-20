@@ -40,11 +40,12 @@ import { do_moves_mm } from "../core_0x88_t/make_move_0x88_t/make_move_0x88.js";
 
 import { nm_searching_negamax, nm_ini_stack } from "../search_negamax_0x88/search_negamax_0x88.js";
 
-import { 
-        ab_searching_negamax_alpha_beta_id, ab_ini_stack, ab_clear_test_tt, 
-        AB_INIT_EVAL, AB_IS_TEST_BOARD_SCORE, 
-        ab_save_alpha_up_test_tt, ab_save_beta_cut_test_tt, //save_score_up_test_tt,
-        ab_use_alpha_up_test_tt, ab_use_beta_cut_test_tt, //use_score_test_tt,
+import {
+  ab_searching_negamax_alpha_beta_id, ab_ini_stack, ab_clear_test_tt,
+  AB_INIT_EVAL, AB_IS_TEST_BOARD_SCORE,
+  ab_save_alpha_up_test_tt, ab_save_beta_cut_test_tt, //save_score_up_test_tt,
+  ab_use_alpha_up_test_tt, ab_use_beta_cut_test_tt, //use_score_test_tt,
+  ab_use_alpha_up_not_move_test_tt
 } from "./search_nm_ab_0x88.js";
 
 import {
@@ -61,7 +62,7 @@ import {
 } from "../heuristic_0x88/transposition_table_0x88/transposition_key_0x88.js";
 
 import {
-  ini_tt, test_uses_hash_tt, print_test_set_get_position_tt,
+  ini_tt, test_uses_hash_tt, print_test_set_get_position_tt, TT_IS_TEST_FEN
 } from "../heuristic_0x88/transposition_table_0x88/transposition_table_0x88.js";
 
 import { Timer_C } from "../../browser/timer.js";
@@ -133,14 +134,17 @@ const set_stop_search_in_0_r = function () {
 }
 
 const test_tt = function () {
-  console.log("-------------------------------------- ");
-  console.log("ab_save_alpha_up_test_tt " + ab_save_alpha_up_test_tt);
-  console.log("ab_use_alpha_up_test_tt " + ab_use_alpha_up_test_tt);
-  console.log("----- ");
-  console.log("ab_save_beta_cut_test_tt " + ab_save_beta_cut_test_tt);
-  console.log("ab_use_beta_cut_test_tt " + ab_use_beta_cut_test_tt);
-  console.log("-------------------------------------- ");
-
+  if (TT_IS_TEST_FEN) {
+    console.log("-------------------------------------- ");
+    console.log("ab_save_alpha_up_test_tt " + ab_save_alpha_up_test_tt);
+    console.log("ab_use_alpha_up_test_tt " + ab_use_alpha_up_test_tt);
+    console.log("----- ");
+    console.log("ab_save_beta_cut_test_tt " + ab_save_beta_cut_test_tt);
+    console.log("ab_use_beta_cut_test_tt " + ab_use_beta_cut_test_tt);
+    console.log("----- ");
+    console.log("ab_use_alpha_up_not_move_test_tt " + ab_use_alpha_up_not_move_test_tt);
+    console.log("-------------------------------------- ");
+  }
 }
 
 /** negamax
@@ -303,7 +307,7 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
 
   ini_random_key_array_64_tk();// инициируем внтуренний массив случайных чисел.
   ini_tt();
-  ab_clear_test_tt();
+  if (TT_IS_TEST_FEN) ab_clear_test_tt();
   ab_ini_stack();// стек альфа беты
   qs_ini_stack();// стек быстрого поиска
   ini_Array_hh();// ини массива истории
@@ -364,7 +368,7 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
     //console.log("searching_iterative_deepening -> packing_moves[IND_NUMBER_MOVE] " + packing_moves[IND_NUMBER_MOVE]);
     node_root = 0;
 
-  // идем по списку ходов
+    // идем по списку ходов
     for (let move_i = 0; move_i < packing_moves[IND_NUMBER_MOVE_ML]; move_i++) {
 
       type_move = get_type_move_ml(move_i, packing_moves);
@@ -460,16 +464,16 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
     uci_return_search.fen_end = set_fen_from_0x88_cb(chess_board_0x88_get_move);
 
 
-    //test
-    console.log("*");
-    console.log("searching_iterative_deepening_r -> depth_max_current = " + depth_max_current);
-    console.log("searching_iterative_deepening_r -> chess_board_0x88_found_best_score");
-    test_print_piece_0x88_f_cb(chess_board_0x88_get_move);
+    // //test
+    // console.log("*");
+    // console.log("searching_iterative_deepening_r -> depth_max_current = " + depth_max_current);
+    // console.log("searching_iterative_deepening_r -> chess_board_0x88_found_best_score");
+    // test_print_piece_0x88_f_cb(chess_board_0x88_get_move);
 
-    // TEST
-    console.log("ssearching_iterative_deepening_r -> chess_board_0x88_score");
-    test_print_piece_0x88_f_cb(chess_board_0x88_score);
-    console.log("searching_iterative_deepening_r -> chess_board_0x88_score => score = " + score_position_e(chess_board_0x88_score));
+    // // TEST
+    // console.log("ssearching_iterative_deepening_r -> chess_board_0x88_score");
+    // test_print_piece_0x88_f_cb(chess_board_0x88_score);
+    // console.log("searching_iterative_deepening_r -> chess_board_0x88_score => score = " + score_position_e(chess_board_0x88_score));
 
 
     if (number_move_legal != 0) {
@@ -521,10 +525,10 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
 
   }// for (let depth_max_current = 1; depth_max_current < depth_max_search; depth_max_current++) {
 
-    print_test_set_get_position_tt();// печатаем если есть коллизии фена
-    test_uses_hash_tt();// сколько позиций записано
+  if(TT_IS_TEST_FEN) print_test_set_get_position_tt();// печатаем если есть коллизии фена
+  if (TT_IS_TEST_FEN) test_uses_hash_tt();// сколько позиций записано
 
-    test_tt();// записано использовано по альфа бете
+  if (TT_IS_TEST_FEN) test_tt();// записано использовано по альфа бете
 
   return uci_return_search;
 }
