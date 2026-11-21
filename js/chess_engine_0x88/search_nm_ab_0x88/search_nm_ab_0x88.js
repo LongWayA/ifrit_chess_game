@@ -110,6 +110,9 @@ const IS_HISTORY_USE = true;// использование сортировки �
 let IS_TT_USE = true;// сортировка и отсечка по таблице перестановок(хеш-таблице)
 //let IS_TT_USE = false;// сортировка и отсечка по таблице перестановок(хеш-таблице)
 
+const IS_PVS_USE = true;// 
+//const IS_PVS_USE = false;// 
+
 //////////////////////////////
 
 // это два киллера
@@ -246,7 +249,7 @@ const ab_searching_negamax_alpha_beta_id = (alpha, beta, chess_board_0x88, chess
 
   let score = 0;// текущая оценка позиции
   let found_score;// максимальная найденная в данном узле оценка позиции
-  let update_found_score = -1;// номер хода который обновил максимальную оценку
+  let update_alpha = -1;// номер хода который обновил максимальную оценку
 
   let is_moove_legal = -1;// есть ли легальные ходы
   let number_move_legal = 0;// колличество легальных ходов  
@@ -265,7 +268,7 @@ const ab_searching_negamax_alpha_beta_id = (alpha, beta, chess_board_0x88, chess
 
   let fen = "";
 
-  if (depth == 0) node_mm[0] = 0;
+  let isPVnode = 0;
 
   // достигли предельной глубины. вызываем статичискую оценку позиции
   if (depth >= depth_max) {
@@ -436,29 +439,37 @@ const ab_searching_negamax_alpha_beta_id = (alpha, beta, chess_board_0x88, chess
 
     number_move_legal = number_move_legal + 1;
 
-    // зачем это делаю не помню. код посмотрел и все равно не понимаю :)
-    if (depth == 0) packing_pv_line[IND_TYPE_VARIANT_PV] = 1;
+    if (!IS_PVS_USE) {
+      score = -ab_searching_negamax_alpha_beta_id(-beta, -alpha, chess_board_0x88, chess_board_0x88_score,
+        chess_board_key_64, packing_pv_line, (depth + 1), depth_max, node_mm, isPV);
+    }
 
-    score = -ab_searching_negamax_alpha_beta_id(-beta, -alpha, chess_board_0x88, chess_board_0x88_score,
-      chess_board_key_64, packing_pv_line, (depth + 1), depth_max, node_mm, isPV);
+    if (IS_PVS_USE) {
+      if ((move_number == 0) && (isPV == 1)) {
+        // Первый ход считаем с полным окном
+        isPVnode = 1;
+        score = -ab_searching_negamax_alpha_beta_id(-beta, -alpha, chess_board_0x88, chess_board_0x88_score,
+          chess_board_key_64, packing_pv_line, (depth + 1), depth_max, node_mm, isPVnode);
+      } else {
+        // Остальные — с нулевым окном (проверка, хуже ли они)
+        isPVnode = 0;
+        score = -ab_searching_negamax_alpha_beta_id(-alpha - 1, -alpha, chess_board_0x88, chess_board_0x88_score,
+          chess_board_key_64, packing_pv_line, (depth + 1), depth_max, node_mm, isPVnode);
+
+        if ((score > alpha) && (score < beta)) {
+          // Если ход оказался лучше alpha (и не вызвал бета-отсечение),
+          // делаем полный пересчет
+          isPVnode = 1;
+          score = -ab_searching_negamax_alpha_beta_id(-beta, -alpha, chess_board_0x88, chess_board_0x88_score,
+            chess_board_key_64, packing_pv_line, (depth + 1), depth_max, node_mm, isPVnode);
+        }
+      }
+    }
 
 
+    //Fail-Soft Alpha-Beta
     if (score > found_score) {
       found_score = score;
-      update_found_score = move_number;
-
-      // тут записываем в узловой кеш всю линию которая привела к такой оценке.
-      // т.е. особо отмечу пишется линия от самого максимума глубины до верха. 
-      // тут записаны все ходы приведшие к позиции с оценкой
-      save_pv_line_pv(best_packing_pv_line, packing_pv_line);
-
-
-      // TEST
-      if (AB_IS_TEST_BOARD_SCORE) {
-        // с глубины вернулась не только оценка, но и позиция соответствующая оценки 
-        // ее мы тоже записываем в узловой кеш
-        chess_board_0x88_save_score.set(chess_board_0x88_score);//записываем позицию соответствующую лучшей оценке
-      }
 
       //console.log("Search_0x88_C->score > max_score depth " + depth + " found_score " + found_score);
 
@@ -512,6 +523,33 @@ const ab_searching_negamax_alpha_beta_id = (alpha, beta, chess_board_0x88, chess
 
         if (score > alpha) {
           alpha = score; //
+          update_alpha = move_number;
+
+          if (IS_PVS_USE) {
+            // тут записываем в узловой кеш всю линию которая привела к такой оценке.
+            // т.е. особо отмечу пишется линия от самого максимума глубины до верха. 
+            // тут записаны все ходы приведшие к позиции с оценкой
+            if (isPV == 1) save_pv_line_pv(best_packing_pv_line, packing_pv_line);
+
+            // TEST
+            if (AB_IS_TEST_BOARD_SCORE) {
+              // с глубины вернулась не только оценка, но и позиция соответствующая оценки 
+              // ее мы тоже записываем в узловой кеш
+              if (isPV == 1) chess_board_0x88_save_score.set(chess_board_0x88_score);//записываем позицию соответствующую лучшей оценке
+            }
+          } else {
+            // тут записываем в узловой кеш всю линию которая привела к такой оценке.
+            // т.е. особо отмечу пишется линия от самого максимума глубины до верха. 
+            // тут записаны все ходы приведшие к позиции с оценкой
+            save_pv_line_pv(best_packing_pv_line, packing_pv_line);
+
+            // TEST
+            if (AB_IS_TEST_BOARD_SCORE) {
+              // с глубины вернулась не только оценка, но и позиция соответствующая оценки 
+              // ее мы тоже записываем в узловой кеш
+              chess_board_0x88_save_score.set(chess_board_0x88_score);//записываем позицию соответствующую лучшей оценке
+            }
+          }
 
           // используем хеш таблицу ====================================================
           if (IS_TT_USE) {
@@ -541,15 +579,28 @@ const ab_searching_negamax_alpha_beta_id = (alpha, beta, chess_board_0x88, chess
   }//for (let move_number = 0; move_number < move_list_0x88_O.number_move; move_number++) {
 
   // если во время поиска лучшую оценку обновили то записываем соответствующий ей вариант
-  if (update_found_score != -1) {
-    // тут мы вернем все ходы которые привели к лучшей в узле оценке. это ходы до финальной позиции 
-    // которую оценили статически
-    save_pv_line_pv(packing_pv_line, best_packing_pv_line);
+  if (update_alpha != -1) {
 
-    // TEST
-    if (AB_IS_TEST_BOARD_SCORE) {
-      // а это та самая финальная позиция которую оценили статически
-      chess_board_0x88_score.set(chess_board_0x88_save_score);// возвращаем лучшую записанную позицию соотв. лучшей оценке
+    if (IS_PVS_USE) {
+      // тут мы вернем все ходы которые привели к лучшей в узле оценке. это ходы до финальной позиции 
+      // которую оценили статически
+      if (isPV == 1) save_pv_line_pv(packing_pv_line, best_packing_pv_line);
+
+      // TEST
+      if (AB_IS_TEST_BOARD_SCORE) {
+        // а это та самая финальная позиция которую оценили статически
+        if (isPV == 1) chess_board_0x88_score.set(chess_board_0x88_save_score);// возвращаем лучшую записанную позицию соотв. лучшей оценке
+      }
+    } else {
+      // тут мы вернем все ходы которые привели к лучшей в узле оценке. это ходы до финальной позиции 
+      // которую оценили статически
+      save_pv_line_pv(packing_pv_line, best_packing_pv_line);
+
+      // TEST
+      if (AB_IS_TEST_BOARD_SCORE) {
+        // а это та самая финальная позиция которую оценили статически
+        chess_board_0x88_score.set(chess_board_0x88_save_score);// возвращаем лучшую записанную позицию соотв. лучшей оценке
+      }
     }
   }
 

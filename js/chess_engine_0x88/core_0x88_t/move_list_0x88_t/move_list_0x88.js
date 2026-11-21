@@ -740,20 +740,20 @@ const sorting_list_ml = (packing_moves) => {
  * точнее мы просто нужный ход из списка поднимаем на первое место.
  * находим ход и поднимаем на первое место
  * @param {Int32Array} packing_moves
- * @param {Int32Array} packing_moves_1_tt
+ * @param {Int32Array} packing_move_arr
  * @returns {number}
  */
-// для packing_moves_1_tt
+// для packing_move_arr
 // нужно передать всего один ход, но я передаю массив из одного хода.
 // что бы в других местах возвращать параметр.
-const set_move_in_0_ml = (packing_moves, packing_moves_1_tt) => {
+const set_move_in_0_ml = (packing_moves, packing_move_arr) => {
 
     let save_move = -1;
     let s_m;
 
     let number_move = packing_moves[IND_NUMBER_MOVE_ML];
     let start = 0;
-    let move_tt = packing_moves_1_tt[0];
+    let move_tt = packing_move_arr[0];
 
     if (packing_moves[start] == move_tt) return 1;// ход и так на первом месте
 
