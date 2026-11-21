@@ -89,7 +89,7 @@ let Tests_R = {
 
             // Тестируем модуль генерации взятий generator_move_captures_0x88_test.js
             if (is_generator_move_captures_0x88 == TEST) {
-                  console.log("Tests_R -> Start Test: generator_move_captures_0x88_test.js");
+                  console.log("Tests_R -> Start Test: generator_move_captures_0x88.js");
                   Tests_R.generator_move_captures_0x88_TEST_O.go();
             }
 

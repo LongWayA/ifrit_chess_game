@@ -362,12 +362,23 @@ const test_generation_key_64_tk = function (chess_board_key_64_test, chess_board
 
 }
 
+/**
+ * написал Gemini 4 Hydrogen
+ * переключение стороны хода (для Null Move)
+ * @param {BigUint64Array} chess_board_key_64 
+ * @returns {void}
+ */
+const key_update_side_0x88_tk = function (chess_board_key_64) {
+    chess_board_key_64[0] = chess_board_key_64[0] ^ key_array_64_tk[6][16];
+}
+
+
 
 export {
     ini_random_key_array_64_tk, ini_key_array_64_tk, set_key_from_board_0x88_tk, test_chess_board_key_64_tk,
     key_update_do_move_0x88_tk, key_update_ep_move_0x88_tk, key_update_promo_move_0x88_tk,
     key_update_castle_move_0x88_tk, key_update_ep_0x88_tk, key_update_ep_sq_0x88_tk, key_update_QqKk_0x88_tk,
-    test_generation_key_64_tk
+    test_generation_key_64_tk, key_update_side_0x88_tk
 };
 
 /**

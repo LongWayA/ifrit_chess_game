@@ -4,7 +4,7 @@
  * @author AnBr75
  * @name make_move_0x88.js
  * @version created 24.01m.2026 
- * Code review: Qwen3.7-Max AI
+ * Code review: Qwen3.7-Max AI, Gemini 4 Hydrogen
 */
 
 //+
@@ -46,7 +46,7 @@ import {
 
 
 import {
-  key_update_do_move_0x88_tk, key_update_ep_move_0x88_tk, key_update_promo_move_0x88_tk,
+  key_update_do_move_0x88_tk, key_update_ep_move_0x88_tk, key_update_promo_move_0x88_tk, key_update_side_0x88_tk,
   key_update_castle_move_0x88_tk, key_update_ep_0x88_tk, key_update_ep_sq_0x88_tk, key_update_QqKk_0x88_tk
 } from "../../heuristic_0x88/transposition_table_0x88/transposition_key_0x88.js";
 
@@ -1034,7 +1034,22 @@ const make_promo_move_0x88_mm = (chess_board_0x88, chess_board_key_64, from, to,
 
 }
 
+/** нулевой ход (передача очереди хода сопернику без перемещения фигур)
+ * @param {Int32Array} chess_board_0x88
+ * @param {BigUint64Array} chess_board_key_64
+ * @returns {void}
+ */
+const do_null_move_mm = (chess_board_0x88, chess_board_key_64) => {
+  // Меняем сторону хода
+  chess_board_0x88[SIDE_TO_MOVE_CB] = 1 - chess_board_0x88[SIDE_TO_MOVE_CB];
+  key_update_side_0x88_tk(chess_board_key_64);
+
+  // Сбрасываем возможность взятия на проходе, если она была активна
+  key_update_ep_0x88_mm(chess_board_0x88, chess_board_key_64);
+}
+
+
 export {
-  do_moves_mm,
+  do_moves_mm, do_null_move_mm,
   MOOVE_IS_LEGAL_MM, MOOVE_IS_NOT_LEGAL_CHECK_MM, MOOVE_IS_NOT_LEGAL_CASTLING_MM
 };

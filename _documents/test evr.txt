@@ -64,26 +64,61 @@ a TT
  max depth:10, nodes:31 856 712, n/s:633 788, score:0
  info depth 10 score cp 0 nodes 31856712 nps 633788 pv b1c3 g8f6 g1f3 d7d5 d2d4 b8c6 f3e5 a7a5 c1e3 c8f5 
 
+LMR false--------
+max depth:10, nodes:25 711 433, n/s:689 037, score:0
+ info depth 10 score cp 0 nodes 25711433 nps 689037 pv b1c3 g8f6 g1f3 d7d5 e2e3 b8c6 f1d3 e7e5 e1g1 f8c5 
 
+ max depth:10, nodes:28 798 495, n/s:742 919, score:-13
+ info depth 10 score cp -13 nodes 28798495 nps 742919 pv e7e5 g1f3 b8c6 d2d4 e5d4 f3d4 c6d4 d1d4 c7c5 d4d5 
 
+LMR true--------
+ max depth:10, nodes:2 311 987, n/s:672 285, score:5
+ info depth 10 score cp 5 nodes 2311987 nps 672285 pv b1c3 d7d5 d2d4 a7a5 e2e4 d5e4 c3e4 c8f5 f1b5 b8c6
 
+max depth:10, nodes:3 524 147, n/s:655 411, score:-10
+ info depth 10 score cp -10 nodes 3524147 nps 655411 pv g8f6 g1f3 d7d5 d2d4 a7a5 c1e3 b8c6 a2a4 c8f5 h2h4 
 
+NMP_USE true--------
+ max depth:10, nodes:2 942 017, n/s:746 137, score:0
+ info depth 10 score cp 0 nodes 2942017 nps 746137 pv b1c3 g8f6 g1f3 b8c6 d2d4 d7d5 c1e3 a7a5 a2a4 c8f5
 
+ max depth:10, nodes:2 435 319, n/s:784 574, score:-13
+ info depth 10 score cp -13 nodes 2435319 nps 784574 pv e7e5 g1f3 b8c6 d2d4 e5d4 f3d4 c6d4 d1d4 c7c5 d4d5 
 
+LMR + NMP_USE true--------
+max depth:10, nodes:632 298, n/s:643 233, score:5
+ info depth 10 score cp 5 nodes 632298 nps 643233 pv b1c3 d7d5 d2d4 b8c6 c1f4 a7a6 g1f3 g8f6 a2a4 c8f5 
 
+max depth:10, nodes:783 441, n/s:650 699, score:-10
+ info depth 10 score cp -10 nodes 783441 nps 650699 pv g8f6 g1f3 b8c6 d2d4 d7d5 c1e3 a7a5 a2a4 c8f5 a1a3 
 
+LMR + NMP_USE + IS_RFP_USE true--------
+max depth:10, nodes:634 283, n/s:636 192, score:5
+ info depth 10 score cp 5 nodes 634283 nps 636192 pv b1c3 d7d5 d2d4 b8c6 c1f4 a7a6 g1f3 g8f6 a2a4 c8f5
 
+max depth:10, nodes:651 204, n/s:558 973, score:-10
+ info depth 10 score cp -10 nodes 651204 nps 558973 pv g8f6 g1f3 b8c6 d2d4 d7d5 c1e3 c8f5 a2a4 a7a5 h2h4 
 
+LMR + NMP_USE + RFP + LMR_HISTORY true--------
+ max depth:10, nodes:2 628 981, n/s:819 508, score:0
+ info depth 10 score cp 0 nodes 2628981 nps 819508 pv b1c3 g8f6 g1f3 d7d5 e2e3 b8c6 f1d3 e7e5 e1g1 f8c5
 
+max depth:10, nodes:1 255 925, n/s:786 920, score:-13
+ info depth 10 score cp -13 nodes 1255925 nps 786920 pv e7e5 g1f3 b8c6 d2d4 e5d4 f3d4 c6d4 d1d4 c7c5 d4d5 
 
+LMR + NMP_USE + RFP + LMR_HISTORY true--------исправл 64
+max depth:10, nodes:1 727 630, n/s:685 567, score:0
+ info depth 10 score cp 0 nodes 1727630 nps 685567 pv b1c3 g8f6 g1f3 d7d5 e2e3 b8c6 f1d3 e7e5 e1g1 f8c5
 
+max depth:10, nodes:1 215 190, n/s:679 636, score:-13
+ info depth 10 score cp -13 nodes 1215190 nps 679636 pv b8c6 d2d4 d7d5 e2e4 d5e4 d4d5 c6e5 d1d4 f7f6 c3e4 
 
+включил продление на шахах-----
+max depth:10, nodes:2 324 599, n/s:731 927, score:0
+ info depth 10 score cp 0 nodes 2324599 nps 731927 pv b1c3 g8f6 g1f3 d7d5 d2d4 b8c6 c1e3 c8f5 a2a4 a7a5 c2c3 b7c6 c1e3 
 
-
-
-
-
-
+max depth:10, nodes:1 315 517, n/s:699 743, score:-10
+ info depth 10 score cp -10 nodes 1315517 nps 699743 pv d7d5 g1f3 d5d4 c3b5 c7c5 c2c3 b8c6 c3d4 c6d4 a2a4 e7d6 e1f1 b7c6 f3d4 
 
 
 
