@@ -1034,7 +1034,9 @@ const make_promo_move_0x88_mm = (chess_board_0x88, chess_board_key_64, from, to,
 
 }
 
-/** нулевой ход (передача очереди хода сопернику без перемещения фигур)
+/** 
+ * написал Gemini 4 Hydrogen
+ * нулевой ход (передача очереди хода сопернику без перемещения фигур)
  * @param {Int32Array} chess_board_0x88
  * @param {BigUint64Array} chess_board_key_64
  * @returns {void}

@@ -463,18 +463,18 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
     uci_return_search.fen_start = fen_start;
     uci_return_search.fen_end = set_fen_from_0x88_cb(chess_board_0x88_get_move);
 
+    if (AB_IS_TEST_BOARD_SCORE) {
+      //test
+      console.log("*");
+      console.log("searching_iterative_deepening_r -> depth_max_current = " + depth_max_current);
+      console.log("searching_iterative_deepening_r -> chess_board_0x88_found_best_score");
+      test_print_piece_0x88_f_cb(chess_board_0x88_get_move);
 
-    // //test
-    // console.log("*");
-    // console.log("searching_iterative_deepening_r -> depth_max_current = " + depth_max_current);
-    // console.log("searching_iterative_deepening_r -> chess_board_0x88_found_best_score");
-    // test_print_piece_0x88_f_cb(chess_board_0x88_get_move);
-
-    // // TEST
-    // console.log("ssearching_iterative_deepening_r -> chess_board_0x88_score");
-    // test_print_piece_0x88_f_cb(chess_board_0x88_score);
-    // console.log("searching_iterative_deepening_r -> chess_board_0x88_score => score = " + score_position_e(chess_board_0x88_score));
-
+      // TEST
+      console.log("ssearching_iterative_deepening_r -> chess_board_0x88_score");
+      test_print_piece_0x88_f_cb(chess_board_0x88_score);
+      console.log("searching_iterative_deepening_r -> chess_board_0x88_score => score = " + score_position_e(chess_board_0x88_score));
+    }
 
     if (number_move_legal != 0) {
 
@@ -525,7 +525,7 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
 
   }// for (let depth_max_current = 1; depth_max_current < depth_max_search; depth_max_current++) {
 
-  if(TT_IS_TEST_FEN) print_test_set_get_position_tt();// печатаем если есть коллизии фена
+  if (TT_IS_TEST_FEN) print_test_set_get_position_tt();// печатаем если есть коллизии фена
   if (TT_IS_TEST_FEN) test_uses_hash_tt();// сколько позиций записано
 
   if (TT_IS_TEST_FEN) test_tt();// записано использовано по альфа бете
