@@ -14,7 +14,7 @@ import { Draw_С } from "./draw.js";
 
 import {
     clear_list_ml, get_type_move_ml, get_from_ml, get_to_ml, get_name_capture_piece_ml,
-    move_is_found_ml, return_i_move_ml, move_to_string_uci_ml,
+    move_is_found_ml, return_i_move_ml, move_to_string_uci_ml, move_to_string_f_ml,
     LENGTH_LIST_ML, IND_PIECE_COLOR_ML,
     MOVE_NO_ML
 } from "../chess_engine_0x88/core_0x88_t/move_list_0x88_t/move_list_0x88.js";
@@ -81,7 +81,9 @@ class GuiLegalMove_0x88_С {
 
   move_to_string_uci(){
         //return move_to_string_uci(this.i_move_save, this.packing_moves_gui_save);
-        return move_to_string_uci_ml(this.i_move, this.packing_moves_gui);        
+        //return move_to_string_uci_ml(this.i_move, this.packing_moves_gui); 
+        const color = this.packing_moves_gui[IND_PIECE_COLOR_ML];
+        return move_to_string_f_ml(this.i_move, this.packing_moves_gui,color);
   }
 
 

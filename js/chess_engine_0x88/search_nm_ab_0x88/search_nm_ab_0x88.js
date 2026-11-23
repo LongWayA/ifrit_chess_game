@@ -436,10 +436,11 @@ const ab_searching_negamax_alpha_beta_id = (alpha, beta, chess_board_0x88, chess
 
   // сгенерировали список ходов тут и взятия и тихие ходы
   generated_pseudo_legal_captures_mgc(chess_board_0x88, packing_moves);
+  sorting_list_ml(packing_moves);
   generated_pseudo_legal_quiet_moves_mgq(chess_board_0x88, packing_moves);
 
   // сортировка по взятиям и типу других ходов
-  sorting_list_ml(packing_moves);
+  //sorting_list_ml(packing_moves);
 
   // используем историю ====================================================    
   // сортировка по истории

@@ -410,7 +410,7 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
       number_move_legal = number_move_legal + 1;
 
       // node_js^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-      chessEngine_0x88_O?.info_currmove_uci_from_searching_iterative_deepening_r(move_to_string_uci_ml(move_i, packing_moves), move_i, String(depth_max_current));
+      //chessEngine_0x88_O?.info_currmove_uci_from_searching_iterative_deepening_r(move_to_string_uci_ml(move_i, packing_moves), move_i, String(depth_max_current));
 
       // пишем ход в линию варианта что бы следующая глубина видела от какого хода они появились
       add_move_to_pv_line_pv(move_i, packing_moves, packing_pv_line, depth);
@@ -522,7 +522,7 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
       return_search_result.uci_best_move = "bestmove " + move_to_string_uci_ml(0, packing_pv_line);//best_move
 
       // node_js^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-      chessEngine_0x88_O?.node_js_return_search_result_on_depth_max_current_to_ChessEngine_0x88_С_from_searching_iterative_deepening_r(return_search_result);
+      //chessEngine_0x88_O?.node_js_return_search_result_on_depth_max_current_to_ChessEngine_0x88_С_from_searching_iterative_deepening_r(return_search_result);
 
       //
       chessEngine_0x88_O?.return_search_result_on_depth_max_current_to_ChessEngine_0x88_С_from_searching_iterative_deepening_r(return_search_result);
@@ -542,9 +542,6 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
 
       return_search_result.best_move_f = "bestmove no";
       return_search_result.uci_best_move = "bestmove no";
-
-      // почему этот используем только когда ходов нет?
-      chessEngine_0x88_O?.node_js_return_search_result_on_depth_max_current_to_ChessEngine_0x88_С_from_searching_iterative_deepening_r(return_search_result);
 
       chessEngine_0x88_O?.return_search_result_on_depth_max_current_to_ChessEngine_0x88_С_from_searching_iterative_deepening_r(return_search_result);
     }

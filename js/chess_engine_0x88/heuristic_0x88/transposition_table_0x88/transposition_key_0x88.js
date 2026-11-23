@@ -29,8 +29,8 @@ import {
   Каждой позиции присваеваем уникальный 64 битный ключ.
 */
 
-const IS_NODE_JS_USE = true;// 
-//const IS_NODE_JS_USE = false;// 
+//const IS_NODE_JS_USE = true;// 
+const IS_NODE_JS_USE = false;// 
 
 let key_64_equal = 0;// совпадающие ключи
 let key_64_not_equal = 0;// не совпадающие ключи
