@@ -90,7 +90,8 @@ let IfritChessGame_R = {
 
     iniM() {
 
-        console.log('IfritChessGame_R->iniM get_text_requests.value ' + get_text_requests.value);
+        //DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+        //console.log('IfritChessGame_R->iniM get_text_requests.value ' + get_text_requests.value);
 
         IfritChessGame_R.gui_chess_O.iniM(IfritChessGame_R);
 
@@ -100,7 +101,7 @@ let IfritChessGame_R = {
         IfritChessGame_R.gui_chess_O.mode_game = Gui_chess_C.ID;// циклическое погружение со всеми эвристиками      
 
         // задаем глубину перебора во время игры
-        IfritChessGame_R.gui_chess_O.depth_max = 8;//6
+        IfritChessGame_R.gui_chess_O.depth_max = 5;//6
         
         // @ts-ignore
         IfritChessGame_R.checkbox_O.set_input_max_depth_value(IfritChessGame_R.gui_chess_O.depth_max);
@@ -298,7 +299,7 @@ let IfritChessGame_R = {
             IfritChessGame_R.gui_chess_O.click_is_stop = Gui_chess_C.CLICK_YES_STOP;
             IfritChessGame_R.checkbox_O.set_disabled(true);
 
-            IfritChessGame_R.gui_chess_O.GuiStartWorker_O.message_gui_to_egnine(fen, IfritChessGame_R.gui_chess_O.depth_max, side_to_move,
+            IfritChessGame_R.gui_chess_O.GuiStartWorker_O.outgoing_message_GuiStartWorker_R_to_worker_chess_engine(fen, IfritChessGame_R.gui_chess_O.depth_max, side_to_move,
                 1, Gui_chess_C.NEGAMAX);
 
 
@@ -308,7 +309,7 @@ let IfritChessGame_R = {
             IfritChessGame_R.gui_chess_O.click_is_stop = Gui_chess_C.CLICK_YES_STOP;
             IfritChessGame_R.checkbox_O.set_disabled(true);
 
-            IfritChessGame_R.gui_chess_O.GuiStartWorker_O.message_gui_to_egnine(fen, IfritChessGame_R.gui_chess_O.depth_max, side_to_move,
+            IfritChessGame_R.gui_chess_O.GuiStartWorker_O.outgoing_message_GuiStartWorker_R_to_worker_chess_engine(fen, IfritChessGame_R.gui_chess_O.depth_max, side_to_move,
                 1, Gui_chess_C.ID);
 
         }
@@ -345,12 +346,12 @@ let IfritChessGame_R = {
             // тут ход уже сделан на доске движка chess_board_0x88_O и мы считаем ответ
             if (IfritChessGame_R.gui_chess_O.mode_game == Gui_chess_C.NEGAMAX) {// test negamax запуск полного перебора 
                 console.log("IfritChessGame_R -> MINMAX");
-                IfritChessGame_R.gui_chess_O.GuiStartWorker_O.message_gui_to_egnine(IfritChessGame_R.position_fen,
+                IfritChessGame_R.gui_chess_O.GuiStartWorker_O.outgoing_message_GuiStartWorker_R_to_worker_chess_engine(IfritChessGame_R.position_fen,
                     IfritChessGame_R.gui_chess_O.depth_max, side_to_move, 0, Gui_chess_C.NEGAMAX);
 
             } else if (IfritChessGame_R.gui_chess_O.mode_game == Gui_chess_C.ID) {  // iterative deepening
                 console.log("IfritChessGame_R -> ID");
-                IfritChessGame_R.gui_chess_O.GuiStartWorker_O.message_gui_to_egnine(IfritChessGame_R.position_fen,
+                IfritChessGame_R.gui_chess_O.GuiStartWorker_O.outgoing_message_GuiStartWorker_R_to_worker_chess_engine(IfritChessGame_R.position_fen,
                     IfritChessGame_R.gui_chess_O.depth_max, side_to_move, 0, Gui_chess_C.ID);
 
             }
@@ -383,17 +384,18 @@ let IfritChessGame_R = {
             IfritChessGame_R.gui_chess_O.click_is_stop = Gui_chess_C.CLICK_YES_STOP;
             IfritChessGame_R.checkbox_O.set_disabled(true);
 
-            IfritChessGame_R.gui_chess_O.GuiStartWorker_O.message_gui_to_egnine(fen, IfritChessGame_R.gui_chess_O.depth_max, side_to_move,
+            IfritChessGame_R.gui_chess_O.GuiStartWorker_O.outgoing_message_GuiStartWorker_R_to_worker_chess_engine(fen, IfritChessGame_R.gui_chess_O.depth_max, side_to_move,
                 0, Gui_chess_C.NEGAMAX);
 
 
         } else if (IfritChessGame_R.gui_chess_O.mode_game == Gui_chess_C.ID) {  // iterative deepening
-            console.log("IfritChessGame_R -> ID");
+//DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD            
+//            console.log("IfritChessGame_R -> ID");
 
             IfritChessGame_R.gui_chess_O.click_is_stop = Gui_chess_C.CLICK_YES_STOP;
             IfritChessGame_R.checkbox_O.set_disabled(true);
 
-            IfritChessGame_R.gui_chess_O.GuiStartWorker_O.message_gui_to_egnine(fen, IfritChessGame_R.gui_chess_O.depth_max, side_to_move,
+            IfritChessGame_R.gui_chess_O.GuiStartWorker_O.outgoing_message_GuiStartWorker_R_to_worker_chess_engine(fen, IfritChessGame_R.gui_chess_O.depth_max, side_to_move,
                 0, Gui_chess_C.ID);
 
         }

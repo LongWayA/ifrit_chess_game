@@ -219,9 +219,6 @@ const searching_negamax = function (chess_board_0x88, chess_board_0x88_score, ch
 
     number_move_legal = number_move_legal + 1;
 
-    // зачем это делаю не помню. код посмотрел и все равно не понимаю :)
-    if (depth == 0) packing_pv_line[IND_TYPE_VARIANT_PV] = 1;
-
     score = -searching_negamax(chess_board_0x88, chess_board_0x88_score, chess_board_key_64, packing_pv_line, (depth + 1), depth_max);
 
 

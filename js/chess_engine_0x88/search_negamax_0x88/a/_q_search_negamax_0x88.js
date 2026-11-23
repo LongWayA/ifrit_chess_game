@@ -308,7 +308,6 @@ function search_preleaf(chess_board_0x88, chess_board_0x88_score, chess_board_ke
   // получалось копированием best_packing_pv_line обратно.
   if (best_move_number !== -1) {
     add_move_to_pv_line_pv(best_move_number, packing_moves, packing_pv_line, depth);
-    if (is_root) packing_pv_line[IND_TYPE_VARIANT_PV] = 1;
     if (TRACK_SCORE_BOARD) chess_board_0x88_score.set(chess_board_save_score);
   }
 
@@ -402,7 +401,6 @@ function search_node(chess_board_0x88, chess_board_0x88_score, chess_board_key_6
 
     add_move_to_pv_line_pv(move_number, packing_moves, packing_pv_line, depth);
     number_move_legal = number_move_legal + 1;
-    if (is_root) packing_pv_line[IND_TYPE_VARIANT_PV] = 1;
 
     const score = child_is_preleaf
       ? -search_preleaf(chess_board_0x88, chess_board_0x88_score, chess_board_key_64,

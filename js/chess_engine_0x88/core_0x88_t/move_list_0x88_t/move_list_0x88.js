@@ -11,7 +11,7 @@
 // проверить: sorting_list_history_heuristic_ml
 
 import {
-    s_0x88_to_x07_cb, s_0x88_to_y07_cb,
+    s_0x88_to_x07_cb, s_0x88_to_y07_cb, chessPieces,
     LET_COOR_CB,
     PIECE_NO_CB, W_PAWN_CB, W_KNIGHT_CB, W_BISHOP_CB, W_ROOK_CB, W_QUEEN_CB, W_KING_CB, B_PAWN_CB,
     B_KNIGHT_CB, B_BISHOP_CB, B_ROOK_CB, B_QUEEN_CB, B_KING_CB, SQUARE_128_to_64_CB
@@ -1015,6 +1015,9 @@ const return_i_move_ml = (packing_moves, from, to, promo = "") => {
     return i_move;
 }
 
+/////////
+// UCI //
+/////////
 /**
 *  gui, i_serch
 * 
@@ -1043,6 +1046,123 @@ const move_to_string_uci_ml = (i, packing_moves) => {
 
     return move_str;
 }
+
+
+/** @type {Record<string, string>} */
+const chessPieces_promo_white = {
+
+    //  "": '\u3000', // Специальный широкий пробел
+    "": ' ', // 
+
+    // Белые фигуры
+    "n": '♘', // Конь
+    "b": '♗', // Слон
+    "r": '♖', // Ладья
+    "q": '♕', // Ферзь
+
+};
+
+/** @type {Record<string, string>} */
+const chessPieces_promo_black = {
+
+    //  "": '\u3000', // Специальный широкий пробел
+    "": ' ', // 
+    // Черные фигуры
+    "n": '♞', // Конь
+    "b": '♝', // Слон
+    "r": '♜', // Ладья
+    "q": '♛', // Ферзь
+};
+
+/////////////////////////////////////////////
+
+/** @type {Record<string, string>} */
+const chessPieces_white = {
+
+    //"NO": '\u3000', // Специальный широкий пробел
+    "NO": 'NO', // 
+    // Белые фигуры
+    "P": '♙', // Пешка
+    "N": '♘', // Конь
+    "B": '♗', // Слон
+    "R": '♖', // Ладья
+    "Q": '♕', // Ферзь
+    "K": '♔', // Король
+};
+
+/** @type {Record<string, string>} */
+const chessPieces_black = {
+
+    //"NO": '\u3000', // Специальный широкий пробел
+    "NO": 'NO', //
+    // Черные фигуры
+    "P": '♟', // Пешка
+    "N": '♞', // Конь
+    "B": '♝', // Слон
+    "R": '♜', // Ладья
+    "Q": '♛', // Ферзь
+    "K": '♚' // Король
+};
+
+/**
+*  gui, i_serch
+* 
+* t
+*
+* возвращем ход из списка на заданной позиции
+* в виде строки вида e2e4, e7e8q
+* @param {number} i
+* @param {Int32Array} packing_moves
+* @param {number} piece_color
+* @returns {string}
+*/
+const move_to_string_f_ml = (i, packing_moves, piece_color) => {
+
+    const type_move_i = get_type_move_ml(i, packing_moves);
+
+    const promo = return_promo_piece_from_type_move_ml(type_move_i);
+    const from_i = get_from_ml(i, packing_moves);
+    const to_i = get_to_ml(i, packing_moves);
+
+    const name_piece = type_move_to_name_piece_ml(type_move_i);
+
+    let name_piece_f;
+    let name_piece_promo_f;
+
+    let sp;
+
+    const capture = ((type_move_i < MOVE_PAWN_PROMO_QUEEN_ML) ||
+        ( (type_move_i > MOVE_PAWN_PROMO_KNIGHT_ML) && (type_move_i < MOVE_QUEEN_ML) )
+    );
+
+    if (capture) {
+        sp = "x";
+    } else {
+        sp = "-";
+    }
+
+
+    if (piece_color == 1) {
+        name_piece_promo_f = chessPieces_promo_white[promo];
+        name_piece_f = chessPieces_white[name_piece];
+    } else {
+        name_piece_promo_f = chessPieces_promo_black[promo];
+        name_piece_f = chessPieces_black[name_piece];
+    }
+
+
+
+    const move_str = name_piece_f +
+
+        LET_COOR_CB[s_0x88_to_x07_cb(from_i)] +
+        (8 - s_0x88_to_y07_cb(from_i)) +
+        sp +
+        LET_COOR_CB[s_0x88_to_x07_cb(to_i)] +
+        (8 - s_0x88_to_y07_cb(to_i)) + name_piece_promo_f;
+
+    return move_str;
+}
+
 
 // Qwen3.7-Max AI
 /**
@@ -1551,7 +1671,7 @@ export {
     set_number_captures_move_ml, sorting_list_ml, test_compare_list_from_ml, test_print_i_move_list_ml, test_print_list_ml,
     save_list_from_ml, move_is_found_ml, return_i_move_ml, move_to_string_uci_ml, return_type_captures_pawn_promo_ml,
     return_type_simple_move_ml, type_move_to_name_piece_ml, type_move_to_name_piece_f_ml, return_promo_piece_from_type_move_ml,
-    set_move_after_the_captures_ml, sorting_list_history_heuristic_ml, set_move_in_0_ml, test_print_list_history_ml,
+    set_move_after_the_captures_ml, sorting_list_history_heuristic_ml, set_move_in_0_ml, test_print_list_history_ml, move_to_string_f_ml,
     LENGTH_LIST_ML, IND_PIECE_COLOR_ML, IND_NUMBER_CAPTURES_MOVE_ML, IND_NUMBER_MOVE_ML,
     IND_PROMO_QUEEN_ML, IND_PROMO_ROOK_ML, IND_PROMO_BISHOP_ML, IND_PROMO_KNIGHT_ML,
     MOVE_NO_ML, CAPTURES_PAWN_QUEEN_PROMO_QUEEN_ML, CAPTURES_PAWN_ROOK_PROMO_QUEEN_ML, CAPTURES_PAWN_BISHOP_PROMO_QUEEN_ML,

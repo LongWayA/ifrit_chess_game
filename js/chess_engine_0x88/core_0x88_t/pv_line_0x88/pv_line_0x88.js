@@ -7,33 +7,37 @@
 */
 
 import {
-    s_0x88_to_x07_cb, s_0x88_to_y07_cb,
+    s_0x88_to_x07_cb, s_0x88_to_y07_cb, chessPieces,
     LET_COOR_CB
-} from "../core_0x88_t/chess_board_0x88_t/chess_board_0x88.js";
+} from "../chess_board_0x88_t/chess_board_0x88.js";
 
 import {
     get_type_move_ml, get_from_ml, get_to_ml, get_name_capture_piece_ml,
     return_promo_piece_from_type_move_ml,
     TYPE_MOVE_NAME_ML
-} from "../core_0x88_t/move_list_0x88_t/move_list_0x88.js";
+} from "../move_list_0x88_t/move_list_0x88.js";
 
 /**
 * НАЗНАЧЕНИЕ
 
 let packing_pv_line = new Int32Array(MAX_DEPTH_PV = 104).fill(MOVE_NO);
 
+вариант не может быть больше 101 ход т.е. индекс до 100 это возможные ходы
 101 - type_variant - тип варианта. это я уже не помню что такое и вроде не использую
-102 - детектор мата по типу depth - 1 + 500
+102 - детектор мата и пата по типу depth - 1 + 500 пишем глубину последнего хода 
+так как на глубине обнаружения мата ходов не было то depth - 1,
+ + 500 что бы не было нуля на глубине 1 так как 0 это отсутствие мата или пата
 103 - depth_max - максимальная глубина записи хода
 */
 
 
 const MAX_DEPTH_PV = 104;// размер массива. до 103 глубины. причем 101,102,103 используем
 
-const IND_TYPE_VARIANT_PV = 101;// кое где пишу но зачем уже не помню. похоже не использую
-const IND_DEPTH_MAT_PV = 102;// записываем детектор мата по типу depth - 1 + 500, если не 0 то случай мата или пата 
-const IND_DEPTH_PV = 103; // сюда пишем глубину записи если она больше уже записанной. 
+const IND_DEPTH_PV = 101; // сюда пишем глубину записи если она больше уже записанной. 
                           // т.е. это последняя глубина записанного хода, а не колличество записанных ходов
+
+const IND_DEPTH_MAT_PV = 102;// записываем детектор мата по типу depth - 1 + 500, если не 0 то случай мата или пата 
+const IND_TYPE_VARIANT_PV = 103;// кое где пишу но зачем уже не помню. похоже не использую
 
 /**
 * очищаем список ходов
@@ -44,9 +48,13 @@ const clear_pv_line_pv = (packing_pv_line) => {
   for (let i = 0; i < MAX_DEPTH_PV; i++) {
     packing_pv_line[i] = 0;
   }
+  packing_pv_line[IND_TYPE_VARIANT_PV] = 0;
+  packing_pv_line[IND_DEPTH_MAT_PV] = 0;
+  packing_pv_line[IND_DEPTH_PV] = 0;
 }
 
 /**
+* добавляем ход из списка ходов в линию варианта(тоже списко ходов только по глубине)
 * @param {number} i_move
 * @param {Int32Array} packing_moves
 * @param {Int32Array} packing_pv_line
@@ -159,6 +167,28 @@ const pv_line_to_uci_string_pv = (packing_pv_line, mat) => {
 
   return pv_line_str;
 }
+
+// /** @type {Record<number, string>} */
+// const chessPieces = {
+
+//     0: '\u3000', // Специальный широкий пробел
+
+//     // Белые фигуры
+//     1: '♙', // Пешка
+//     2: '♘', // Конь
+//     3: '♗', // Слон
+//     4: '♖', // Ладья
+//     5: '♕', // Ферзь
+//     6: '♔', // Король
+
+//     // Черные фигуры
+//      9: '♟', // Пешка
+//     10: '♞', // Конь
+//     11: '♝', // Слон
+//     12: '♜', // Ладья
+//     13: '♛', // Ферзь
+//     14: '♚' // Король
+// };
 
 
 export {

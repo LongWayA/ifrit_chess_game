@@ -18,15 +18,30 @@ import { Checkbox_C } from "../browser/checkbox.js";
 // при запуске игры сразу же запускается отдельный поток в котором идет расчет.
 const worker_egine_0x88 = new Worker('js/worker/worker_chess_engine_0x88.js', { type: "module" });
 
-// принимаем сообщения от движка
 /**
+ * 
+ * посылаем сообщения порожденному потоку поиска
+ * 
+  * @param {string} message
+  * @returns {void}
+  */
+let outgoing_message_gui_start_worker_to_worker_chess_engine = function (message) {
+      worker_egine_0x88.postMessage(message);
+}
+
+// 
+/**
+ * 
+ * принимаем сообщения от порожденного потока поиска
+ * 
  * @param {any} event
  * @returns {void}
  */
 worker_egine_0x88.onmessage = function (event) {
       //console.log('Сообщение от движка : ', event.data);
-      GuiStartWorker_R.message_egnine_to_gui(event.data);
+      GuiStartWorker_R.incoming_message_gui_start_worker_from_worker_chess_engine(event.data)
 };
+
 
 //
 let GuiStartWorker_R = {
@@ -45,15 +60,20 @@ let GuiStartWorker_R = {
             GuiStartWorker_R.IfritChessGame_O = IfritChessGame_R;
             GuiStartWorker_R.checkbox_O = IfritChessGame_R.checkbox_O;
       },
-
-      // функция работы с текстовыми сообщениями от движка который запущен в отдельном потоке.
+ 
       /**
+       * 
+       * функция работы с текстовыми сообщениями от потока движка который запущен в отдельном потоке.
+       * 
        * @param {string} message
        * @returns {void}
        */
-      message_egnine_to_gui(message) {
+      incoming_message_gui_start_worker_from_worker_chess_engine(message) {
             //console.log('TO GUI message ' + message);
 
+            //////////////////////////////////////////////////////////////////////////////////
+            // not uci 
+            // движок оболочке таких команд в нормальном уки не присылает
             if (message.includes("position fen ")) {
                   let end = message.length;
                   let fen = message.slice(13, end);
@@ -64,10 +84,15 @@ let GuiStartWorker_R = {
                   GuiStartWorker_R.IfritChessGame_O.gui_chess_O.game_line_0x88_O.add_position(fen);
             }
 
+            //////////////////////////////////////////////////////////////////////////////////
+            // uci 
+            //           
             //0    1     2 3     4  5  6     7  8   9     10 11  
             //info depth 3 score cp 42 nodes 72 nps 36000 pv e2e4
             if (message.includes("info ")) {
 
+                  // разбиваем сообщения на массив. разделитель пробел. 
+                  // массив начинается с 0
                   let info = message.split(' ');
 
                   //console.log('message ' + message);
@@ -98,6 +123,9 @@ let GuiStartWorker_R = {
 
             }
 
+            //////////////////////////////////////////////////////////////////////////////////
+            // uci 
+            // bestmove e2e4
             if (message.includes("bestmove")) {
                   //console.log('g go');
                   // рисуем доску                 
@@ -120,13 +148,15 @@ let GuiStartWorker_R = {
                         GuiStartWorker_R.IfritChessGame_O.gui_chess_O.number_move =
                               GuiStartWorker_R.IfritChessGame_O.gui_chess_O.number_move + 1;
 
-                        move_str = GuiStartWorker_R.IfritChessGame_O.gui_chess_O.pv_line_str.slice(3, 8);
+                        //move_str = GuiStartWorker_R.IfritChessGame_O.gui_chess_O.pv_line_str.slice(3, 8);
+                        move_str = message.split(' ')[1] + " "; // "e2e4"
+                        //move_str = message.slice(0, 7);                        
 
-                        if (move_str[4] != " ") {
-                              move_str = move_str + " ";
-                              // console.log("move_str " + move_str);
-                              console.log("move_str[4] " + move_str[4]);
-                        }
+                        // if (move_str[4] != " ") {
+                        //       move_str = move_str + " ";
+                        //       // console.log("move_str " + move_str);
+                        //       console.log("move_str[4] " + move_str[4]);
+                        // }
 
                         move_str = GuiStartWorker_R.IfritChessGame_O.gui_chess_O.number_move + "." + move_str;
 
@@ -139,14 +169,14 @@ let GuiStartWorker_R = {
 
                   } else {
 
-                        move_str = GuiStartWorker_R.IfritChessGame_O.gui_chess_O.pv_line_str.slice(3, 8);
+                        //move_str = GuiStartWorker_R.IfritChessGame_O.gui_chess_O.pv_line_str.slice(3, 8);
+                        move_str = message.split(' ')[1] + " "; // "e2e4"
 
-
-                        if (move_str[4] != " ") {
-                              move_str = move_str + " ";
-                              // console.log("move_str " + move_str);                              
-                              // console.log("move_str[4] " + move_str[4]);
-                        }
+                        // if (move_str[4] != " ") {
+                        //       move_str = move_str + " ";
+                        //       // console.log("move_str " + move_str);                              
+                        //       // console.log("move_str[4] " + move_str[4]);
+                        // }
 
                         GuiStartWorker_R.IfritChessGame_O.checkbox_O.add_text_chess_game(move_str);
 
@@ -161,10 +191,11 @@ let GuiStartWorker_R = {
             }
       },
 
-
-      // передаем сообщение движку после нажатия кнопки го или сделанного руками хода, 
-      // если ход сделали мы то добавляем его в линию игры
       /**
+       * 
+       * передаем сообщение потоку движка после нажатия кнопки го или сделанного руками хода,
+       * если ход сделали мы то добавляем его в линию игры
+       * 
        * @param {string} fen
        * @param {number} depth_max
        * @param {number} side_to_move 
@@ -172,15 +203,15 @@ let GuiStartWorker_R = {
        * @param {number} mode_game  
        * @returns {void}
        */
-      message_gui_to_egnine(fen, depth_max, side_to_move, not_go, mode_game) {
+      outgoing_message_GuiStartWorker_R_to_worker_chess_engine(fen, depth_max, side_to_move, not_go, mode_game) {
 
             let message = "mode_game " + mode_game;
-            worker_egine_0x88.postMessage(message);
+            outgoing_message_gui_start_worker_to_worker_chess_engine(message);
 
             message = "position fen " + fen;
-            worker_egine_0x88.postMessage(message);
+            outgoing_message_gui_start_worker_to_worker_chess_engine(message);
             message = "go depth " + depth_max;
-            worker_egine_0x88.postMessage(message);
+            outgoing_message_gui_start_worker_to_worker_chess_engine(message);
 
             let move_str;
 
@@ -192,7 +223,7 @@ let GuiStartWorker_R = {
                         // GuiStartWorker_R.IfritChessGame_O.gui_chess_O.number_move = GuiStartWorker_R.IfritChessGame_O.
                         // gui_chess_O.number_move + 1;
                         GuiStartWorker_R.IfritChessGame_O.gui_chess_O.number_move = GuiStartWorker_R.IfritChessGame_O.
-                        gui_chess_O.number_move + 1;
+                              gui_chess_O.number_move + 1;
 
                         move_str = GuiStartWorker_R.IfritChessGame_O.gui_chess_O.number_move + "." +
                               GuiStartWorker_R.IfritChessGame_O.gui_chess_O.guiLegalMove_0x88_O.move_to_string_uci() +

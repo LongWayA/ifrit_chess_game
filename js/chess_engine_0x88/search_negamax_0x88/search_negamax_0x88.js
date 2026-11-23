@@ -28,7 +28,7 @@ import {
 import {
   add_move_to_pv_line_pv, save_pv_line_pv,
   MAX_DEPTH_PV, IND_TYPE_VARIANT_PV, IND_DEPTH_MAT_PV
-} from "../core_0x88_t/pv_line_0x88.js";
+} from "../core_0x88_t/pv_line_0x88/pv_line_0x88.js";
 
 import {
   generated_pseudo_legal_captures_mgc, check_detected_mgc
@@ -228,9 +228,6 @@ const nm_searching_negamax = (chess_board_0x88, chess_board_0x88_score, chess_bo
     add_move_to_pv_line_pv(move_number, packing_moves, packing_pv_line, depth);
 
     number_move_legal = number_move_legal + 1;
-
-    // зачем это делаю не помню. код посмотрел и все равно не понимаю :)
-    if (depth == 0) packing_pv_line[IND_TYPE_VARIANT_PV] = 1;
 
     score = -nm_searching_negamax(chess_board_0x88, chess_board_0x88_score, chess_board_key_64, 
                                   packing_pv_line,  (depth + 1), depth_max, node_mm);

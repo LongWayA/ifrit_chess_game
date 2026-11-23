@@ -248,11 +248,6 @@ const searching_negamax = function (
     legalMovesCount += 1;
     add_move_to_pv_line_pv(moveIdx, moveList, packing_pv_line, depth);
 
-    // Помечаем линию PV как валидный игровой вариант при старте ветки из корня
-    if (depth === 0) {
-      packing_pv_line[IND_TYPE_VARIANT_PV] = 1;
-    }
-
     // Рекурсивный спуск на следующий полуход (инвертируем знак оценки по принципу Negamax)
     const childScore = -searching_negamax(
       chess_board_0x88,

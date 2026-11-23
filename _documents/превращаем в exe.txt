@@ -1,0 +1,33 @@
+Так как в коде есть относительный импорт ../chess_engine_0x88/i_chess_engine_0x88.js, 
+сначала нужно объединить все JS-файлы в один скрипт формата CommonJS, который понимает упаковщик Node.js.
+Установите esbuild (если еще не установлен) и соберите бандл:
+
+npm install -g esbuild
+esbuild ifrit_node_js.js --bundle --platform=node --format=cjs --outfile=bundle.cjs
+
+
+Создайте в той же папке файл sea-config.json со следующим содержимым:
+
+{
+  "main": "bundle.cjs",
+  "output": "sea-prep.blob",
+  "disableExperimentalSEAWarning": true
+}
+
+(Параметр disableExperimentalSEAWarning критически важен: 
+он уберет лишние системные предупреждения Node.js из stdout, 
+чтобы шахматная оболочка не сбивалась при чтении команд UCI).
+
+Генерируем бинарный слепок вашего кода:
+
+node --experimental-sea-config sea-config.json
+
+Копируем исполняемый файл самого Node.js под именем вашего движка:
+
+node -e "require('fs').copyFileSync(process.execPath, 'Ifrit_js.exe')"
+
+Устанавливаем утилиту postject и внедряем ваш код внутрь Ifrit_js.exe:
+
+npx postject Ifrit_js.exe NODE_SEA_BLOB sea-prep.blob --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2
+
+После этого файл Ifrit_js.exe полностью готов к подключению в любую шахматную оболочку.

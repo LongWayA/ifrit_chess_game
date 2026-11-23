@@ -481,7 +481,6 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
       number_move_legal = number_move_legal + 1;
 
       add_move_to_pv_line_pv(move_i, packing_moves, packing_pv_line, 0);
-      packing_pv_line[IND_TYPE_VARIANT_PV] = 1;
 
       set_node_in_0_ab();
 

@@ -19,6 +19,9 @@ import { ChessEngine_0x88_С } from "../chess_engine_0x88/i_chess_engine_0x88.js
 /**
 * НАЗНАЧЕНИЕ
 * Все объяснил и помог сделать заготовку ИИ от Google
+* 
+* править константу в transposition_key_0x88.js
+* 
 */
 
 let chessEngine_0x88_O = new ChessEngine_0x88_С();// встроенный шахматный движок на доске 0x88
@@ -62,7 +65,7 @@ rl.on('line', (line) => {
   save_command(command);
 
   if (command === 'uci') {
-    console.log('id name Ifrit_js_1402m26');
+    console.log('id name Ifrit_js_23.11.26');
     console.log('id author AnBr75');
     console.log('uciok');
   }
@@ -111,14 +114,14 @@ rl.on('line', (line) => {
     depth_max = command.slice(9);
     //console.log('depth_max ' + depth_max);
     //console.log('2 fen_start ' + fen_start);
-    let info_return_search = chessEngine_0x88_O.go_depth_id(fen_start, depth_max);
+    let return_search_result = chessEngine_0x88_O.go_depth_id(fen_start, depth_max);
 
     // console.log("info depth "+ info_return_search.depth_max_search_str + " score cp " + info_return_search.best_score_str 
     // + " nodes " + info_return_search.node_count_str + " nps " + info_return_search.nodes_per_second_str 
     // + " pv " + info_return_search.pv_line_uci_str);
 
     //console.log('bestmove ' + info_return_search.best_move);
-    console.log(info_return_search.best_move);
+    console.log(return_search_result.uci_best_move);
   }
 
   else if (command === 'stop') {

@@ -2,7 +2,7 @@
 /** 
  * @copyright Copyright (c) 2026, AnBr75 and/or its affiliates. All rights reserved.
  * @author AnBr75
- * @name transposition_table_0x88.js
+ * @name transposition_key_0x88.js
  * @version created 07.02m.2026 
  * * Code review: Gemini 4 Hydrogen
 */
@@ -28,6 +28,9 @@ import {
   Работаем с кеш ключом шахматной доски.
   Каждой позиции присваеваем уникальный 64 битный ключ.
 */
+
+const IS_NODE_JS_USE = true;// 
+//const IS_NODE_JS_USE = false;// 
 
 let key_64_equal = 0;// совпадающие ключи
 let key_64_not_equal = 0;// не совпадающие ключи
@@ -67,8 +70,12 @@ const ini_random_key_array_64_tk = function () {
             // если мы не вышли за пределы доски
             if ((sq & 136) == 0) {// 136 0x88
                 // nnnnnnnnnnnnnnnnnnnnnn
-                //crypto.getRandomValues(uint_a_64);
-                self.crypto.getRandomValues(uint_a_64);
+
+                if (IS_NODE_JS_USE) {
+                    crypto.getRandomValues(uint_a_64);
+                } else {
+                    self.crypto.getRandomValues(uint_a_64);
+                }
 
                 uint64 = uint_a_64[0];//
 
@@ -123,7 +130,7 @@ const set_key_from_board_0x88_tk = function (chess_board_0x88, chess_board_key_6
 
     let piece;
     let key_64 = 0n;
-
+    
     // бежим по шахматной доске
     for (let sq = 0; sq < 128; sq++) {
 

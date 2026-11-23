@@ -54,7 +54,7 @@ import {
 import {
   add_move_to_pv_line_pv, save_pv_line_pv,
   MAX_DEPTH_PV, IND_TYPE_VARIANT_PV, IND_DEPTH_MAT_PV
-} from "../core_0x88_t/pv_line_0x88.js";
+} from "../core_0x88_t/pv_line_0x88/pv_line_0x88.js";
 
 import {
   generated_pseudo_legal_captures_mgc, check_detected_mgc
@@ -85,45 +85,45 @@ import {
 
 
 // TESTS ////////////////////////////////////////////
-const IS_TEST_KEY_64 = true;//
-//const IS_TEST_KEY_64 = false; //
+//const IS_TEST_KEY_64 = true;//
+const IS_TEST_KEY_64 = false; //
 
-const AB_IS_TEST_BOARD_SCORE = true;//
-//const AB_IS_TEST_BOARD_SCORE = false;//
+//const AB_IS_TEST_BOARD_SCORE = true;//
+const AB_IS_TEST_BOARD_SCORE = false;//
 //////////////////////////////////////////// TESTS
 
 const IS_EVALUATE_USE = true;// статическая оценка позиции
 //const IS_EVALUATE_USE = false;// 
 
-//const IS_QUIESCENCE_USE = true;// используем просмотр выгодных взятий до конца
-const IS_QUIESCENCE_USE = false;// 
+const IS_QUIESCENCE_USE = true;// используем просмотр выгодных взятий до конца
+//const IS_QUIESCENCE_USE = false;// 
 
-//const IS_AB_USE = true;// используем альфа-бета оптимизацию
-const IS_AB_USE = false;// 
+const IS_AB_USE = true;// используем альфа-бета оптимизацию
+//const IS_AB_USE = false;// 
 
-//const IS_KILLER_USE = IS_AB_USE && true;// is_killer_heuristic_use_ab   использование двух киллеров, т.е. лучших ходов на этой глубине
-const IS_KILLER_USE = IS_AB_USE && false;// 
+const IS_KILLER_USE = IS_AB_USE && true;// is_killer_heuristic_use_ab   использование двух киллеров, т.е. лучших ходов на этой глубине
+//const IS_KILLER_USE = IS_AB_USE && false;// 
 
-//const IS_HISTORY_USE = IS_AB_USE && true;// использование сортировки по частоте отсечений.
-const IS_HISTORY_USE = IS_AB_USE && false;// 
+const IS_HISTORY_USE = IS_AB_USE && true;// использование сортировки по частоте отсечений.
+//const IS_HISTORY_USE = IS_AB_USE && false;// 
 
-//let IS_TT_USE = IS_AB_USE && true;// сортировка и отсечка по таблице перестановок(хеш-таблице)
-let IS_TT_USE = IS_AB_USE && false;// 
+let IS_TT_USE = IS_AB_USE && true;// сортировка и отсечка по таблице перестановок(хеш-таблице)
+//let IS_TT_USE = IS_AB_USE && false;// 
 
-//const IS_PVS_USE = true;// Principal Variation Search
-const IS_PVS_USE = false;// 
+const IS_PVS_USE = true;// Principal Variation Search
+//const IS_PVS_USE = false;// 
 
-//const IS_LMR_USE = IS_PVS_USE && true;// Late Move Reductions
-const IS_LMR_USE = IS_PVS_USE && false;//
+const IS_LMR_USE = IS_PVS_USE && true;// Late Move Reductions
+//const IS_LMR_USE = IS_PVS_USE && false;//
 
-//const IS_NMP_USE = true; // Null Move Pruning
-const IS_NMP_USE = false; // 
+const IS_NMP_USE = true; // Null Move Pruning
+//const IS_NMP_USE = false; // 
 
 //const IS_RFP_USE = IS_EVALUATE_USE && true; // Reverse Futility Pruning (отсечение по статической оценке)
 const IS_RFP_USE = IS_EVALUATE_USE && false;
 
-//const IS_LMR_HISTORY_USE = IS_HISTORY_USE && IS_LMR_USE && true; // Учёт таблицы истории при расчёте редукции LMR
-const IS_LMR_HISTORY_USE = IS_HISTORY_USE && IS_LMR_USE && false;
+const IS_LMR_HISTORY_USE = IS_HISTORY_USE && IS_LMR_USE && true; // Учёт таблицы истории при расчёте редукции LMR
+//const IS_LMR_HISTORY_USE = IS_HISTORY_USE && IS_LMR_USE && false;
 
 //const IS_CHECK_EXT_USE = true; // Check Extensions (продление поиска при шахе)
 const IS_CHECK_EXT_USE = false;

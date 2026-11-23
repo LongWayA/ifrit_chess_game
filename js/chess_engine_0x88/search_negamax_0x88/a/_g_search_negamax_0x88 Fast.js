@@ -131,10 +131,6 @@ const searching_negamax = function (
     add_move_to_pv_line_pv(move_number, packing_moves, packing_pv_line, depth);
     number_move_legal++;
 
-    if (depth === 0) {
-      packing_pv_line[IND_TYPE_VARIANT_PV] = 1;
-    }
-
     const score = -searching_negamax(
       chess_board_0x88,
       chess_board_0x88_score,

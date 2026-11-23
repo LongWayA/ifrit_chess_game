@@ -1,0 +1,3 @@
+deno run --allow-all ifrit_chess_client\js\node_js\ifrit_node_js.js
+
+deno compile --allow-all --output ifrit_deno.exe ifrit_chess_client\js\node_js\ifrit_node_js.js
