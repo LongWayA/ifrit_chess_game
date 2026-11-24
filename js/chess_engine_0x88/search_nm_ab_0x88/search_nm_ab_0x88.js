@@ -85,11 +85,11 @@ import {
 
 
 // TESTS ////////////////////////////////////////////
-//const IS_TEST_KEY_64 = true;//
-const IS_TEST_KEY_64 = false; //
+const IS_TEST_KEY_64 = true;//
+//const IS_TEST_KEY_64 = false; //
 
-//const AB_IS_TEST_BOARD_SCORE = true;//
-const AB_IS_TEST_BOARD_SCORE = false;//
+const AB_IS_TEST_BOARD_SCORE = true;//
+//const AB_IS_TEST_BOARD_SCORE = false;//
 //////////////////////////////////////////// TESTS
 
 const IS_EVALUATE_USE = true;// статическая оценка позиции
@@ -110,20 +110,22 @@ const IS_HISTORY_USE = IS_AB_USE && true;// использование сорт�
 let IS_TT_USE = IS_AB_USE && true;// сортировка и отсечка по таблице перестановок(хеш-таблице)
 //let IS_TT_USE = IS_AB_USE && false;// 
 
-const IS_PVS_USE = true;// Principal Variation Search
-//const IS_PVS_USE = false;// 
+///////////////////////////////////////////////////////////////
 
-const IS_LMR_USE = IS_PVS_USE && true;// Late Move Reductions
-//const IS_LMR_USE = IS_PVS_USE && false;//
+//const IS_PVS_USE = true;// Principal Variation Search
+const IS_PVS_USE = false;// 
 
-const IS_NMP_USE = true; // Null Move Pruning
-//const IS_NMP_USE = false; // 
+//const IS_LMR_USE = IS_PVS_USE && true;// Late Move Reductions
+const IS_LMR_USE = IS_PVS_USE && false;//
+
+//const IS_NMP_USE = true; // Null Move Pruning
+const IS_NMP_USE = false; // 
 
 //const IS_RFP_USE = IS_EVALUATE_USE && true; // Reverse Futility Pruning (отсечение по статической оценке)
 const IS_RFP_USE = IS_EVALUATE_USE && false;
 
-const IS_LMR_HISTORY_USE = IS_HISTORY_USE && IS_LMR_USE && true; // Учёт таблицы истории при расчёте редукции LMR
-//const IS_LMR_HISTORY_USE = IS_HISTORY_USE && IS_LMR_USE && false;
+//const IS_LMR_HISTORY_USE = IS_HISTORY_USE && IS_LMR_USE && true; // Учёт таблицы истории при расчёте редукции LMR
+const IS_LMR_HISTORY_USE = IS_HISTORY_USE && IS_LMR_USE && false;
 
 //const IS_CHECK_EXT_USE = true; // Check Extensions (продление поиска при шахе)
 const IS_CHECK_EXT_USE = false;

@@ -484,26 +484,33 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
     //DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD   
     if (AB_IS_TEST_BOARD_SCORE) {
       //test
-      // console.log("*");
-      // console.log("searching_iterative_deepening_r -> depth_max_current = " + depth_max_current);
-      // console.log("searching_iterative_deepening_r -> chess_board_0x88_found_best_score");
-      // test_print_piece_0x88_f_cb(chess_board_0x88_get_move);
-      // console.log("searching_iterative_deepening_r -> node_root = " + node_root);
+      console.log("*");
+      console.log("searching_iterative_deepening_r -> depth_max_current = " + depth_max_current);
+      console.log("searching_iterative_deepening_r -> chess_board_0x88_found_best_score");
+      test_print_piece_0x88_f_cb(chess_board_0x88_get_move);
+      console.log("searching_iterative_deepening_r -> node_root = " + node_root);
 
-      // // TEST
-      // console.log("ssearching_iterative_deepening_r -> chess_board_0x88_score");
-      // test_print_piece_0x88_f_cb(chess_board_0x88_score);
-      // console.log("searching_iterative_deepening_r -> chess_board_0x88_score => score = " + score_position_e(chess_board_0x88_score));
+      // TEST
+      console.log("ssearching_iterative_deepening_r -> chess_board_0x88_score");
+      test_print_piece_0x88_f_cb(chess_board_0x88_score);
+      console.log("searching_iterative_deepening_r -> chess_board_0x88_score => score = " + score_position_e(chess_board_0x88_score));
 
     }
 
     return_search_result.fen_start = fen_start;
     return_search_result.fen_end = set_fen_from_0x88_cb(chess_board_0x88_get_move);// если ходов не было тут стартовая позиция
 
+
+
+
     if (number_move_legal != 0) {
 
       // вот она сортировка по оценке
       sorting_list_top_max_score_lr(list_score_move);
+
+      const piece_color = packing_moves[IND_PIECE_COLOR_ML];
+
+      if (piece_color == 0) best_score = -best_score;
 
       let depth_uci = String(depth_max_current);
       let score_cp = String(best_score);
@@ -517,8 +524,8 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
         " nodes " + nodes + " nps " + nps + " pv " + pv;
 
       //bestmove e2e4
-      const piece_color_pv = packing_moves[IND_PIECE_COLOR_ML];
-      return_search_result.best_move_f = "bestmove " + move_to_string_f_ml(0, packing_pv_line, piece_color_pv);
+      //const piece_color_pv = packing_moves[IND_PIECE_COLOR_ML];
+      return_search_result.best_move_f = "bestmove " + move_to_string_f_ml(0, packing_pv_line, piece_color);
       return_search_result.uci_best_move = "bestmove " + move_to_string_uci_ml(0, packing_pv_line);//best_move
 
       // node_js^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

@@ -26,7 +26,7 @@ import {
 import {
       clear_pv_line_pv, add_move_to_pv_line_pv, save_pv_line_pv, pv_line_to_uci_string_pv,
       MAX_DEPTH_PV, IND_TYPE_VARIANT_PV
-} from "../chess_engine_0x88/core_0x88_t/pv_line_0x88.js";
+} from "../chess_engine_0x88/core_0x88_t/pv_line_0x88/pv_line_0x88.js";
 
 import { Timer_C } from "../browser/timer.js";
 
