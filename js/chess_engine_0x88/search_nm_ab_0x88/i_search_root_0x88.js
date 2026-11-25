@@ -484,7 +484,7 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
     //DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD   
     if (AB_IS_TEST_BOARD_SCORE) {
       //test
-      console.log("*");
+      console.log("NNNNNNNNNNNNNNNNNNNNNNNNNNNN");
       console.log("searching_iterative_deepening_r -> depth_max_current = " + depth_max_current);
       console.log("searching_iterative_deepening_r -> chess_board_0x88_found_best_score");
       test_print_piece_0x88_f_cb(chess_board_0x88_get_move);
@@ -493,8 +493,11 @@ const searching_iterative_deepening_r = function (chessEngine_0x88_O, fen_start,
       // TEST
       console.log("ssearching_iterative_deepening_r -> chess_board_0x88_score");
       test_print_piece_0x88_f_cb(chess_board_0x88_score);
-      console.log("searching_iterative_deepening_r -> chess_board_0x88_score => score = " + score_position_e(chess_board_0x88_score));
-
+      console.log("ssearching_iterative_deepening_r -> depth_max_current = " + depth_max_current);
+      console.log("ssearching_iterative_deepening_r -> score = " + best_score);
+      let score_position_e_t = score_position_e(chess_board_0x88_score);
+      console.log("searching_iterative_deepening_r -> chess_board_0x88_score => score = " + score_position_e_t);
+      if (Math.abs(best_score) != Math.abs(score_position_e_t)) console.log("ssearching_iterative_deepening_r -> WARNING !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     }
 
     return_search_result.fen_start = fen_start;

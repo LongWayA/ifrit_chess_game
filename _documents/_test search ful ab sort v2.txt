@@ -224,12 +224,18 @@ AB + TT, DEPTH 5------
  max depth:5, nodes:22540, n/s:751333, score:15 - в 1,2 раз меньше узлов
  info depth 5 score cp 15 nodes 22540 nps 751333 pv b1c3 b8c6 d2d4 g8f6 c1e3 
 
+ max depth:5, nodes:18836, n/s:697630, score:15 - в 1,4 раз меньше узлов
+ info depth 5 score cp 15 nodes 18836 nps 697630 pv b1c3 b8c6 d2d4 g8f6 c1e3 
+
  ♞b8-c6
  max depth:5, nodes:61 580, n/s:684 222, score:0
  info depth 5 score cp 0 nodes 61580 nps 684222 pv b8c6 d2d4 d7d5 c1e3 c8f5 
 
  max depth:5, nodes:49444, n/s:686722, score:0 - в 1,2 раз меньше узлов
  info depth 5 score cp 0 nodes 49444 nps 686722 pv b8c6 d2d4 d7d5 c1e3 c8f5 
+
+ max depth:5, nodes:21232, n/s:684903, score:0 - в 2,9 раз меньше узлов
+ info depth 5 score cp 0 nodes 21232 nps 684903 pv b8c6 d2d4 d7d5 c1e3 c8f5  
 
  2.♘g1-f3
  max depth:5, nodes:100 190, n/s:834 917, score:20
@@ -238,12 +244,18 @@ AB + TT, DEPTH 5------
  max depth:5, nodes:64493, n/s:786500, score:20 - в 1,5 раз меньше узлов
  info depth 5 score cp 20 nodes 64493 nps 786500 pv g1f3 d7d5 e2e4 c8e6 f1d3 ?
 
+ max depth:5, nodes:29123, n/s:728075, score:20 - в 3,4 раз меньше узлов
+ info depth 5 score cp 20 nodes 29123 nps 728075 pv g1f3 d7d5 e2e4 c8e6 f1d3 
+
  ♞g8-f6
  max depth:5, nodes:83 970, n/s:631 353, score:0
  info depth 5 score cp 0 nodes 83970 nps 631353 pv g8f6 d2d4 d7d5 c1e3 c8f5
 
  max depth:5, nodes:54797, n/s:652345, score:0 - в 1,5 раз меньше узлов
  info depth 5 score cp 0 nodes 54797 nps 652345 pv g8f6 d2d4 d7d5 c1e3 c8f5
+
+ max depth:5, nodes:16377, n/s:682375, score:0 - в 5,1 раз меньше узлов
+ info depth 5 score cp 0 nodes 16377 nps 682375 pv g8f6 d2d4 d7d5 c1e3 c8f5 
 
  3.♙e2-e4
  max depth:5, nodes:145 879, n/s:801 533, score:15
@@ -252,12 +264,18 @@ AB + TT, DEPTH 5------
  max depth:5, nodes:110185, n/s:729702, score:15 - в 1,3 раз меньше узлов
  info depth 5 score cp 15 nodes 110185 nps 729702 pv e2e4 d7d5 e4d5 f6d5 f1d3 
 
+ max depth:5, nodes:49482, n/s:677836, score:15 - в 2,9 раз меньше узлов
+ info depth 5 score cp 15 nodes 49482 nps 677836 pv e2e4 d7d5 e4d5 f6d5 f1d3  
+
  ♟d7-d5
  max depth:5, nodes:153 587, n/s:420 786, score:-3
  info depth 5 score cp -3 nodes 153587 nps 420786 pv d7d5 e4d5 f6d5 c3d5 d8d5
 
  max depth:5, nodes:119069, n/s:423733, score:-3 - в 1,3 раз меньше узлов
  info depth 5 score cp -3 nodes 119069 nps 423733 pv d7d5 e4d5 f6d5 c3d5 d8d5 
+
+ max depth:5, nodes:63244, n/s:436166, score:-3 - в 2,4 раз меньше узлов
+ info depth 5 score cp -3 nodes 63244 nps 436166 pv d7d5 e4d5 f6d5 c3d5 d8d5
 
  4.♙e4xd5
  max depth:5, nodes:36 811, n/s:783 213, score:22
@@ -266,12 +284,18 @@ AB + TT, DEPTH 5------
  max depth:5, nodes:31497, n/s:768220, score:22 - в 1,1 раз меньше узлов
  info depth 5 score cp 22 nodes 31497 nps 768220 pv e4d5 f6d5 c3d5 d8d5 f1d3 
 
+ max depth:5, nodes:24427, n/s:814233, score:22 - в 1,5 раз меньше узлов
+ info depth 5 score cp 22 nodes 24427 nps 814233 pv e4d5 f6d5 c3d5 d8d5 f1d3 
+
  ♞f6xd5
  max depth:5, nodes:28236, n/s:910839, score:7
  info depth 5 score cp 7 nodes 28236 nps 910839 pv f6d5 c3d5 d8d5 c2c4 d5e4 
 
  max depth:5, nodes:24219, n/s:864964, score:7 - в 1,1 раз меньше узлов
  info depth 5 score cp 7 nodes 24219 nps 864964 pv f6d5 c3d5 d8d5 c2c4 d5e4 
+
+ max depth:5, nodes:22910, n/s:790000, score:7 - в 1,2 раз меньше узлов
+ info depth 5 score cp 7 nodes 22910 nps 790000 pv f6d5 c3d5 d8d5 c2c4 d5e4
 
 ------ AB + TT, DEPTH 5 
 
@@ -285,12 +309,18 @@ AB + KIL + HIS + TT, DEPTH 5------
  max depth:5, nodes:12158, n/s:552636, score:15 - в 2,1 раз меньше узлов
  info depth 5 score cp 15 nodes 12158 nps 552636 pv b1c3 b8c6 d2d4 g8f6 c1e3 
 
+ max depth:5, nodes:10775, n/s:633824, score:15 - в 2,4 раз меньше узлов
+ info depth 5 score cp 15 nodes 10775 nps 633824 pv b1c3 b8c6 d2d4 g8f6 c1e3 
+
  ♞b8-c6
  max depth:5, nodes:61 580, n/s:684 222, score:0
  info depth 5 score cp 0 nodes 61580 nps 684222 pv b8c6 d2d4 d7d5 c1e3 c8f5 
 
  max depth:5, nodes:12359, n/s:727000, score:0 - в 5 раз меньше узлов
  info depth 5 score cp 0 nodes 12359 nps 727000 pv b8c6 d2d4 d7d5 c1e3 c8f5 
+
+ max depth:5, nodes:11606, n/s:725375, score:0 - в 5,3 раз меньше узлов
+ info depth 5 score cp 0 nodes 11606 nps 725375 pv b8c6 d2d4 d7d5 c1e3 c8f5 
 
  2.♘g1-f3
  max depth:5, nodes:100 190, n/s:834 917, score:20
@@ -299,12 +329,18 @@ AB + KIL + HIS + TT, DEPTH 5------
  max depth:5, nodes:17385, n/s:755870, score:20 - в 5,8 раз меньше узлов
  info depth 5 score cp 20 nodes 17385 nps 755870 pv g1f3 d7d5 e2e4 g8f6 f1d3 ? 
 
+ max depth:5, nodes:15169, n/s:722333, score:20 - в 6,6 раз меньше узлов
+ info depth 5 score cp 20 nodes 15169 nps 722333 pv g1f3 d7d5 e2e4 g8f6 f1d3 
+
  ♞g8-f6
  max depth:5, nodes:83 970, n/s:631 353, score:0
  info depth 5 score cp 0 nodes 83970 nps 631353 pv g8f6 d2d4 d7d5 c1e3 c8f5
 
  max depth:5, nodes:18159, n/s:726360, score:0 - в 4,6 раз меньше узлов
  info depth 5 score cp 0 nodes 18159 nps 726360 pv g8f6 d2d4 d7d5 c1e3 c8f5 
+
+ max depth:5, nodes:14274, n/s:679714, score:0 - в 5,9 раз меньше узлов
+ info depth 5 score cp 0 nodes 14274 nps 679714 pv g8f6 d2d4 d7d5 c1e3 c8f5
 
  3.♙e2-e4
  max depth:5, nodes:145 879, n/s:801 533, score:15
@@ -313,12 +349,18 @@ AB + KIL + HIS + TT, DEPTH 5------
  max depth:5, nodes:21986, n/s:628171, score:15 - в 6,6 раз меньше узлов
  info depth 5 score cp 15 nodes 21986 nps 628171 pv e2e4 d7d5 e4d5 f6d5 f1d3
 
+ max depth:5, nodes:22761, n/s:598974, score:15 - в 6,4 раз меньше узлов ?
+ info depth 5 score cp 15 nodes 22761 nps 598974 pv e2e4 d7d5 e4d5 f6d5 f1d3 
+
  ♟d7-d5
  max depth:5, nodes:153 587, n/s:420 786, score:-3
  info depth 5 score cp -3 nodes 153587 nps 420786 pv d7d5 e4d5 f6d5 c3d5 d8d5
 
  max depth:5, nodes:36404, n/s:383200, score:-3 - в 4,2 раз меньше узлов
  info depth 5 score cp -3 nodes 36404 nps 383200 pv d7d5 e4d5 f6d5 c3d5 d8d5
+
+ max depth:5, nodes:32589, n/s:407363, score:-3 - в 4,7 раз меньше узлов
+ info depth 5 score cp -3 nodes 32589 nps 407363 pv d7d5 e4d5 f6d5 c3d5 d8d5 
 
  4.♙e4xd5
  max depth:5, nodes:36 811, n/s:783 213, score:22
@@ -327,12 +369,18 @@ AB + KIL + HIS + TT, DEPTH 5------
  max depth:5, nodes:24808, n/s:800258, score:22 - в 1,5 раз меньше узлов
  info depth 5 score cp 22 nodes 24808 nps 800258 pv e4d5 f6d5 c3d5 d8d5 f1d3 
 
+ max depth:5, nodes:24679, n/s:949192, score:22 - в 1,5 раз меньше узлов =
+ info depth 5 score cp 22 nodes 24679 nps 949192 pv e4d5 f6d5 c3d5 d8d5 f1d3
+
  ♞f6xd5
  max depth:5, nodes:28236, n/s:910839, score:7
  info depth 5 score cp 7 nodes 28236 nps 910839 pv f6d5 c3d5 d8d5 c2c4 d5e4 
 
  max depth:5, nodes:23886, n/s:918692, score:7 - в 1,2 раз меньше узлов
  info depth 5 score cp 7 nodes 23886 nps 918692 pv f6d5 c3d5 d8d5 c2c4 d5e4
+
+ max depth:5, nodes:22480, n/s:864615, score:7 - в 1,25 раз меньше узлов
+ info depth 5 score cp 7 nodes 22480 nps 864615 pv f6d5 c3d5 d8d5 c2c4 d5e4
 
 ------ AB + KIL + HIS + TT, DEPTH 5
 
@@ -345,69 +393,80 @@ DEPTH 5------
 FULL-> AB         = 185
 AB  -> AB + KIL   = 1,9
 AB  -> AB + HIS   = 1,5
-AB  -> AB + TT    = 1,2
-AB->AB+KIL+HIS+TT = 2,1
+AB  -> AB + TT    = 1,2 1,4
+AB->AB+KIL+HIS+TT = 2,1 2,4
 FULL-> AB + ALL   = 388,5
 
  ♞b8-c6
 FULL-> AB         = 92
 AB  -> AB + KIL   = 4,3
 AB  -> AB + HIS   = 2,8
-AB  -> AB + TT    = 1,2
-AB->AB+KIL+HIS+TT = 5
+AB  -> AB + TT    = 1,2 2,9
+AB->AB+KIL+HIS+TT = 5   5,3
 FULL-> AB + ALL   = 460
 
  2.♘g1-f3
 FULL-> AB         = 70
 AB  -> AB + KIL   = 4,2
 AB  -> AB + HIS   = 4,1
-AB  -> AB + TT    = 1,5
-AB->AB+KIL+HIS+TT = 5,8
+AB  -> AB + TT    = 1,5 3,4
+AB->AB+KIL+HIS+TT = 5,8 6,6
 FULL-> AB + ALL   = 406
 
  ♞g8-f6
 FULL-> AB         = 98
 AB  -> AB + KIL   = 4
 AB  -> AB + HIS   = 1,9
-AB  -> AB + TT    = 1,5
-AB->AB+KIL+HIS+TT = 4,6
+AB  -> AB + TT    = 1,5 5,1
+AB->AB+KIL+HIS+TT = 4,6 5,9
 FULL-> AB + ALL   = 450,8
 
  3.♙e2-e4
 FULL-> AB         = 69
 AB  -> AB + KIL   = 5,3
 AB  -> AB + HIS   = 4,4
-AB  -> AB + TT    = 1,3
-AB->AB+KIL+HIS+TT = 6,6
+AB  -> AB + TT    = 1,3 2,9
+AB->AB+KIL+HIS+TT = 6,6 6,4 <
 FULL-> AB + ALL   = 455,4
 
  ♟d7-d5
 FULL-> AB         = 100
 AB  -> AB + KIL   = 2,5
 AB  -> AB + HIS   = 3,3
-AB  -> AB + TT    = 1,3
-AB->AB+KIL+HIS+TT = 4,2
+AB  -> AB + TT    = 1,3 2,4
+AB->AB+KIL+HIS+TT = 4,2 4,7
 FULL-> AB + ALL   = 420
 
  4.♙e4xd5
 FULL-> AB         = 890!!
 AB  -> AB + KIL   = 1,2
 AB  -> AB + HIS   = 1,2
-AB  -> AB + TT    = 1,1
-AB->AB+KIL+HIS+TT = 1,5
+AB  -> AB + TT    = 1,1 1,5
+AB->AB+KIL+HIS+TT = 1,5 1,5 =
 FULL-> AB + ALL   = 1 335
 
  ♞f6xd5
 FULL-> AB         = 1 229!!!
 AB  -> AB + KIL   = 1,02
 AB  -> AB + HIS   = 1,02
-AB  -> AB + TT    = 1,1
-AB->AB+KIL+HIS+TT = 1,2
+AB  -> AB + TT    = 1,1 1,2
+AB->AB+KIL+HIS+TT = 1,2 1,25
 FULL-> AB + ALL   = 1 474,8
 
 ------ DEPTH 5
 
+Сравнение результатов AB vs AB + TT (до и после исправления)
 
+
+Ход	AB (узлы)	AB + TT со старым багом (узлы)	AB + TT после правки (узлы)	Итоговый выигрыш AB -> AB + TT
+1. Nc3	26 282	22 540 (1.2x)	18 836	1.4x
+1... Nc6	61 580	49 444 (1.2x)	21 232	2.9x
+2. Nf3	100 190	64 493 (1.5x)	29 123	3.4x
+2... Nf6	83 970	54 797 (1.5x)	16 377	5.1x
+3. e4	145 879	110 185 (1.3x)	49 482	2.9x
+3... d5	153 587	119 069 (1.3x)	63 244	2.4x
+4. exd5	36 811	31 497 (1.1x)	24 427	1.5x
+4... Nxd5	28 236	24 219 (1.1x)	22 910	1.2x
 
 
 

@@ -1,0 +1,269 @@
+
+Первые ходы из начальной позиции
+
+Тут сравнение просто альфа беты и аб с киллерами историей и кеш таблицей
+AB -> AB + KIL + HIS + TT, DEPTH 5------ 
+
+ ♘b1-c3 
+ max depth:5, nodes:26 282, n/s:773 000, score:15
+ info depth 5 score cp 15 nodes 26282 nps 773000 pv b1c3 b8c6 d2d4 g8f6 c1e3
+
+ max depth:5, nodes:10775, n/s:633824, score:15 - в 2,4 раз меньше узлов
+ info depth 5 score cp 15 nodes 10775 nps 633824 pv b1c3 b8c6 d2d4 g8f6 c1e3 
+
+ ♞b8-c6
+ max depth:5, nodes:61 580, n/s:684 222, score:0
+ info depth 5 score cp 0 nodes 61580 nps 684222 pv b8c6 d2d4 d7d5 c1e3 c8f5 
+
+ max depth:5, nodes:11606, n/s:725375, score:0 - в 5,3 раз меньше узлов
+ info depth 5 score cp 0 nodes 11606 nps 725375 pv b8c6 d2d4 d7d5 c1e3 c8f5 
+
+ 2.♘g1-f3
+ max depth:5, nodes:100 190, n/s:834 917, score:20
+ info depth 5 score cp 20 nodes 100190 nps 834917 pv g1f3 d7d5 d2d4 c8f5 c1e3 
+
+ max depth:5, nodes:15169, n/s:722333, score:20 - в 6,6 раз меньше узлов
+ info depth 5 score cp 20 nodes 15169 nps 722333 pv g1f3 d7d5 e2e4 g8f6 f1d3 ?
+
+ ♞g8-f6
+ max depth:5, nodes:83 970, n/s:631 353, score:0
+ info depth 5 score cp 0 nodes 83970 nps 631353 pv g8f6 d2d4 d7d5 c1e3 c8f5
+
+ max depth:5, nodes:14274, n/s:679714, score:0 - в 5,9 раз меньше узлов
+ info depth 5 score cp 0 nodes 14274 nps 679714 pv g8f6 d2d4 d7d5 c1e3 c8f5
+
+ 3.♙e2-e4
+ max depth:5, nodes:145 879, n/s:801 533, score:15
+ info depth 5 score cp 15 nodes 145879 nps 801533 pv e2e4 d7d5 e4d5 f6d5 f1d3 
+
+ max depth:5, nodes:22761, n/s:598974, score:15 - в 6,4 раз меньше узлов ?
+ info depth 5 score cp 15 nodes 22761 nps 598974 pv e2e4 d7d5 e4d5 f6d5 f1d3 
+
+ ♟d7-d5
+ max depth:5, nodes:153 587, n/s:420 786, score:-3
+ info depth 5 score cp -3 nodes 153587 nps 420786 pv d7d5 e4d5 f6d5 c3d5 d8d5
+
+ max depth:5, nodes:32589, n/s:407363, score:-3 - в 4,7 раз меньше узлов
+ info depth 5 score cp -3 nodes 32589 nps 407363 pv d7d5 e4d5 f6d5 c3d5 d8d5 
+
+ 4.♙e4xd5
+ max depth:5, nodes:36 811, n/s:783 213, score:22
+ info depth 5 score cp 22 nodes 36811 nps 783213 pv e4d5 f6d5 c3d5 d8d5 f1d3
+
+ max depth:5, nodes:24679, n/s:949192, score:22 - в 1,5 раз меньше узлов =
+ info depth 5 score cp 22 nodes 24679 nps 949192 pv e4d5 f6d5 c3d5 d8d5 f1d3
+
+ ♞f6xd5
+ max depth:5, nodes:28236, n/s:910839, score:7
+ info depth 5 score cp 7 nodes 28236 nps 910839 pv f6d5 c3d5 d8d5 c2c4 d5e4 
+
+ max depth:5, nodes:22480, n/s:864615, score:7 - в 1,25 раз меньше узлов
+ info depth 5 score cp 7 nodes 22480 nps 864615 pv f6d5 c3d5 d8d5 c2c4 d5e4
+
+------ AB -> AB + KIL + HIS + TT, DEPTH 5
+
+Тут сравнение альфа бета со всеми эвристиками и пвс
+AB + ALL = AB + KIL + HIS + TT
+AB + ALL -> PVS, DEPTH 5------ 
+
+ ♘b1-c3 
+ max depth:5, nodes:10775, n/s:633824, score:15 - в 2,4 раз меньше узлов
+ info depth 5 score cp 15 nodes 10775 nps 633824 pv b1c3 b8c6 d2d4 g8f6 c1e3 
+
+ max depth:5, nodes:10784, n/s:513524, score:15
+ info depth 5 score cp 15 nodes 10784 nps 513524 pv b1c3 b8c6 d2d4 g8f6 c1e3 
+
+ ♞b8-c6
+ max depth:5, nodes:11606, n/s:725375, score:0 - в 5,3 раз меньше узлов
+ info depth 5 score cp 0 nodes 11606 nps 725375 pv b8c6 d2d4 d7d5 c1e3 c8f5 
+
+ max depth:5, nodes:11530, n/s:678235, score:0
+ info depth 5 score cp 0 nodes 11530 nps 678235 pv b8c6 d2d4 d7d5 c1e3 c8f5 
+
+ 2.♘g1-f3
+ max depth:5, nodes:15169, n/s:722333, score:20 - в 6,6 раз меньше узлов
+ info depth 5 score cp 20 nodes 15169 nps 722333 pv g1f3 d7d5 e2e4 g8f6 f1d3 ?
+
+ max depth:5, nodes:14783, n/s:703952, score:20
+ info depth 5 score cp 20 nodes 14783 nps 703952 pv g1f3 d7d5 e2e4 g8f6 f1d3 
+
+ ♞g8-f6
+ max depth:5, nodes:14274, n/s:679714, score:0 - в 5,9 раз меньше узлов
+ info depth 5 score cp 0 nodes 14274 nps 679714 pv g8f6 d2d4 d7d5 c1e3 c8f5
+
+ max depth:5, nodes:13858, n/s:477862, score:0
+ info depth 5 score cp 0 nodes 13858 nps 477862 pv g8f6 d2d4 d7d5 c1e3 c8f5 
+
+ 3.♙e2-e4
+ max depth:5, nodes:22761, n/s:598974, score:15 - в 6,4 раз меньше узлов ?
+ info depth 5 score cp 15 nodes 22761 nps 598974 pv e2e4 d7d5 e4d5 f6d5 f1d3 
+
+ max depth:5, nodes:21932, n/s:534927, score:15
+ info depth 5 score cp 15 nodes 21932 nps 534927 pv e2e4 d7d5 e4d5 f6d5 f1d3 
+
+ ♟d7-d5
+ max depth:5, nodes:32589, n/s:407363, score:-3 - в 4,7 раз меньше узлов
+ info depth 5 score cp -3 nodes 32589 nps 407363 pv d7d5 e4d5 f6d5 c3d5 d8d5 
+
+ max depth:5, nodes:31477, n/s:425365, score:-3
+ info depth 5 score cp -3 nodes 31477 nps 425365 pv d7d5 e4d5 f6d5 c3d5 d8d5 
+
+ 4.♙e4xd5
+ max depth:5, nodes:24679, n/s:949192, score:22 - в 1,5 раз меньше узлов =
+ info depth 5 score cp 22 nodes 24679 nps 949192 pv e4d5 f6d5 c3d5 d8d5 f1d3
+
+ max depth:5, nodes:24679, n/s:914037, score:22
+ info depth 5 score cp 22 nodes 24679 nps 914037 pv e4d5 f6d5 c3d5 d8d5 f1d3 
+
+ ♞f6xd5
+ max depth:5, nodes:22480, n/s:864615, score:7 - в 1,25 раз меньше узлов
+ info depth 5 score cp 7 nodes 22480 nps 864615 pv f6d5 c3d5 d8d5 c2c4 d5e4
+
+ max depth:5, nodes:22420, n/s:747333, score:7
+ info depth 5 score cp 7 nodes 22420 nps 747333 pv f6d5 c3d5 d8d5 c2c4 d5e4 
+
+------ AB + ALL -> PVS, DEPTH 5
+
+
+-----------------------------------------------------
+
+------ AB -> AB + KIL + HIS + TT, DEPTH 9
+
+Тут сравнение альфа бета со всеми эвристиками и пвс
+AB + ALL = AB + KIL + HIS + TT
+AB + ALL -> PVS, DEPTH 5------ 
+
+ ♘b1-c3 
+ max depth:9, nodes:4956363, n/s:808278, score:15
+ info depth 9 score cp 15 nodes 4956363 nps 808278 pv b1c3 g8f6 g1f3 b8c6 e2e4 e7e5 f1d3 f8c5 e1g1 
+
+ max depth:9, nodes:3543523, n/s:807365, score:15
+ info depth 9 score cp 15 nodes 3543523 nps 807365 pv b1c3 g8f6 g1f3 b8c6 e2e4 d7d5 e4d5 f6d5 f1d3
+
+ ♞g8-f6 
+ max depth:9, nodes:6892329, n/s:812391, score:0
+ info depth 9 score cp 0 nodes 6892329 nps 812391 pv g8f6 g1f3 d7d5 d2d4 c8f5 a2a4 b8c6 c1f4 a7a5 
+
+ max depth:9, nodes:4245973, n/s:834179, score:0
+ info depth 9 score cp 0 nodes 4245973 nps 834179 pv g8f6 g1f3 b8c6 d2d4 d7d5 a2a4 c8f5 c1f4 a7a5 
+
+ 2.♘g1-f3
+ max depth:9, nodes:12281154, n/s:890068, score:15
+ info depth 9 score cp 15 nodes 12281154 nps 890068 pv g1f3 d7d5 d2d4 c8f5 c1f4 b8c6 e2e3 a7a5 f1d3
+
+ max depth:9, nodes:9287444, n/s:892680, score:15
+ info depth 9 score cp 15 nodes 9287444 nps 892680 pv g1f3 d7d5 d2d4 a7a5 e2e3 c8f5 f1d3 f5d3 c2d3
+
+ ♞b8-c6
+ max depth:9, nodes:11643382, n/s:741145, score:5
+ info depth 9 score cp 5 nodes 11643382 nps 741145 pv b8c6 d2d4 d7d5 c1f4 f6h5 f4e3 a7a5 h2h4 c8f5
+
+ max depth:9, nodes:7701669, n/s:743189, score:5
+ info depth 9 score cp 5 nodes 7701669 nps 743189 pv b8c6 d2d4 d7d5 c1f4 f6h5 f4e3 c8f5 a2a4 a7a5 
+
+ 3.♙d2-d4
+ max depth:9, nodes:21201772, n/s:739975, score:20
+ info depth 9 score cp 20 nodes 21201772 nps 739975 pv d2d4 d7d5 c1f4 c8f5 e2e3 a7a5 f1d3 f5d3 c2d3 
+
+ max depth:9, nodes:16461347, n/s:718805, score:20
+ info depth 9 score cp 20 nodes 16461347 nps 718805 pv d2d4 d7d5 c1f4 c8f5 e2e3 a7a5 f1d3 f5d3 c2d3 
+
+ ♟d7-d5
+ max depth:9, nodes:36049643, n/s:565920, score:10
+ info depth 9 score cp 10 nodes 36049643 nps 565920 pv d7d5 c1f4 c8g4 e2e3 e7e6 f1d3 f8d6 h2h3 d6f4 
+
+ max depth:9, nodes:29377606, n/s:576359, score:10
+ info depth 9 score cp 10 nodes 29377606 nps 576359 pv d7d5 c1f4 c8g4 e2e3 e7e6 f1d3 f8d6 h2h3 d6f4 
+
+ 4.♗c1-f4
+ max depth:9, nodes:75952845, n/s:664923, score:15
+ info depth 9 score cp 15 nodes 75952845 nps 664923 pv c1f4 c8f5 e2e3 e7e6 f1d3 f8b4 d3f5 b4c3 b2c3 
+
+ max depth:9, nodes:61358210, n/s:728400, score:15
+ info depth 9 score cp 15 nodes 61358210 nps 728400 pv c1f4 c8f5 e2e3 e7e6 f1d3 f8b4 d3f5 b4c3 b2c3  
+
+ ♝c8-f5
+
+
+ max depth:9, nodes:38516449, n/s:619056, score:10
+ info depth 9 score cp 10 nodes 38516449 nps 619056 pv c8f5 e2e3 e7e6 f1d3 f5d3 c2d3 f8d6 e1g1 e8g8
+
+------ AB + ALL -> PVS, DEPTH 9
+
+
+
+
+DEPTH 5------ 
+Ходы из начальной позиции
+Во сколько раз эвристики сокращают количество узлов в поиске
+
+ ♘b1-c3 
+FULL-> AB         = 185
+AB  -> AB + KIL   = 1,9
+AB  -> AB + HIS   = 1,5
+AB  -> AB + TT    = 1,4
+AB->AB+KIL+HIS+TT = 2,4
+FULL-> AB + ALL   = 388,5
+
+ ♞b8-c6
+FULL-> AB         = 92
+AB  -> AB + KIL   = 4,3
+AB  -> AB + HIS   = 2,8
+AB  -> AB + TT    = 2,9
+AB->AB+KIL+HIS+TT = 5,3
+FULL-> AB + ALL   = 460
+
+ 2.♘g1-f3
+FULL-> AB         = 70
+AB  -> AB + KIL   = 4,2
+AB  -> AB + HIS   = 4,1
+AB  -> AB + TT    = 3,4
+AB->AB+KIL+HIS+TT = 6,6
+FULL-> AB + ALL   = 406
+
+ ♞g8-f6
+FULL-> AB         = 98
+AB  -> AB + KIL   = 4
+AB  -> AB + HIS   = 1,9
+AB  -> AB + TT    = 5,1
+AB->AB+KIL+HIS+TT = 5,9
+FULL-> AB + ALL   = 450,8
+
+ 3.♙e2-e4
+FULL-> AB         = 69
+AB  -> AB + KIL   = 5,3
+AB  -> AB + HIS   = 4,4
+AB  -> AB + TT    = 2,9
+AB->AB+KIL+HIS+TT = 6,4
+FULL-> AB + ALL   = 455,4
+
+ ♟d7-d5
+FULL-> AB         = 100
+AB  -> AB + KIL   = 2,5
+AB  -> AB + HIS   = 3,3
+AB  -> AB + TT    = 2,4
+AB->AB+KIL+HIS+TT = 4,7
+FULL-> AB + ALL   = 420
+
+ 4.♙e4xd5
+FULL-> AB         = 890!!
+AB  -> AB + KIL   = 1,2
+AB  -> AB + HIS   = 1,2
+AB  -> AB + TT    = 1,5
+AB->AB+KIL+HIS+TT = 1,5
+FULL-> AB + ALL   = 1 335
+
+ ♞f6xd5
+FULL-> AB         = 1 229!!!
+AB  -> AB + KIL   = 1,02
+AB  -> AB + HIS   = 1,02
+AB  -> AB + TT    = 1,1 1,2
+AB->AB+KIL+HIS+TT = 1,2 1,25
+FULL-> AB + ALL   = 1 474,8
+
+------ DEPTH 5
+
+
+
+
+

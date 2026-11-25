@@ -237,7 +237,7 @@ const set_position_in_tt = (chess_board_key_64, packing_moves, type_nodes, score
         let delta_depth_tt_ = delta_depth_tt[idx]; //
 
         // место уже было записано. надо проверить глубину записи
-        if (delta_depth_tt_ <= delta_depth) {
+        if (delta_depth_tt_ <= delta_depth) {//  <=
 
             key_64_rewrite__set_position_in_tt = key_64_rewrite__set_position_in_tt + 1;// добавили позицию перезаписав старую
 
@@ -313,32 +313,14 @@ const get_position_from_tt = (chess_board_key_64, packing_move_arr, depth, max_d
             }
         }
 
-        let delta_depth = max_depth - depth;
-
-        // 
-        let delta_depth_tt_ = delta_depth_tt[idx]; //            
-
         packing_move_arr[0] = packing_move_tt[idx];
 
         out_tt[IND_SC_TT] = score_tt[idx];
         out_tt[IND_TN_TT] = type_save_node_tt[idx];
         out_tt[IND_DD_TT] = delta_depth_tt[idx];
 
-        // проверяем что глубина поиска позиции из таблицы больше или равна
-        if (delta_depth_tt_ >= delta_depth) {
+        return out_tt;
 
-            // прошли тест по глубине поиска
-            delta_depth_use__get_position_from_tt = delta_depth_use__get_position_from_tt + 1;
-
-            return out_tt;
-
-        } else {//if (delta_depth_tt_ >= delta_depth) {
-
-            // если это узел не ALPHA_UPDATE_TT выдаем [-1,-1,-1]
-            if (out_tt[IND_TN_TT] != ALPHA_UPDATE_TT) clear_out_tt();
-
-            return out_tt;
-        }//if (delta_depth_tt_ >= delta_depth) {
 
     } else {//if (chess_board_key_64[0] == key_64_chess_board_tt[Number(index_key_64)]) {
         // зашли по индексу но ключ не совпал

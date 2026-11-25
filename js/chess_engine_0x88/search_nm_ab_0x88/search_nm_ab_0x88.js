@@ -85,11 +85,11 @@ import {
 
 
 // TESTS ////////////////////////////////////////////
-const IS_TEST_KEY_64 = true;//
-//const IS_TEST_KEY_64 = false; //
+//const IS_TEST_KEY_64 = true;//
+const IS_TEST_KEY_64 = false; //
 
-const AB_IS_TEST_BOARD_SCORE = true;//
-//const AB_IS_TEST_BOARD_SCORE = false;//
+//const AB_IS_TEST_BOARD_SCORE = true;//
+const AB_IS_TEST_BOARD_SCORE = false;//
 //////////////////////////////////////////// TESTS
 
 const IS_EVALUATE_USE = true;// статическая оценка позиции
@@ -112,23 +112,23 @@ let IS_TT_USE = IS_AB_USE && true;// сортировка и отсечка по
 
 ///////////////////////////////////////////////////////////////
 
-//const IS_PVS_USE = true;// Principal Variation Search
-const IS_PVS_USE = false;// 
+const IS_PVS_USE = IS_AB_USE && true;// Principal Variation Search
+//const IS_PVS_USE = IS_AB_USE && false;// 
 
-//const IS_LMR_USE = IS_PVS_USE && true;// Late Move Reductions
-const IS_LMR_USE = IS_PVS_USE && false;//
+const IS_LMR_USE = IS_PVS_USE && true;// Late Move Reductions
+//const IS_LMR_USE = IS_PVS_USE && false;//
 
-//const IS_NMP_USE = true; // Null Move Pruning
-const IS_NMP_USE = false; // 
+//const IS_NMP_USE = IS_AB_USE && true; // Null Move Pruning
+const IS_NMP_USE = IS_AB_USE && false; // 
 
-//const IS_RFP_USE = IS_EVALUATE_USE && true; // Reverse Futility Pruning (отсечение по статической оценке)
-const IS_RFP_USE = IS_EVALUATE_USE && false;
+//const IS_RFP_USE = IS_AB_USE &&  IS_EVALUATE_USE && true; // Reverse Futility Pruning (отсечение по статической оценке)
+const IS_RFP_USE = IS_AB_USE && IS_EVALUATE_USE && false;
 
 //const IS_LMR_HISTORY_USE = IS_HISTORY_USE && IS_LMR_USE && true; // Учёт таблицы истории при расчёте редукции LMR
 const IS_LMR_HISTORY_USE = IS_HISTORY_USE && IS_LMR_USE && false;
 
-//const IS_CHECK_EXT_USE = true; // Check Extensions (продление поиска при шахе)
-const IS_CHECK_EXT_USE = false;
+//const IS_CHECK_EXT_USE = IS_AB_USE && true; // Check Extensions (продление поиска при шахе)
+const IS_CHECK_EXT_USE = IS_AB_USE && false;
 
 //////////////////////////////
 
@@ -360,16 +360,20 @@ const ab_searching_negamax_alpha_beta_id = (alpha, beta, chess_board_0x88, chess
 
     if (out_tt[IND_TN_TT] == BETA_CUT_TT) {// если узел был записан при отсечеке по бете
 
-      if (out_tt[IND_SC_TT] >= beta) {// проверяем что оценка действительно вызывает отсечку 
+      // проверяем что оценка действительно вызывает отсечку 
+      // и глубина поиска записанного узла больше или равна текущему
+      if ((out_tt[IND_SC_TT] >= beta) && (out_tt[IND_DD_TT] >= (depth_max - depth))) {
 
         if (TT_IS_TEST_FEN) {
           ab_use_beta_cut_test_tt = ab_use_beta_cut_test_tt + 1;
         }
 
         return out_tt[IND_SC_TT];
-      }
-    }
-  }
+      }//if (out_tt[IND_SC_TT] >= beta) {
+    }// if (out_tt[IND_TN_TT] == BETA_CUT_TT) {
+
+
+  }//   if (IS_TT_USE) {
   // ==================================================== используем хеш таблицу   
 
   // REVERSE FUTILITY PRUNING =============================================
@@ -468,7 +472,9 @@ const ab_searching_negamax_alpha_beta_id = (alpha, beta, chess_board_0x88, chess
   // используем хеш таблицу ====================================================
   // 
   if (IS_TT_USE) {
-    // if (out_tt[IND_TN_TT] == ALPHA_UPDATE_TT){
+    // используем лучший ход даже если его нашли на меньшей глубине поиска 
+    // и даже если он вызвал отсечку по бете на предыдущей глубине
+    // (на этой для отсечки он не подошел из за меньшей глубины поиска) 
     if ((out_tt[IND_TN_TT] == ALPHA_UPDATE_TT) || (out_tt[IND_TN_TT] == BETA_CUT_TT)) {
 
       if (TT_IS_TEST_FEN) {
@@ -719,14 +725,17 @@ const ab_searching_negamax_alpha_beta_id = (alpha, beta, chess_board_0x88, chess
             // тут записываем в узловой кеш всю линию которая привела к такой оценке.
             // т.е. особо отмечу пишется линия от самого максимума глубины до верха. 
             // тут записаны все ходы приведшие к позиции с оценкой
-            if (isPV == 1) save_pv_line_pv(best_packing_pv_line, packing_pv_line);
+            if (isPV == 1) {
+              save_pv_line_pv(best_packing_pv_line, packing_pv_line);
 
-            // TEST
-            if (AB_IS_TEST_BOARD_SCORE) {
-              // с глубины вернулась не только оценка, но и позиция соответствующая оценки 
-              // ее мы тоже записываем в узловой кеш
-              if (isPV == 1) chess_board_0x88_save_score.set(chess_board_0x88_score);//записываем позицию соответствующую лучшей оценке
-            }
+              // TEST
+              if (AB_IS_TEST_BOARD_SCORE) {
+                // с глубины вернулась не только оценка, но и позиция соответствующая оценки 
+                // ее мы тоже записываем в узловой кеш
+                chess_board_0x88_save_score.set(chess_board_0x88_score);//записываем позицию соответствующую лучшей оценке
+              }
+            }//if (isPV == 1) {
+
           } else {//if (IS_PVS_USE) {
             // тут записываем в узловой кеш всю линию которая привела к такой оценке.
             // т.е. особо отмечу пишется линия от самого максимума глубины до верха. 
@@ -795,12 +804,14 @@ const ab_searching_negamax_alpha_beta_id = (alpha, beta, chess_board_0x88, chess
       if (IS_PVS_USE) {
         // тут мы вернем все ходы которые привели к лучшей в узле оценке. это ходы до финальной позиции 
         // которую оценили статически
-        if (isPV == 1) save_pv_line_pv(packing_pv_line, best_packing_pv_line);
+        if (isPV == 1) {
+          save_pv_line_pv(packing_pv_line, best_packing_pv_line);
 
-        // TEST
-        if (AB_IS_TEST_BOARD_SCORE) {
-          // а это та самая финальная позиция которую оценили статически
-          if (isPV == 1) chess_board_0x88_score.set(chess_board_0x88_save_score);// возвращаем лучшую записанную позицию соотв. лучшей оценке
+          // TEST
+          if (AB_IS_TEST_BOARD_SCORE) {
+            // а это та самая финальная позиция которую оценили статически
+            chess_board_0x88_score.set(chess_board_0x88_save_score);// возвращаем лучшую записанную позицию соотв. лучшей оценке
+          }
         }
       } else {//if (IS_PVS_USE) {
         // тут мы вернем все ходы которые привели к лучшей в узле оценке. это ходы до финальной позиции 
