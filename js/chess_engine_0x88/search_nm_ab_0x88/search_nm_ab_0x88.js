@@ -118,8 +118,8 @@ const IS_PVS_USE = IS_AB_USE && true;// Principal Variation Search
 const IS_LMR_USE = IS_PVS_USE && true;// Late Move Reductions
 //const IS_LMR_USE = IS_PVS_USE && false;//
 
-//const IS_NMP_USE = IS_AB_USE && true; // Null Move Pruning
-const IS_NMP_USE = IS_AB_USE && false; // 
+const IS_NMP_USE = IS_AB_USE && true; // Null Move Pruning
+//const IS_NMP_USE = IS_AB_USE && false; // 
 
 //const IS_RFP_USE = IS_AB_USE &&  IS_EVALUATE_USE && true; // Reverse Futility Pruning (отсечение по статической оценке)
 const IS_RFP_USE = IS_AB_USE && IS_EVALUATE_USE && false;
