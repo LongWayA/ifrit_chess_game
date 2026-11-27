@@ -43,7 +43,7 @@ let Tests_B_K = {
             let chessEngine_0x88_O = new ChessEngine_0x88_С();
             //let chessEngine_0x88_O = null;
 
-            const depth_max = 10;//8
+            const depth_max = 8;//8
 
             let fen_test;
 

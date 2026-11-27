@@ -115,8 +115,8 @@ let IS_TT_USE = IS_AB_USE && true;// сортировка и отсечка по
 const IS_PVS_USE = IS_AB_USE && true;// Principal Variation Search
 //const IS_PVS_USE = IS_AB_USE && false;// 
 
-const IS_NMP_USE = IS_AB_USE && true; // Null Move Pruning
-//const IS_NMP_USE = IS_AB_USE && false; // 
+const IS_NMP_USE = IS_AB_USE && IS_PVS_USE &&  true; // Null Move Pruning
+//const IS_NMP_USE = IS_AB_USE && IS_PVS_USE &&  false; // 
 
 //const IS_LMR_USE = IS_PVS_USE && true;// Late Move Reductions
 const IS_LMR_USE = IS_PVS_USE && false;//
@@ -237,6 +237,10 @@ const MATE = -30000;
 const AB_INIT_EVAL = -40000;// матовая оценка всегда должна обновлять INIT_EVAL 
 // и при - и при + на следющей глубине поиска (-30000 > -40000) и (30000 > -40000)
 ///////////////////////////////////////////// AB SEARCH SEARCH
+
+let node_nm = new Int32Array(1).fill(0);
+
+let packing_pv_line_nm = new Int32Array(MAX_DEPTH_PV).fill(MOVE_NO_ML);// записанная линия варианта
 
 /**
  * searching_alpha_beta_fail_soft
@@ -395,8 +399,6 @@ const ab_searching_negamax_alpha_beta_id = (alpha, beta, chess_board_0x88, chess
   }
   // ============================================= REVERSE FUTILITY PRUNING
 
-
-
   // NULL MOVE PRUNING ====================================================
   if (IS_NMP_USE) {
     if ((allow_null == 1) && (!in_check && isPV == 0) && ((depth_max - depth) >= 3)) {
@@ -416,17 +418,25 @@ const ab_searching_negamax_alpha_beta_id = (alpha, beta, chess_board_0x88, chess
         let next_depth = depth + 1 + R;
         if (next_depth >= depth_max) next_depth = depth_max;
 
+        node_nm[0] = 0;
+
+        // смещаем диапазон нулевого поиска что бы не пересекался с основным
+        next_depth = next_depth + 30;
+        const next_depth_max = depth_max + 30;       
+
         // 4. Ищем с нулевым окном (-beta, -beta + 1) и запретом повторного null move (allow_null = 0)
         const null_score = -ab_searching_negamax_alpha_beta_id(
           -beta, -beta + 1,
           chess_board_0x88, chess_board_0x88_score,
-          chess_board_key_64, packing_pv_line,
-          next_depth, depth_max, node_mm, 0, 0
+          chess_board_key_64, packing_pv_line_nm,
+          next_depth, next_depth_max, node_nm, 0, 0
         );
 
         // 5. Восстанавливаем доску и ключ
         chess_board_0x88.set(chess_board_0x88_undo);
         chess_board_key_64[0] = chess_board_key_64_undo[0];
+
+        //console.log("search_nm_ab_0x88.js -> IS_NMP_USE");
 
         // 6. Если оценка >= beta — отсекаем ветку
         if (null_score >= beta) {
