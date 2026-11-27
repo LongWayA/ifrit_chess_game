@@ -94,7 +94,7 @@ class Checkbox_C {
             } else {
                   this.IfritChessGame_O.gui_chess_O.depth_max = parseInt(input_max_depth.value);
                   if (this.IfritChessGame_O.gui_chess_O.depth_max <= 0) this.IfritChessGame_O.gui_chess_O.depth_max = 1;
-                  if (this.IfritChessGame_O.gui_chess_O.depth_max > 12) this.IfritChessGame_O.gui_chess_O.depth_max = 12;
+                  if (this.IfritChessGame_O.gui_chess_O.depth_max > 15) this.IfritChessGame_O.gui_chess_O.depth_max = 15;
                   input_max_depth.value = this.IfritChessGame_O.gui_chess_O.depth_max;//
             }
       }

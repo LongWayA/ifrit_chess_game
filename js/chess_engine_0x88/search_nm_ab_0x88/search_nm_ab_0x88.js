@@ -115,17 +115,18 @@ let IS_TT_USE = IS_AB_USE && true;// сортировка и отсечка по
 const IS_PVS_USE = IS_AB_USE && true;// Principal Variation Search
 //const IS_PVS_USE = IS_AB_USE && false;// 
 
-const IS_LMR_USE = IS_PVS_USE && true;// Late Move Reductions
-//const IS_LMR_USE = IS_PVS_USE && false;//
-
 const IS_NMP_USE = IS_AB_USE && true; // Null Move Pruning
 //const IS_NMP_USE = IS_AB_USE && false; // 
+
+//const IS_LMR_USE = IS_PVS_USE && true;// Late Move Reductions
+const IS_LMR_USE = IS_PVS_USE && false;//
+
+//const IS_LMR_HISTORY_USE = IS_HISTORY_USE && IS_LMR_USE && true; // Учёт таблицы истории при расчёте редукции LMR
+const IS_LMR_HISTORY_USE = IS_HISTORY_USE && IS_LMR_USE && false;
 
 //const IS_RFP_USE = IS_AB_USE &&  IS_EVALUATE_USE && true; // Reverse Futility Pruning (отсечение по статической оценке)
 const IS_RFP_USE = IS_AB_USE && IS_EVALUATE_USE && false;
 
-//const IS_LMR_HISTORY_USE = IS_HISTORY_USE && IS_LMR_USE && true; // Учёт таблицы истории при расчёте редукции LMR
-const IS_LMR_HISTORY_USE = IS_HISTORY_USE && IS_LMR_USE && false;
 
 //const IS_CHECK_EXT_USE = IS_AB_USE && true; // Check Extensions (продление поиска при шахе)
 const IS_CHECK_EXT_USE = IS_AB_USE && false;
