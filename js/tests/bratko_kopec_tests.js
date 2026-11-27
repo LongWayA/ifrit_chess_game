@@ -43,7 +43,7 @@ let Tests_B_K = {
             let chessEngine_0x88_O = new ChessEngine_0x88_С();
             //let chessEngine_0x88_O = null;
 
-            const depth_max = 8;
+            const depth_max = 8;//8
 
             let fen_test;
 
@@ -79,31 +79,31 @@ let Tests_B_K = {
             ];
 
             let fen_best_move_test_stack = [
-                  //d8
-                  "bestmove ♛d6-d1 ",//0  + Qd1+
-                  "bestmove ♙d4-d5 ",//1  - d5
-                  "bestmove ♟f6-f5 ",//2  + f5
-                  "bestmove ♙e5-e6 ",//3  - e6
-                  "bestmove ♘c3-d5 ",//4  - Nd5 a4
-                  "bestmove ♙g5-g6 ",//5  - g6
-                  "bestmove ♘h5-f6 ",//6  + Nf6
-                  "bestmove ♙f4-f5 ",//7  - f5
-                  "bestmove ♙f4-f5 ",//8  - f5
-                  "bestmove ♞c6-e5 ",//9  - Ne5
-                  "bestmove ♙f2-f4 ",//10 + f4
-                  "bestmove ♝d7-f5 ",//11 + Bf5
-                  "bestmove ♙b2-b4 ",//12 - b4
-                  "bestmove ♕d1-d2 ",//13 Qd2 Qe1 ♕d1-e1
-                  "bestmove ♕g4xg7 ",//14 Qxg7
-                  "bestmove ♘d2-e4",//15 Ne4
-                  "bestmove ♟h7-h5 ",//16 h5
-                  "bestmove ♞c5-b3 ",//17 Nb3
-                  "bestmove ♜e8xe4 ",//18 Rxe4
-                  "bestmove ♙g3-g4 ",//19 g4
-                  "bestmove ♘f5-h6 ",//20 Nh6
-                  "bestmove ♝b7xe4 ",//21 Bxe4
-                  "bestmove ♟f7-f6 ",//22 f6
-                  "bestmove ♙f2-f4 ",//23 f4
+                  //                       d8
+                  "bestmove ♛d6-d1 ",// 0  + Qd1+
+                  "bestmove ♙d4-d5 ",// 1  - d5
+                  "bestmove ♟f6-f5 ",// 2  + f5
+                  "bestmove ♙e5-e6 ",// 3  - e6
+                  "bestmove ♘c3-d5 ",// 4  + Nd5 a4
+                  "bestmove ♙g5-g6 ",// 5  - g6
+                  "bestmove ♘h5-f6 ",// 6  + Nf6
+                  "bestmove ♙f4-f5 ",// 7  - f5
+                  "bestmove ♙f4-f5 ",// 8  - f5
+                  "bestmove ♞c6-e5 ",// 9  - Ne5
+                  "bestmove ♙f2-f4 ",// 10 + f4
+                  "bestmove ♝d7-f5 ",// 11 + Bf5
+                  "bestmove ♙b2-b4 ",// 12 - b4
+                  "bestmove ♕d1-d2 ",// 13 + Qd2 Qe1 ♕d1-e1
+                  "bestmove ♕g4xg7 ",// 14 + Qxg7
+                  "bestmove ♘d2-e4 ",// 15 + Ne4 
+                  "bestmove ♟h7-h5 ",// 16 + h5
+                  "bestmove ♞c5-b3 ",// 17 - Nb3
+                  "bestmove ♜e8xe4 ",// 18 + Rxe4
+                  "bestmove ♙g3-g4 ",// 19 - g4
+                  "bestmove ♘f5-h6 ",// 20 + Nh6
+                  "bestmove ♝b7xe4 ",// 21 + Bxe4
+                  "bestmove ♟f7-f6 ",// 22 - f6
+                  "bestmove ♙f2-f4 ",// 23 + f4
             ]
 
             for (let fen_number = 0; fen_number < 24; fen_number++) {
@@ -118,24 +118,28 @@ let Tests_B_K = {
                   console.log("===================================================");
                   console.log("bratko_kopec_tests.js -> fen_best_move_test_stack != best_move fen_number = " + fen_number);
 
-                  if (fen_best_move_test_stack[fen_number] != best_move) {
-
-                        failure = failure + 1;
-                        console.log("failure = " + failure);
-                        console.log("FAILURE");
+                  if ((fen_best_move_test_stack[fen_number] == best_move)
+                        || ((fen_number == 4) && (best_move == "bestmove ♙a2-a4 "))
+                        || ((fen_number == 13) && (best_move == "bestmove ♕d1-e1 "))
+                  ) {
+                        success = success + 1;
+                        console.log(" ");
+                        console.log("success = " + success);
+                        console.log("SUCCESS");
 
                         set_board_from_fen_0x88_cb(fen_test, chess_board_0x88_start_from_fen);
                         test_print_piece_0x88_f_cb(chess_board_0x88_start_from_fen);
 
                         console.log("bratko_kopec_tests.js -> fen_best_move_test_stack[fen_number] = " + fen_best_move_test_stack[fen_number]);
                         console.log("bratko_kopec_tests.js -> best_move = " + best_move);
+                        if (fen_number == 4) console.log("bratko_kopec_tests.js -> 2 best_move = " + "bestmove ♙a2-a4 ");                        
+                        if (fen_number == 13) console.log("bratko_kopec_tests.js -> 2 best_move = " + "bestmove ♕d1-e1 ");
 
                   } else {
 
-                        success = success + 1;
-                        console.log(" ");
-                        console.log("success = " + success);
-                        console.log("SUCCESS");
+                        failure = failure + 1;
+                        console.log("failure = " + failure);
+                        console.log("FAILURE");
 
                         set_board_from_fen_0x88_cb(fen_test, chess_board_0x88_start_from_fen);
                         test_print_piece_0x88_f_cb(chess_board_0x88_start_from_fen);
