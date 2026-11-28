@@ -43,7 +43,7 @@ let Tests_B_K = {
             let chessEngine_0x88_O = new ChessEngine_0x88_С();
             //let chessEngine_0x88_O = null;
 
-            const depth_max = 8;//8
+            const depth_max = 9;//8
 
             let fen_test;
 
@@ -81,6 +81,7 @@ let Tests_B_K = {
 
             let fen_best_move_test_stack = [
                   // pvs d8 OK; lmr d8 -1(13); npm d8 OK; rfp d8 -1(6); all d8 -1(7);  all d10 -1(8,13,+19); 
+                  // lmr d9 -1(9); lmr d8 -1(13) ; lmr+npm d9 OK
                   //                             d5ab d8ab  d8
                   "bestmove ♟f6-f5 ", // 2   0  +    +     + f5
                   "bestmove ♝d7-f5 ", // 11  1  +    +     + Bf5

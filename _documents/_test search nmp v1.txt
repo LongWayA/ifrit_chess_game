@@ -26,6 +26,14 @@ AB + ALL = AB + KIL + HIS + TT
  max depth:9, nodes:381849, n/s:690505, score:15
  info depth 9 score cp 15 nodes 381849 nps 690505 pv b1c3 g8f6 g1f3 b8c6 e2e4 e7e5 f1d3 f8c5 e1g1 
 
+ max depth:9, nodes:372150, n/s:739861, score:15
+ info depth 9 score cp 15 nodes 372150 nps 739861 pv b1c3 g8f6 g1f3 b8c6 e2e4 e7e5 f1d3 f8c5 e1g1 
+a8a8 a8a8 a8a8 a8a8 a8a8 a8a8 a8a8 a8a8 a8a8 a8a8 a8a8 a8a8 a8a8 a8a8 a8a8 a8a8 a8a8 a8a8 a8a8 a8a8 
+a8a8 a8a8 a8a8 a8a8 a8a8 a8a8 a8a8 b8c6 b1a1 f1d3
+
+ max depth:9, nodes:351039, n/s:700677, score:15
+ info depth 9 score cp 15 nodes 351039 nps 700677 pv b1c3 g8f6 g1f3 b8c6 e2e4 e7e5 f1d3 f8c5 e1g1 
+
  ♞g8-f6 
  max depth:9, nodes:6708929, n/s:1202533, score:0
  info depth 9 score cp 0 nodes 6708929 nps 1202533 pv g8f6 g1f3 b8c6 d2d4 d7d5 c1e3 c8f5 a2a4 a7a5 
@@ -42,6 +50,9 @@ AB + ALL = AB + KIL + HIS + TT
 
  max depth:9, nodes:434371, n/s:764738, score:0
  info depth 9 score cp 0 nodes 434371 nps 764738 pv b8c6 d2d4 d7d5 g1f3 g8f6 c1e3 c8f5 a2a4 a7a5 
+
+ max depth:9, nodes:408349, n/s:747892, score:0
+ info depth 9 score cp 0 nodes 408349 nps 747892 pv b8c6 d2d4 d7d5 c1f4 c8f5 c3b5 a8c8 g1f3 g8f6 
 
  2.♘g1-f3
  max depth:9, nodes:11433902, n/s:1305538, score:15

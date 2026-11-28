@@ -1,0 +1,150 @@
+
+Первые ходы из начальной позиции
+
+AB + ALL = AB + KIL + HIS + TT
+
+------ AB + ALL -> LMR, DEPTH 9
+Записи:
+1 AB + ALL
+2 AB + ALL + PVS 
+3 AB + ALL + PVS + LMR no hist old
+4 AB + ALL + PVS + LMR no hist new
+5 AB + ALL + PVS + LMR no hist new upd
+
+ ♘b1-c3 
+ max depth:9, nodes:5903372, n/s:1249655, score:15
+ info depth 9 score cp 15 nodes 5903372 nps 1249655 pv b1c3 g8f6 g1f3 d7d5 e2e3 b8c6 f1d3 c8e6 e1g1 
+
+ max depth:9, nodes:3 910 203, n/s:1151075, score:15
+ info depth 9 score cp 15 nodes 3910203 nps 1151075 pv b1c3 g8f6 g1f3 d7d5 e2e3 b8c6 f1d3 c8e6 e1g1 
+
+ max depth:9, nodes:536 817, n/s:539515, score:15
+ info depth 9 score cp 15 nodes 536817 nps 539515 pv e2e4 b8c6 g1f3 g8f6 f1d3 d7d5 b1c3 d5d4 c3b5
+ход изменил хожу сам
+
+ max depth:9, nodes:559 187, n/s:529032, score:15
+ info depth 9 score cp 15 nodes 559187 nps 529032 pv e2e4 b8c6 g1f3 g8f6 f1d3 d7d5 b1c3 d5d4 c3b5 
+
+ max depth:9, nodes:1 152 649, n/s:975168, score:15
+ info depth 9 score cp 15 nodes 1152649 nps 975168 pv b1c3 g8f6 e2e4 b8c6 g1f3 e7e5 f1d3 f8c5 e1g1 
+
+ ♞g8-f6 
+ max depth:9, nodes:6708929, n/s:1202533, score:0
+ info depth 9 score cp 0 nodes 6708929 nps 1202533 pv g8f6 g1f3 b8c6 d2d4 d7d5 c1e3 c8f5 a2a4 a7a5 
+
+ max depth:9, nodes:4 464 240, n/s:1164686, score:0
+ info depth 9 score cp 0 nodes 4464240 nps 1164686 pv g8f6 g1f3 b8c6 d2d4 d7d5 c1e3 c8f5 a2a4 a7a5 
+
+ max depth:9, nodes:470 869, n/s:478040, score:0
+ info depth 9 score cp 0 nodes 470869 nps 478040 pv b8c6 g1f3 d7d5 d2d4 c8f5 c1e3 g8f6 a2a4 a7a5
+ход изменил хожу сам
+
+ max depth:9, nodes:680 002, n/s:534593, score:3
+ info depth 9 score cp 3 nodes 680002 nps 534593 pv e7e5 d2d4 e5d4 d1d4 b8c6 d4e4 f8e7 c1e3 g8f6 
+
+ max depth:9, nodes:1 314 329, n/s:942847, score:0
+ info depth 9 score cp 0 nodes 1314329 nps 942847 pv g8f6 e2e4 b8c6 d2d4 e7e5 d4d5 c6a5 c1e3 f8d6 
+
+ 2.♘g1-f3
+ max depth:9, nodes:11433902, n/s:1305538, score:15
+ info depth 9 score cp 15 nodes 11433902 nps 1305538 pv g1f3 d7d5 d2d4 a7a5 e2e3 b8c6 f1d3 c8e6 e1g1 
+
+ max depth:9, nodes:7 907 229, n/s:1262329, score:15
+ info depth 9 score cp 15 nodes 7907229 nps 1262329 pv g1f3 d7d5 d2d4 c8f5 c1f4 b8c6 e2e3 a7a5 f1d3 
+
+ max depth:9, nodes:869 143, n/s:492711, score:10
+ info depth 9 score cp 10 nodes 869143 nps 492711 pv g1f3 d7d5 d2d4 c8f5 c1e3 b8c6 a2a4 a7a5 h2h4
+
+ max depth:9, nodes:706 771, n/s:508834, score:15
+ info depth 9 score cp 15 nodes 706771 nps 508834 pv d2d4 d7d5 c1f4 c8f5 e2e3 b8c6 g1f3 a7a5 f1d3 
+ход изменил хожу сам
+
+ max depth:9, nodes:2 370 436, n/s:997239, score:10
+ info depth 9 score cp 10 nodes 2370436 nps 997239 pv g1f3 d7d5 a2a4 c8f5 d2d4 b8c6 c1e3 a7a5 h2h4 
+
+ ♞b8-c6
+ max depth:9, nodes:10922482, n/s:1064466, score:5
+ info depth 9 score cp 5 nodes 10922482 nps 1064466 pv b8c6 d2d4 d7d5 c1f4 f6h5 f4e3 a7a5 a2a4 c8f5 
+
+ max depth:9, nodes:7 413 462, n/s:995096, score:5
+ info depth 9 score cp 5 nodes 7413462 nps 995096 pv b8c6 d2d4 d7d5 c1f4 f6h5 f4e3 c8f5 a2a4 a7a5 
+
+ max depth:9, nodes:742 371, n/s:493926, score:10
+ info depth 9 score cp 10 nodes 742371 nps 493926 pv b8c6 d2d4 d7d5 c1f4 c8f5 e2e3 e7e6 f1d3 f8d6 
+
+ max depth:9, nodes:945 021, n/s:508076, score:10
+ info depth 9 score cp 10 nodes 945021 nps 508076 pv b8c6 d2d4 d7d5 c1f4 c8f5 e2e3 e7e6 f1d3 f8d6 
+
+ max depth:9, nodes:2 395 921, n/s:894334, score:4
+ info depth 9 score cp 4 nodes 2395921 nps 894334 pv d7d5 e2e3 b8c6 f1b5 c8f5 f3d4 d8d7 e1g1 a7a5 
+ход изменил хожу сам
+
+ 3.♙d2-d4
+ max depth:9, nodes:21051042, n/s:1002765, score:20
+ info depth 9 score cp 20 nodes 21051042 nps 1002765 pv d2d4 d7d5 c1f4 c8f5 e2e3 a7a5 f1d3 f5d3 c2d3 
+
+ max depth:9, nodes:13 324 696, n/s:992603, score:20
+ info depth 9 score cp 20 nodes 13324696 nps 992603 pv d2d4 d7d5 c1f4 c8f5 e2e3 a7a5 f1d3 f5d3 c2d3 
+
+ max depth:9, nodes:1 792 655, n/s:490466, score:15
+ info depth 9 score cp 15 nodes 1792655 nps 490466 pv d2d4 e7e6 c1e3 d7d5 a2a4 f8d6 h2h4 e8g8 h1h3 
+
+ max depth:9, nodes:1 595 231, n/s:504820, score:15
+ info depth 9 score cp 15 nodes 1595231 nps 504820 pv d2d4 d7d5 c1f4 c8g4 c3b5 a8c8 h2h3 g4f3 g2f3
+
+ max depth:9, nodes:3 738 241, n/s:848829, score:20
+ info depth 9 score cp 20 nodes 3738241 nps 848829 pv d2d4 d7d5 c1f4 c8g4 e2e3 h7h6 f1d3 g7g5 f4e5 
+
+ ♟d7-d5
+ max depth:9, nodes:32437037, n/s:724720, score:10
+ info depth 9 score cp 10 nodes 32437037 nps 724720 pv d7d5 c1f4 c8g4 e2e3 e7e6 f1d3 f8d6 h2h3 d6f4 
+
+ max depth:9, nodes:31 242 195, n/s:716597, score:10
+ info depth 9 score cp 10 nodes 31242195 nps 716597 pv d7d5 c1f4 c8f5 e2e3 e7e6 f1d3 f5d3 c2d3 f8d6 
+
+ max depth:9, nodes:3 125 648, n/s:534025, score:10
+ info depth 9 score cp 10 nodes 3125648 nps 534025 pv d7d5 c1f4 c8f5 e2e3 e7e6 f1d3 f5d3 c2d3 f8b4 
+
+ max depth:9, nodes:3 930 616, n/s:526822, score:10
+ info depth 9 score cp 10 nodes 3930616 nps 526822 pv d7d5 c1f4 c8f5 e2e3 e7e6 f1d3 f5d3 c2d3 f8d6 
+
+ max depth:9, nodes:5 983 149, n/s:863120, score:10
+ info depth 9 score cp 10 nodes 5983149 nps 863120 pv d7d5 c1f4 c8g4 e2e3 e7e6 f1d3 f8d6 h2h3 d6f4 
+
+ 4.♗c1-f4
+ max depth:9, nodes:72487558, n/s:880879, score:15
+ info depth 9 score cp 15 nodes 72487558 nps 880879 pv c1f4 c8f5 e2e3 e7e6 f1d3 f8b4 d3f5 b4c3 b2c3 
+
+ max depth:9, nodes:58 564 999, n/s:968065, score:15
+ info depth 9 score cp 15 nodes 58564999 nps 968065 pv c1f4 c8f5 e2e3 e7e6 f1d3 f8b4 d3f5 b4c3 b2c3 
+
+ max depth:9, nodes:5 894 534, n/s:511456, score:15
+ info depth 9 score cp 15 nodes 5894534 nps 511456 pv c1f4 c8f5 e2e3 e7e6 f1d3 f8b4 d3f5 b4c3 b2c3 
+
+ max depth:9, nodes:4 962 236, n/s:517385, score:15
+ info depth 9 score cp 15 nodes 4962236 nps 517385 pv c1f4 c8f5 e2e3 e7e6 f1d3 f8b4 e1g1 e8g8 a2a4 
+
+ max depth:9, nodes:16 422 581, n/s:876338, score:15
+ info depth 9 score cp 15 nodes 16422581 nps 876338 pv c1f4 c8f5 e2e3 e7e6 f1d3 f8b4 e1g1 e8g8 a2a4 
+
+ ♝c8-f5
+ max depth:9, nodes:52849665, n/s:698349, score:10
+ info depth 9 score cp 10 nodes 52849665 nps 698349 pv c8f5 e2e3 e7e6 f1d3 f5d3 c2d3 f8d6 e1g1 e8g8 
+
+ max depth:9, nodes:34 913 827, n/s:789174, score:10
+ info depth 9 score cp 10 nodes 34913827 nps 789174 pv c8f5 e2e3 e7e6 f1d3 f5d3 c2d3 f8d6 e1g1 e8g8 
+
+ max depth:9, nodes:5 517 841, n/s:531943, score:10
+ info depth 9 score cp 10 nodes 5517841 nps 531943 pv c8f5 e2e3 e7e6 f1d3 f8d6 d3f5 e6f5 e1g1 e8g8
+
+ max depth:9, nodes:7 286 885, n/s:535446, score:10
+ info depth 9 score cp 10 nodes 7286885 nps 535446 pv c8f5 e2e3 e7e6 f1d3 f8d6 d3f5 e6f5 e1g1 e8g8 
+
+ max depth:9, nodes:9 342 602, n/s:828906, score:10
+ info depth 9 score cp 10 nodes 9342602 nps 828906 pv c8f5 e2e3 e7e6 f1d3 f5d3 c2d3 f8d6 e1g1 e8g8 
+
+------ AB + ALL -> LMR, DEPTH 9
+
+
+
+
